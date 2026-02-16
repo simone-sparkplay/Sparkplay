@@ -1,167 +1,172 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <link rel="apple-touch-icon" href=icona.png
-    <title>SparkPlay</title>
+    <link rel="apple-touch-icon" href="icona.png">
+    <title>SparkPlay - Avventure Reali</title>
     <style>
-        :root { 
-            --bg: #070B14; --accent: #3F5EF6; --gold: #FFB300; --ink: #EAF2FF; 
-            --magic: #8E44AD; --detective: #2C3E50;
+        :root {
+            --bg: #070B14;
+            --card: rgba(255, 255, 255, 0.05);
+            --accent: #3F5EF6;
+            --magic: #8E44AD;
+            --detective: #27AE60;
+            --gold: #FFB300;
+            --text: #EAF2FF;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0; padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+        /* Design Premium simile allo ZIP */
+        .container {
+            max-width: 500px; margin: 0 auto; width: 100%;
+            padding: 20px; padding-top: calc(20px + env(safe-area-inset-top));
+        }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { font-size: 24px; font-weight: 900; letter-spacing: 2px; color: var(--gold); }
         
-        html, body { 
-            height: 100%; margin: 0; overflow: hidden; 
-            background: var(--bg); font-family: -apple-system, system-ui, sans-serif;
-            color: var(--ink);
+        .card {
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
         }
-
-        #SPARKPLAY_APP { height: 100vh; display: flex; flex-direction: column; transition: background 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-
-        /* THEME GRADIENTS */
-        .theme-spazio { background: radial-gradient(circle at top, #16213E 0%, #070B14 100%); }
-        .theme-magia { background: radial-gradient(circle at top, #4A235A 0%, #070B14 100%); }
-        .theme-detective { background: radial-gradient(circle at top, #1B2631 0%, #070B14 100%); }
-
-        .header { 
-            padding: 60px 24px 15px; 
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .stage { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 24px; }
-
-        .card-game {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 40px; padding: 35px; backdrop-filter: blur(15px);
-            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        .world-selector { display: flex; gap: 8px; margin-bottom: 25px; justify-content: center; }
-        .badge-world { 
-            padding: 10px 14px; border-radius: 18px; font-size: 11px; font-weight: 800;
-            border: 1px solid rgba(255,255,255,0.15); opacity: 0.4; transition: 0.3s;
-        }
-        .badge-world.active { opacity: 1; background: rgba(255,255,255,0.1); border-color: white; }
-
-        .instruction { font-size: 26px; font-weight: 800; line-height: 1.25; margin: 30px 0; min-height: 120px; display: flex; align-items: center; justify-content: center; }
         
+        .world-selector { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .world-btn {
+            padding: 10px 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
+            background: transparent; color: white; font-size: 12px; font-weight: bold; cursor: pointer;
+        }
+        .world-btn.active { background: var(--accent); border-color: var(--accent); }
+
         .btn-main {
-            width: 100%; padding: 24px; border-radius: 26px; border: none;
-            font-weight: 900; font-size: 18px; cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.1s;
+            width: 100%; padding: 20px; border-radius: 18px; border: none;
+            background: linear-gradient(135deg, var(--accent), #5673FF);
+            color: white; font-size: 18px; font-weight: 800; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(63, 94, 246, 0.3);
         }
-        .btn-main:active { transform: scale(0.97); }
+        
+        /* Sicurezza */
+        .safety-bar {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            padding: 10px; border-radius: 12px;
+            font-size: 11px; text-align: center; margin-bottom: 20px;
+        }
 
-        .btn-spazio { background: var(--accent); color: white; }
-        .btn-magia { background: var(--magic); color: white; }
-        .btn-detective { background: var(--detective); color: white; }
-
-        .progression { font-size: 12px; font-weight: 700; opacity: 0.5; letter-spacing: 2px; text-transform: uppercase; }
+        .step-text { font-size: 20px; line-height: 1.4; margin: 20px 0; font-weight: 600; }
+        .hidden { display: none; }
     </style>
 </head>
-<body class="theme-spazio">
-    <div id="SPARKPLAY_APP"></div>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">SPARKPLAY 🌟</div>
+        </div>
+
+        <div class="safety-bar">
+            ⚠️ <b>REGOLA D'ORO:</b> Non correre, non arrampicarti e stai lontano dalla cucina.
+        </div>
+
+        <div id="home-screen">
+            <div class="world-selector">
+                <button class="world-btn active" onclick="setWorld('spazio')">SPAZIO 🚀</button>
+                <button class="world-btn" onclick="setWorld('magia')">MAGIA 🪄</button>
+                <button class="world-btn" onclick="setWorld('detective')">DETECTIVE 🔍</button>
+            </div>
+            
+            <div class="card" id="world-card">
+                <h2 id="world-title">Mondo Spazio</h2>
+                <p id="world-desc">Missioni di movimento calmo per astronauti in addestramento.</p>
+                <button class="btn-main" onclick="startMission()">AVVIA MISSIONE</button>
+            </div>
+        </div>
+
+        <div id="mission-screen" class="hidden">
+            <div class="card">
+                <div id="mission-content">
+                    <small id="mission-category" style="text-transform: uppercase; color: var(--gold);"></small>
+                    <div class="step-text" id="mission-text">Caricamento missione...</div>
+                </div>
+                <button class="btn-main" onclick="completeMission()">FATTO ✅</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        (() => {
-            const KEY = "sparkplay_v5_pro_mac";
-            const Narrator = {
-                synth: window.speechSynthesis, enabled: false, rate: 0.72,
-                speak(text) {
-                    if (!this.enabled || !text) return;
-                    this.synth.cancel();
-                    const msg = new SpeechSynthesisUtterance(text);
-                    msg.lang = 'it-IT'; msg.rate = this.rate;
-                    this.synth.speak(msg);
-                }
+        const missions = {
+            spazio: [
+                "Trova un calzino pulito: sarà la tua 'Antenna Stellare'. Portala in base senza farla cadere.",
+                "Metti un cuscino a terra: è un piccolo pianeta. Camminaci intorno in punta di piedi per 3 volte senza toccarlo.",
+                "Diventa un satellite: muoviti lentissimo per la stanza toccando solo oggetti di colore blu."
+            ],
+            magia: [
+                "Trova un cucchiaio di legno: è la tua Bacchetta. Tocca 3 oggetti 'addormentati' per svegliarli con un sussurro.",
+                "Crea un cerchio magico a terra usando una corda o delle scarpe. Siediti dentro e conta fino a 10 in silenzio.",
+                "Cerca un ingrediente segreto (una foglia o un sasso). Portalo in un posto buio per dargli energia magica."
+            ],
+            detective: [
+                "Trova 3 oggetti che iniziano con la lettera 'S'. Portali sul tavolo senza farti sentire da nessuno.",
+                "Osserva una finestra per 30 secondi. Quante macchine o alberi vedi? Torna a riferire il numero.",
+                "Cerca un oggetto che sia più piccolo del tuo pollice. Nascondilo e sfida qualcuno a trovarlo."
+            ]
+        };
+
+        let currentWorld = 'spazio';
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function setWorld(world) {
+            currentWorld = world;
+            document.querySelectorAll('.world-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const titles = { spazio: 'Mondo Spazio', magia: 'Mondo Magia', detective: 'Mondo Detective' };
+            const descs = { 
+                spazio: 'Esplora la casa come un astronauta in orbita.', 
+                magia: 'Trasforma oggetti comuni in strumenti incantati.', 
+                detective: 'Aguzza la vista e risolvi i misteri domestici.' 
             };
+            
+            document.getElementById('world-title').innerText = titles[world];
+            document.getElementById('world-desc').innerText = descs[world];
+        }
 
-            const App = {
-                s: JSON.parse(localStorage.getItem(KEY)) || { 
-                    fsm: "HOME", count: 0, audio: false, step: 0, 
-                    world: "spazio", specialReady: false 
-                },
+        function startMission() {
+            const list = missions[currentWorld];
+            const randomMission = list[Math.floor(Math.random() * list.length)];
+            document.getElementById('mission-text').innerText = randomMission;
+            document.getElementById('mission-category').innerText = currentWorld;
+            document.getElementById('home-screen').classList.add('hidden');
+            document.getElementById('mission-screen').classList.remove('hidden');
+        }
 
-                missions: {
-                    spazio: ["Trova una torcia stellare.", "Punta la luce verso il soffitto.", "Fai tre cerchi di luce lenti."],
-                    magia: ["Trova la tua bacchetta magica.", "Disegna una stella nell'aria.", "Sussurra la parola magica: Alakazam."],
-                    detective: ["Trova un indizio di colore rosso.", "Portalo sul tuo tavolo segreto.", "Osservalo bene con un occhio chiuso."]
-                },
+        function completeMission() {
+            playSuccessSound();
+            document.getElementById('mission-screen').classList.add('hidden');
+            document.getElementById('home-screen').classList.remove('hidden');
+        }
 
-                init() {
-                    Narrator.enabled = this.s.audio;
-                    this.render();
-                    document.getElementById("SPARKPLAY_APP").addEventListener("click", e => {
-                        const act = e.target.closest("[data-action]")?.dataset.action;
-                        const val = e.target.closest("[data-value]")?.dataset.value;
-                        if (act) this.handle(act, val);
-                    });
-                },
-
-                handle(act, val) {
-                    if (act === "SET_WORLD") {
-                        this.s.world = val;
-                        Narrator.speak("Mondo " + val + " selezionato.");
-                    }
-                    if (act === "TOGGLE_AUDIO") {
-                        this.s.audio = !this.s.audio; Narrator.enabled = this.s.audio;
-                        Narrator.speak(this.s.audio ? "Audio attivo." : "");
-                    }
-                    if (act === "START") {
-                        this.s.fsm = "PLAY"; this.s.step = 0;
-                        Narrator.speak(this.missions[this.s.world][0]);
-                    }
-                    if (act === "NEXT") {
-                        if (this.s.step < this.missions[this.s.world].length - 1) {
-                            this.s.step++;
-                            Narrator.speak(this.missions[this.s.world][this.s.step]);
-                        } else {
-                            this.s.count++; this.s.fsm = "HOME";
-                            Narrator.speak("Missione completata. Bravissimo.");
-                        }
-                    }
-                    localStorage.setItem(KEY, JSON.stringify(this.s));
-                    this.render();
-                },
-
-                render() {
-                    const { fsm, step, count, audio, world } = this.s;
-                    const root = document.getElementById("SPARKPLAY_APP");
-                    document.body.className = `theme-${world}`;
-                    
-                    let content = fsm === "HOME" ? `
-                        <div class="card-game">
-                            <div class="world-selector">
-                                <div class="badge-world ${world==='spazio'?'active':''}" data-action="SET_WORLD" data-value="spazio">SPAZIO</div>
-                                <div class="badge-world ${world==='magia'?'active':''}" data-action="SET_WORLD" data-value="magia">MAGIA</div>
-                                <div class="badge-world ${world==='detective'?'active':''}" data-action="SET_WORLD" data-value="detective">DETECTIVE</div>
-                            </div>
-                            <div class="instruction">Scegli un mondo e inizia l'avventura.</div>
-                            <button class="btn-main btn-${world}" data-action="START">AVVIA MISSIONE</button>
-                            <div style="margin-top:25px; font-size:12px; opacity:0.4;">MISSIONI COMPLETATE: ${count}/3</div>
-                        </div>` : `
-                        <div class="card-game">
-                            <div class="progression">Passo ${step + 1} di 3</div>
-                            <div class="instruction">${this.missions[world][step]}</div>
-                            <button class="btn-main btn-${world}" data-action="NEXT">${step === 2 ? 'FINISH' : 'FATTO'}</button>
-                        </div>`;
-
-                    root.innerHTML = `
-                        <div class="header">
-                            <div style="font-weight:900; letter-spacing:2px; font-size:15px; color:white;">SPARKPLAY</div>
-                            <div data-action="TOGGLE_AUDIO" style="font-size:26px; cursor:pointer;">${audio ? '🔊' : '🔈'}</div>
-                        </div>
-                        <div class="stage">${content}</div>`;
-                }
-            };
-            App.init();
-        })();
+        function playSuccessSound() {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // DO
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2); // LA
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        }
     </script>
 </body>
 </html>
