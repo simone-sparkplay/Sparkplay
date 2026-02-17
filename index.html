@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>SparkPlay</title>
 
-  <!-- Basic cache hints (not enough alone on iOS, but helps) -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
@@ -79,18 +78,8 @@
       font-weight:900;
       white-space:nowrap;
     }
-
-    h1,h2{
-      margin:0 0 8px;
-      font-weight:1000;
-      letter-spacing:.2px;
-    }
-    p{
-      margin:0 0 12px;
-      color:var(--muted);
-      line-height:1.45;
-      font-size:14px;
-    }
+    h1,h2{margin:0 0 8px;font-weight:1000;letter-spacing:.2px}
+    p{margin:0 0 12px;color:var(--muted);line-height:1.45;font-size:14px}
 
     .progress{
       height:10px;
@@ -100,11 +89,7 @@
       margin-top:10px;
       border:1px solid rgba(255,255,255,.10);
     }
-    .bar{
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg,var(--accent),var(--gold));
-    }
+    .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--gold));}
 
     button{
       width:100%;
@@ -127,38 +112,24 @@
       color:#1b1400;
     }
     button:active{transform:scale(.99)}
-
-    .row{display:flex; gap:10px}
+    .row{display:flex;gap:10px}
     .row button{flex:1}
 
-    /* Montessori step-by-step (not newspaper list) */
     .stepWrap{
       background:var(--card2);
       border-radius:18px;
       padding:14px;
       border:1px solid rgba(255,255,255,.08);
     }
-    .dots{display:flex; gap:6px; margin:0 0 12px}
+    .dots{display:flex;gap:6px;margin:0 0 12px}
     .dot{
       width:10px;height:10px;border-radius:999px;
       background:rgba(255,255,255,.12);
       border:1px solid rgba(255,255,255,.10);
     }
-    .dot.on{
-      background:linear-gradient(135deg,var(--accent),var(--gold));
-      border-color:rgba(255,255,255,.20);
-    }
-    .stepTitle{
-      font-weight:1000;
-      margin:0 0 8px;
-      font-size:15px;
-    }
-    .stepText{
-      margin:0;
-      color:var(--text);
-      line-height:1.42;
-      font-size:14px;
-    }
+    .dot.on{background:linear-gradient(135deg,var(--accent),var(--gold));border-color:rgba(255,255,255,.20);}
+    .stepTitle{font-weight:1000;margin:0 0 8px;font-size:15px}
+    .stepText{margin:0;color:var(--text);line-height:1.42;font-size:14px}
 
     .diary-item{
       background:var(--card2);
@@ -167,46 +138,29 @@
       margin-bottom:8px;
       border:1px solid rgba(255,255,255,.08);
     }
-    .diary-item b{color:var(--text)}
     .diary-meta{font-size:12px;color:var(--muted);margin-top:4px}
-
     .center{text-align:center}
 
-    /* Update banner */
     .banner{
-      position:sticky;
-      top:10px;
-      z-index:10;
-      margin-bottom:12px;
-      padding:12px 12px;
-      border-radius:16px;
+      position:sticky;top:10px;z-index:10;margin-bottom:12px;
+      padding:12px;border-radius:16px;
       background:rgba(255,183,3,.18);
       border:1px solid rgba(255,183,3,.35);
-      color:var(--text);
       box-shadow:0 16px 30px rgba(0,0,0,.30);
     }
-    .banner .btitle{font-weight:1000; margin:0 0 6px}
-    .banner .btext{margin:0 0 10px; color:rgba(241,245,255,.9); font-size:13px; line-height:1.35}
-    .banner .brow{display:flex; gap:10px}
-    .banner .brow button{padding:12px; border-radius:14px; font-size:14px}
+    .banner .btitle{font-weight:1000;margin:0 0 6px}
+    .banner .btext{margin:0 0 10px;color:rgba(241,245,255,.9);font-size:13px;line-height:1.35}
+    .banner .brow{display:flex;gap:10px}
+    .banner .brow button{padding:12px;border-radius:14px;font-size:14px}
 
-    /* Dev controls (hidden unless enabled) */
-    .devbox{
-      margin-top:12px;
+    .parentGate{
+      background:rgba(255,255,255,.05);
+      border:1px dashed rgba(255,255,255,.22);
       padding:12px;
       border-radius:16px;
-      background:rgba(79,124,255,.10);
-      border:1px dashed rgba(79,124,255,.45);
+      margin-top:10px;
     }
-    .devbox .dtitle{
-      font-weight:1000;
-      margin:0 0 8px;
-      font-size:13px;
-      color:rgba(241,245,255,.95);
-    }
-    .devbox .drow{display:flex; gap:10px; flex-wrap:wrap}
-    .devbox .drow button{flex:1; min-width:120px}
-    .tiny{font-size:12px; color:var(--muted); margin-top:8px}
+    .tiny{font-size:12px;color:var(--muted);margin-top:8px}
   </style>
 </head>
 
@@ -214,74 +168,78 @@
 <div class="app" id="app"></div>
 
 <script>
-/* =========================
-   SparkPlay – Montessori Core
-   + Versioning + Anti-cache check
-   + Developer Mode (hidden)
-   Single file: index.html
-   ========================= */
+/** BUMP VERSION ON EACH RELEASE */
+const APP_VERSION = "2026.02.17-02";
 
-/** CHANGE THIS EACH TIME YOU RELEASE (manual version bump). */
-const APP_VERSION = "2026.02.17-01";
-
-/** Storage keys */
 const KEY_STATE = "sparkplay_state_v2";
 const KEY_DEV   = "sparkplay_dev_mode";
 
-/** Montessori daily rhythm: 1) Esplora 2) Crea 3) Calma */
 const MISSIONS = [
-  {
-    phase:"Esplora",
-    title:"Radar Spaziale",
+  { phase:"Esplora", title:"Radar Spaziale", emoji:"🛰️",
     steps:[
       "Guarda la stanza: scegli 3 oggetti diversi.",
       "Avvicinati lentamente a ciascuno come fossi su un pianeta alieno.",
       "Descrivi a voce: forma, texture, ‘potere’ dell’oggetto."
-    ],
-    emoji:"🛰️"
+    ]
   },
-  {
-    phase:"Crea",
-    title:"Costruisci la Base",
+  { phase:"Crea", title:"Costruisci la Base", emoji:"🧱",
     steps:[
       "Scegli 3 oggetti di casa (già tuoi).",
       "Costruisci una mini base sul tavolo o sul pavimento.",
       "Spiega a cosa serve ogni parte (energia, scudo, porta)."
-    ],
-    emoji:"🧱"
+    ]
   },
-  {
-    phase:"Calma",
-    title:"Respiro dell’Astronauta",
+  { phase:"Calma", title:"Respiro dell’Astronauta", emoji:"🌙",
     steps:[
       "Siediti comodo: schiena dritta, piedi fermi.",
       "Conta lentamente da 5 a 1.",
       "A ogni numero: un respiro profondo e lento."
-    ],
-    emoji:"🌙"
+    ]
   }
 ];
 
-/** Helpers */
+/** Missione speciale: NON conta nel limite 3 */
+const SPECIAL_MISSIONS = [
+  { phase:"Speciale", title:"Oggetto Misterioso", emoji:"✨",
+    steps:[
+      "Scegli un oggetto a caso (senza dirlo).",
+      "Descrivilo con 3 indizi: forma, uso, suono.",
+      "Fai indovinare a un genitore o a un fratello."
+    ]
+  },
+  { phase:"Speciale", title:"Caccia alla Texture", emoji:"🔎",
+    steps:[
+      "Trova 3 superfici: liscia, ruvida, morbida.",
+      "Toccane una alla volta e descrivi la sensazione.",
+      "Scegli la ‘texture preferita’ e spiega perché."
+    ]
+  }
+];
+
 const nowISO = () => new Date().toISOString();
 const todayKey = () => new Date().toDateString();
 
-/** Load state */
+function safeParse(raw){ try{ return JSON.parse(raw); }catch(e){ return null; } }
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+
 let state = safeParse(localStorage.getItem(KEY_STATE)) || {
   day: todayKey(),
-  missionIndex: 0,     // 0..2
-  stepIndex: 0,        // step inside mission
+  missionIndex: 0,
+  stepIndex: 0,
   diary: [],
-  lastSeenVersion: null
+  lastSeenVersion: null,
+
+  // Special mission state
+  specialActive: false,
+  specialIndex: 0,
+  specialStepIndex: 0
 };
 
-function safeParse(raw){
-  try{ return JSON.parse(raw); }catch(e){ return null; }
-}
-
-function save(){
-  localStorage.setItem(KEY_STATE, JSON.stringify(state));
-}
+function save(){ localStorage.setItem(KEY_STATE, JSON.stringify(state)); }
 
 function resetDay(){
   state.day = todayKey();
@@ -289,7 +247,6 @@ function resetDay(){
   state.stepIndex = 0;
   save();
 }
-
 function resetAll(){
   localStorage.removeItem(KEY_STATE);
   state = {
@@ -297,47 +254,40 @@ function resetAll(){
     missionIndex: 0,
     stepIndex: 0,
     diary: [],
-    lastSeenVersion: null
+    lastSeenVersion: null,
+    specialActive: false,
+    specialIndex: 0,
+    specialStepIndex: 0
   };
   save();
 }
 
-/** New day auto-reset */
 if(state.day !== todayKey()){
-  // keep diary, reset the daily progression
   state.day = todayKey();
   state.missionIndex = 0;
   state.stepIndex = 0;
+  state.specialActive = false;
+  state.specialStepIndex = 0;
   save();
 }
 
-/** DEV MODE (hidden): 5 taps on brand within 2 seconds toggles */
+/** DEV MODE (hidden): 5 taps on brand toggles */
 let tapCount = 0;
 let tapTimer = null;
 function toggleDev(){
   const cur = (localStorage.getItem(KEY_DEV) === "1");
-  const next = !cur;
-  localStorage.setItem(KEY_DEV, next ? "1" : "0");
+  localStorage.setItem(KEY_DEV, cur ? "0" : "1");
   render();
 }
-function isDev(){
-  return localStorage.getItem(KEY_DEV) === "1";
-}
+function isDev(){ return localStorage.getItem(KEY_DEV) === "1"; }
 function brandTap(){
   tapCount++;
   if(tapTimer) clearTimeout(tapTimer);
   tapTimer = setTimeout(()=>{ tapCount=0; }, 2000);
-  if(tapCount >= 5){
-    tapCount = 0;
-    toggleDev();
-  }
+  if(tapCount >= 5){ tapCount = 0; toggleDev(); }
 }
 
-/** Anti-cache / update check:
-    - fetch current URL with cache:'no-store'
-    - extract APP_VERSION from fetched content
-    - if different from running version, show update banner
-*/
+/** Anti-cache update check */
 let updateAvailable = false;
 let remoteVersion = null;
 
@@ -354,44 +304,60 @@ async function checkForUpdate(){
         render();
       }
     }
-  }catch(e){
-    // ignore (offline etc.)
-  }
+  }catch(e){}
 }
-
-/** Force reload bypassing cache (adds cache-bust query) */
 function forceReload(){
   const base = window.location.href.split("#")[0].split("?")[0];
-  const bust = "v=" + encodeURIComponent(Date.now().toString());
-  window.location.replace(base + "?" + bust);
+  window.location.replace(base + "?v=" + encodeURIComponent(Date.now()));
 }
 
-/** UI render */
-function render(){
-  const app = document.getElementById("app");
-  app.innerHTML = "";
+/** Parent gate (session-only) */
+let parentUnlocked = false;
 
-  // Update banner (only if remote differs)
-  if(updateAvailable){
-    const banner = document.createElement("div");
-    banner.className = "banner";
-    banner.innerHTML = `
-      <div class="btitle">Aggiornamento disponibile</div>
-      <div class="btext">È pronta una versione più nuova (${escapeHtml(remoteVersion)}). Tocca aggiorna per caricarla.</div>
-      <div class="brow">
-        <button class="gold" id="btnUpdate">Aggiorna</button>
-        <button class="secondary" id="btnLater">Dopo</button>
-      </div>
-    `;
-    app.appendChild(banner);
-    banner.querySelector("#btnUpdate").addEventListener("click", forceReload);
-    banner.querySelector("#btnLater").addEventListener("click", ()=>{
-      updateAvailable = false;
-      render();
-    });
-  }
+function askParentGate(){
+  const a = 3 + Math.floor(Math.random()*7); // 3..9
+  const b = 2 + Math.floor(Math.random()*8); // 2..9
+  const ans = prompt(`Area Genitore\nRispondi: ${a} + ${b} = ?`);
+  if(ans === null) return false;
+  const ok = Number(ans) === (a+b);
+  if(ok) parentUnlocked = true;
+  return ok;
+}
 
-  // Top bar
+/** Long press helper */
+function attachLongPress(el, fn, ms=900){
+  let t=null;
+  const start=()=>{ t=setTimeout(()=>{ t=null; fn(); }, ms); };
+  const cancel=()=>{ if(t){ clearTimeout(t); t=null; } };
+  el.addEventListener("pointerdown", start);
+  el.addEventListener("pointerup", cancel);
+  el.addEventListener("pointercancel", cancel);
+  el.addEventListener("pointerleave", cancel);
+}
+
+/** Special mission */
+function startSpecial(){
+  state.specialIndex = Math.floor(Math.random() * SPECIAL_MISSIONS.length);
+  state.specialStepIndex = 0;
+  state.specialActive = true;
+  save();
+  render();
+}
+function completeSpecial(){
+  const m = SPECIAL_MISSIONS[state.specialIndex];
+  (state.diary ||= []).unshift({
+    phase: m.phase,
+    title: m.title,
+    emoji: m.emoji,
+    at: nowISO()
+  });
+  state.specialActive = false;
+  state.specialStepIndex = 0;
+  save();
+  render();
+}
+
+function renderTop(app){
   const top = document.createElement("div");
   top.className = "topbar";
   top.innerHTML = `
@@ -403,64 +369,183 @@ function render(){
   `;
   app.appendChild(top);
   top.querySelector("#brand").addEventListener("click", brandTap);
+}
 
-  // Main logic
+function renderUpdateBanner(app){
+  if(!updateAvailable) return;
+  const banner = document.createElement("div");
+  banner.className = "banner";
+  banner.innerHTML = `
+    <div class="btitle">Aggiornamento disponibile</div>
+    <div class="btext">È pronta una versione più nuova (${escapeHtml(remoteVersion)}). Tocca aggiorna per caricarla.</div>
+    <div class="brow">
+      <button class="gold" id="btnUpdate">Aggiorna</button>
+      <button class="secondary" id="btnLater">Dopo</button>
+    </div>
+  `;
+  app.appendChild(banner);
+  banner.querySelector("#btnUpdate").addEventListener("click", forceReload);
+  banner.querySelector("#btnLater").addEventListener("click", ()=>{ updateAvailable=false; render(); });
+}
+
+function renderStepMission(app, mission, idx, totalSteps, onPrev, onNext, nextLabel){
+  const stepsCard = document.createElement("div");
+  stepsCard.className = "card";
+  stepsCard.innerHTML = `
+    <div class="stepWrap">
+      <div class="dots">
+        ${Array.from({length: totalSteps}).map((_,i)=>`<div class="dot ${i===idx ? "on":""}"></div>`).join("")}
+      </div>
+      <div class="stepTitle">Passo ${idx+1} di ${totalSteps}</div>
+      <p class="stepText">${escapeHtml(mission.steps[idx])}</p>
+    </div>
+    <div style="height:10px"></div>
+    <div class="row">
+      <button class="secondary" id="btnPrev" ${idx===0 ? "disabled style='opacity:.55'":""}>Indietro</button>
+      <button id="btnNext">${escapeHtml(nextLabel)}</button>
+    </div>
+  `;
+  app.appendChild(stepsCard);
+  stepsCard.querySelector("#btnPrev").addEventListener("click", onPrev);
+  stepsCard.querySelector("#btnNext").addEventListener("click", onNext);
+}
+
+function renderDiary(app){
+  const diary = document.createElement("div");
+  diary.className = "card";
+  diary.innerHTML = `<h2>📓 Diario missioni</h2><p>Piccolo storico delle missioni completate.</p>`;
+  const items = (state.diary || []).slice(0, 25);
+  if(items.length === 0){
+    diary.innerHTML += `<p>Nessuna missione registrata.</p>`;
+  }else{
+    diary.innerHTML += items.map(d=>{
+      const when = new Date(d.at).toLocaleString("it-IT");
+      return `
+        <div class="diary-item">
+          <b>${escapeHtml(d.emoji)} ${escapeHtml(d.phase)}</b> -- ${escapeHtml(d.title)}
+          <div class="diary-meta">${escapeHtml(when)}</div>
+        </div>
+      `;
+    }).join("");
+  }
+  app.appendChild(diary);
+  return diary;
+}
+
+function render(){
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+
+  renderUpdateBanner(app);
+  renderTop(app);
+
+  // If special mission active, render it immediately (doesn't affect daily 3)
+  if(state.specialActive){
+    const m = SPECIAL_MISSIONS[state.specialIndex];
+    const idx = Math.max(0, Math.min(m.steps.length-1, state.specialStepIndex));
+
+    const head = document.createElement("div");
+    head.className = "card";
+    head.innerHTML = `
+      <h1>${escapeHtml(m.emoji)} Missione Speciale</h1>
+      <p><b>${escapeHtml(m.title)}</b><br>Extra: non conta nelle 3 missioni di oggi.</p>
+    `;
+    app.appendChild(head);
+
+    renderStepMission(
+      app, m, idx, m.steps.length,
+      ()=>{ if(state.specialStepIndex>0){ state.specialStepIndex--; save(); render(); } },
+      ()=>{ 
+        if(idx < m.steps.length-1){ state.specialStepIndex++; save(); render(); }
+        else { completeSpecial(); }
+      },
+      (idx === m.steps.length-1) ? "Completa" : "Avanti"
+    );
+
+    const back = document.createElement("div");
+    back.className = "card";
+    back.innerHTML = `<button class="secondary" id="exitSpecial">Esci (senza completare)</button>`;
+    app.appendChild(back);
+    back.querySelector("#exitSpecial").addEventListener("click", ()=>{
+      state.specialActive = false;
+      state.specialStepIndex = 0;
+      save();
+      render();
+    });
+    return;
+  }
+
   const doneToday = state.missionIndex >= 3;
 
   if(doneToday){
-    // Parent stop screen (this is the Montessori heart)
     const stop = document.createElement("div");
     stop.className = "card center";
     stop.innerHTML = `
       <h2>🌙 Fine per oggi</h2>
       <p>SparkPlay si ferma qui: <b>3 missioni fatte bene</b> valgono più di 30 random.</p>
       <p><b>Rituale genitore (30 sec):</b><br>Chiedi: "Qual è stata la tua parte preferita?"</p>
+
+      <div class="parentGate" id="parentGate">
+        <p style="margin:0;color:rgba(241,245,255,.9)"><b>Area Genitore</b></p>
+        <p style="margin:6px 0 0">Tieni premuto 1 secondo per sbloccare.</p>
+        <div class="tiny">Serve per ripartire / missione speciale. I bambini non ci arrivano per caso.</div>
+      </div>
     `;
     app.appendChild(stop);
 
-    // Diary
-    const diary = document.createElement("div");
-    diary.className = "card";
-    diary.innerHTML = `<h2>📓 Diario missioni</h2><p>Piccolo storico delle missioni completate.</p>`;
-    const list = document.createElement("div");
-    const items = (state.diary || []).slice(0, 25);
-    if(items.length === 0){
-      list.innerHTML = `<p>Nessuna missione registrata.</p>`;
-    }else{
-      list.innerHTML = items.map(d=>{
-        const when = new Date(d.at).toLocaleString("it-IT");
-        return `
-          <div class="diary-item">
-            <b>${escapeHtml(d.emoji)} ${escapeHtml(d.phase)}</b> -- ${escapeHtml(d.title)}
-            <div class="diary-meta">${escapeHtml(when)}</div>
-          </div>
-        `;
-      }).join("");
-    }
-    diary.appendChild(list);
+    // Attach long press on the parent gate box
+    const gate = stop.querySelector("#parentGate");
+    attachLongPress(gate, ()=>{
+      if(parentUnlocked || askParentGate()){
+        parentUnlocked = true;
+        render(); // rerender showing parent controls below
+      }
+    }, 900);
 
-    // Dev-only controls to avoid getting stuck while testing
-    if(isDev()){
-      const dev = document.createElement("div");
-      dev.className = "devbox";
-      dev.innerHTML = `
-        <div class="dtitle">Developer Mode (solo per test)</div>
-        <div class="drow">
+    const diaryCard = renderDiary(app);
+
+    if(parentUnlocked){
+      const controls = document.createElement("div");
+      controls.className = "card";
+      controls.innerHTML = `
+        <h2>🔒 Area Genitore</h2>
+        <p>Strumenti rapidi (non visibili ai bambini).</p>
+        <div class="row">
+          <button class="gold" id="btnSpecial">Avvia Missione Speciale</button>
+        </div>
+        <div style="height:10px"></div>
+        <div class="row">
           <button class="secondary" id="btnResetDay">Reset giorno</button>
           <button class="secondary" id="btnResetAll">Reset totale</button>
         </div>
-        <div class="tiny">Attivazione: 5 tap su "SPARKPLAY". I clienti non lo vedono.</div>
+        <div class="tiny">Reset giorno = riparti con le 3 missioni. Speciale = extra senza contare.</div>
       `;
-      diary.appendChild(dev);
-      dev.querySelector("#btnResetDay").addEventListener("click", ()=>{ resetDay(); render(); });
-      dev.querySelector("#btnResetAll").addEventListener("click", ()=>{ resetAll(); render(); });
+      app.appendChild(controls);
+
+      controls.querySelector("#btnSpecial").addEventListener("click", startSpecial);
+      controls.querySelector("#btnResetDay").addEventListener("click", ()=>{ resetDay(); parentUnlocked=false; render(); });
+      controls.querySelector("#btnResetAll").addEventListener("click", ()=>{ resetAll(); parentUnlocked=false; render(); });
+    }else if(isDev()){
+      // Dev mode still available (hidden) – only for you
+      const dev = document.createElement("div");
+      dev.className = "card";
+      dev.innerHTML = `
+        <h2>🛠️ Dev (test)</h2>
+        <p>Attivo perché hai Dev Mode. (5 tap su SPARKPLAY)</p>
+        <div class="row">
+          <button class="secondary" id="devResetDay">Reset giorno</button>
+          <button class="secondary" id="devResetAll">Reset totale</button>
+        </div>
+      `;
+      app.appendChild(dev);
+      dev.querySelector("#devResetDay").addEventListener("click", ()=>{ resetDay(); render(); });
+      dev.querySelector("#devResetAll").addEventListener("click", ()=>{ resetAll(); render(); });
     }
 
-    app.appendChild(diary);
     return;
   }
 
-  // Current mission
+  // Normal daily missions
   const mission = MISSIONS[state.missionIndex];
   const totalMissions = 3;
   const progressPct = Math.round((state.missionIndex / totalMissions) * 100);
@@ -474,58 +559,32 @@ function render(){
   `;
   app.appendChild(head);
 
-  // Step-by-step view (not "newspaper")
-  const stepsCard = document.createElement("div");
-  stepsCard.className = "card";
-
   const steps = mission.steps;
   const idx = Math.max(0, Math.min(steps.length - 1, state.stepIndex));
 
-  stepsCard.innerHTML = `
-    <div class="stepWrap">
-      <div class="dots">
-        ${steps.map((_,i)=>`<div class="dot ${i===idx ? "on":""}"></div>`).join("")}
-      </div>
-      <div class="stepTitle">Passo ${idx+1} di ${steps.length}</div>
-      <p class="stepText">${escapeHtml(steps[idx])}</p>
-    </div>
-    <div style="height:10px"></div>
-    <div class="row">
-      <button class="secondary" id="btnPrev" ${idx===0 ? "disabled style='opacity:.55'":""}>Indietro</button>
-      <button id="btnNext">${idx===steps.length-1 ? "Finito" : "Avanti"}</button>
-    </div>
-  `;
-  app.appendChild(stepsCard);
+  renderStepMission(
+    app, mission, idx, steps.length,
+    ()=>{ if(state.stepIndex>0){ state.stepIndex--; save(); render(); } },
+    ()=>{
+      if(idx < steps.length-1){
+        state.stepIndex++; save(); render();
+      }else{
+        // complete daily mission
+        (state.diary ||= []).unshift({
+          phase: mission.phase,
+          title: mission.title,
+          emoji: mission.emoji,
+          at: nowISO()
+        });
+        state.missionIndex++;
+        state.stepIndex = 0;
+        save();
+        render();
+      }
+    },
+    (idx === steps.length-1) ? "Finito" : "Avanti"
+  );
 
-  stepsCard.querySelector("#btnPrev").addEventListener("click", ()=>{
-    if(state.stepIndex > 0){
-      state.stepIndex--;
-      save();
-      render();
-    }
-  });
-
-  stepsCard.querySelector("#btnNext").addEventListener("click", ()=>{
-    if(idx < steps.length-1){
-      state.stepIndex++;
-      save();
-      render();
-    }else{
-      // Complete mission
-      (state.diary ||= []).unshift({
-        phase: mission.phase,
-        title: mission.title,
-        emoji: mission.emoji,
-        at: nowISO()
-      });
-      state.missionIndex++;
-      state.stepIndex = 0;
-      save();
-      render();
-    }
-  });
-
-  // Dev box (optional, hidden)
   if(isDev()){
     const dev = document.createElement("div");
     dev.className = "card";
@@ -534,36 +593,22 @@ function render(){
       <p>Solo per te. Non visibile ai clienti.</p>
       <div class="row">
         <button class="secondary" id="devResetDay">Reset giorno</button>
-        <button class="secondary" id="devResetAll">Reset totale</button>
+        <button class="secondary" id="devStartSpecial">Speciale</button>
       </div>
       <div class="tiny">Disattiva: 5 tap su "SPARKPLAY".</div>
     `;
     app.appendChild(dev);
     dev.querySelector("#devResetDay").addEventListener("click", ()=>{ resetDay(); render(); });
-    dev.querySelector("#devResetAll").addEventListener("click", ()=>{ resetAll(); render(); });
+    dev.querySelector("#devStartSpecial").addEventListener("click", startSpecial);
   }
 }
 
-/** Small HTML escape */
-function escapeHtml(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-/** Boot */
 render();
 
-// Mark last seen version
 if(state.lastSeenVersion !== APP_VERSION){
   state.lastSeenVersion = APP_VERSION;
   save();
 }
-
-// Update check shortly after load (helps against iOS cache)
 setTimeout(checkForUpdate, 600);
 </script>
 </body>
