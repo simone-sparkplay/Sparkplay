@@ -82,71 +82,245 @@ button.secondary{
 
 <body>
 <div id="app"></div>
-
 <script>
 (() => {
   "use strict";
 
-  const KEY = "sparkplay_spazio_v1";
-  const today = new Date().toDateString();
+  const KEY = "sparkplay_spazio_v2";
+  const VERSION = "v2026.02.17-01";
+  const todayStr = () => new Date().toDateString();
+  const nowISO = () => new Date().toISOString();
 
-  const state = JSON.parse(localStorage.getItem(KEY)) || {
-    date: today,
-    missionsDone: 0
+  const DEFAULT = {
+    date: todayStr(),
+    missionsDone: 0,
+    diary: [],
+    current: null
   };
 
-  if(state.date !== today){
-    state.date = today;
-    state.missionsDone = 0;
-    save();
+  function load(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      const s = raw ? JSON.parse(raw) : structuredClone(DEFAULT);
+      // daily reset automatico
+      if(s.date !== todayStr()){
+        s.date = todayStr();
+        s.missionsDone = 0;
+        s.current = null;
+      }
+      // guardie anti-corruzione
+      if(!Array.isArray(s.diary)) s.diary = [];
+      if(typeof s.missionsDone !== "number") s.missionsDone = 0;
+      return s;
+    }catch(e){
+      return structuredClone(DEFAULT);
+    }
   }
+
+  let state = load();
 
   function save(){
     localStorage.setItem(KEY, JSON.stringify(state));
   }
 
-  function render(){
-    const root = document.getElementById("app");
-    root.innerHTML = `
+  // === Mission generator (Spazio) ===
+  const MISSIONS = [
+    { title:"Radar Spaziale", steps:[
+      "Prendi una torcia e un oggetto metallico (cucchiaio).",
+      "Fai ‘scansioni’ lente sul pavimento cercando ‘segnali’.",
+      "Disegna una mappa semplice di dove hai trovato il segnale."
+    ]},
+    { title:"Costruisci la Base", steps:[
+      "Usa cuscini o scatole per creare una ‘base’ a terra.",
+      "Scegli 3 oggetti che saranno ‘strumenti’ della base.",
+      "Spiega al genitore a cosa serve ogni strumento."
+    ]},
+    { title:"Respiro dell’Astronauta", steps:[
+      "Metti una mano sulla pancia e una sul petto.",
+      "Inspira 3 secondi, espira 4 secondi (x4 volte).",
+      "Dì una frase: ‘Sono pronto per la missione’."
+    ]},
+    { title:"Allarme Meteora", steps:[
+      "Trova 5 oggetti ‘scudo’ in casa (libro, coperchio…).",
+      "Proteggi una zona sicura (la base).",
+      "Racconta come hai salvato l’equipaggio."
+    ]},
+  ];
+
+  function pickMission(){
+    const m = MISSIONS[Math.floor(Math.random()*MISSIONS.length)];
+    return {
+      id: "m_" + Math.random().toString(16).slice(2),
+      createdAt: nowISO(),
+      phase: 0, // 0 Calma, 1 Crea, 2 Esplora
+      title: m.title,
+      steps: m.steps
+    };
+  }
+
+  const PHASES = [
+    { key:"Calma", icon:"🌙", hint:"30 secondi: respiro + focus." },
+    { key:"Crea",  icon:"🧱", hint:"Costruisci / prepara con oggetti di casa." },
+    { key:"Esplora", icon:"🛰️", hint:"Azione: esegui e racconta la missione." }
+  ];
+
+  function startMission(){
+    if(state.missionsDone >= 3) return;
+    state.current = pickMission();
+    save();
+    render();
+  }
+
+  function nextPhase(){
+    if(!state.current) return;
+    if(state.current.phase < 2){
+      state.current.phase++;
+      save();
+      render();
+    }else{
+      completeMission();
+    }
+  }
+
+  function completeMission(){
+    if(!state.current) return;
+
+    state.missionsDone = Math.min(3, state.missionsDone + 1);
+
+    state.diary.unshift({
+      when: nowISO(),
+      title: state.current.title,
+      phases: PHASES.map(p=>p.key).join(" → ")
+    });
+
+    state.current = null;
+    save();
+    render();
+  }
+
+  function resetTest(){
+    // SOLO per test: reset immediato
+    state.date = todayStr();
+    state.missionsDone = 0;
+    state.current = null;
+    save();
+    render();
+  }
+
+  // === UI ===
+  function headerHTML(){
+    return `
       <div class="header">
         <div>
           <strong>SparkPlay</strong><br/>
           <small class="muted">Montessori · Spazio</small>
         </div>
-        <div class="badge">v2026.02.17</div>
-      </div>
-
-      <div class="card">
-        <h2>🚀 Missione Spazio</h2>
-        <p>Usa oggetti di casa per creare una missione spaziale.</p>
-        <p><strong>Missioni fatte oggi:</strong> ${state.missionsDone}/3</p>
-        ${
-          state.missionsDone < 3
-          ? `<button onclick="doMission()">Avvia missione</button>`
-          : `<button class="secondary" disabled>Fine per oggi 🌙</button>`
-        }
-      </div>
-
-      <div class="card">
-        <h3>📘 Diario</h3>
-        <p>3 missioni fatte bene valgono più di 30 casuali.</p>
-      </div>
-
-      <div class="footer">
-        Gioca meglio · Cresci meglio
+        <div class="badge">${VERSION}</div>
       </div>
     `;
   }
 
-  window.doMission = function(){
-    if(state.missionsDone >= 3) return;
-    state.missionsDone++;
-    save();
-    render();
+  function missionHomeHTML(){
+    const locked = state.missionsDone >= 3;
+    return `
+      <div class="card">
+        <h2>🚀 Missione Spazio</h2>
+        <p>Usa oggetti di casa per creare una missione spaziale.</p>
+        <p><strong>Missioni fatte oggi:</strong> ${state.missionsDone}/3</p>
+
+        ${
+          !locked
+          ? `<button onclick="SP.startMission()">Avvia missione</button>`
+          : `<button class="secondary" disabled>Fine per oggi 🌙</button>`
+        }
+
+        <div style="height:10px"></div>
+        <button class="secondary" onclick="SP.resetTest()">Nuova giornata (test)</button>
+      </div>
+    `;
+  }
+
+  function missionRunHTML(){
+    const m = state.current;
+    const p = PHASES[m.phase];
+    return `
+      <div class="card">
+        <h2>${p.icon} ${p.key}</h2>
+        <p style="color:var(--muted)">${p.hint}</p>
+
+        <div style="height:10px"></div>
+        <h3>${m.title}</h3>
+
+        <div style="margin-top:12px; display:flex; flex-direction:column; gap:10px">
+          ${m.steps.map(s => `
+            <div style="background:rgba(255,255,255,.08); padding:12px; border-radius:14px">
+              ${s}
+            </div>
+          `).join("")}
+        </div>
+
+        <div style="height:14px"></div>
+
+        ${
+          m.phase < 2
+          ? `<button onclick="SP.nextPhase()">Avanti →</button>`
+          : `<button onclick="SP.completeMission()">Missione completata ✅</button>`
+        }
+
+        <div style="height:10px"></div>
+        <button class="secondary" onclick="SP.backHome()">Esci missione</button>
+      </div>
+    `;
+  }
+
+  function diaryHTML(){
+    const items = state.diary.slice(0,6);
+    return `
+      <div class="card">
+        <h3>📘 Diario missioni</h3>
+        <p style="color:var(--muted)">Piccolo storico delle missioni completate.</p>
+
+        <div style="margin-top:12px; display:flex; flex-direction:column; gap:10px">
+          ${
+            items.length
+            ? items.map(it => `
+              <div style="background:rgba(255,255,255,.06); padding:12px; border-radius:14px">
+                <strong>${it.title}</strong><br/>
+                <small style="color:var(--muted)">${new Date(it.when).toLocaleString()}</small>
+              </div>
+            `).join("")
+            : `<div style="color:var(--muted)">Ancora nessuna missione salvata.</div>`
+          }
+        </div>
+      </div>
+    `;
+  }
+
+  function footerHTML(){
+    return `<div class="footer">Gioca meglio · Cresci meglio</div>`;
+  }
+
+  function render(){
+    const root = document.getElementById("app");
+    root.innerHTML =
+      headerHTML() +
+      (state.current ? missionRunHTML() : missionHomeHTML()) +
+      diaryHTML() +
+      footerHTML();
+  }
+
+  // API globale per i bottoni inline
+  window.SP = {
+    startMission,
+    nextPhase,
+    completeMission,
+    resetTest,
+    backHome: () => { state.current = null; save(); render(); }
   };
 
   render();
 })();
 </script>
+
 </body>
 </html>
