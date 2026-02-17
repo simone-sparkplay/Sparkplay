@@ -5,48 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>SparkPlay</title>
 
-  <!-- SparkPlay Montessori – Single File Core -->
+  <!-- Basic cache hints (not enough alone on iOS, but helps) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
   <style>
     :root{
       --bg:#0b1020;
       --card:#121a33;
+      --card2:#0e1530;
       --accent:#4f7cff;
       --gold:#ffb703;
       --text:#f1f5ff;
       --muted:#9aa6d6;
       --ok:#2dd4bf;
+      --danger:#ff4d6d;
       --radius:22px;
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: -apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,Inter,system-ui,Segoe UI,Roboto,sans-serif;
       background:linear-gradient(180deg,#060914,#0b1020);
       color:var(--text);
     }
-
     .app{
       max-width:420px;
       margin:0 auto;
       padding:16px;
       padding-bottom:calc(24px + env(safe-area-inset-bottom));
     }
-
     .card{
       background:var(--card);
       border-radius:var(--radius);
       padding:18px;
       box-shadow:0 20px 40px rgba(0,0,0,.4);
       margin-bottom:14px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      user-select:none;
+      -webkit-user-select:none;
+    }
+    .brand .t{
+      font-weight:1000;
+      letter-spacing:.6px;
+      font-size:14px;
+      line-height:1.1;
+    }
+    .brand .s{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.2;
+    }
+    .chip{
+      font-size:12px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--text);
+      font-weight:900;
+      white-space:nowrap;
     }
 
     h1,h2{
       margin:0 0 8px;
-      font-weight:900;
-      letter-spacing:.3px;
+      font-weight:1000;
+      letter-spacing:.2px;
     }
-
     p{
       margin:0 0 12px;
       color:var(--muted);
@@ -54,62 +92,121 @@
       font-size:14px;
     }
 
-    button{
-      width:100%;
-      border:0;
-      border-radius:16px;
-      padding:14px;
-      font-weight:900;
-      font-size:15px;
-      cursor:pointer;
-      background:linear-gradient(135deg,var(--accent),#7a6cff);
-      color:white;
-    }
-
-    button.secondary{
-      background:#1a244a;
-      color:var(--text);
-    }
-
-    button.gold{
-      background:linear-gradient(135deg,var(--gold),#ff8800);
-      color:#1b1400;
-    }
-
-    .row{display:flex;gap:10px}
-    .row button{flex:1}
-
     .progress{
       height:10px;
       background:#1a244a;
       border-radius:999px;
       overflow:hidden;
       margin-top:10px;
+      border:1px solid rgba(255,255,255,.10);
     }
-
     .bar{
       height:100%;
       width:0%;
       background:linear-gradient(90deg,var(--accent),var(--gold));
     }
 
-    .step{
-      background:#0e1530;
-      border-radius:14px;
+    button{
+      width:100%;
+      border:0;
+      border-radius:16px;
       padding:14px;
-      margin-bottom:10px;
+      font-weight:1000;
+      font-size:15px;
+      cursor:pointer;
+      background:linear-gradient(135deg,var(--accent),#7a6cff);
+      color:white;
+    }
+    button.secondary{
+      background:#1a244a;
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    button.gold{
+      background:linear-gradient(135deg,var(--gold),#ff8800);
+      color:#1b1400;
+    }
+    button:active{transform:scale(.99)}
+
+    .row{display:flex; gap:10px}
+    .row button{flex:1}
+
+    /* Montessori step-by-step (not newspaper list) */
+    .stepWrap{
+      background:var(--card2);
+      border-radius:18px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .dots{display:flex; gap:6px; margin:0 0 12px}
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .dot.on{
+      background:linear-gradient(135deg,var(--accent),var(--gold));
+      border-color:rgba(255,255,255,.20);
+    }
+    .stepTitle{
+      font-weight:1000;
+      margin:0 0 8px;
+      font-size:15px;
+    }
+    .stepText{
+      margin:0;
+      color:var(--text);
+      line-height:1.42;
       font-size:14px;
     }
 
     .diary-item{
-      background:#0e1530;
-      border-radius:14px;
+      background:var(--card2);
+      border-radius:16px;
       padding:12px;
       margin-bottom:8px;
-      font-size:13px;
+      border:1px solid rgba(255,255,255,.08);
     }
+    .diary-item b{color:var(--text)}
+    .diary-meta{font-size:12px;color:var(--muted);margin-top:4px}
 
     .center{text-align:center}
+
+    /* Update banner */
+    .banner{
+      position:sticky;
+      top:10px;
+      z-index:10;
+      margin-bottom:12px;
+      padding:12px 12px;
+      border-radius:16px;
+      background:rgba(255,183,3,.18);
+      border:1px solid rgba(255,183,3,.35);
+      color:var(--text);
+      box-shadow:0 16px 30px rgba(0,0,0,.30);
+    }
+    .banner .btitle{font-weight:1000; margin:0 0 6px}
+    .banner .btext{margin:0 0 10px; color:rgba(241,245,255,.9); font-size:13px; line-height:1.35}
+    .banner .brow{display:flex; gap:10px}
+    .banner .brow button{padding:12px; border-radius:14px; font-size:14px}
+
+    /* Dev controls (hidden unless enabled) */
+    .devbox{
+      margin-top:12px;
+      padding:12px;
+      border-radius:16px;
+      background:rgba(79,124,255,.10);
+      border:1px dashed rgba(79,124,255,.45);
+    }
+    .devbox .dtitle{
+      font-weight:1000;
+      margin:0 0 8px;
+      font-size:13px;
+      color:rgba(241,245,255,.95);
+    }
+    .devbox .drow{display:flex; gap:10px; flex-wrap:wrap}
+    .devbox .drow button{flex:1; min-width:120px}
+    .tiny{font-size:12px; color:var(--muted); margin-top:8px}
   </style>
 </head>
 
@@ -117,124 +214,357 @@
 <div class="app" id="app"></div>
 
 <script>
-/*
-  SPARKPLAY – CORE MONTESSORI
-  Ritmo giornaliero:
-  1) Esplora
-  2) Crea
-  3) Calma
-  Dopo 3 → STOP genitore
-*/
+/* =========================
+   SparkPlay – Montessori Core
+   + Versioning + Anti-cache check
+   + Developer Mode (hidden)
+   Single file: index.html
+   ========================= */
 
+/** CHANGE THIS EACH TIME YOU RELEASE (manual version bump). */
+const APP_VERSION = "2026.02.17-01";
+
+/** Storage keys */
+const KEY_STATE = "sparkplay_state_v2";
+const KEY_DEV   = "sparkplay_dev_mode";
+
+/** Montessori daily rhythm: 1) Esplora 2) Crea 3) Calma */
 const MISSIONS = [
   {
     phase:"Esplora",
     title:"Radar Spaziale",
     steps:[
-      "Prendi una torcia o usa la luce della stanza.",
-      "Trova 3 oggetti intorno a te.",
-      "Descrivili come se fossi su un pianeta alieno."
-    ]
+      "Guarda la stanza: scegli 3 oggetti diversi.",
+      "Avvicinati lentamente a ciascuno come fossi su un pianeta alieno.",
+      "Descrivi a voce: forma, texture, ‘potere’ dell’oggetto."
+    ],
+    emoji:"🛰️"
   },
   {
     phase:"Crea",
     title:"Costruisci la Base",
     steps:[
-      "Usa 3 oggetti di casa.",
-      "Costruisci una base sul tavolo o sul pavimento.",
-      "Spiega a cosa serve ogni parte."
-    ]
+      "Scegli 3 oggetti di casa (già tuoi).",
+      "Costruisci una mini base sul tavolo o sul pavimento.",
+      "Spiega a cosa serve ogni parte (energia, scudo, porta)."
+    ],
+    emoji:"🧱"
   },
   {
     phase:"Calma",
     title:"Respiro dell’Astronauta",
     steps:[
-      "Siediti comodo.",
+      "Siediti comodo: schiena dritta, piedi fermi.",
       "Conta lentamente da 5 a 1.",
-      "Fai un respiro profondo a ogni numero."
-    ]
+      "A ogni numero: un respiro profondo e lento."
+    ],
+    emoji:"🌙"
   }
 ];
 
-const KEY = "sparkplay_state_v1";
+/** Helpers */
+const nowISO = () => new Date().toISOString();
+const todayKey = () => new Date().toDateString();
 
-let state = JSON.parse(localStorage.getItem(KEY)) || {
-  day:new Date().toDateString(),
-  step:0,
-  diary:[]
+/** Load state */
+let state = safeParse(localStorage.getItem(KEY_STATE)) || {
+  day: todayKey(),
+  missionIndex: 0,     // 0..2
+  stepIndex: 0,        // step inside mission
+  diary: [],
+  lastSeenVersion: null
 };
 
-if(state.day !== new Date().toDateString()){
-  state.step = 0;
-  state.day = new Date().toDateString();
+function safeParse(raw){
+  try{ return JSON.parse(raw); }catch(e){ return null; }
 }
 
 function save(){
-  localStorage.setItem(KEY, JSON.stringify(state));
+  localStorage.setItem(KEY_STATE, JSON.stringify(state));
 }
 
+function resetDay(){
+  state.day = todayKey();
+  state.missionIndex = 0;
+  state.stepIndex = 0;
+  save();
+}
+
+function resetAll(){
+  localStorage.removeItem(KEY_STATE);
+  state = {
+    day: todayKey(),
+    missionIndex: 0,
+    stepIndex: 0,
+    diary: [],
+    lastSeenVersion: null
+  };
+  save();
+}
+
+/** New day auto-reset */
+if(state.day !== todayKey()){
+  // keep diary, reset the daily progression
+  state.day = todayKey();
+  state.missionIndex = 0;
+  state.stepIndex = 0;
+  save();
+}
+
+/** DEV MODE (hidden): 5 taps on brand within 2 seconds toggles */
+let tapCount = 0;
+let tapTimer = null;
+function toggleDev(){
+  const cur = (localStorage.getItem(KEY_DEV) === "1");
+  const next = !cur;
+  localStorage.setItem(KEY_DEV, next ? "1" : "0");
+  render();
+}
+function isDev(){
+  return localStorage.getItem(KEY_DEV) === "1";
+}
+function brandTap(){
+  tapCount++;
+  if(tapTimer) clearTimeout(tapTimer);
+  tapTimer = setTimeout(()=>{ tapCount=0; }, 2000);
+  if(tapCount >= 5){
+    tapCount = 0;
+    toggleDev();
+  }
+}
+
+/** Anti-cache / update check:
+    - fetch current URL with cache:'no-store'
+    - extract APP_VERSION from fetched content
+    - if different from running version, show update banner
+*/
+let updateAvailable = false;
+let remoteVersion = null;
+
+async function checkForUpdate(){
+  try{
+    const url = window.location.href.split("#")[0];
+    const res = await fetch(url, { cache: "no-store" });
+    const txt = await res.text();
+    const m = txt.match(/const\s+APP_VERSION\s*=\s*"([^"]+)"/);
+    if(m && m[1]){
+      remoteVersion = m[1];
+      if(remoteVersion !== APP_VERSION){
+        updateAvailable = true;
+        render();
+      }
+    }
+  }catch(e){
+    // ignore (offline etc.)
+  }
+}
+
+/** Force reload bypassing cache (adds cache-bust query) */
+function forceReload(){
+  const base = window.location.href.split("#")[0].split("?")[0];
+  const bust = "v=" + encodeURIComponent(Date.now().toString());
+  window.location.replace(base + "?" + bust);
+}
+
+/** UI render */
 function render(){
   const app = document.getElementById("app");
   app.innerHTML = "";
 
-  // BLOCCO GENITORE
-  if(state.step >= 3){
-    app.innerHTML = `
-      <div class="card center">
-        <h2>🌙 Fine per oggi</h2>
-        <p>SparkPlay si ferma qui.<br>
-        Il gioco continua nel mondo reale.</p>
-        <p><b>Consiglio per il genitore:</b><br>
-        Lascia che il bambino racconti la missione fatta.</p>
-      </div>
-      <div class="card">
-        <h2>📓 Diario</h2>
-        ${state.diary.map(d=>`
-          <div class="diary-item">
-            <b>${d.phase}</b> – ${d.title}
-          </div>
-        `).join("")}
+  // Update banner (only if remote differs)
+  if(updateAvailable){
+    const banner = document.createElement("div");
+    banner.className = "banner";
+    banner.innerHTML = `
+      <div class="btitle">Aggiornamento disponibile</div>
+      <div class="btext">È pronta una versione più nuova (${escapeHtml(remoteVersion)}). Tocca aggiorna per caricarla.</div>
+      <div class="brow">
+        <button class="gold" id="btnUpdate">Aggiorna</button>
+        <button class="secondary" id="btnLater">Dopo</button>
       </div>
     `;
+    app.appendChild(banner);
+    banner.querySelector("#btnUpdate").addEventListener("click", forceReload);
+    banner.querySelector("#btnLater").addEventListener("click", ()=>{
+      updateAvailable = false;
+      render();
+    });
+  }
+
+  // Top bar
+  const top = document.createElement("div");
+  top.className = "topbar";
+  top.innerHTML = `
+    <div class="brand" id="brand">
+      <div class="t">SPARKPLAY</div>
+      <div class="s">Montessori • gioco nel mondo reale</div>
+    </div>
+    <div class="chip">v ${APP_VERSION}</div>
+  `;
+  app.appendChild(top);
+  top.querySelector("#brand").addEventListener("click", brandTap);
+
+  // Main logic
+  const doneToday = state.missionIndex >= 3;
+
+  if(doneToday){
+    // Parent stop screen (this is the Montessori heart)
+    const stop = document.createElement("div");
+    stop.className = "card center";
+    stop.innerHTML = `
+      <h2>🌙 Fine per oggi</h2>
+      <p>SparkPlay si ferma qui: <b>3 missioni fatte bene</b> valgono più di 30 random.</p>
+      <p><b>Rituale genitore (30 sec):</b><br>Chiedi: "Qual è stata la tua parte preferita?"</p>
+    `;
+    app.appendChild(stop);
+
+    // Diary
+    const diary = document.createElement("div");
+    diary.className = "card";
+    diary.innerHTML = `<h2>📓 Diario missioni</h2><p>Piccolo storico delle missioni completate.</p>`;
+    const list = document.createElement("div");
+    const items = (state.diary || []).slice(0, 25);
+    if(items.length === 0){
+      list.innerHTML = `<p>Nessuna missione registrata.</p>`;
+    }else{
+      list.innerHTML = items.map(d=>{
+        const when = new Date(d.at).toLocaleString("it-IT");
+        return `
+          <div class="diary-item">
+            <b>${escapeHtml(d.emoji)} ${escapeHtml(d.phase)}</b> -- ${escapeHtml(d.title)}
+            <div class="diary-meta">${escapeHtml(when)}</div>
+          </div>
+        `;
+      }).join("");
+    }
+    diary.appendChild(list);
+
+    // Dev-only controls to avoid getting stuck while testing
+    if(isDev()){
+      const dev = document.createElement("div");
+      dev.className = "devbox";
+      dev.innerHTML = `
+        <div class="dtitle">Developer Mode (solo per test)</div>
+        <div class="drow">
+          <button class="secondary" id="btnResetDay">Reset giorno</button>
+          <button class="secondary" id="btnResetAll">Reset totale</button>
+        </div>
+        <div class="tiny">Attivazione: 5 tap su "SPARKPLAY". I clienti non lo vedono.</div>
+      `;
+      diary.appendChild(dev);
+      dev.querySelector("#btnResetDay").addEventListener("click", ()=>{ resetDay(); render(); });
+      dev.querySelector("#btnResetAll").addEventListener("click", ()=>{ resetAll(); render(); });
+    }
+
+    app.appendChild(diary);
     return;
   }
 
-  const mission = MISSIONS[state.step];
+  // Current mission
+  const mission = MISSIONS[state.missionIndex];
+  const totalMissions = 3;
+  const progressPct = Math.round((state.missionIndex / totalMissions) * 100);
 
-  app.innerHTML = `
-    <div class="card">
-      <h1>${mission.phase}</h1>
-      <p>${mission.title}</p>
+  const head = document.createElement("div");
+  head.className = "card";
+  head.innerHTML = `
+    <h1>${escapeHtml(mission.emoji)} ${escapeHtml(mission.phase)}</h1>
+    <p><b>${escapeHtml(mission.title)}</b><br>Lo schermo guida. Il gioco succede nella stanza.</p>
+    <div class="progress"><div class="bar" style="width:${progressPct}%"></div></div>
+  `;
+  app.appendChild(head);
 
-      <div class="progress">
-        <div class="bar" style="width:${(state.step/3)*100}%"></div>
+  // Step-by-step view (not "newspaper")
+  const stepsCard = document.createElement("div");
+  stepsCard.className = "card";
+
+  const steps = mission.steps;
+  const idx = Math.max(0, Math.min(steps.length - 1, state.stepIndex));
+
+  stepsCard.innerHTML = `
+    <div class="stepWrap">
+      <div class="dots">
+        ${steps.map((_,i)=>`<div class="dot ${i===idx ? "on":""}"></div>`).join("")}
       </div>
+      <div class="stepTitle">Passo ${idx+1} di ${steps.length}</div>
+      <p class="stepText">${escapeHtml(steps[idx])}</p>
     </div>
-
-    <div class="card">
-      ${mission.steps.map(s=>`
-        <div class="step">${s}</div>
-      `).join("")}
-    </div>
-
-    <div class="card">
-      <button onclick="complete()">Missione completata</button>
+    <div style="height:10px"></div>
+    <div class="row">
+      <button class="secondary" id="btnPrev" ${idx===0 ? "disabled style='opacity:.55'":""}>Indietro</button>
+      <button id="btnNext">${idx===steps.length-1 ? "Finito" : "Avanti"}</button>
     </div>
   `;
-}
+  app.appendChild(stepsCard);
 
-function complete(){
-  const m = MISSIONS[state.step];
-  state.diary.unshift({
-    phase:m.phase,
-    title:m.title
+  stepsCard.querySelector("#btnPrev").addEventListener("click", ()=>{
+    if(state.stepIndex > 0){
+      state.stepIndex--;
+      save();
+      render();
+    }
   });
-  state.step++;
-  save();
-  render();
+
+  stepsCard.querySelector("#btnNext").addEventListener("click", ()=>{
+    if(idx < steps.length-1){
+      state.stepIndex++;
+      save();
+      render();
+    }else{
+      // Complete mission
+      (state.diary ||= []).unshift({
+        phase: mission.phase,
+        title: mission.title,
+        emoji: mission.emoji,
+        at: nowISO()
+      });
+      state.missionIndex++;
+      state.stepIndex = 0;
+      save();
+      render();
+    }
+  });
+
+  // Dev box (optional, hidden)
+  if(isDev()){
+    const dev = document.createElement("div");
+    dev.className = "card";
+    dev.innerHTML = `
+      <h2>🛠️ Dev (test)</h2>
+      <p>Solo per te. Non visibile ai clienti.</p>
+      <div class="row">
+        <button class="secondary" id="devResetDay">Reset giorno</button>
+        <button class="secondary" id="devResetAll">Reset totale</button>
+      </div>
+      <div class="tiny">Disattiva: 5 tap su "SPARKPLAY".</div>
+    `;
+    app.appendChild(dev);
+    dev.querySelector("#devResetDay").addEventListener("click", ()=>{ resetDay(); render(); });
+    dev.querySelector("#devResetAll").addEventListener("click", ()=>{ resetAll(); render(); });
+  }
 }
 
+/** Small HTML escape */
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/** Boot */
 render();
+
+// Mark last seen version
+if(state.lastSeenVersion !== APP_VERSION){
+  state.lastSeenVersion = APP_VERSION;
+  save();
+}
+
+// Update check shortly after load (helps against iOS cache)
+setTimeout(checkForUpdate, 600);
 </script>
 </body>
 </html>
