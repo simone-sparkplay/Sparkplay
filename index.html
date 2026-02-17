@@ -1,326 +1,139 @@
 <!doctype html>
 <html lang="it">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="theme-color" content="#0B1220"/>
-<title>SparkPlay – Spazio</title>
-
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0B1220"><title>SparkPlay</title>
+<link rel="apple-touch-icon" href="icona.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
+/* --- DESIGN PREMIUM ORIGINALE (DNA ZIP) --- */
 :root{
-  --bg1:#0B1220;
-  --bg2:#101A33;
-  --card:#16224A;
-  --text:#EAF0FF;
-  --muted:#9FB0FF;
-  --accent:#4F7CFF;
-  --ok:#2DCE89;
+  --bg0:#070B14; --bg1:#0B1220; --ink:#EAF2FF; --muted:#A9B7D6; --line:rgba(255,255,255,.10);
+  --accent:#3F5EF6; --gold:#FFB300; --radius:26px; --shadow:0 30px 70px rgba(0,0,0,.45);
+  --soft:0 18px 40px rgba(63,94,246,.20);
 }
-
 *{box-sizing:border-box}
-html,body{
+html,body{height:100%; overflow-x: hidden;}
+body{
   margin:0;
-  height:100%;
-  background:linear-gradient(180deg,var(--bg1),var(--bg2));
-  color:var(--text);
-  font-family:-apple-system,Inter,system-ui,sans-serif;
+  background: radial-gradient(1200px 800px at 30% 10%, rgba(63,94,246,.22), transparent 60%),
+              radial-gradient(900px 700px at 80% 30%, rgba(255,179,0,.10), transparent 60%),
+              linear-gradient(180deg, var(--bg0), var(--bg1));
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  color:var(--ink);
 }
-
-#app{
-  min-height:100%;
-  padding:16px;
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-}
-
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.badge{
-  font-size:12px;
-  padding:6px 10px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-}
-
-.card{
-  background:var(--card);
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 20px 40px rgba(0,0,0,.4);
-}
-
-button{
-  appearance:none;
-  border:none;
-  border-radius:14px;
-  padding:14px;
-  font-size:16px;
-  font-weight:600;
-  background:var(--accent);
-  color:#fff;
-}
-
-button.secondary{
-  background:rgba(255,255,255,.12);
-}
-
-.footer{
-  margin-top:auto;
-  text-align:center;
-  font-size:13px;
-  color:var(--muted);
-}
+.sp-root{max-width:800px; margin:0 auto; padding:18px 16px calc(22px + env(safe-area-inset-bottom));}
+.sp-shell{border:1px solid var(--line); border-radius:var(--radius); background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02)); box-shadow:var(--shadow); overflow:hidden;}
+.sp-top{padding:16px; border-bottom:1px solid var(--line); background:radial-gradient(700px 220px at 20% 0%, rgba(63,94,246,.22), transparent 60%); display:flex; justify-content:space-between; align-items:center;}
+.brand{font-weight:1000; letter-spacing:1.4px; font-size:13px;}
+.badge{display:inline-flex; align-items:center; gap:8px; padding:7px 12px; border-radius:999px; font-weight:900; font-size:12px; border:1px solid var(--line); background:rgba(255,255,255,.03); cursor:pointer;}
+.sp-body{padding:16px;}
+.state{display:none; opacity:0; transform:translateY(8px) scale(.98); transition:0.35s ease;}
+.state.active{display:block; opacity:1; transform:translateY(0) scale(1);}
+.card{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03)); border:1px solid rgba(255,255,255,0.1); border-radius:22px; padding:16px; box-shadow:var(--soft); margin-bottom:12px;}
+.btn{width:100%; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.04); color:var(--ink); padding:18px; border-radius:20px; cursor:pointer; font-weight:900; font-size:16px; display:flex; align-items:center; justify-content:center; transition:0.2s;}
+.btn-primary{background:linear-gradient(180deg, var(--accent), #334ed7); box-shadow:0 18px 40px rgba(63,94,246,.26); border:none;}
+.btn-ghost{background:transparent; border:1px solid var(--line); color:var(--muted);}
+.orb{width:60px; height:60px; border-radius:20px; background:rgba(63,94,246,0.2); border:1px solid rgba(63,94,246,0.3); display:flex; align-items:center; justify-content:center; font-size:30px; margin-bottom:20px; animation:float 3.3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);}}
+.step{display:flex; gap:12px; padding:14px; border-bottom:1px solid rgba(255,255,255,0.08); align-items:flex-start;}
+.step.active{background:linear-gradient(90deg, rgba(63,94,246,0.15), transparent); border-left: 4px solid var(--accent); color: #fff;}
+.step.dim{opacity:0.35;}
 </style>
 </head>
-
 <body>
-<div id="app"></div>
+<div id="SPARKPLAY_APP" class="sp-root"></div>
+
 <script>
-(() => {
-  "use strict";
-
-  const KEY = "sparkplay_spazio_v2";
-  const VERSION = "v2026.02.17-01";
-  const todayStr = () => new Date().toDateString();
-  const nowISO = () => new Date().toISOString();
-
-  const DEFAULT = {
-    date: todayStr(),
-    missionsDone: 0,
-    diary: [],
-    current: null
-  };
-
-  function load(){
-    try{
-      const raw = localStorage.getItem(KEY);
-      const s = raw ? JSON.parse(raw) : structuredClone(DEFAULT);
-      // daily reset automatico
-      if(s.date !== todayStr()){
-        s.date = todayStr();
-        s.missionsDone = 0;
-        s.current = null;
-      }
-      // guardie anti-corruzione
-      if(!Array.isArray(s.diary)) s.diary = [];
-      if(typeof s.missionsDone !== "number") s.missionsDone = 0;
-      return s;
-    }catch(e){
-      return structuredClone(DEFAULT);
+(()=>{"use strict";
+/* --- ENGINE CORE v1.3 --- */
+const DB={
+  small:[
+    {id:"s01",badge:"🌙",title:"Segnale Perduto",story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.",
+     goal:"Riaccendere l’antenna della base.",propHero:"📡",steps:[
+       "Trova l’antenna (un calzino pulito) e stringila forte.",
+       "Portala nella tua base (un tappeto o sotto un tavolo).",
+       "Fai 3 piccoli 'bip' lenti: bip… bip… bip…"
+     ],finale:"Gran Finale 🌟: Segnale ripristinato. Missione compiuta Comandante!",q:"Curiosità Spaziale 🤔: Quale pianeta visiteresti per primo?"
+    },
+    {id:"s02",badge:"🔋",title:"Cristallo Energia",story:"I motori della nave sono quasi scarichi.",
+     goal:"Portare nuova energia al modulo centrale.",propHero:"🔋",steps:[
+       "Trova un cristallo (un libro o un foglio).",
+       "Portalo al petto per scaldarlo per 5 secondi.",
+       "Appoggialo piano nella tua base sussurrando 'Energia'..."
+     ],finale:"Gran Finale 🌟: Motori stabili e pronti al salto spaziale!",q:"Curiosità Spaziale 🤔: Dove nasconderesti il cristallo per tenerlo al sicuro?"
     }
+  ],
+  legend:{
+    id:"L01",title:"Sincronia Stellare 🤝",
+    story:"Per ripartire serve la spinta coordinata di due astronauti.",
+    goal:"Collaborazione totale con il genitore.",propHero:"🤝",
+    steps:[
+      "Prenditi per mano con il genitore: ora siete un solo equipaggio.",
+      "Fate 5 passi lentissimi insieme verso la base senza staccarvi mai.",
+      "Contate insieme ad alta voce: '3... 2... 1... Decollo!'"
+    ],
+    finale:"Gran Finale 🌟: Siete una squadra formidabile!",
+    q:"Curiosità Spaziale 🤔: Cosa vi è piaciuto di più del muovervi insieme?"
   }
+};
 
-  let state = load();
+let state = { fsm:"WELCOME", audio:false, step:0, quest:null };
 
-  function save(){
-    localStorage.setItem(KEY, JSON.stringify(state));
-  }
+function speak(text){
+  if(!state.audio) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang="it-IT"; u.rate=0.88; u.pitch=1.02;
+  speechSynthesis.speak(u);
+}
 
-  // === Mission generator (Spazio) ===
-  const MISSIONS = [
-    { title:"Radar Spaziale", steps:[
-      "Prendi una torcia e un oggetto metallico (cucchiaio).",
-      "Fai ‘scansioni’ lente sul pavimento cercando ‘segnali’.",
-      "Disegna una mappa semplice di dove hai trovato il segnale."
-    ]},
-    { title:"Costruisci la Base", steps:[
-      "Usa cuscini o scatole per creare una ‘base’ a terra.",
-      "Scegli 3 oggetti che saranno ‘strumenti’ della base.",
-      "Spiega al genitore a cosa serve ogni strumento."
-    ]},
-    { title:"Respiro dell’Astronauta", steps:[
-      "Metti una mano sulla pancia e una sul petto.",
-      "Inspira 3 secondi, espira 4 secondi (x4 volte).",
-      "Dì una frase: ‘Sono pronto per la missione’."
-    ]},
-    { title:"Allarme Meteora", steps:[
-      "Trova 5 oggetti ‘scudo’ in casa (libro, coperchio…).",
-      "Proteggi una zona sicura (la base).",
-      "Racconta come hai salvato l’equipaggio."
-    ]},
-  ];
-
-  function pickMission(){
-    const m = MISSIONS[Math.floor(Math.random()*MISSIONS.length)];
-    return {
-      id: "m_" + Math.random().toString(16).slice(2),
-      createdAt: nowISO(),
-      phase: 0, // 0 Calma, 1 Crea, 2 Esplora
-      title: m.title,
-      steps: m.steps
-    };
-  }
-
-  const PHASES = [
-    { key:"Calma", icon:"🌙", hint:"30 secondi: respiro + focus." },
-    { key:"Crea",  icon:"🧱", hint:"Costruisci / prepara con oggetti di casa." },
-    { key:"Esplora", icon:"🛰️", hint:"Azione: esegui e racconta la missione." }
-  ];
-
-  function startMission(){
-    if(state.missionsDone >= 3) return;
-    state.current = pickMission();
-    save();
-    render();
-  }
-
-  function nextPhase(){
-    if(!state.current) return;
-    if(state.current.phase < 2){
-      state.current.phase++;
-      save();
-      render();
-    }else{
-      completeMission();
-    }
-  }
-
-  function completeMission(){
-    if(!state.current) return;
-
-    state.missionsDone = Math.min(3, state.missionsDone + 1);
-
-    state.diary.unshift({
-      when: nowISO(),
-      title: state.current.title,
-      phases: PHASES.map(p=>p.key).join(" → ")
-    });
-
-    state.current = null;
-    save();
-    render();
-  }
-
-  function resetTest(){
-    // SOLO per test: reset immediato
-    state.date = todayStr();
-    state.missionsDone = 0;
-    state.current = null;
-    save();
-    render();
-  }
-
-  // === UI ===
-  function headerHTML(){
-    return `
-      <div class="header">
-        <div>
-          <strong>SparkPlay</strong><br/>
-          <small class="muted">Montessori · Spazio</small>
+function render(){
+  const root = document.getElementById("SPARKPLAY_APP");
+  if(state.fsm === "WELCOME"){
+    root.innerHTML = `<div class="sp-shell">
+      <div class="sp-top"><div class="brand">SPARKPLAY</div><div class="badge" onclick="toggleAudio()">${state.audio?'🔊 ON':'🔈 OFF'}</div></div>
+      <div class="sp-body">
+        <div class="orb">🚀</div><h1 style="font-weight:900; margin-bottom:10px;">Benvenuto Comandante</h1>
+        <p style="color:var(--muted); line-height:1.5; margin-bottom:20px;">Le missioni di oggi richiedono calma e precisione. Posa lo schermo, attiva la mente.</p>
+        <button class="btn btn-primary" onclick="startQuest()">AVVIA MISSIONE</button>
+        <div style="height:12px"></div>
+        <button class="btn btn-ghost" onclick="startLegend()">SINCRONIA STELLARE 🤝</button>
+      </div></div>`;
+  } else {
+    const q = state.quest;
+    root.innerHTML = `<div class="sp-shell">
+      <div class="sp-top"><div class="brand">${q.title}</div><div class="badge" onclick="toggleAudio()">${state.audio?'🔊':'🔈'}</div></div>
+      <div class="sp-body">
+        <div class="card" style="font-size:14px;"><b>Contesto:</b> ${q.story}</div>
+        <div class="card" style="font-size:14px; border-color:var(--accent);"><b>Obiettivo:</b> ${q.goal}</div>
+        <div class="card" style="background:rgba(0,0,0,0.2); padding:0;">
+          ${q.steps.map((t,i)=>`<div class="step ${i===state.step?'active':'dim'}"><b>${i+1}</b> ${t}</div>`).join("")}
         </div>
-        <div class="badge">${VERSION}</div>
-      </div>
-    `;
+        <button class="btn btn-primary" onclick="nextStep()">
+          ${state.step < q.steps.length-1 ? 'PROSSIMO PASSO' : 'COMPLETATO ✅'}
+        </button>
+      </div></div>`;
   }
+}
 
-  function missionHomeHTML(){
-    const locked = state.missionsDone >= 3;
-    return `
-      <div class="card">
-        <h2>🚀 Missione Spazio</h2>
-        <p>Usa oggetti di casa per creare una missione spaziale.</p>
-        <p><strong>Missioni fatte oggi:</strong> ${state.missionsDone}/3</p>
-
-        ${
-          !locked
-          ? `<button onclick="SP.startMission()">Avvia missione</button>`
-          : `<button class="secondary" disabled>Fine per oggi 🌙</button>`
-        }
-
-        <div style="height:10px"></div>
-        <button class="secondary" onclick="SP.resetTest()">Nuova giornata (test)</button>
-      </div>
-    `;
+window.toggleAudio = () => { state.audio = !state.audio; render(); if(state.audio) speak("Audio attivato"); };
+window.startQuest = () => { state.fsm="QUEST"; state.quest=DB.small[Math.floor(Math.random()*DB.small.length)]; state.step=0; render(); speak(state.quest.steps[0]); };
+window.startLegend = () => { state.fsm="QUEST"; state.quest=DB.legend; state.step=0; render(); speak(state.quest.steps[0]); };
+window.nextStep = () => {
+  if(state.step < state.quest.steps.length-1){
+    state.step++; render(); speak(state.quest.steps[state.step]);
+  } else {
+    speak(state.quest.finale + " " + state.quest.q);
+    alert(state.quest.finale + "\n\n" + state.quest.q);
+    state.fsm="WELCOME"; render();
   }
+};
 
-  function missionRunHTML(){
-    const m = state.current;
-    const p = PHASES[m.phase];
-    return `
-      <div class="card">
-        <h2>${p.icon} ${p.key}</h2>
-        <p style="color:var(--muted)">${p.hint}</p>
-
-        <div style="height:10px"></div>
-        <h3>${m.title}</h3>
-
-        <div style="margin-top:12px; display:flex; flex-direction:column; gap:10px">
-          ${m.steps.map(s => `
-            <div style="background:rgba(255,255,255,.08); padding:12px; border-radius:14px">
-              ${s}
-            </div>
-          `).join("")}
-        </div>
-
-        <div style="height:14px"></div>
-
-        ${
-          m.phase < 2
-          ? `<button onclick="SP.nextPhase()">Avanti →</button>`
-          : `<button onclick="SP.completeMission()">Missione completata ✅</button>`
-        }
-
-        <div style="height:10px"></div>
-        <button class="secondary" onclick="SP.backHome()">Esci missione</button>
-      </div>
-    `;
-  }
-
-  function diaryHTML(){
-    const items = state.diary.slice(0,6);
-    return `
-      <div class="card">
-        <h3>📘 Diario missioni</h3>
-        <p style="color:var(--muted)">Piccolo storico delle missioni completate.</p>
-
-        <div style="margin-top:12px; display:flex; flex-direction:column; gap:10px">
-          ${
-            items.length
-            ? items.map(it => `
-              <div style="background:rgba(255,255,255,.06); padding:12px; border-radius:14px">
-                <strong>${it.title}</strong><br/>
-                <small style="color:var(--muted)">${new Date(it.when).toLocaleString()}</small>
-              </div>
-            `).join("")
-            : `<div style="color:var(--muted)">Ancora nessuna missione salvata.</div>`
-          }
-        </div>
-      </div>
-    `;
-  }
-
-  function footerHTML(){
-    return `<div class="footer">Gioca meglio · Cresci meglio</div>`;
-  }
-
-  function render(){
-    const root = document.getElementById("app");
-    root.innerHTML =
-      headerHTML() +
-      (state.current ? missionRunHTML() : missionHomeHTML()) +
-      diaryHTML() +
-      footerHTML();
-  }
-
-  // API globale per i bottoni inline
-  window.SP = {
-    startMission,
-    nextPhase,
-    completeMission,
-    resetTest,
-    backHome: () => { state.current = null; save(); render(); }
-  };
-
-  render();
+render();
 })();
 </script>
-
 </body>
 </html>
