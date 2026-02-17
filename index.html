@@ -5,272 +5,181 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="theme-color" content="#0b1220"/>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<meta http-equiv="Pragma" content="no-cache"/>
-<meta http-equiv="Expires" content="0"/>
+<meta name="theme-color" content="#0B1220"/>
 <title>SparkPlay</title>
 <style>
+/* SparkPlay CORE v1.2 -- Spazio Master (Premium Light) */
 :root{
-  --bg0:#070B14;
-  --bg1:#0B1220;
-  --bg2:#0E1530;
-  --card:#121B38;
-  --card2:#0F1733;
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.18);
-  --txt:rgba(255,255,255,.92);
-  --muted:rgba(255,255,255,.65);
-  --muted2:rgba(255,255,255,.52);
-  --accent:#1F6BFF;
-  --good:#2DCE89;
-  --warn:#FFB300;
-  --bad:#FF4D4D;
-  --shadow:0 30px 70px rgba(0,0,0,.45);
-  --r16:16px;
-  --r22:22px;
-  --r26:26px;
+  --bg0:#070B14; --bg1:#0B1220; --ink:#EAF2FF; --muted:#A9B7D6; --line:rgba(255,255,255,.10);
+  --accent:#3F5EF6; --gold:#FFB300; --rad:26px; --shadow:0 30px 70px rgba(0,0,0,.45);
+  --ok:#2DCE89; --warn:#FF7A00;
 }
-
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
-  color:var(--txt);
-  background: radial-gradient(1200px 800px at 30% 10%, rgba(60,80,255,.22), transparent 60%),
-              radial-gradient(900px 700px at 80% 30%, rgba(150,80,255,.18), transparent 60%),
-              linear-gradient(180deg, var(--bg1), var(--bg0));
-  font-family: -apple-system, system-ui, Inter, Segoe UI, Roboto, Arial;
-  overflow-x:hidden;
+  font-family: -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--ink);
+  background: radial-gradient(1200px 700px at 30% 10%, rgba(63,94,246,.35), transparent 60%),
+              radial-gradient(900px 500px at 80% 20%, rgba(255,179,0,.18), transparent 55%),
+              linear-gradient(180deg,var(--bg1),var(--bg0));
+  -webkit-font-smoothing:antialiased;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
-
 a{color:inherit}
-
-.sp-root{
-  max-width: 520px;
-  margin: 0 auto;
-  padding: 18px 16px 120px;
-}
-
+button{font-family:inherit}
+.sp-root{min-height:100%; padding:20px 16px 26px}
+.container{max-width:520px;margin:0 auto}
 .header{
-  display:flex; align-items:flex-start; justify-content:space-between;
-  gap:12px;
-  margin-top: 4px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; margin-bottom:16px;
 }
 .brand{
   display:flex; flex-direction:column; gap:4px;
 }
-.brand h1{
-  margin:0;
-  font-size: 20px;
-  letter-spacing:.5px;
-}
-.brand p{
-  margin:0;
-  color:var(--muted);
-  font-size: 13px;
-}
+.brand h1{font-size:18px; margin:0; letter-spacing:.5px}
+.brand small{color:var(--muted)}
 .pill{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid var(--stroke);
-  background: rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.22);
+  padding:8px 12px; border-radius:999px;
+  color:rgba(255,255,255,.88);
+  font-weight:800;
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+.card{
+  background:rgba(8,12,24,.62);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:var(--rad);
+  padding:18px 16px;
+  box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  color:rgba(255,255,255,.82);
-  font-size: 13px;
-  white-space:nowrap;
+  margin-bottom:14px;
 }
-
-.card{
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-  border:1px solid var(--stroke);
-  border-radius: var(--r26);
-  box-shadow: var(--shadow);
-  padding:16px;
-}
-
-.section{
-  margin-top: 14px;
-}
-
-.h2{
-  display:flex; align-items:center; gap:10px;
-  margin:0 0 6px 0;
-  font-size: 26px;
-}
-.sub{
-  margin:0;
-  color:var(--muted);
-  font-size: 14px;
-  line-height: 1.35;
-}
-
+.card h2{margin:0 0 10px 0; font-size:18px}
+.card p{margin:0; color:rgba(234,242,255,.88); line-height:1.45}
+.row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
 .btn{
-  width:100%;
-  border:0;
-  border-radius: 16px;
-  padding: 14px 14px;
-  font-size: 16px;
-  font-weight: 800;
+  border:0; border-radius:14px;
+  padding:12px 14px;
+  font-weight:900;
   cursor:pointer;
-  color:white;
-  background: linear-gradient(180deg, rgba(31,107,255,1), rgba(31,107,255,.72));
-  box-shadow: 0 12px 30px rgba(31,107,255,.22);
+  color:#06100b;
+  background:var(--ok);
+  box-shadow:0 16px 40px rgba(45,206,137,.18);
 }
-.btn:active{transform: translateY(1px)}
-
-.btn-ghost{
-  background: rgba(255,255,255,.08);
+.btn.secondary{
+  background:rgba(255,255,255,.12);
+  color:rgba(255,255,255,.92);
   border:1px solid rgba(255,255,255,.16);
   box-shadow:none;
 }
-
-.row{
-  display:flex; gap:10px; flex-wrap:wrap;
+.btn.warn{
+  background:var(--gold);
+  color:#2a1a00;
+  box-shadow:0 16px 40px rgba(255,179,0,.12);
 }
-.row .btn{flex:1; min-width: 160px}
-
-.hr{
-  height:1px; width:100%;
-  background: rgba(255,255,255,.10);
-  margin: 14px 0;
+.meta{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+.chip{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:8px 12px; border-radius:999px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.92);
+  font-weight:800;
 }
-
+.progress{
+  height:12px; width:100%;
+  background:rgba(255,255,255,.10);
+  border-radius:999px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
+  margin-top:12px;
+}
+.progress > div{
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, rgba(63,94,246,1), rgba(255,179,0,1));
+  border-radius:999px;
+  transition: width .35s ease;
+}
 .step{
-  background:#0e1530;
+  background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
   border-radius:14px;
   padding:14px;
   margin-bottom:10px;
   font-size:14px;
-  color:rgba(255,255,255,.90);
+  line-height:1.45;
+  color:rgba(234,242,255,.92);
 }
-
 .diary-item{
-  background:#0e1530;
+  background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
   border-radius:14px;
   padding:12px;
   margin-bottom:8px;
   font-size:13px;
-  color:rgba(255,255,255,.88);
+  color:rgba(234,242,255,.92);
 }
-
-.badge{
-  display:inline-flex; align-items:center; gap:8px;
-  padding: 8px 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.12);
-  color: rgba(255,255,255,.86);
-  font-size: 12px;
-}
-
+.small{font-size:12px;color:rgba(234,242,255,.70)}
 .center{text-align:center}
-
-/* --- extra safety / version badge --- */
-.sp-version {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 9999;
-  background: rgba(0,0,0,.35);
-  border: 1px solid rgba(255,255,255,.14);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: rgba(255,255,255,.85);
-  font: 12px/1.2 -apple-system, system-ui, Inter, Segoe UI, Roboto, Arial;
-  padding: 8px 10px;
-  border-radius: 999px;
-}
-
-.sp-debug {
-  position: fixed;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
-  z-index: 99999;
-  background: rgba(0,0,0,.72);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 14px;
-  padding: 12px;
-  font: 12px/1.35 -apple-system, system-ui, Inter, Segoe UI, Roboto, Arial;
-  white-space: pre-wrap;
-  max-height: 45vh;
-  overflow: auto;
-  display: none;
-}
-
-.sp-debug.show { display:block; }
-.sp-recover-actions { display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
-.sp-recover-actions button {
-  appearance: none;
-  border: 0;
-  border-radius: 12px;
-  padding: 10px 12px;
-  font-weight: 700;
-}
 </style>
 </head>
 <body>
-<div class="sp-version" id="SP_VERSION">v2026.02.17-03</div>
+
 <div id="SPARKPLAY_APP" class="sp-root"></div>
-<div class="sp-debug" id="SP_DEBUG"></div>
+
+<!-- version pill -->
+<div style="position:fixed;top:10px;right:10px;z-index:9999;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:rgba(255,255,255,.85);font:12px/1.2 -apple-system,system-ui,Inter,Segoe UI,Roboto,Arial;padding:8px 10px;border-radius:999px;">v2026.02.17-04</div>
+
+<!-- debug / recovery -->
+<div id="SP_DEBUG" style="position:fixed;left:12px;right:12px;bottom:12px;z-index:99999;background:rgba(0,0,0,.80);color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:12px;font:12px/1.35 -apple-system,system-ui,Inter,Segoe UI,Roboto,Arial;white-space:pre-wrap;max-height:45vh;overflow:auto;display:none;"></div>
 
 <script>
-/* SparkPlay wrapper: error surface + watchdog (no more "schermata blu muta") */
 (function(){
-  const DEBUG_BOX = document.getElementById('SP_DEBUG');
-  function showDebug(title, msg){
-    try{
-      DEBUG_BOX.classList.add('show');
-      DEBUG_BOX.textContent = title + "\n\n" + msg;
-    }catch(e){}
+  const box=document.getElementById('SP_DEBUG');
+  function show(title,msg,withActions){
+    if(!box) return;
+    box.style.display='block';
+    box.textContent=title+"\n\n"+msg;
+    if(withActions){
+      const wrap=document.createElement('div');
+      wrap.style.display='flex';
+      wrap.style.gap='10px';
+      wrap.style.marginTop='10px';
+      wrap.style.flexWrap='wrap';
+      wrap.innerHTML =
+        '<button style="border:0;border-radius:12px;padding:10px 12px;font-weight:800;background:#2DCE89;color:#06100b" onclick="location.reload()">Ricarica</button>'+
+        '<button style="border:0;border-radius:12px;padding:10px 12px;font-weight:800;background:#FFB300;color:#2a1a00" onclick="(function(){try{localStorage.clear();}catch(e){} try{sessionStorage.clear();}catch(e){} location.reload();})()">Reset dati</button>'+
+        '<button style="border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:10px 12px;font-weight:800;background:rgba(255,255,255,.10);color:#fff" onclick="document.getElementById(\'SP_DEBUG\').style.display=\'none\'">Chiudi</button>';
+      box.appendChild(wrap);
+    }
   }
   window.addEventListener('error', function(e){
-    const src = (e.filename || '') + ':' + (e.lineno || '') + ':' + (e.colno || '');
-    showDebug('⚠️ Errore JavaScript', String(e.message || e.error || 'Errore') + "\n" + src);
+    const src=(e.filename||'')+':'+(e.lineno||'')+':'+(e.colno||'');
+    show('⚠️ Errore JavaScript', String(e.message||e.error||'Errore')+"\n"+src, false);
   });
   window.addEventListener('unhandledrejection', function(e){
-    const r = e.reason;
-    const txt = (r && (r.stack || r.message)) ? (r.stack || r.message) : String(r);
-    showDebug('⚠️ Errore (Promise)', txt);
+    const r=e.reason;
+    const txt=(r&&(r.stack||r.message))?(r.stack||r.message):String(r);
+    show('⚠️ Errore (Promise)', txt, false);
   });
-
-  // watchdog: if app doesn't render, show recovery UI
   setTimeout(function(){
-    const root = document.getElementById('SPARKPLAY_APP');
-    if (!root) return;
-    if (root.childElementCount === 0){
-      const msg = [
-        "SparkPlay non si è avviato correttamente.",
-        "",
-        "Può succedere dopo un aggiornamento o se la cache del browser è in conflitto.",
-        "",
-        "Prova prima: Ricarica.",
-        "Se non basta: Reset dati (solo test)."
-      ].join("\n");
-      showDebug("🛠️ Modalità recupero", msg);
-
-      const actions = document.createElement('div');
-      actions.className = 'sp-recover-actions';
-      actions.innerHTML =
-        '<button onclick="location.reload()" style="background:#2DCE89;color:#08110b;">Ricarica</button>' +
-        '<button onclick="(function(){localStorage.clear();sessionStorage.clear();location.reload();})()" style="background:#ffb300;color:#2a1a00;">Reset dati</button>' +
-        '<button onclick="document.getElementById(\'SP_DEBUG\').classList.remove(\'show\')" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);">Chiudi</button>';
-      DEBUG_BOX.appendChild(actions);
+    const root=document.getElementById('SPARKPLAY_APP');
+    if(!root) return;
+    if(root.childElementCount===0){
+      show('🛠️ Modalità recupero',
+        'SparkPlay non si è avviato correttamente.\n\n'+
+        'Può succedere dopo un aggiornamento o se la cache del browser è in conflitto.\n\n'+
+        'Prova prima: Ricarica.\nSe non basta: Reset dati (solo test).', true);
     }
-  }, 1400);
+  }, 1200);
 })();
 </script>
 
 <script>
-/* ======== game.js (embedded) ======== */
 (()=>{"use strict";
 /* SparkPlay CORE v1.2 -- Spazio Master (Premium Light)
    - Netlify-ready: index.html + style.css + game.js
@@ -285,200 +194,303 @@ const today=()=>new Date().toDateString();
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 
 const MISSIONS=[
-  {phase:"Calma", icon:"🌙", title:"Respiro dell’Astronauta", short:"3 respiri lenti guardando un punto sul soffitto.", long:"Fai 5 respiri: inspira 4, trattieni 2, espira 6. Poi racconta al genitore cosa hai "sentito" nel corpo.", steps:[
-    "Siediti comodo come in navicella.",
+  {phase:"Calma", icon:"🌙", title:"Respiro dell’Astronauta", short:"Fai 6 respiri lenti: 4 secondi inspiro, 4 secondi espiro.", long:"Sedetevi. Mano sulla pancia. Fate 6 respiri lenti: 4 sec inspiro, 4 sec espiro. Alla fine: ‘Come si sente il corpo?’", steps:[
+    "Sedetevi comodi.",
+    "Mano sulla pancia.",
     "Inspira 4 secondi.",
-    "Trattieni 2 secondi.",
-    "Espira 6 secondi.",
-    "Ripeti 5 volte."
+    "Espira 4 secondi.",
+    "Ripeti 6 volte.",
+    "Chiedi: "Come si sente il corpo?""
   ]},
-  {phase:"Crea", icon:"🧱", title:"Costruisci la Base", short:"Costruisci una mini-base con 5 oggetti.", long:"Crea una base spaziale con 7 oggetti di casa. Deve avere: ingresso, torre, zona "energia". Spiega al genitore cosa fa ogni parte.", steps:[
-    "Scegli 7 oggetti (libro, scatola, cucchiaio…).",
-    "Costruisci un ingresso.",
-    "Aggiungi una torre di controllo.",
-    "Crea una zona energia.",
-    "Fai un tour guidato."
+  {phase:"Crea", icon:"🧱", title:"Costruisci la Base", short:"Con cuscini e sedie crea una base spaziale.", long:"Costruite una base spaziale con cuscini/sedie. Poi scegliete: ingresso, sala comandi, area riposo. Alla fine: ‘Qual è la regola della base?’", steps:[
+    "Scegli 3 oggetti (cuscini, sedie, lenzuolo).",
+    "Costruisci l’ingresso.",
+    "Crea la sala comandi.",
+    "Crea l’area riposo.",
+    "Decidi una regola della base.",
+    "Mostra la base al genitore."
   ]},
-  {phase:"Esplora", icon:"🛰️", title:"Radar Spaziale", short:"Trova 3 "segnali" in casa (suoni/oggetti).", long:"Accendi il radar: trova 5 "segnali" in casa. Ogni segnale va descritto con 2 dettagli. Poi fai una mini-mappa mentale e raccontala al genitore.", steps:[
-    "Cammina piano come astronauta.",
-    "Trova un segnale (oggetto o suono).",
-    "Descrivi 2 dettagli.",
-    "Ripeti fino a 5 segnali.",
-    "Racconta la missione al genitore."
+  {phase:"Esplora", icon:"🛰️", title:"Radar Spaziale", short:"Trova 5 oggetti ‘spaziali’ in casa (tondi, metallici, luminosi).", long:"Avvia la ‘scansione’: trovate 5 oggetti spaziali (tondi/metallici/luminosi). Per ciascuno: nome, funzione, dove si usa nello spazio.", steps:[
+    "Dite: "Avvio scansione…"",
+    "Trova un oggetto tondo.",
+    "Trova un oggetto metallico.",
+    "Trova un oggetto luminoso.",
+    "Dagli un nome spaziale.",
+    "Spiega a cosa serve sulla navicella."
+  ]},
+  {phase:"Speciale", icon:"🪐", title:"Missione Speciale -- Segnale Misterioso", short:"Decifra un segnale: batti 3 ritmi e falla indovinare.", long:"Crea un ‘segnale’ con 3 ritmi (batti mani/tavolo). L’altro deve copiarlo. Aumenta difficoltà: 4 ritmi. Finale: inventate cosa dice il segnale.", steps:[
+    "Crea un ritmo di 3 battiti.",
+    "L’altro lo ripete.",
+    "Aggiungi un 4° battito.",
+    "Inventate un messaggio segreto.",
+    "Fate un saluto spaziale finale."
   ]}
 ];
 
-function load(){
+const STATE_DEFAULT=()=>({
+  day: today(),
+  step: 0,                 // 0..2 for daily missions
+  daily: [],               // array of 3 missions chosen for the day
+  completed: false,        // day finished
+  diary: []                // recent completions
+});
+
+function safeLoad(){
   try{
     const raw=localStorage.getItem(KEY);
-    if(!raw) return {day:today(), step:0, diary:[]};
+    if(!raw) return STATE_DEFAULT();
     const s=JSON.parse(raw);
-    if(!s || typeof s!=="object") return {day:today(), step:0, diary:[]};
-    if(s.day!==today()) return {day:today(), step:0, diary:(s.diary||[])};
-    return {day:s.day||today(), step:clamp(+s.step||0,0,3), diary:Array.isArray(s.diary)?s.diary:[]};
+    if(!s || typeof s!=="object") return STATE_DEFAULT();
+    // daily reset
+    if(s.day!==today()){
+      return STATE_DEFAULT();
+    }
+    // normalize
+    s.step=clamp(Number(s.step||0),0,3);
+    s.daily=Array.isArray(s.daily)?s.daily:[];
+    s.completed=!!s.completed;
+    s.diary=Array.isArray(s.diary)?s.diary:[];
+    return s;
   }catch(e){
-    return {day:today(), step:0, diary:[]};
+    return STATE_DEFAULT();
   }
 }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
-
-let state=load();
-
-function viewHome(){
-  const done = state.step>=3;
-  const m = MISSIONS[state.step] || MISSIONS[0];
-
-  if(done){
-    return `
-      <div class="header">
-        <div class="brand">
-          <h1>SPARKPLAY</h1>
-          <p>Montessori • gioco nel mondo reale</p>
-        </div>
-        <div class="pill">Spazio</div>
-      </div>
-
-      <div class="section card">
-        <h2 class="h2">🌙 Fine per oggi</h2>
-        <p class="sub"><b>SparkPlay si ferma qui:</b> 3 missioni fatte bene valgono più di 30 random.</p>
-        <div class="hr"></div>
-        <p class="sub"><b>Rituale genitore (30 sec):</b><br/>Chiedi: "Qual è stata la tua parte preferita?"</p>
-        <div class="hr"></div>
-        <div class="row">
-          <button class="btn btn-ghost" data-act="restart">Ricomincia (test)</button>
-        </div>
-      </div>
-
-      <div class="section card">
-        <h2 class="h2">📓 Diario missioni</h2>
-        <p class="sub">Piccolo storico delle missioni completate.</p>
-        <div class="hr"></div>
-        ${renderDiary()}
-      </div>
-    `;
-  }
-
-  return `
-    <div class="header">
-      <div class="brand">
-        <h1>SPARKPLAY</h1>
-        <p>Montessori • gioco nel mondo reale</p>
-      </div>
-      <div class="pill">Spazio</div>
-    </div>
-
-    <div class="section card">
-      <div class="badge">${m.icon} <b>${m.phase}</b> • missione ${state.step+1}/3</div>
-      <div style="height:10px"></div>
-      <h2 class="h2">${m.title}</h2>
-      <p class="sub">Scegli una durata. Poi fai la missione nel mondo reale.</p>
-      <div class="hr"></div>
-      <div class="row">
-        <button class="btn" data-act="start" data-mode="short">Missione breve</button>
-        <button class="btn btn-ghost" data-act="start" data-mode="long">Missione lunga</button>
-      </div>
-    </div>
-
-    <div class="section card">
-      <h2 class="h2">🧠 Nota Montessori</h2>
-      <p class="sub">Poche missioni, fatte bene. Il valore è nella storia che il bambino racconta dopo.</p>
-    </div>
-  `;
+function safeSave(state){
+  try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
 }
 
-function viewMission(mode){
-  const m = MISSIONS[state.step] || MISSIONS[0];
-  const text = (mode==="long") ? m.long : m.short;
-  const steps = (mode==="long") ? m.steps : m.steps.slice(0,3);
+let state = safeLoad();
 
-  return `
-    <div class="header">
-      <div class="brand">
-        <h1>SPARKPLAY</h1>
-        <p>Spazio • missione ${state.step+1}/3</p>
-      </div>
-      <div class="pill">${m.icon} ${m.phase}</div>
-    </div>
-
-    <div class="section card">
-      <h2 class="h2">${m.title}</h2>
-      <p class="sub">${text}</p>
-      <div class="hr"></div>
-      ${steps.map(s=>`<div class="step">${s}</div>`).join("")}
-      <div style="height:8px"></div>
-      <button class="btn" data-act="complete">Missione completata</button>
-      <div style="height:10px"></div>
-      <button class="btn btn-ghost" data-act="back">Indietro</button>
-    </div>
-  `;
+function pickDailyMissions(){
+  // choose 3 missions from Calma/Crea/Esplora (no Speciale)
+  const base = MISSIONS.filter(m=>m.phase!=="Speciale");
+  // deterministic-ish shuffle by date
+  const seed = (new Date(state.day).getTime()/86400000)|0;
+  const rng = mulberry32(seed);
+  const shuffled = base.slice().sort(()=>rng()-0.5);
+  state.daily = shuffled.slice(0,3);
+  state.step = 0;
+  state.completed = false;
+  safeSave(state);
 }
 
-function renderDiary(){
-  if(!state.diary.length){
-    return `<p class="sub">Nessuna missione salvata ancora.</p>`;
-  }
-  return state.diary.slice(0,12).map(d=>`
-    <div class="diary-item">
-      <div style="font-weight:800;">${d.icon||"⭐"} ${d.phase} -- ${d.title}</div>
-      <div style="color:rgba(255,255,255,.62);margin-top:4px;">${d.ts||""}</div>
-    </div>
-  `).join("");
+function mulberry32(a){
+  return function(){
+    let t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
 }
 
-let screen="home";
-let mode="short";
+function el(html){
+  const t=document.createElement('template');
+  t.innerHTML=html.trim();
+  return t.content.firstElementChild;
+}
 
 function render(){
   const root=document.getElementById(ROOT);
   if(!root) return;
-  root.innerHTML = (screen==="home") ? viewHome() : viewMission(mode);
+
+  if(!state.daily || state.daily.length!==3){
+    pickDailyMissions();
+  }
+
+  const doneCount = clamp(state.step,0,3);
+  const percent = Math.round((doneCount/3)*100);
+
+  const currentMission = state.completed ? null : state.daily[state.step];
+
+  const app = el(`
+    <div class="container">
+      <div class="header">
+        <div class="brand">
+          <h1>SPARKPLAY</h1>
+          <small>Montessori · gioco nel mondo reale</small>
+        </div>
+        <div class="pill">Spazio</div>
+      </div>
+
+      ${state.completed ? `
+        <div class="card center">
+          <h2>🌙 Fine per oggi</h2>
+          <p><b>SparkPlay si ferma qui:</b> <b>3 missioni fatte bene</b> valgono più di 30 random.</p>
+          <p style="margin-top:10px"><b>Rituale genitore (30 sec):</b><br/>Chiedi: "Qual è stata la tua parte preferita?"</p>
+          <div class="row" style="justify-content:center">
+            <button class="btn secondary" data-action="newday">Ricomincia (test)</button>
+            <button class="btn warn" data-action="special">Missione speciale</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>📓 Diario missioni</h2>
+          <p class="small">Piccolo storico delle missioni completate.</p>
+          <div style="margin-top:12px">
+            ${state.diary.length? state.diary.slice(0,12).map(d=>`
+              <div class="diary-item"><b>${d.icon} ${d.phase}</b> -- ${d.title}<div class="small">${new Date(d.ts).toLocaleString()}</div></div>
+            `).join("") : `<div class="diary-item">Nessuna missione registrata.</div>`}
+          </div>
+        </div>
+      ` : `
+        <div class="card">
+          <h2>${currentMission.icon} Missione ${state.step+1}/3 -- ${currentMission.phase}</h2>
+          <p><b>${currentMission.title}</b></p>
+
+          <div class="meta">
+            <span class="chip">🎯 Oggi: 3 missioni</span>
+            <span class="chip">✅ Fatto: ${doneCount}/3</span>
+          </div>
+
+          <div class="progress"><div style="width:${percent}%"></div></div>
+
+          <div class="row">
+            <button class="btn" data-action="mode" data-mode="short">Missione breve</button>
+            <button class="btn secondary" data-action="mode" data-mode="long">Missione lunga</button>
+            <button class="btn warn" data-action="audio">🔊 Ascolta</button>
+          </div>
+        </div>
+
+        <div class="card" id="missionContent">
+          ${renderMissionContent(currentMission, state.mode||"short")}
+          <div class="row">
+            <button class="btn" data-action="complete">Missione completata</button>
+          </div>
+        </div>
+      `}
+    </div>
+  `);
+
+  root.innerHTML="";
+  root.appendChild(app);
 }
 
-function complete(){
-  const m = MISSIONS[state.step];
+function renderMissionContent(m, mode){
+  const desc = (mode==="long") ? m.long : m.short;
+  return `
+    <p style="margin-bottom:12px">${desc}</p>
+    <div class="card" style="margin:0; box-shadow:none; background:rgba(255,255,255,.05);">
+      ${m.steps.map(s=>`<div class="step">${escapeHtml(s)}</div>`).join("")}
+    </div>
+  `;
+}
+
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+// simple TTS
+let ttsEnabled=true;
+function speak(text){
+  try{
+    if(!ttsEnabled) return;
+    if(!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang="it-IT";
+    u.rate=1.0;
+    u.pitch=1.0;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function completeMission(){
+  const m = state.daily[state.step];
   state.diary.unshift({
-    phase:m.phase,
-    icon:m.icon,
-    title:m.title,
-    ts: new Date().toLocaleString("it-IT")
+    ts: Date.now(),
+    phase: m.phase,
+    icon: m.icon,
+    title: m.title
   });
   state.step++;
-  save();
-  screen="home";
+  if(state.step>=3){
+    state.completed=true;
+    state.step=3;
+  }
+  safeSave(state);
   render();
 }
 
-function restartForTest(){
-  state.day=today();
-  state.step=0;
-  save();
-  screen="home";
+function startSpecial(){
+  // show special mission in a simple modal card
+  const root=document.getElementById(ROOT);
+  if(!root) return;
+  const m = MISSIONS.find(x=>x.phase==="Speciale");
+  const overlay = el(`
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;padding:16px;z-index:99999;">
+      <div class="card" style="width:min(520px,100%);margin:0">
+        <h2>${m.icon} ${m.title}</h2>
+        <p>${m.long}</p>
+        <div style="margin-top:12px">
+          ${m.steps.map(s=>`<div class="step">${escapeHtml(s)}</div>`).join("")}
+        </div>
+        <div class="row" style="justify-content:flex-end">
+          <button class="btn secondary" data-action="closeSpecial">Chiudi</button>
+          <button class="btn" data-action="completeSpecial">Segna come fatta</button>
+        </div>
+      </div>
+    </div>
+  `);
+  root.appendChild(overlay);
+}
+
+function closeSpecial(){
+  const root=document.getElementById(ROOT);
+  const ov = root && root.querySelector('[data-action="closeSpecial"]')?.closest('div[style*="position:fixed"]');
+  if(ov) ov.remove();
+}
+
+function completeSpecial(){
+  const m = MISSIONS.find(x=>x.phase==="Speciale");
+  state.diary.unshift({ts:Date.now(), phase:m.phase, icon:m.icon, title:m.title});
+  safeSave(state);
+  closeSpecial();
   render();
 }
 
+function newDayTest(){
+  state = STATE_DEFAULT();
+  safeSave(state);
+  render();
+}
+
+// event delegation
 document.addEventListener("click", (e)=>{
-  const btn = e.target.closest("[data-act]");
+  const btn = e.target.closest("button");
   if(!btn) return;
-  const act = btn.getAttribute("data-act");
-  if(act==="start"){
-    mode = btn.getAttribute("data-mode") || "short";
-    screen="mission";
+  const act = btn.getAttribute("data-action");
+  if(!act) return;
+
+  if(act==="mode"){
+    const mode = btn.getAttribute("data-mode") || "short";
+    state.mode = mode;
+    safeSave(state);
     render();
+    return;
   }
-  if(act==="back"){
-    screen="home";
-    render();
+  if(act==="complete"){ completeMission(); return; }
+  if(act==="audio"){
+    const m = state.completed ? null : state.daily[state.step];
+    if(!m) return;
+    const mode = state.mode || "short";
+    const text = `${m.phase}. ${m.title}. ${mode==="long"?m.long:m.short}`;
+    speak(text);
+    return;
   }
-  if(act==="complete"){
-    complete();
-  }
-  if(act==="restart"){
-    restartForTest();
-  }
+  if(act==="newday"){ newDayTest(); return; }
+  if(act==="special"){ startSpecial(); return; }
+  if(act==="closeSpecial"){ closeSpecial(); return; }
+  if(act==="completeSpecial"){ completeSpecial(); return; }
 });
 
 render();
 })();
 </script>
+
 </body>
 </html>
