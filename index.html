@@ -12,8 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 
 <style>
-/* ======= style.css (dallo ZIP) ======= */
-/* SparkPlay CORE v1.2 -- Spazio Master (Premium Light) */
+/* ======= style.css (embedded) ======= */
 :root{
   --bg0:#070B14; --bg1:#0B1220; --ink:#EAF2FF; --muted:#A9B7D6; --line:rgba(255,255,255,.10);
   --accent:#3F5EF6; --gold:#FFB300; --radius:26px; --shadow:0 30px 70px rgba(0,0,0,.45);
@@ -96,13 +95,6 @@ body{
 .item{display:flex;justify-content:space-between;gap:10px;padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.08);align-items:flex-start}
 .item:last-child{border-bottom:0}
 .item small{color:rgba(234,242,255,.65);font-weight:700}
-
-/* ======= PATCH: Montessori step-by-step (no "giornale") ======= */
-.dots{display:flex;gap:6px;padding:12px 12px 0 12px}
-.dot{width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.10)}
-.dot.on{background:linear-gradient(135deg,var(--accent),var(--gold));border-color:rgba(255,255,255,.22)}
-.stepbox.one{padding-bottom:12px}
-.stepbox.one .step{border-bottom:0;padding-top:10px}
 </style>
 </head>
 
@@ -110,10 +102,13 @@ body{
 <div id="SPARKPLAY_APP" class="sp-root"></div>
 
 <script>
+/* ======= game.js (embedded) ======= */
 (()=>{"use strict";
-/* SparkPlay CORE v1.2 -- Spazio Master (Premium Light)
-   - Single-file build (index.html only)
-   - PATCH: mission steps = 1 step at a time + dots (Montessori pacing)
+
+/* SparkPlay SPAZIO MASTER -- PATCH STORAGEFIX
+   - robust localStorage handling
+   - stable daily reset
+   - deterministic UI states
 */
 
 const ROOT="SPARKPLAY_APP";
@@ -121,7 +116,15 @@ const KEY="sp_v12_spazio";
 const today=()=>new Date().toDateString();
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const pick=a=>a[Math.floor(Math.random()*a.length)];
-const esc=s=>String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+
+const esc=s=>String(s??"")
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;");
+
+const __memStore = { v: null };
+const safeGet = () => { try { return localStorage.getItem(KEY); } catch(e){ return __memStore.v; } };
+const safeSet = (v) => { try { localStorage.setItem(KEY, v); } catch(e){ __memStore.v = v; } };
 
 const DB={
   small:[
@@ -187,16 +190,23 @@ const DB={
 };
 
 const DEF=()=>({
-  v:"1.2",day:today(),fsm:"WELCOME",age:null,lvl:1,xp:0,count:0,
-  used:{small:[],big:[]},diary:[],stats:{totalMin:0,missionsTotal:0},
-  audio:{enabled:false,voiceName:null},gateOk:false,legendDone:false,
-  quest:null,step:0,lock:false
+  v:"master-storagefix",
+  day:today(),
+  fsm:"WELCOME",
+  age:null,
+  lvl:1,
+  xp:0,
+  count:0,
+  used:{small:[],big:[]},
+  diary:[],
+  stats:{totalMin:0,missionsTotal:0},
+  audio:{enabled:false,voiceName:null},
+  gateOk:false,
+  legendDone:false,
+  quest:null,
+  step:0,
+  lock:false
 });
-
-// Storage hardening
-const __memStore = { v: null };
-const safeGet = () => { try { return localStorage.getItem(KEY); } catch(e){ return __memStore.v; } };
-const safeSet = (v) => { try { localStorage.setItem(KEY, v); } catch(e){ __memStore.v = v; } };
 
 const load=()=>{
   let raw=null, s=null;
@@ -215,6 +225,7 @@ const load=()=>{
   }
   return s;
 };
+
 const save=s=>safeSet(JSON.stringify(s));
 
 const Audio={
@@ -279,8 +290,12 @@ const App={
   el:null,s:null,
   init(){
     const boot=()=>{
-      const el=document.getElementById(ROOT); if(!el){ setTimeout(boot,80); return; }
-      this.el=el; this.s=load(); this.bind();
+      const el=document.getElementById(ROOT);
+      if(!el){ setTimeout(boot,80); return; }
+      this.el=el;
+      this.s=load();
+      this.bind();
+
       if("speechSynthesis" in window){
         speechSynthesis.onvoiceschanged=()=>{
           if(this.s.audio.enabled){ Audio.voice=Audio.pickVoice(this.s.audio.voiceName); }
@@ -288,12 +303,14 @@ const App={
       }
       this.render();
     };
+
     if(document.readyState==="complete"||document.readyState==="interactive") boot();
     else document.addEventListener("DOMContentLoaded",boot,{once:true});
   },
   bind(){
     this.el.addEventListener("click",(e)=>{
-      const b=e.target.closest("[data-action]"); if(!b) return;
+      const b=e.target.closest("[data-action]");
+      if(!b) return;
       if(this.s.lock) return;
       const a=b.getAttribute("data-action"),v=b.getAttribute("data-value");
       this.act(a,v);
@@ -307,8 +324,6 @@ const App={
       case "AGE": return this.setAge(v);
       case "START": return this.startMission();
       case "SPEAK": return this.speakAll();
-      case "PREV": return this.prevStep();
-      case "NEXT": return this.nextStep();
       case "DONE": return this.complete();
       case "HOME": return this.go("HOME");
       case "OPEN_ALBUM": return this.album(true);
@@ -352,49 +367,36 @@ const App={
   startMission(){
     if(!this.s.age) return this.go("AGE");
     if(this.s.count>=3) return this.go("REWARD");
+
     const age=this.s.age;
     const pool=DB[age]||[];
     const used=this.s.used?.[age]||[];
     let cand=pool.filter(x=>!used.includes(x.id));
     if(cand.length===0){ cand=pool; this.s.used[age]=[]; }
     const q=pick(cand);
+
     this.s.quest=q;
     this.s.step=0;
     this.s.fsm="QUEST";
     this.s.used[age].push(q.id);
     save(this.s);
-    if(this.s.audio.enabled){ Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true; Audio.speak(q.story,{rate:0.92,pitch:1.02}); }
+
+    if(this.s.audio.enabled){
+      Audio.voice=Audio.pickVoice(this.s.audio.voiceName);
+      Audio.enabled=true;
+      Audio.speak(q.story,{rate:0.92,pitch:1.02});
+    }
     this.render();
   },
   speakAll(){
     const q=this.s.quest; if(!q) return;
     if(!this.s.audio.enabled) return;
     Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true;
-    const cur=clamp(this.s.step,0,q.steps.length-1);
-    Audio.speak(q.steps[cur],{rate:0.92,pitch:1.02});
-  },
-  prevStep(){
-    const q=this.s.quest; if(!q) return;
-    this.s.step=clamp(this.s.step-1,0,q.steps.length-1);
-    save(this.s);
-    if(this.s.audio.enabled){ Audio.speak(q.steps[this.s.step],{rate:0.92,pitch:1.02}); }
-    this.render();
-  },
-  nextStep(){
-    const q=this.s.quest; if(!q) return;
-    const last=q.steps.length-1;
-    if(this.s.step<last){
-      this.s.step++;
-      save(this.s);
-      if(this.s.audio.enabled){ Audio.speak(q.steps[this.s.step],{rate:0.92,pitch:1.02}); }
-      this.render();
-    }else{
-      // last step -> user taps DONE button
-      this.render();
-    }
+    Audio.speak(q.story+" "+q.goal+" "+q.steps.join(" ")+ " "+q.finale,{rate:0.92,pitch:1.02});
   },
   complete(){
     const q=this.s.quest; if(!q) return;
+
     const mins = q.legend ? 2 : 4;
     this.s.stats.totalMin = (this.s.stats.totalMin||0) + mins;
     this.s.stats.missionsTotal = (this.s.stats.missionsTotal||0) + 1;
@@ -404,10 +406,13 @@ const App={
       this.s.xp = (this.s.xp||0) + 1;
       if(this.s.xp>=3){ this.s.lvl=(this.s.lvl||1)+1; this.s.xp=0; }
     }
-    (this.s.diary ||= []).unshift({badge:q.badge,title:q.title,day:this.s.day,age:this.s.age,legend:!!q.legend});
+
+    (this.s.diary ||= []).unshift({
+      badge:q.badge,title:q.title,day:this.s.day,age:this.s.age,legend:!!q.legend
+    });
+
     this.s.quest=null;
     this.s.step=0;
-
     save(this.s);
 
     if(q.legend){
@@ -415,11 +420,8 @@ const App={
       return;
     }
 
-    if(this.s.count>=3){
-      this.go("REWARD");
-    }else{
-      this.go("HOME");
-    }
+    if(this.s.count>=3) this.go("REWARD");
+    else this.go("HOME");
   },
   parentGate(){
     const q=gateQuestion();
@@ -434,11 +436,17 @@ const App={
   startLegend(){
     if(this.s.legendDone) return;
     if(!this.s.gateOk){ alert("Serve sblocco genitore."); return; }
+
     this.s.quest=DB.legend;
     this.s.step=0;
     this.s.fsm="QUEST";
     save(this.s);
-    if(this.s.audio.enabled){ Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true; Audio.speak(DB.legend.story,{rate:0.92,pitch:1.02}); }
+
+    if(this.s.audio.enabled){
+      Audio.voice=Audio.pickVoice(this.s.audio.voiceName);
+      Audio.enabled=true;
+      Audio.speak(DB.legend.story,{rate:0.92,pitch:1.02});
+    }
     this.render();
   },
   legendDone(){
@@ -470,7 +478,7 @@ const App={
         <div class="sp-nav">
           <div class="badge lv"><span>LV</span> <b>${s.lvl||1}</b></div>
           <div class="brand">SPARKPLAY</div>
-          <button class="link" data-action="TOGGLE_AUDIO">${this.audio.enabled? "🔊 Audio" : "🔇 Audio"}</button>
+          <button class="link" data-action="TOGGLE_AUDIO">${s.audio.enabled? "🔊 Audio" : "🔇 Audio"}</button>
           <button class="link" data-action="OPEN_ALBUM">📚 Diario</button>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:10px;">
@@ -479,7 +487,7 @@ const App={
         </div>
         <div class="progress"><div style="width:${xpPct}%"></div></div>
       </div>`:
-      `<div class="sp-top"><div class="sp-nav"><div class="brand">SPARKPLAY</div><button class="link" data-action="TOGGLE_AUDIO">${this.audio.enabled? "🔊 Audio" : "🔇 Audio"}</button>
+      `<div class="sp-top"><div class="sp-nav"><div class="brand">SPARKPLAY</div><button class="link" data-action="TOGGLE_AUDIO">${s.audio.enabled? "🔊 Audio" : "🔇 Audio"}</button>
           <button class="link" data-action="OPEN_ALBUM">📚 Diario</button></div></div>`;
 
     const welcome=`
@@ -512,9 +520,6 @@ const App={
           <button class="btn" data-action="AGE" data-value="small"><span>👦 5–7 anni -- Esploratore</span><span>→</span></button>
           <button class="btn" data-action="AGE" data-value="big"><span>🧠 8–10 anni -- Comandante</span><span>→</span></button>
         </div>
-        <div class="row2" style="margin-top:12px">
-          <button class="btn ghost" data-action="TOGGLE_AUDIO">${this.audio.enabled? "🔊 Audio attivo" : "🔇 Audio disattivato"}</button>
-        </div>
       </div>`;
 
     const home=`
@@ -530,7 +535,6 @@ const App={
           <div class="grid">
             <button class="btn primary center" data-action="START" ${s.count>=3?'disabled style="opacity:.55;cursor:not-allowed"':''}>Avvia missione Spazio 🚀</button>
             <button class="btn ghost center" data-action="AGE">Cambia età</button>
-            <button class="btn ghost center" data-action="UNLOCK_AUDIO">${s.audio.enabled?"Audio attivo ✅":"Attiva audio 🔊"}</button>
           </div>
         </div>
       </div>`;
@@ -541,21 +545,21 @@ const App={
           <div class="hero">
             <div class="orb" style="border-color:rgba(255,179,0,.45);background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), rgba(255,179,0,.16));">🏅</div>
             <div class="kv">
-              <div class="k">CAPITOLO COMPLETATO</div>
-              <div class="v">Ricompensa sbloccata</div>
-              <div class="k" style="margin-top:6px;">Suggerimento: "Cosa hai scoperto?"</div>
+              <div class="k">FINE PER OGGI</div>
+              <div class="v">3 missioni fatte</div>
+              <div class="k" style="margin-top:6px;">Rituale genitore: "Qual è stata la tua parte preferita?"</div>
             </div>
           </div>
         </div>
         <div style="height:12px"></div>
         <div class="card">
-          <div class="h1" style="margin-top:0">E adesso?</div>
-          <p class="p">Oggi hai finito le 3 missioni. La Missione Speciale richiede un genitore.</p>
+          <div class="h1" style="margin-top:0">Missione Speciale</div>
+          <p class="p">Serve lo sblocco del genitore.</p>
           <div class="grid">
-            ${!s.legendDone?`<button class="btn primary center" data-action="GATE">⚡ Sblocca Missione Speciale (Genitore)</button>`:`<button class="btn primary center" disabled style="opacity:.55;cursor:not-allowed">Missione Speciale completata ✅</button>`}
-            ${(!s.legendDone && s.gateOk)?`<button class="btn primary center" data-action="LEGEND_START">Avvia Missione Speciale ⚡ (120s)</button>`:""}
+            ${!s.legendDone?`<button class="btn primary center" data-action="GATE">⚡ Sblocca (Genitore)</button>`:`<button class="btn primary center" disabled style="opacity:.55;cursor:not-allowed">Completata ✅</button>`}
+            ${( !s.legendDone && s.gateOk )?`<button class="btn primary center" data-action="LEGEND_START">Avvia Protocollo 120s ⚡</button>`:""}
             <button class="btn ghost center" data-action="OPEN_ALBUM">Apri Diario 📚</button>
-            <button class="btn ghost center" data-action="RESET_TEST">Reset oggi (solo test, genitore)</button>
+            <button class="btn ghost center" data-action="RESET_TEST">Reset oggi (test, genitore)</button>
           </div>
         </div>
       </div>`;
@@ -563,26 +567,18 @@ const App={
     let quest=`<div class="state ${s.fsm==="QUEST"?"active":""}"></div>`;
     if(s.fsm==="QUEST" && s.quest){
       const q=s.quest;
-      const cur=clamp(s.step,0,q.steps.length-1);
+      const stepsHtml=q.steps.map((t,i)=>`
+        <div class="step ${i<s.step?"dim":""}">
+          <div class="n">${i+1}</div>
+          <div class="t">${esc(t)}</div>
+        </div>`).join("");
 
-      /* PATCH: one step at a time + dots */
-      const stepsTotal=q.steps.length;
-      const dots=Array.from({length:stepsTotal}).map((_,i)=>`<span class="dot ${i===cur?"on":""}"></span>`).join("");
-      const stepHtml=`
-        <div class="stepbox one">
-          <div class="dots">${dots}</div>
-          <div class="step one active">
-            <div class="n">${cur+1}</div>
-            <div class="t">${esc(q.steps[cur])}</div>
-          </div>
-        </div>`;
-
-      const timer=q.legend?`<div class="pill" id="legTimer" style="border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.10);color:#FFD0D0;">⏱️ 120s</div>`:"";
       quest=`
         <div class="state active">
           <div class="card">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
-              <div class="pill">${esc(q.badge)} ${esc(q.title)}</div>${timer}
+              <div class="pill">${esc(q.badge)} ${esc(q.title)}</div>
+              ${q.legend?`<div class="pill" id="legTimer" style="border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.10);color:#FFD0D0;">⏱️ 120s</div>`:""}
             </div>
 
             <div style="height:10px"></div>
@@ -606,27 +602,22 @@ const App={
             <div style="height:10px"></div>
             <div class="pill">🎒 Prendi: <b style="color:#fff">${esc(q.prop)}</b></div>
 
-            ${stepHtml}
+            <div class="stepbox">${stepsHtml}</div>
 
             <div style="height:12px"></div>
             <div class="grid">
-              <button class="btn ghost center" data-action="PREV" ${s.step>0?"":"disabled style='opacity:.55;cursor:not-allowed'"}>← Passo prima</button>
-              <button class="btn center" data-action="NEXT" ${s.step<q.steps.length-1?"":"disabled style='opacity:.55;cursor:not-allowed'"}>Prossimo passo →</button>
-              <button class="btn ghost center" style="grid-column:1/-1" data-action="SPEAK" ${s.audio.enabled?"":"disabled style='opacity:.55;cursor:not-allowed'"}>Ascolta passo 🔊</button>
+              <button class="btn ghost center" data-action="SPEAK" ${s.audio.enabled?"":"disabled style='opacity:.55;cursor:not-allowed'"}>Ascolta 🔊</button>
+              ${(q.legend)?`<button class="btn primary center" data-action="LEGEND_DONE">Completato ⚡</button>`:`<button class="btn primary center" data-action="DONE">Completato ✅</button>`}
             </div>
 
             <div style="height:12px"></div>
             <div class="card" style="background:rgba(255,179,0,.10);border-color:rgba(255,179,0,.25);box-shadow:none;">
-              <div class="k" style="color:#FFE3A6;font-weight:1000;">FINALE DI GLORIA</div>
+              <div class="k" style="color:#FFE3A6;font-weight:1000;">FINALE</div>
               <div class="p" style="margin-top:6px;color:#FFF6E0">${esc(q.finale)}</div>
               <div class="k" style="margin-top:10px;color:#FFE3A6;font-weight:1000;">DOMANDA CALMA</div>
               <div class="p" style="margin-top:6px;color:#FFF6E0">${esc(q.q)}</div>
             </div>
           </div>
-          <div style="height:12px"></div>
-          ${(s.step>=q.steps.length-1)
-            ? (q.legend?`<button class="btn primary center" data-action="LEGEND_DONE">Completato ⚡</button>`:`<button class="btn primary center" data-action="DONE">Completato ✅</button>`)
-            : `<button class="btn primary center" disabled style="opacity:.55;cursor:not-allowed">Completa dopo l’ultimo passo</button>`}
           <div style="height:10px"></div>
           <button class="btn ghost center" data-action="HOME">Torna alle missioni</button>
         </div>`;
@@ -678,15 +669,15 @@ const App={
         let t=120;
         el.textContent="⏱️ 120s";
         legendTimer=setInterval(()=>{
-          t--; if(t<=0){ clearInterval(legendTimer); legendTimer=null; el.textContent="⏱️ Tempo!"; return; }
+          t--; 
+          if(t<=0){ clearInterval(legendTimer); legendTimer=null; el.textContent="⏱️ Tempo!"; return; }
           el.textContent="⏱️ "+t+"s";
         },1000);
       }
     }else{
       if(legendTimer){ clearInterval(legendTimer); legendTimer=null; }
     }
-  },
-  get audio(){ return Audio; }
+  }
 };
 
 App.init();
