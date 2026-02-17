@@ -2,170 +2,114 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="icona.png">
-    <title>SparkPlay - Avventure Reali</title>
+    <title>SparkPlay - Missione Spazio</title>
     <style>
         :root {
-            --bg: #070B14;
-            --card: rgba(255, 255, 255, 0.05);
+            --bg: #0B1220;
             --accent: #3F5EF6;
-            --magic: #8E44AD;
-            --detective: #27AE60;
             --gold: #FFB300;
+            --card: rgba(255, 255, 255, 0.05);
             --text: #EAF2FF;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            margin: 0; padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
+            margin: 0; background: var(--bg); color: var(--text);
+            font-family: -apple-system, system-ui, sans-serif;
             display: flex; flex-direction: column; min-height: 100vh;
         }
-        /* Design Premium simile allo ZIP */
-        .container {
-            max-width: 500px; margin: 0 auto; width: 100%;
-            padding: 20px; padding-top: calc(20px + env(safe-area-inset-top));
+        .container { max-width: 500px; margin: 0 auto; padding: 20px; padding-top: calc(20px + env(safe-area-inset-top)); }
+        .header { text-align: center; margin-bottom: 20px; }
+        .logo { font-size: 22px; font-weight: 900; letter-spacing: 2px; color: var(--gold); }
+        
+        .safety-alert {
+            background: rgba(231, 76, 60, 0.15); border: 1px solid #e74c3c;
+            padding: 10px; border-radius: 12px; font-size: 11px; text-align: center; margin-bottom: 20px;
         }
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo { font-size: 24px; font-weight: 900; letter-spacing: 2px; color: var(--gold); }
         
         .card {
-            background: var(--card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
+            background: var(--card); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px; padding: 24px; text-align: center;
         }
         
-        .world-selector { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
-        .world-btn {
-            padding: 10px 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
-            background: transparent; color: white; font-size: 12px; font-weight: bold; cursor: pointer;
-        }
-        .world-btn.active { background: var(--accent); border-color: var(--accent); }
-
+        .mission-title { font-size: 24px; font-weight: 800; margin: 10px 0; color: var(--accent); }
+        .mission-text { font-size: 19px; line-height: 1.5; margin: 20px 0; font-weight: 500; }
+        
         .btn-main {
-            width: 100%; padding: 20px; border-radius: 18px; border: none;
+            width: 100%; padding: 20px; border-radius: 20px; border: none;
             background: linear-gradient(135deg, var(--accent), #5673FF);
             color: white; font-size: 18px; font-weight: 800; cursor: pointer;
             box-shadow: 0 10px 20px rgba(63, 94, 246, 0.3);
         }
-        
-        /* Sicurezza */
-        .safety-bar {
-            background: rgba(231, 76, 60, 0.2);
-            border: 1px solid #e74c3c;
-            padding: 10px; border-radius: 12px;
-            font-size: 11px; text-align: center; margin-bottom: 20px;
+        .btn-ghost {
+            background: transparent; color: var(--accent); border: 1px solid var(--accent);
+            margin-top: 15px; padding: 12px; border-radius: 15px; width: 100%; font-weight: 700;
         }
-
-        .step-text { font-size: 20px; line-height: 1.4; margin: 20px 0; font-weight: 600; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo">SPARKPLAY 🌟</div>
-        </div>
+        <div class="header"><div class="logo">SPARKPLAY 🚀</div></div>
+        
+        <div class="safety-alert">⚠️ REGOLE DI SICUREZZA: Muoviti lentamente, non correre e non usare oggetti pericolosi o fragili.</div>
 
-        <div class="safety-bar">
-            ⚠️ <b>REGOLA D'ORO:</b> Non correre, non arrampicarti e stai lontano dalla cucina.
-        </div>
-
-        <div id="home-screen">
-            <div class="world-selector">
-                <button class="world-btn active" onclick="setWorld('spazio')">SPAZIO 🚀</button>
-                <button class="world-btn" onclick="setWorld('magia')">MAGIA 🪄</button>
-                <button class="world-btn" onclick="setWorld('detective')">DETECTIVE 🔍</button>
-            </div>
-            
-            <div class="card" id="world-card">
-                <h2 id="world-title">Mondo Spazio</h2>
-                <p id="world-desc">Missioni di movimento calmo per astronauti in addestramento.</p>
-                <button class="btn-main" onclick="startMission()">AVVIA MISSIONE</button>
-            </div>
-        </div>
-
-        <div id="mission-screen" class="hidden">
+        <div id="home">
             <div class="card">
-                <div id="mission-content">
-                    <small id="mission-category" style="text-transform: uppercase; color: var(--gold);"></small>
-                    <div class="step-text" id="mission-text">Caricamento missione...</div>
-                </div>
-                <button class="btn-main" onclick="completeMission()">FATTO ✅</button>
+                <h2>Pronto al decollo?</h2>
+                <p>Completa 3 missioni per diventare un vero Comandante Stellare.</p>
+                <button class="btn-main" onclick="startMission()">INIZIA AVVENTURA</button>
+            </div>
+        </div>
+
+        <div id="mission" class="hidden">
+            <div class="card">
+                <div id="mission-badge" style="font-size: 40px;">🌙</div>
+                <div class="mission-title" id="m-title">Caricamento...</div>
+                <div class="mission-text" id="m-text"></div>
+                <button class="btn-main" onclick="finish()">MISSIONE COMPIUTA ✅</button>
+                <button class="btn-ghost" onclick="showHome()">ANNULLA</button>
             </div>
         </div>
     </div>
 
     <script>
-        const missions = {
-            spazio: [
-                "Trova un calzino pulito: sarà la tua 'Antenna Stellare'. Portala in base senza farla cadere.",
-                "Metti un cuscino a terra: è un piccolo pianeta. Camminaci intorno in punta di piedi per 3 volte senza toccarlo.",
-                "Diventa un satellite: muoviti lentissimo per la stanza toccando solo oggetti di colore blu."
-            ],
-            magia: [
-                "Trova un cucchiaio di legno: è la tua Bacchetta. Tocca 3 oggetti 'addormentati' per svegliarli con un sussurro.",
-                "Crea un cerchio magico a terra usando una corda o delle scarpe. Siediti dentro e conta fino a 10 in silenzio.",
-                "Cerca un ingrediente segreto (una foglia o un sasso). Portalo in un posto buio per dargli energia magica."
-            ],
-            detective: [
-                "Trova 3 oggetti che iniziano con la lettera 'S'. Portali sul tavolo senza farti sentire da nessuno.",
-                "Osserva una finestra per 30 secondi. Quante macchine o alberi vedi? Torna a riferire il numero.",
-                "Cerca un oggetto che sia più piccolo del tuo pollice. Nascondilo e sfida qualcuno a trovarlo."
-            ]
-        };
-
-        let currentWorld = 'spazio';
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function setWorld(world) {
-            currentWorld = world;
-            document.querySelectorAll('.world-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            const titles = { spazio: 'Mondo Spazio', magia: 'Mondo Magia', detective: 'Mondo Detective' };
-            const descs = { 
-                spazio: 'Esplora la casa come un astronauta in orbita.', 
-                magia: 'Trasforma oggetti comuni in strumenti incantati.', 
-                detective: 'Aguzza la vista e risolvi i misteri domestici.' 
-            };
-            
-            document.getElementById('world-title').innerText = titles[world];
-            document.getElementById('world-desc').innerText = descs[world];
-        }
+        const db = [
+            { t: "Segnale Perduto", b: "📡", text: "La base ha perso il segnale. Trova un calzino pulito (la tua antenna) e portalo in alto sopra un tavolo per riattivare i contatti." },
+            { t: "Pianeta Delicato", b: "🪐", text: "C'è un pianeta sensibile (un cuscino). Appoggialo a terra e camminaci intorno in punta di piedi senza fare rumore." },
+            { t: "Rifornimento Starship", b: "🔋", text: "La nave ha bisogno di energia. Trova un libro leggero, mettilo sulla testa e fai 5 passi senza farlo cadere." },
+            { t: "Satellite in Orbita", b: "🛰️", text: "Devi fluttuare nello spazio. Tocca 3 oggetti di colore blu nella stanza muovendoti lentissimo, come se non ci fosse gravità." }
+        ];
 
         function startMission() {
-            const list = missions[currentWorld];
-            const randomMission = list[Math.floor(Math.random() * list.length)];
-            document.getElementById('mission-text').innerText = randomMission;
-            document.getElementById('mission-category').innerText = currentWorld;
-            document.getElementById('home-screen').classList.add('hidden');
-            document.getElementById('mission-screen').classList.remove('hidden');
+            const m = db[Math.floor(Math.random()*db.length)];
+            document.getElementById('m-title').innerText = m.t;
+            document.getElementById('m-text').innerText = m.text;
+            document.getElementById('mission-badge').innerText = m.b;
+            document.getElementById('home').classList.add('hidden');
+            document.getElementById('mission').classList.remove('hidden');
         }
 
-        function completeMission() {
-            playSuccessSound();
-            document.getElementById('mission-screen').classList.add('hidden');
-            document.getElementById('home-screen').classList.remove('hidden');
+        function finish() {
+            // Suono di vittoria
+            const ac = new (window.AudioContext || window.webkitAudioContext)();
+            const o = ac.createOscillator(); const g = ac.createGain();
+            o.connect(g); g.connect(ac.destination);
+            o.frequency.setValueAtTime(523, ac.currentTime);
+            o.frequency.exponentialRampToValueAtTime(880, ac.currentTime + 0.2);
+            g.gain.setValueAtTime(0.1, ac.currentTime); g.gain.linearRampToValueAtTime(0, ac.currentTime + 0.3);
+            o.start(); o.stop(ac.currentTime + 0.3);
+            
+            alert("Ottimo lavoro! Missione completata.");
+            showHome();
         }
 
-        function playSuccessSound() {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // DO
-            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2); // LA
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        function showHome() {
+            document.getElementById('mission').classList.add('hidden');
+            document.getElementById('home').classList.remove('hidden');
         }
     </script>
 </body>
