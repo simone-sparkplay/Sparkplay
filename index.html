@@ -107,6 +107,15 @@ padding:6px 8px;border-radius:10px;">
 LOADED • 15:17
 </div>
 <script>
+window.onerror = function(msg, src, line, col, err){
+  var box = document.createElement('div');
+  box.style.cssText =
+    'position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;' +
+    'background:#111;color:#fff;border:2px solid #ff4d4d;border-radius:14px;' +
+    'padding:12px;font:12px/1.35 -apple-system,Inter,system-ui;white-space:pre-wrap';
+  box.textContent = 'JS ERROR:\n' + msg + '\n' + (src||'') + ':' + line + ':' + col;
+  document.body.appendChild(box);
+};
 /* ======= game.js (embedded) ======= */
 (()=>{"use strict";
 
