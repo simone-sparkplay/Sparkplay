@@ -3,698 +3,481 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0B1220">
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#0b1220"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <title>SparkPlay</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-
 <style>
-/* ======= style.css (embedded) ======= */
 :root{
-  --bg0:#070B14; --bg1:#0B1220; --ink:#EAF2FF; --muted:#A9B7D6; --line:rgba(255,255,255,.10);
-  --accent:#3F5EF6; --gold:#FFB300; --radius:26px; --shadow:0 30px 70px rgba(0,0,0,.45);
-  --soft:0 18px 40px rgba(63,94,246,.20);
+  --bg0:#070B14;
+  --bg1:#0B1220;
+  --bg2:#0E1530;
+  --card:#121B38;
+  --card2:#0F1733;
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.18);
+  --txt:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.65);
+  --muted2:rgba(255,255,255,.52);
+  --accent:#1F6BFF;
+  --good:#2DCE89;
+  --warn:#FFB300;
+  --bad:#FF4D4D;
+  --shadow:0 30px 70px rgba(0,0,0,.45);
+  --r16:16px;
+  --r22:22px;
+  --r26:26px;
 }
+
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
-  background: radial-gradient(1200px 800px at 30% 10%, rgba(63,94,246,.22), transparent 60%),
-              radial-gradient(900px 700px at 80% 30%, rgba(255,179,0,.10), transparent 60%),
-              linear-gradient(180deg, var(--bg0), var(--bg1));
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  color:var(--ink);
+  color:var(--txt);
+  background: radial-gradient(1200px 800px at 30% 10%, rgba(60,80,255,.22), transparent 60%),
+              radial-gradient(900px 700px at 80% 30%, rgba(150,80,255,.18), transparent 60%),
+              linear-gradient(180deg, var(--bg1), var(--bg0));
+  font-family: -apple-system, system-ui, Inter, Segoe UI, Roboto, Arial;
+  overflow-x:hidden;
 }
-.sp-root{max-width:460px;margin:0 auto;padding:18px 16px calc(22px + env(safe-area-inset-bottom))}
-.sp-shell{min-height:100vh}
-.sp-top{position:sticky;top:0;background:linear-gradient(180deg, rgba(7,11,20,.92), rgba(7,11,20,.65) 60%, rgba(7,11,20,0));backdrop-filter:blur(10px);padding-top:env(safe-area-inset-top);padding-bottom:12px;z-index:10}
-.sp-nav{display:flex;align-items:center;gap:10px}
-.brand{font-weight:1000;letter-spacing:2px;font-size:12px;opacity:.9;margin-right:auto}
-.link{background:transparent;border:0;color:var(--ink);font-weight:900;letter-spacing:.3px;font-size:12px;padding:10px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.10);cursor:pointer}
-.link:active{transform:scale(.99)}
-.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:8px 10px;background:rgba(255,255,255,.05);font-size:12px;font-weight:900}
-.badge span{opacity:.7;font-weight:800}
-.pill{border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:8px 10px;background:rgba(255,255,255,.05);font-size:12px;font-weight:900;color:#DCE6FF}
-.progress{height:10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);overflow:hidden;margin-top:10px}
-.progress>div{height:100%;background:linear-gradient(90deg, var(--accent), rgba(255,179,0,.65));border-radius:999px;box-shadow:var(--soft)}
-.sp-body{padding-top:10px}
-.state{display:none}
-.state.active{display:block}
+
+a{color:inherit}
+
+.sp-root{
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 18px 16px 120px;
+}
+
+.header{
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:12px;
+  margin-top: 4px;
+}
+.brand{
+  display:flex; flex-direction:column; gap:4px;
+}
+.brand h1{
+  margin:0;
+  font-size: 20px;
+  letter-spacing:.5px;
+}
+.brand p{
+  margin:0;
+  color:var(--muted);
+  font-size: 13px;
+}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background: rgba(0,0,0,.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color:rgba(255,255,255,.82);
+  font-size: 13px;
+  white-space:nowrap;
+}
+
 .card{
-  border-radius:var(--radius);
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.05);
-  box-shadow:var(--shadow);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border:1px solid var(--stroke);
+  border-radius: var(--r26);
+  box-shadow: var(--shadow);
   padding:16px;
 }
-.h1{font-size:22px;font-weight:1000;letter-spacing:-.3px;margin:4px 0 8px}
-.p{color:var(--muted);line-height:1.5;font-size:14px;margin:0}
-.grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.section{
+  margin-top: 14px;
+}
+
+.h2{
+  display:flex; align-items:center; gap:10px;
+  margin:0 0 6px 0;
+  font-size: 26px;
+}
+.sub{
+  margin:0;
+  color:var(--muted);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
 .btn{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
   width:100%;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.04);
-  color:var(--ink);
-  padding:14px 14px;
-  font-weight:1000;
+  border:0;
+  border-radius: 16px;
+  padding: 14px 14px;
+  font-size: 16px;
+  font-weight: 800;
   cursor:pointer;
+  color:white;
+  background: linear-gradient(180deg, rgba(31,107,255,1), rgba(31,107,255,.72));
+  box-shadow: 0 12px 30px rgba(31,107,255,.22);
 }
-.btn:active{transform:scale(.99)}
-.btn.primary{background:linear-gradient(135deg, rgba(63,94,246,1), rgba(124,92,255,1));border-color:rgba(255,255,255,.16);box-shadow:0 18px 45px rgba(63,94,246,.25)}
-.btn.ghost{background:rgba(0,0,0,.18)}
-.center{justify-content:center}
-.hero{display:flex;gap:14px;align-items:center}
-.orb{
-  width:56px;height:56px;border-radius:18px;
-  display:flex;align-items:center;justify-content:center;
-  border:1px solid rgba(255,255,255,.14);
-  background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.12), rgba(0,0,0,.12));
-  font-size:26px;
+.btn:active{transform: translateY(1px)}
+
+.btn-ghost{
+  background: rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:none;
 }
-.kv .k{font-weight:1000;letter-spacing:2px;font-size:12px;color:#DCE6FF;opacity:.9}
-.kv .v{font-weight:1000;font-size:16px;margin-top:2px}
-.stepbox{margin-top:12px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);overflow:hidden;}
-.step{display:flex;gap:12px;padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.08);align-items:flex-start;}
-.step:last-child{border-bottom:0;}
-.step .n{width:28px;height:28px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-weight:1000;color:#DCE6FF;flex:0 0 auto;}
-.step .t{font-size:14px;line-height:1.45;color:#EAF2FF;font-weight:700;}
-.step.dim .t{color:rgba(234,242,255,.55);font-weight:700}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;padding:18px;z-index:50}
-.modal.show{display:flex}
-.sheet{width:100%;max-width:520px;border-radius:24px;background:rgba(11,18,32,.98);border:1px solid rgba(255,255,255,.10);box-shadow:0 30px 80px rgba(0,0,0,.65);overflow:hidden}
-.sheet-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
-.sheet-h h3{margin:0;font-size:16px;font-weight:1000}
-.sheet-b{padding:14px}
-.list{border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(255,255,255,.03);overflow:hidden}
-.item{display:flex;justify-content:space-between;gap:10px;padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.08);align-items:flex-start}
-.item:last-child{border-bottom:0}
-.item small{color:rgba(234,242,255,.65);font-weight:700}
+
+.row{
+  display:flex; gap:10px; flex-wrap:wrap;
+}
+.row .btn{flex:1; min-width: 160px}
+
+.hr{
+  height:1px; width:100%;
+  background: rgba(255,255,255,.10);
+  margin: 14px 0;
+}
+
+.step{
+  background:#0e1530;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:10px;
+  font-size:14px;
+  color:rgba(255,255,255,.90);
+}
+
+.diary-item{
+  background:#0e1530;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:8px;
+  font-size:13px;
+  color:rgba(255,255,255,.88);
+}
+
+.badge{
+  display:inline-flex; align-items:center; gap:8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.86);
+  font-size: 12px;
+}
+
+.center{text-align:center}
+
+/* --- extra safety / version badge --- */
+.sp-version {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.14);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255,255,255,.85);
+  font: 12px/1.2 -apple-system, system-ui, Inter, Segoe UI, Roboto, Arial;
+  padding: 8px 10px;
+  border-radius: 999px;
+}
+
+.sp-debug {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 99999;
+  background: rgba(0,0,0,.72);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 14px;
+  padding: 12px;
+  font: 12px/1.35 -apple-system, system-ui, Inter, Segoe UI, Roboto, Arial;
+  white-space: pre-wrap;
+  max-height: 45vh;
+  overflow: auto;
+  display: none;
+}
+
+.sp-debug.show { display:block; }
+.sp-recover-actions { display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+.sp-recover-actions button {
+  appearance: none;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 700;
+}
 </style>
 </head>
-
 <body>
+<div class="sp-version" id="SP_VERSION">v2026.02.17-03</div>
 <div id="SPARKPLAY_APP" class="sp-root"></div>
-<div style="position:fixed;top:8px;right:10px;z-index:99999;
-background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.2);
-color:#fff;font:12px/1.2 -apple-system,Inter,system-ui;
-padding:6px 8px;border-radius:10px;">
-LOADED • 15:17
-</div>
-<script>
-window.onerror = function(msg, src, line, col, err){
-  var box = document.createElement('div');
-  box.style.cssText =
-    'position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;' +
-    'background:#111;color:#fff;border:2px solid #ff4d4d;border-radius:14px;' +
-    'padding:12px;font:12px/1.35 -apple-system,Inter,system-ui;white-space:pre-wrap';
-  box.textContent = 'JS ERROR:\n' + msg + '\n' + (src||'') + ':' + line + ':' + col;
-  document.body.appendChild(box);
-};
-/* ======= game.js (embedded) ======= */
-(()=>{"use strict";
+<div class="sp-debug" id="SP_DEBUG"></div>
 
-/* SparkPlay SPAZIO MASTER -- PATCH STORAGEFIX
-   - robust localStorage handling
-   - stable daily reset
-   - deterministic UI states
+<script>
+/* SparkPlay wrapper: error surface + watchdog (no more "schermata blu muta") */
+(function(){
+  const DEBUG_BOX = document.getElementById('SP_DEBUG');
+  function showDebug(title, msg){
+    try{
+      DEBUG_BOX.classList.add('show');
+      DEBUG_BOX.textContent = title + "\n\n" + msg;
+    }catch(e){}
+  }
+  window.addEventListener('error', function(e){
+    const src = (e.filename || '') + ':' + (e.lineno || '') + ':' + (e.colno || '');
+    showDebug('⚠️ Errore JavaScript', String(e.message || e.error || 'Errore') + "\n" + src);
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    const r = e.reason;
+    const txt = (r && (r.stack || r.message)) ? (r.stack || r.message) : String(r);
+    showDebug('⚠️ Errore (Promise)', txt);
+  });
+
+  // watchdog: if app doesn't render, show recovery UI
+  setTimeout(function(){
+    const root = document.getElementById('SPARKPLAY_APP');
+    if (!root) return;
+    if (root.childElementCount === 0){
+      const msg = [
+        "SparkPlay non si è avviato correttamente.",
+        "",
+        "Può succedere dopo un aggiornamento o se la cache del browser è in conflitto.",
+        "",
+        "Prova prima: Ricarica.",
+        "Se non basta: Reset dati (solo test)."
+      ].join("\n");
+      showDebug("🛠️ Modalità recupero", msg);
+
+      const actions = document.createElement('div');
+      actions.className = 'sp-recover-actions';
+      actions.innerHTML =
+        '<button onclick="location.reload()" style="background:#2DCE89;color:#08110b;">Ricarica</button>' +
+        '<button onclick="(function(){localStorage.clear();sessionStorage.clear();location.reload();})()" style="background:#ffb300;color:#2a1a00;">Reset dati</button>' +
+        '<button onclick="document.getElementById(\'SP_DEBUG\').classList.remove(\'show\')" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);">Chiudi</button>';
+      DEBUG_BOX.appendChild(actions);
+    }
+  }, 1400);
+})();
+</script>
+
+<script>
+/* ======== game.js (embedded) ======== */
+(()=>{"use strict";
+/* SparkPlay CORE v1.2 -- Spazio Master (Premium Light)
+   - Netlify-ready: index.html + style.css + game.js
+   - One root listener (event delegation)
+   - Fix: text color always light (no black-on-blue)
+   - Audio unlock: must be started by user gesture (Chrome/iOS)
 */
 
 const ROOT="SPARKPLAY_APP";
 const KEY="sp_v12_spazio";
 const today=()=>new Date().toDateString();
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
-const pick=a=>a[Math.floor(Math.random()*a.length)];
 
-const esc=s=>String(s??"")
-  .replaceAll("&","&amp;")
-  .replaceAll("<","&lt;")
-  .replaceAll(">","&gt;");
+const MISSIONS=[
+  {phase:"Calma", icon:"🌙", title:"Respiro dell’Astronauta", short:"3 respiri lenti guardando un punto sul soffitto.", long:"Fai 5 respiri: inspira 4, trattieni 2, espira 6. Poi racconta al genitore cosa hai "sentito" nel corpo.", steps:[
+    "Siediti comodo come in navicella.",
+    "Inspira 4 secondi.",
+    "Trattieni 2 secondi.",
+    "Espira 6 secondi.",
+    "Ripeti 5 volte."
+  ]},
+  {phase:"Crea", icon:"🧱", title:"Costruisci la Base", short:"Costruisci una mini-base con 5 oggetti.", long:"Crea una base spaziale con 7 oggetti di casa. Deve avere: ingresso, torre, zona "energia". Spiega al genitore cosa fa ogni parte.", steps:[
+    "Scegli 7 oggetti (libro, scatola, cucchiaio…).",
+    "Costruisci un ingresso.",
+    "Aggiungi una torre di controllo.",
+    "Crea una zona energia.",
+    "Fai un tour guidato."
+  ]},
+  {phase:"Esplora", icon:"🛰️", title:"Radar Spaziale", short:"Trova 3 "segnali" in casa (suoni/oggetti).", long:"Accendi il radar: trova 5 "segnali" in casa. Ogni segnale va descritto con 2 dettagli. Poi fai una mini-mappa mentale e raccontala al genitore.", steps:[
+    "Cammina piano come astronauta.",
+    "Trova un segnale (oggetto o suono).",
+    "Descrivi 2 dettagli.",
+    "Ripeti fino a 5 segnali.",
+    "Racconta la missione al genitore."
+  ]}
+];
 
-const __memStore = { v: null };
-const safeGet = () => { try { return localStorage.getItem(KEY); } catch(e){ return __memStore.v; } };
-const safeSet = (v) => { try { localStorage.setItem(KEY, v); } catch(e){ __memStore.v = v; } };
-
-const DB={
-  small:[
-    {id:"s01",badge:"🌙",title:"Segnale Perduto",story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.",
-     goal:"Riaccendere l’antenna della base.",propHero:"📡",propName:"Antenna Stellare",parent:"Usa un calzino come antenna.",
-     prop:"un calzino",steps:[
-       "Trova l’antenna (calzino) e stringila come se fosse speciale.",
-       "Portala nella tua base (tappeto o sotto il tavolo) e appoggiala in alto.",
-       "Fai 3 "bip" lenti: bip… bip… bip…"
-     ],finale:"Segnale tornato. Base salva.",q:"A chi manderesti il primo messaggio?"
-    },
-    {id:"s02",badge:"🧲",title:"Campo Magnetico",story:"La nave è entrata in un campo magnetico. Serve stabilizzare gli oggetti.",
-     goal:"Creare un ‘ancoraggio’ per la navetta.",propHero:"🧷",propName:"Ancora Orbitale",parent:"Una molletta va benissimo.",
-     prop:"una molletta",steps:[
-       "Prendi una molletta e scegli un punto sicuro per la navetta (un cuscino o il divano).",
-       "Blocca una ‘cintura’ (un fazzoletto o un lembo di tessuto) con la molletta.",
-       "Conta 5…4…3…2…1 e dichiara: ‘Stabile’."
-     ],finale:"Navetta stabilizzata.",q:"Cosa ti ha aiutato a restare calmo?"
-    },
-    {id:"s03",badge:"🪐",title:"Pianeta Silenzioso",story:"Hai trovato un pianeta dove si comunica senza parole.",
-     goal:"Inventare un segnale non verbale.",propHero:"🤫",propName:"Codice Silenzioso",parent:"Guida il bambino a usare gesti lenti.",
-     prop:"le tue mani",steps:[
-       "Crea un gesto per dire ‘ok’ (es. pollice lento).",
-       "Crea un gesto per dire ‘stop’ (mano aperta).",
-       "Fai una mini conversazione con 3 gesti."
-     ],finale:"Comunicazione stabilita.",q:"Quale gesto ti piace di più?"
-    }
-  ],
-  big:[
-    {id:"b01",badge:"🛰️",title:"Rotta Sbagliata",story:"Il navigatore ha una rotta sbagliata. Serve una correzione precisa.",
-     goal:"Creare una rotta con 2 oggetti e 1 regola.",propHero:"🧭",propName:"Bussola Quantica",parent:"Usa 2 oggetti come ‘punti’ nello spazio.",
-     prop:"2 oggetti",steps:[
-       "Scegli 2 oggetti: Punto A e Punto B.",
-       "Decidi una regola: ‘la navetta non può toccare il pavimento’.",
-       "Costruisci un percorso tra A e B rispettando la regola."
-     ],finale:"Rotta corretta.",q:"Qual è stata la scelta più intelligente?"
-    },
-    {id:"b02",badge:"🔋",title:"Energia Critica",story:"L’energia sta finendo. Serve riattivare il cuore della base.",
-     goal:"Creare un ‘cuore energetico’ con 2 oggetti.",propHero:"💠",propName:"Nucleo Energetico",parent:"Aiuta a scegliere oggetti sicuri e leggeri.",
-     prop:"2 oggetti",steps:[
-       "Scegli 2 oggetti e mettili al centro della base.",
-       "Dai un nome al nucleo (es. ‘Core-7’).",
-       "Fai 3 respiri lenti e ‘accendilo’ con una parola."
-     ],finale:"Cuore energetico riattivato. La base torna a vivere.",q:"Qual è stata la tua scelta migliore nell’emergenza?"
-    }
-  ],
-  legend:{
-    id:"L1",legend:true,badge:"⚡",title:"Protocollo 120 Secondi",
-    story:"Allarme rosso. Hai 120 secondi per salvare la base.",
-    goal:"Completare la sequenza senza distrazioni.",
-    propHero:"⏱️",propName:"Timer Stellare",
-    parent:"Metti un timer (120s). Tono calmo, zero pressione.",
-    prop:"un timer (120s)",
-    steps:[
-      "Prendi 1 oggetto-chiave (scelta tua).",
-      "Costruisci un ‘scudo’ con 2 cose vicine.",
-      "Dichiara la parola segreta: ‘SPARKPLAY’.",
-      "Fai 5 respiri lenti guardando lo scudo."
-    ],
-    finale:"Missione speciale completata. Base salva in tempo.",
-    q:"Cosa ti ha aiutato a finire entro il tempo?"
+function load(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(!raw) return {day:today(), step:0, diary:[]};
+    const s=JSON.parse(raw);
+    if(!s || typeof s!=="object") return {day:today(), step:0, diary:[]};
+    if(s.day!==today()) return {day:today(), step:0, diary:(s.diary||[])};
+    return {day:s.day||today(), step:clamp(+s.step||0,0,3), diary:Array.isArray(s.diary)?s.diary:[]};
+  }catch(e){
+    return {day:today(), step:0, diary:[]};
   }
-};
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
 
-const DEF=()=>({
-  v:"master-storagefix",
-  day:today(),
-  fsm:"WELCOME",
-  age:null,
-  lvl:1,
-  xp:0,
-  count:0,
-  used:{small:[],big:[]},
-  diary:[],
-  stats:{totalMin:0,missionsTotal:0},
-  audio:{enabled:false,voiceName:null},
-  gateOk:false,
-  legendDone:false,
-  quest:null,
-  step:0,
-  lock:false
+let state=load();
+
+function viewHome(){
+  const done = state.step>=3;
+  const m = MISSIONS[state.step] || MISSIONS[0];
+
+  if(done){
+    return `
+      <div class="header">
+        <div class="brand">
+          <h1>SPARKPLAY</h1>
+          <p>Montessori • gioco nel mondo reale</p>
+        </div>
+        <div class="pill">Spazio</div>
+      </div>
+
+      <div class="section card">
+        <h2 class="h2">🌙 Fine per oggi</h2>
+        <p class="sub"><b>SparkPlay si ferma qui:</b> 3 missioni fatte bene valgono più di 30 random.</p>
+        <div class="hr"></div>
+        <p class="sub"><b>Rituale genitore (30 sec):</b><br/>Chiedi: "Qual è stata la tua parte preferita?"</p>
+        <div class="hr"></div>
+        <div class="row">
+          <button class="btn btn-ghost" data-act="restart">Ricomincia (test)</button>
+        </div>
+      </div>
+
+      <div class="section card">
+        <h2 class="h2">📓 Diario missioni</h2>
+        <p class="sub">Piccolo storico delle missioni completate.</p>
+        <div class="hr"></div>
+        ${renderDiary()}
+      </div>
+    `;
+  }
+
+  return `
+    <div class="header">
+      <div class="brand">
+        <h1>SPARKPLAY</h1>
+        <p>Montessori • gioco nel mondo reale</p>
+      </div>
+      <div class="pill">Spazio</div>
+    </div>
+
+    <div class="section card">
+      <div class="badge">${m.icon} <b>${m.phase}</b> • missione ${state.step+1}/3</div>
+      <div style="height:10px"></div>
+      <h2 class="h2">${m.title}</h2>
+      <p class="sub">Scegli una durata. Poi fai la missione nel mondo reale.</p>
+      <div class="hr"></div>
+      <div class="row">
+        <button class="btn" data-act="start" data-mode="short">Missione breve</button>
+        <button class="btn btn-ghost" data-act="start" data-mode="long">Missione lunga</button>
+      </div>
+    </div>
+
+    <div class="section card">
+      <h2 class="h2">🧠 Nota Montessori</h2>
+      <p class="sub">Poche missioni, fatte bene. Il valore è nella storia che il bambino racconta dopo.</p>
+    </div>
+  `;
+}
+
+function viewMission(mode){
+  const m = MISSIONS[state.step] || MISSIONS[0];
+  const text = (mode==="long") ? m.long : m.short;
+  const steps = (mode==="long") ? m.steps : m.steps.slice(0,3);
+
+  return `
+    <div class="header">
+      <div class="brand">
+        <h1>SPARKPLAY</h1>
+        <p>Spazio • missione ${state.step+1}/3</p>
+      </div>
+      <div class="pill">${m.icon} ${m.phase}</div>
+    </div>
+
+    <div class="section card">
+      <h2 class="h2">${m.title}</h2>
+      <p class="sub">${text}</p>
+      <div class="hr"></div>
+      ${steps.map(s=>`<div class="step">${s}</div>`).join("")}
+      <div style="height:8px"></div>
+      <button class="btn" data-act="complete">Missione completata</button>
+      <div style="height:10px"></div>
+      <button class="btn btn-ghost" data-act="back">Indietro</button>
+    </div>
+  `;
+}
+
+function renderDiary(){
+  if(!state.diary.length){
+    return `<p class="sub">Nessuna missione salvata ancora.</p>`;
+  }
+  return state.diary.slice(0,12).map(d=>`
+    <div class="diary-item">
+      <div style="font-weight:800;">${d.icon||"⭐"} ${d.phase} -- ${d.title}</div>
+      <div style="color:rgba(255,255,255,.62);margin-top:4px;">${d.ts||""}</div>
+    </div>
+  `).join("");
+}
+
+let screen="home";
+let mode="short";
+
+function render(){
+  const root=document.getElementById(ROOT);
+  if(!root) return;
+  root.innerHTML = (screen==="home") ? viewHome() : viewMission(mode);
+}
+
+function complete(){
+  const m = MISSIONS[state.step];
+  state.diary.unshift({
+    phase:m.phase,
+    icon:m.icon,
+    title:m.title,
+    ts: new Date().toLocaleString("it-IT")
+  });
+  state.step++;
+  save();
+  screen="home";
+  render();
+}
+
+function restartForTest(){
+  state.day=today();
+  state.step=0;
+  save();
+  screen="home";
+  render();
+}
+
+document.addEventListener("click", (e)=>{
+  const btn = e.target.closest("[data-act]");
+  if(!btn) return;
+  const act = btn.getAttribute("data-act");
+  if(act==="start"){
+    mode = btn.getAttribute("data-mode") || "short";
+    screen="mission";
+    render();
+  }
+  if(act==="back"){
+    screen="home";
+    render();
+  }
+  if(act==="complete"){
+    complete();
+  }
+  if(act==="restart"){
+    restartForTest();
+  }
 });
 
-const load=()=>{
-  let raw=null, s=null;
-  raw = safeGet();
-  if(raw){ try{s=JSON.parse(raw);}catch(e){s=null;} }
-  if(!s) s=DEF();
-  if(s.day!==today()){
-    s.day=today();
-    s.count=0;
-    s.xp=0;
-    s.quest=null;
-    s.step=0;
-    s.gateOk=false;
-    s.legendDone=false;
-    s.lock=false;
-  }
-  return s;
-};
-
-const save=s=>safeSet(JSON.stringify(s));
-
-const Audio={
-  enabled:false,voice:null,
-  warmup(){
-    try{
-      const u=new SpeechSynthesisUtterance(" ");
-      u.volume=0; u.rate=1; u.pitch=1; u.lang="it-IT";
-      speechSynthesis.speak(u);
-      speechSynthesis.cancel();
-    }catch(e){}
-  },
-  pickVoice(name){
-    try{
-      const list=speechSynthesis.getVoices?.()||[];
-      if(name){
-        const m=list.find(v=>v.name===name);
-        if(m) return m;
-      }
-      const it=list.find(v=>/it/i.test(v.lang));
-      return it||list[0]||null;
-    }catch(e){ return null; }
-  },
-  speak(text,opt={}){
-    if(!this.enabled) return;
-    try{ speechSynthesis.cancel(); }catch(e){}
-    try{
-      const u=new SpeechSynthesisUtterance(text);
-      u.lang="it-IT";
-      u.rate=opt.rate ?? 0.92;
-      u.pitch=opt.pitch ?? 1.02;
-      if(this.voice) u.voice=this.voice;
-      speechSynthesis.speak(u);
-    }catch(e){}
-  }
-};
-
-const gateQuestion=()=>{
-  const pool=[
-    {t:"word",q:()=>pick([{p:"Scrivi la parola: GALASSIA",a:"galassia"},
-                         {p:"Scrivi la parola: SPARKPLAY",a:"sparkplay"}])},
-    {t:"sum3",q:()=>{
-      const a=7+Math.floor(Math.random()*9),b=5+Math.floor(Math.random()*8),c=2+Math.floor(Math.random()*7);
-      return {prompt:`Quanto fa ${a}+${b}+${c}?`,answer:String(a+b+c)};
-    }},
-    {t:"sum2",q:()=>{
-      const a=12+Math.floor(Math.random()*18),b=6+Math.floor(Math.random()*15);
-      return {prompt:`Quanto fa ${a}+${b}?`,answer:String(a+b)};
-    }}
-  ];
-  const w=pick(pool);
-  if(w.t==="word"){
-    const x=w.q(); return {prompt:x.p,answer:x.a};
-  }
-  if(w.t==="sum3") return w.q();
-  return w.q();
-};
-
-let legendTimer=null;
-
-const App={
-  el:null,s:null,
-  init(){
-    const boot=()=>{
-      const el=document.getElementById(ROOT);
-      if(!el){ setTimeout(boot,80); return; }
-      this.el=el;
-      this.s=load();
-      this.bind();
-
-      if("speechSynthesis" in window){
-        speechSynthesis.onvoiceschanged=()=>{
-          if(this.s.audio.enabled){ Audio.voice=Audio.pickVoice(this.s.audio.voiceName); }
-        };
-      }
-      this.render();
-    };
-
-    if(document.readyState==="complete"||document.readyState==="interactive") boot();
-    else document.addEventListener("DOMContentLoaded",boot,{once:true});
-  },
-  bind(){
-    this.el.addEventListener("click",(e)=>{
-      const b=e.target.closest("[data-action]");
-      if(!b) return;
-      if(this.s.lock) return;
-      const a=b.getAttribute("data-action"),v=b.getAttribute("data-value");
-      this.act(a,v);
-    },{passive:true});
-  },
-  go(fsm){ this.s.fsm=fsm; save(this.s); this.render(); },
-  act(a,v){
-    switch(a){
-      case "UNLOCK_AUDIO": return this.unlockAudio();
-      case "TOGGLE_AUDIO": return this.toggleAudio();
-      case "AGE": return this.setAge(v);
-      case "START": return this.startMission();
-      case "SPEAK": return this.speakAll();
-      case "DONE": return this.complete();
-      case "HOME": return this.go("HOME");
-      case "OPEN_ALBUM": return this.album(true);
-      case "CLOSE_ALBUM": return this.album(false);
-      case "GATE": return this.parentGate();
-      case "LEGEND_START": return this.startLegend();
-      case "LEGEND_DONE": return this.legendDone();
-      case "RESET_TEST": return this.resetTest();
-      default: return;
-    }
-  },
-  unlockAudio(){
-    Audio.warmup();
-    Audio.voice=Audio.pickVoice(this.s.audio.voiceName);
-    Audio.enabled=true;
-    this.s.audio.enabled=true;
-    this.s.audio.voiceName=Audio.voice?.name||this.s.audio.voiceName||null;
-    save(this.s);
-    Audio.speak("Audio attivato. Benvenuto comandante.",{rate:0.9,pitch:1.03});
-    if(this.s.fsm==="WELCOME") this.go("AGE"); else this.render();
-  },
-  toggleAudio(){
-    this.s.audio.enabled = !this.s.audio.enabled;
-    Audio.enabled = this.s.audio.enabled;
-    if(!Audio.enabled){
-      try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(e){}
-    }
-    save(this.s);
-    this.render();
-  },
-  setAge(age){
-    this.s.age=age;
-    this.s.fsm="HOME";
-    this.s.quest=null; this.s.step=0;
-    save(this.s); this.render();
-    if(this.s.audio.enabled){
-      Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true;
-      Audio.speak(age==="big" ? "Modalità Comandante. Missioni con più logica." : "Modalità Esploratore. Missioni semplici e calmanti.",{rate:0.92,pitch:1.02});
-    }
-  },
-  startMission(){
-    if(!this.s.age) return this.go("AGE");
-    if(this.s.count>=3) return this.go("REWARD");
-
-    const age=this.s.age;
-    const pool=DB[age]||[];
-    const used=this.s.used?.[age]||[];
-    let cand=pool.filter(x=>!used.includes(x.id));
-    if(cand.length===0){ cand=pool; this.s.used[age]=[]; }
-    const q=pick(cand);
-
-    this.s.quest=q;
-    this.s.step=0;
-    this.s.fsm="QUEST";
-    this.s.used[age].push(q.id);
-    save(this.s);
-
-    if(this.s.audio.enabled){
-      Audio.voice=Audio.pickVoice(this.s.audio.voiceName);
-      Audio.enabled=true;
-      Audio.speak(q.story,{rate:0.92,pitch:1.02});
-    }
-    this.render();
-  },
-  speakAll(){
-    const q=this.s.quest; if(!q) return;
-    if(!this.s.audio.enabled) return;
-    Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true;
-    Audio.speak(q.story+" "+q.goal+" "+q.steps.join(" ")+ " "+q.finale,{rate:0.92,pitch:1.02});
-  },
-  complete(){
-    const q=this.s.quest; if(!q) return;
-
-    const mins = q.legend ? 2 : 4;
-    this.s.stats.totalMin = (this.s.stats.totalMin||0) + mins;
-    this.s.stats.missionsTotal = (this.s.stats.missionsTotal||0) + 1;
-
-    if(!q.legend){
-      this.s.count = (this.s.count||0) + 1;
-      this.s.xp = (this.s.xp||0) + 1;
-      if(this.s.xp>=3){ this.s.lvl=(this.s.lvl||1)+1; this.s.xp=0; }
-    }
-
-    (this.s.diary ||= []).unshift({
-      badge:q.badge,title:q.title,day:this.s.day,age:this.s.age,legend:!!q.legend
-    });
-
-    this.s.quest=null;
-    this.s.step=0;
-    save(this.s);
-
-    if(q.legend){
-      this.go("REWARD");
-      return;
-    }
-
-    if(this.s.count>=3) this.go("REWARD");
-    else this.go("HOME");
-  },
-  parentGate(){
-    const q=gateQuestion();
-    const v=prompt("GENITORE: "+q.prompt);
-    if(v===null) return;
-    const ok=String(v).trim().toLowerCase()===String(q.answer).toLowerCase();
-    if(!ok){ alert("Non ancora. Riprova."); return; }
-    this.s.gateOk=true; save(this.s);
-    alert("Sblocco OK. Ora premi: Avvia Missione Speciale.");
-    this.render();
-  },
-  startLegend(){
-    if(this.s.legendDone) return;
-    if(!this.s.gateOk){ alert("Serve sblocco genitore."); return; }
-
-    this.s.quest=DB.legend;
-    this.s.step=0;
-    this.s.fsm="QUEST";
-    save(this.s);
-
-    if(this.s.audio.enabled){
-      Audio.voice=Audio.pickVoice(this.s.audio.voiceName);
-      Audio.enabled=true;
-      Audio.speak(DB.legend.story,{rate:0.92,pitch:1.02});
-    }
-    this.render();
-  },
-  legendDone(){
-    this.s.legendDone=true;
-    this.complete();
-  },
-  resetTest(){
-    const q=gateQuestion();
-    const v=prompt("GENITORE: "+q.prompt);
-    if(v===null) return;
-    const ok=String(v).trim().toLowerCase()===String(q.answer).toLowerCase();
-    if(!ok){ alert("Non ancora."); return; }
-    this.s.count=0; this.s.legendDone=false; this.s.gateOk=false; this.s.quest=null; this.s.step=0;
-    save(this.s); this.go("HOME");
-  },
-  album(open){
-    const m=this.el.querySelector("#spAlbumModal");
-    if(m) m.classList.toggle("show",!!open);
-  },
-  render(){
-    const s=this.s;
-    const xpPct=clamp((s.xp/3)*100,0,100);
-    const count=`${s.count}/3`;
-    const ageLabel=s.age==="big"?"Comandante (8–10)":(s.age==="small"?"Esploratore (5–7)":"--");
-
-    const showNav=!(s.fsm==="WELCOME"||s.fsm==="AGE");
-    const nav=showNav?`
-      <div class="sp-top">
-        <div class="sp-nav">
-          <div class="badge lv"><span>LV</span> <b>${s.lvl||1}</b></div>
-          <div class="brand">SPARKPLAY</div>
-          <button class="link" data-action="TOGGLE_AUDIO">${s.audio.enabled? "🔊 Audio" : "🔇 Audio"}</button>
-          <button class="link" data-action="OPEN_ALBUM">📚 Diario</button>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:10px;">
-          <div class="badge xp"><span>OGGI</span> <b>${count}</b></div>
-          <div class="pill">🚀 Spazio • ${ageLabel}</div>
-        </div>
-        <div class="progress"><div style="width:${xpPct}%"></div></div>
-      </div>`:
-      `<div class="sp-top"><div class="sp-nav"><div class="brand">SPARKPLAY</div><button class="link" data-action="TOGGLE_AUDIO">${s.audio.enabled? "🔊 Audio" : "🔇 Audio"}</button>
-          <button class="link" data-action="OPEN_ALBUM">📚 Diario</button></div></div>`;
-
-    const welcome=`
-      <div class="state ${s.fsm==="WELCOME"?"active":""}">
-        <div class="hero card">
-          <div class="orb">🚀</div>
-          <div class="kv">
-            <div class="k">SPARKPLAY</div>
-            <div class="v">Il gioco è in casa.</div>
-            <div class="k" style="margin-top:6px;">Calmo. Sicuro. Immaginazione attiva.</div>
-          </div>
-        </div>
-        <div style="height:12px"></div>
-        <div class="card">
-          <div class="h1" style="margin-top:0">Benvenuto</div>
-          <p class="p">Oggi: 3 missioni Spazio. L’audio è opzionale (utile se non si vuole leggere).</p>
-          <div class="grid">
-            <button class="btn primary center" data-action="UNLOCK_AUDIO">Attiva audio 🔊</button>
-            <button class="btn ghost center" data-action="AGE" data-value="small">Inizia senza audio</button>
-          </div>
-          <p class="p" style="margin-top:12px;font-size:12px;">Regola: niente cucina, scale, altezza o oggetti pericolosi.</p>
-        </div>
-      </div>`;
-
-    const age=`
-      <div class="state ${s.fsm==="AGE"?"active":""}">
-        <div class="h1">Chi gioca oggi?</div>
-        <p class="p">Cambia il tipo di sfida: per i "Grandi" più logica e 2 oggetti.</p>
-        <div class="grid">
-          <button class="btn" data-action="AGE" data-value="small"><span>👦 5–7 anni -- Esploratore</span><span>→</span></button>
-          <button class="btn" data-action="AGE" data-value="big"><span>🧠 8–10 anni -- Comandante</span><span>→</span></button>
-        </div>
-      </div>`;
-
-    const home=`
-      <div class="state ${s.fsm==="HOME"?"active":""}">
-        <div class="h1">Missioni di oggi</div>
-        <p class="p">3 missioni = 1 capitolo → micro celebrazione → (opz.) missione speciale con genitore.</p>
-        <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
-            <div class="pill">📍 Oggi: <b style="color:#fff">${count}</b></div>
-            <div class="pill">🎯 Capitolo: <b style="color:#fff">${s.lvl||1}</b></div>
-          </div>
-          <div style="height:12px"></div>
-          <div class="grid">
-            <button class="btn primary center" data-action="START" ${s.count>=3?'disabled style="opacity:.55;cursor:not-allowed"':''}>Avvia missione Spazio 🚀</button>
-            <button class="btn ghost center" data-action="AGE">Cambia età</button>
-          </div>
-        </div>
-      </div>`;
-
-    const reward=`
-      <div class="state ${s.fsm==="REWARD"?"active":""}">
-        <div class="card" style="border-color:rgba(255,179,0,.30);background:rgba(255,179,0,.08);">
-          <div class="hero">
-            <div class="orb" style="border-color:rgba(255,179,0,.45);background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), rgba(255,179,0,.16));">🏅</div>
-            <div class="kv">
-              <div class="k">FINE PER OGGI</div>
-              <div class="v">3 missioni fatte</div>
-              <div class="k" style="margin-top:6px;">Rituale genitore: "Qual è stata la tua parte preferita?"</div>
-            </div>
-          </div>
-        </div>
-        <div style="height:12px"></div>
-        <div class="card">
-          <div class="h1" style="margin-top:0">Missione Speciale</div>
-          <p class="p">Serve lo sblocco del genitore.</p>
-          <div class="grid">
-            ${!s.legendDone?`<button class="btn primary center" data-action="GATE">⚡ Sblocca (Genitore)</button>`:`<button class="btn primary center" disabled style="opacity:.55;cursor:not-allowed">Completata ✅</button>`}
-            ${( !s.legendDone && s.gateOk )?`<button class="btn primary center" data-action="LEGEND_START">Avvia Protocollo 120s ⚡</button>`:""}
-            <button class="btn ghost center" data-action="OPEN_ALBUM">Apri Diario 📚</button>
-            <button class="btn ghost center" data-action="RESET_TEST">Reset oggi (test, genitore)</button>
-          </div>
-        </div>
-      </div>`;
-
-    let quest=`<div class="state ${s.fsm==="QUEST"?"active":""}"></div>`;
-    if(s.fsm==="QUEST" && s.quest){
-      const q=s.quest;
-      const stepsHtml=q.steps.map((t,i)=>`
-        <div class="step ${i<s.step?"dim":""}">
-          <div class="n">${i+1}</div>
-          <div class="t">${esc(t)}</div>
-        </div>`).join("");
-
-      quest=`
-        <div class="state active">
-          <div class="card">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
-              <div class="pill">${esc(q.badge)} ${esc(q.title)}</div>
-              ${q.legend?`<div class="pill" id="legTimer" style="border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.10);color:#FFD0D0;">⏱️ 120s</div>`:""}
-            </div>
-
-            <div style="height:10px"></div>
-            <div class="hero">
-              <div class="orb">${esc(q.propHero)}</div>
-              <div class="kv">
-                <div class="k">OGGETTO NARRATIVO</div>
-                <div class="v">${esc(q.propName)}</div>
-                <div class="k" style="margin-top:6px;">Per il genitore: ${esc(q.parent)}</div>
-              </div>
-            </div>
-
-            <div style="height:12px"></div>
-            <div class="card" style="background:rgba(255,255,255,.03);box-shadow:none;">
-              <div class="k" style="font-weight:1000;">CONTESTO</div>
-              <div class="p" style="margin-top:6px;color:#D8E4FF">${esc(q.story)}</div>
-              <div class="k" style="margin-top:10px;font-weight:1000;">OBIETTIVO</div>
-              <div class="p" style="margin-top:6px;color:#D8E4FF"><b>${esc(q.goal)}</b></div>
-            </div>
-
-            <div style="height:10px"></div>
-            <div class="pill">🎒 Prendi: <b style="color:#fff">${esc(q.prop)}</b></div>
-
-            <div class="stepbox">${stepsHtml}</div>
-
-            <div style="height:12px"></div>
-            <div class="grid">
-              <button class="btn ghost center" data-action="SPEAK" ${s.audio.enabled?"":"disabled style='opacity:.55;cursor:not-allowed'"}>Ascolta 🔊</button>
-              ${(q.legend)?`<button class="btn primary center" data-action="LEGEND_DONE">Completato ⚡</button>`:`<button class="btn primary center" data-action="DONE">Completato ✅</button>`}
-            </div>
-
-            <div style="height:12px"></div>
-            <div class="card" style="background:rgba(255,179,0,.10);border-color:rgba(255,179,0,.25);box-shadow:none;">
-              <div class="k" style="color:#FFE3A6;font-weight:1000;">FINALE</div>
-              <div class="p" style="margin-top:6px;color:#FFF6E0">${esc(q.finale)}</div>
-              <div class="k" style="margin-top:10px;color:#FFE3A6;font-weight:1000;">DOMANDA CALMA</div>
-              <div class="p" style="margin-top:6px;color:#FFF6E0">${esc(q.q)}</div>
-            </div>
-          </div>
-          <div style="height:10px"></div>
-          <button class="btn ghost center" data-action="HOME">Torna alle missioni</button>
-        </div>`;
-    }
-
-    const albumRows=(s.diary||[]).length ? s.diary.map(it=>`
-      <div class="item">
-        <div><b>${esc(it.badge||"🏅")}</b> ${esc(it.title||"")}<br><small>${esc(it.day||"")}</small></div>
-        <div><small>${it.age==="big"?"8–10":"5–7"}</small></div>
-      </div>`).join("") : `<div class="p">Nessuna missione salvata ancora.</div>`;
-
-    const album=`
-      <div class="modal" id="spAlbumModal" role="dialog" aria-modal="true" data-action="CLOSE_ALBUM">
-        <div class="sheet" onclick="event.stopPropagation()">
-          <div class="sheet-h">
-            <h3>Diario di bordo</h3>
-            <button class="link" data-action="CLOSE_ALBUM">Chiudi ✕</button>
-          </div>
-          <div class="sheet-b">
-            <div class="card" style="box-shadow:none;background:rgba(255,255,255,.03);">
-              <div class="k" style="color:#FFE3A6;font-weight:1000;">PARENT DASHBOARD</div>
-              <div class="p" style="margin-top:8px;font-size:13px;">
-                • Tempo attivo stimato: <b style="color:#fff">${s.stats.totalMin|0} min</b><br>
-                • Missioni oggi: <b style="color:#fff">${count}</b><br>
-                • Missioni totali: <b style="color:#fff">${s.stats.missionsTotal|0}</b>
-              </div>
-            </div>
-            <div style="height:10px"></div>
-            <div class="list">${albumRows}</div>
-            <div style="height:12px"></div>
-            <button class="btn ghost" data-action="CLOSE_ALBUM">Torna alle missioni</button>
-          </div>
-        </div>
-      </div>`;
-
-    this.el.innerHTML=`
-      <div class="sp-shell">
-        ${nav}
-        <div class="sp-body">${welcome}${age}${home}${quest}${reward}</div>
-      </div>
-      ${album}
-    `;
-
-    if(s.fsm==="HOME" && s.count>=3){ this.go("REWARD"); return; }
-
-    if(s.fsm==="QUEST" && s.quest?.legend){
-      const el=this.el.querySelector("#legTimer");
-      if(el && !legendTimer){
-        let t=120;
-        el.textContent="⏱️ 120s";
-        legendTimer=setInterval(()=>{
-          t--; 
-          if(t<=0){ clearInterval(legendTimer); legendTimer=null; el.textContent="⏱️ Tempo!"; return; }
-          el.textContent="⏱️ "+t+"s";
-        },1000);
-      }
-    }else{
-      if(legendTimer){ clearInterval(legendTimer); legendTimer=null; }
-    }
-  }
-};
-
-App.init();
+render();
 })();
 </script>
 </body>
