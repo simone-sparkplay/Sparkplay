@@ -1,116 +1,699 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="icona.png">
-    <title>SparkPlay - Missione Spazio</title>
-    <style>
-        :root {
-            --bg: #0B1220;
-            --accent: #3F5EF6;
-            --gold: #FFB300;
-            --card: rgba(255, 255, 255, 0.05);
-            --text: #EAF2FF;
-        }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            margin: 0; background: var(--bg); color: var(--text);
-            font-family: -apple-system, system-ui, sans-serif;
-            display: flex; flex-direction: column; min-height: 100vh;
-        }
-        .container { max-width: 500px; margin: 0 auto; padding: 20px; padding-top: calc(20px + env(safe-area-inset-top)); }
-        .header { text-align: center; margin-bottom: 20px; }
-        .logo { font-size: 22px; font-weight: 900; letter-spacing: 2px; color: var(--gold); }
-        
-        .safety-alert {
-            background: rgba(231, 76, 60, 0.15); border: 1px solid #e74c3c;
-            padding: 10px; border-radius: 12px; font-size: 11px; text-align: center; margin-bottom: 20px;
-        }
-        
-        .card {
-            background: var(--card); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px; padding: 24px; text-align: center;
-        }
-        
-        .mission-title { font-size: 24px; font-weight: 800; margin: 10px 0; color: var(--accent); }
-        .mission-text { font-size: 19px; line-height: 1.5; margin: 20px 0; font-weight: 500; }
-        
-        .btn-main {
-            width: 100%; padding: 20px; border-radius: 20px; border: none;
-            background: linear-gradient(135deg, var(--accent), #5673FF);
-            color: white; font-size: 18px; font-weight: 800; cursor: pointer;
-            box-shadow: 0 10px 20px rgba(63, 94, 246, 0.3);
-        }
-        .btn-ghost {
-            background: transparent; color: var(--accent); border: 1px solid var(--accent);
-            margin-top: 15px; padding: 12px; border-radius: 15px; width: 100%; font-weight: 700;
-        }
-        .hidden { display: none; }
-    </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0B1220">
+<title>SparkPlay</title>
+<link rel="apple-touch-icon" href="icona.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* --- STILE PREMIUM (Ex style.css) --- */
+:root{
+  --bg0:#070B14; --bg1:#0B1220; --ink:#EAF2FF; --muted:#A9B7D6; --line:rgba(255,255,255,.10);
+  --accent:#3F5EF6; --gold:#FFB300; --radius:26px; --shadow:0 30px 70px rgba(0,0,0,.45);
+  --soft:0 18px 40px rgba(63,94,246,.20);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background: radial-gradient(1200px 800px at 30% 10%, rgba(63,94,246,.22), transparent 60%),
+              radial-gradient(900px 700px at 80% 30%, rgba(255,179,0,.10), transparent 60%),
+              linear-gradient(180deg, var(--bg0), var(--bg1));
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color:var(--ink);
+}
+.sp-root{max-width:460px;margin:0 auto;padding:18px 16px calc(22px + env(safe-area-inset-bottom));}
+.sp-shell{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02));box-shadow:var(--shadow);overflow:hidden;}
+.sp-top{padding:16px 16px 10px;border-bottom:1px solid var(--line);background:radial-gradient(700px 220px at 20% 0%, rgba(63,94,246,.22), transparent 60%);}
+.sp-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;font-weight:900;font-size:12px;letter-spacing:.4px;border:1px solid var(--line);background:rgba(255,255,255,.03);}
+.badge.lv{background:rgba(255,179,0,.14);border-color:rgba(255,179,0,.35);}
+.badge.lv b{color:var(--gold);}
+.badge.xp{background:rgba(63,94,246,.12);border-color:rgba(63,94,246,.35);}
+.badge.xp b{color:#AFC0FF;}
+.brand{font-weight:1000;letter-spacing:1.4px;font-size:13px;opacity:.95;}
+.link{border:0;background:transparent;color:#BFD0FF;font-weight:900;font-size:12px;cursor:pointer;padding:8px 10px;border-radius:999px;}
+.link:hover{background:rgba(255,255,255,.04);}
+.progress{margin-top:12px;height:10px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;border:1px solid rgba(255,255,255,.08);}
+.progress>div{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg, rgba(63,94,246,1), rgba(111,137,255,1));transition:width .9s cubic-bezier(.18,.9,.22,1.3);}
+.sp-body{padding:16px;}
+.state{display:none;opacity:0;transform:translateY(8px) scale(.98);transition:opacity .35s ease, transform .35s ease;}
+.state.active{display:block;opacity:1;transform:translateY(0) scale(1);}
+.h1{margin:6px 0 10px;font-size:22px;font-weight:1000;letter-spacing:-.3px;}
+.p{margin:0 0 14px;color:var(--muted);font-size:14px;line-height:1.55;}
+.card{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.10);border-radius:22px;padding:14px;box-shadow:var(--soft);}
+.grid{display:grid;gap:12px;}
+.btn{width:100%;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:var(--ink);padding:16px 16px;border-radius:20px;cursor:pointer;font-weight:900;font-size:16px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.btn:hover{background:rgba(255,255,255,.06);transform:translateY(-1px);}
+.btn:active{transform:translateY(0);}
+.btn.primary{background:linear-gradient(180deg, rgba(63,94,246,1), rgba(51,78,215,1));border-color:rgba(63,94,246,.65);box-shadow:0 18px 40px rgba(63,94,246,.26);}
+.btn.primary:hover{filter:brightness(1.05);}
+.btn.ghost{background:transparent;border-color:rgba(255,255,255,.14);color:#CFE0FF;}
+.btn.center{text-align:center;justify-content:center;}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;color:#CFE0FF;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);}
+.hero{display:flex;align-items:center;gap:14px;}
+.orb{width:56px;height:56px;border-radius:18px;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), rgba(63,94,246,.28)),linear-gradient(180deg, rgba(63,94,246,.18), rgba(255,255,255,.05));border:1px solid rgba(63,94,246,.35);box-shadow:0 18px 45px rgba(63,94,246,.22);display:flex;align-items:center;justify-content:center;font-size:28px;animation:float 3.3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+.kv{display:flex;flex-direction:column;}
+.kv .k{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.2px;}
+.kv .v{font-size:16px;font-weight:1000;}
+.stepbox{margin-top:12px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);overflow:hidden;}
+.step{display:flex;gap:12px;padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.08);align-items:flex-start;}
+.step:last-child{border-bottom:0;}
+.step .n{width:28px;height:28px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-weight:1000;color:#DCE6FF;flex:0 0 auto;}
+.step .t{font-size:14px;line-height:1.45;color:#EAF2FF;font-weight:700;}
+.step.dim .t{color:rgba(234,242,255,.55);font-weight:650;}
+.step.active{background:linear-gradient(90deg, rgba(63,94,246,.18), transparent 70%);}
+.step.active .n{border-color:rgba(63,94,246,.65);box-shadow:0 10px 20px rgba(63,94,246,.18);}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:99999;}
+.confetti i{position:absolute;width:8px;height:12px;border-radius:3px;top:-20px;animation:fall 1.25s ease-out forwards;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35));}
+@keyframes fall{to{transform:translateY(120vh) rotate(420deg);opacity:0;}}
+.modal{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;z-index:9999;background:rgba(0,0,0,.55);padding:14px 14px calc(14px + env(safe-area-inset-bottom));}
+.modal.show{display:flex;}
+.sheet{width:min(480px, 100%);border-radius:26px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg, rgba(14,22,40,.98), rgba(9,14,26,.98));box-shadow:var(--shadow);overflow:hidden;}
+.sheet-h{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.10);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.sheet-h h3{margin:0;font-weight:1000;font-size:16px;}
+.sheet-b{padding:14px 16px;}
+.list{display:grid;gap:10px;}
+.item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 12px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);font-size:14px;color:#EAF2FF;}
+.item small{color:var(--muted);font-weight:800;}
+body.modal-open{overflow:hidden;}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header"><div class="logo">SPARKPLAY 🚀</div></div>
-        
-        <div class="safety-alert">⚠️ REGOLE DI SICUREZZA: Muoviti lentamente, non correre e non usare oggetti pericolosi o fragili.</div>
 
-        <div id="home">
-            <div class="card">
-                <h2>Pronto al decollo?</h2>
-                <p>Completa 3 missioni per diventare un vero Comandante Stellare.</p>
-                <button class="btn-main" onclick="startMission()">INIZIA AVVENTURA</button>
-            </div>
+<div id="SPARKPLAY_APP" class="sp-root"></div>
+
+<script>
+/* --- LOGICA DI GIOCO (Ex game.js) --- */
+(()=>{"use strict";
+
+const ROOT="SPARKPLAY_APP";
+const KEY="sp_v12_spazio";
+const today=()=>new Date().toDateString();
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const esc=s=>String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+
+const DB={
+  small:[
+    {id:"s01",badge:"🌙",title:"Segnale Perduto",story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.",
+     goal:"Riaccendere l’antenna della base.",propHero:"📡",propName:"Antenna Stellare",parent:"Usa un calzino come antenna.",
+     prop:"un calzino",steps:[
+       "Trova l’antenna (calzino) e stringila come se fosse speciale.",
+       "Portala nella tua base (tappeto o sotto il tavolo) e appoggiala in alto.",
+       "Fai 3 “bip” lenti: bip… bip… bip…"
+     ],finale:"Segnale tornato. Base salva.",q:"A chi manderesti il primo messaggio?"
+    },
+    {id:"s02",badge:"🛰️",title:"Satellite Smarrito",story:"Un piccolo satellite è uscito dall’orbita e sta andando lontano.",
+     goal:"Riportarlo vicino alla base.",propHero:"🛰️",propName:"Satellite",parent:"Usa un peluche come satellite.",
+     prop:"un peluche",steps:[
+       "Prendi il satellite (peluche) con due mani: è delicato.",
+       "Fallo fluttuare lento fino alla base.",
+       "Giro d’orbita: un cerchio grande… e uno piccolo."
+     ],finale:"Orbita ripristinata.",q:"Che nome segreto dai al satellite?"
+    },
+    {id:"s03",badge:"⭐",title:"Pianeta in Pericolo",story:"Un pianeta sta per cadere fuori orbita. Serve un salvataggio delicato.",
+     goal:"Rimetterlo in traiettoria.",propHero:"🪐",propName:"Pianeta",parent:"Usa un cuscino come pianeta.",
+     prop:"un cuscino",steps:[
+       "Trova il pianeta (cuscino) e tienilo con calma: è prezioso.",
+       "Appoggialo nella base senza rumore.",
+       "Disegna in aria una “orbita” intorno al pianeta con un dito."
+     ],finale:"Pianeta salvo. Galassia felice.",q:"Di che colore è il tuo pianeta nella mente?"
+    },
+    {id:"s04",badge:"🔋",title:"Cristallo Energia",story:"La nave è scarica. Serve un cristallo per ricaricare tutto.",
+     goal:"Portare energia alla base.",propHero:"🔋",propName:"Cristallo Energia",parent:"Usa un foglio come cristallo.",
+     prop:"un foglio",steps:[
+       "Piega il foglio una volta: ora “brilla”.",
+       "Portalo al petto per scaldarlo 3 secondi.",
+       "Sussurra: “Energia… energia… energia…”"
+     ],finale:"Motori stabili.",q:"Dove metteresti la tua base?"
+    },
+    {id:"s05",badge:"🧭",title:"Mappa Stellare",story:"C’è una rotta invisibile. Solo tu puoi sceglierla.",
+     goal:"Scegliere la rotta segreta.",propHero:"🗺️",propName:"Mappa",parent:"Usa un libro leggero come mappa.",
+     prop:"un libro leggero",steps:[
+       "Apri il libro a caso: quella pagina è la rotta di oggi.",
+       "Guarda la pagina 5 secondi in silenzio.",
+       "Chiudi e indica una direzione: “Andiamo di là!”"
+     ],finale:"Rotta scelta. Equipaggio pronto.",q:"Che suono fa lo spazio quando è calmo?"
+    },
+    {id:"s06",badge:"🔦",title:"Luce di Emergenza",story:"La base è al buio. Serve una luce gentile per guidare tutti.",
+     goal:"Accendere la luce guida.",propHero:"💡",propName:"Luce Guida",parent:"Se hai una torcia piccola bene. Se no: luce immaginaria.",
+     prop:"una torcia piccola (o luce immaginaria)",steps:[
+       "Prendi la torcia e punta verso il pavimento (mai negli occhi).",
+       "Disegna una stella sul tappeto con la luce.",
+       "Respiro profondo e dì: “Via libera.”"
+     ],finale:"Luce stabile. Tutti al sicuro.",q:"Chi inviteresti nella tua base?"
+    }
+  ],
+  big:[
+    {id:"b01",badge:"⚙️",title:"Riparazione Starship",story:"Un modulo vibra. Se lo sistemi, diventi Comandante per un giorno.",
+     goal:"Fissare il modulo senza rumore.",propHero:"⚙️",propName:"Modulo Motore",parent:"Oggetti: calzino (modulo) + foglio (scudo).",
+     prop:"un calzino + un foglio",steps:[
+       "Prendi modulo e scudo. Regola: zero rumore.",
+       "Raggiungi la base camminando solo quando tutto è silenzioso.",
+       "Metti lo scudo sopra il modulo e inventa un “sigillo” di 3 gesti."
+     ],finale:"Motore stabile. Promozione: Comandante.",q:"Cosa è stato più difficile: silenzio, percorso o sigillo?"
+    },
+    {id:"b02",badge:"📡",title:"Codice Radio Fantasma",story:"Un segnale misterioso appare e scompare. Solo tu puoi catturarlo.",
+     goal:"Decifrare il codice senza farsi vedere.",propHero:"📡",propName:"Ricevitore",parent:"Oggetti: torcia (ricevitore) + matita (antenna).",
+     prop:"una torcia + una matita",steps:[
+       "Muoviti in punta di piedi: missione stealth.",
+       "Arriva in base e fai uno “scanner”: osserva 5 secondi immobile.",
+       "Trasmetti: tocca la matita 3 volte (tic… tic… tic…)."
+     ],finale:"Codice catturato. Coordinate salvate.",q:"Che parola segreta useresti con l’equipaggio?"
+    },
+    {id:"b03",badge:"🪐",title:"Orbita a Due Oggetti",story:"Due pianeti stanno per scontrarsi. Serve una manovra precisa.",
+     goal:"Separarli con una danza d’orbita.",propHero:"🪐",propName:"Pianeta A + B",parent:"Oggetti: cuscino (A) + peluche (B).",
+     prop:"un cuscino + un peluche",steps:[
+       "Regola: non farli toccare.",
+       "Posali a distanza di due passi. Stop. Respira.",
+       "Danza d’orbita: sposta A di un passo, poi B di un passo. Ripeti 3 volte."
+     ],finale:"Collisione evitata. Equilibrio ristabilito.",q:"Quale pianeta è più coraggioso secondo te?"
+    },
+    {id:"b04",badge:"🧭",title:"Rotta Invisibile",story:"La rotta è nascosta. Se sbagli, ti perdi nello spazio.",
+     goal:"Seguire un percorso senza “lava”.",propHero:"🧭",propName:"Bussola",parent:"Oggetti: libro (bussola) + foglio (lava).",
+     prop:"un libro + un foglio",steps:[
+       "Metti il foglio a terra: è lava (zona vietata).",
+       "Raggiungi la base senza calpestare la lava (pianifica).",
+       "Apri il libro e scegli una parola: è la “stella guida”."
+     ],finale:"Rotta trovata con logica.",q:"Hai pianificato prima o improvvisato?"
+    },
+    {id:"b05",badge:"🔒",title:"Camera di Sicurezza",story:"C’è una camera segreta. Solo i migliori la chiudono bene.",
+     goal:"Creare un codice di sicurezza.",propHero:"🔒",propName:"Codice",parent:"Oggetti: matita (chiave) + peluche (guardia).",
+     prop:"una matita + un peluche",steps:[
+       "Parla a bassa voce: regola base.",
+       "Crea un codice a 3 gesti (es: su/giù/cerchio).",
+       "Ripeti 2 volte senza sbagliare (la guardia controlla)."
+     ],finale:"Camera protetta. Equipaggio al sicuro.",q:"Il tuo codice è facile o difficile da ricordare?"
+    },
+    {id:"b06",badge:"📦",title:"Rifornimenti Critici",story:"Mancano rifornimenti. Devi consegnarli senza perdere equilibrio.",
+     goal:"Consegna stabile e precisa.",propHero:"📦",propName:"Pacco",parent:"Oggetti: libro (pacco) + foglio (tappo).",
+     prop:"un libro + un foglio",steps:[
+       "Metti il foglio sopra il libro: non deve scivolare.",
+       "Porta il pacco in base camminando lento contando 1–2–3–4.",
+       "Posa piano e fai un “check” con la mano: OK."
+     ],finale:"Rifornimenti consegnati. Base operativa.",q:"Hai rallentato di più all’inizio o alla fine?"
+    }
+  ]
+};
+
+const LEGEND={
+  id:"L01",badge:"⚡",title:"Quest Speciale — Blackout Totale",
+  story:"Allarme rosso. La base è al buio e il tempo scorre.",
+  goal:"Completa il protocollo in 120 secondi (calma e precisione).",
+  propHero:"💠",propName:"Cuore Energetico",
+  parent:"Oggetti: foglio + matita (o dito).",
+  prop:"un foglio + una matita (o dito)",
+  steps:[
+    "Disegna (o fingi) una stella sul foglio: lenta e precisa.",
+    "Appoggia il foglio in base come pannello di comando.",
+    "Sussurra: “Calma. Energia. Pronto.”"
+  ],
+  finale:"Cuore energetico riattivato. La base torna a vivere.",
+  q:"Qual è stata la tua scelta migliore nell’emergenza?"
+};
+
+const DEF=()=>({
+  v:"1.2",day:today(),fsm:"WELCOME",age:null,lvl:1,xp:0,count:0,
+  used:{small:[],big:[]},diary:[],stats:{totalMin:0,missionsTotal:0},
+  audio:{enabled:false,voiceName:null},gateOk:false,legendDone:false,
+  quest:null,step:0,lock:false
+});
+
+const load=()=>{
+  try{
+    const raw=localStorage.getItem(KEY);
+    const s=raw?JSON.parse(raw):DEF();
+    if(s.day!==today()){
+      const fresh=DEF(); fresh.day=today();
+      fresh.diary=(s.diary||[]).slice(0,30);
+      fresh.stats=s.stats||fresh.stats;
+      fresh.audio=s.audio||fresh.audio;
+      return fresh;
+    }
+    s.used=s.used||{small:[],big:[]};
+    s.diary=s.diary||[];
+    s.stats=s.stats||{totalMin:0,missionsTotal:0};
+    s.audio=s.audio||{enabled:false,voiceName:null};
+    return s;
+  }catch(_){ return DEF(); }
+};
+const save=s=>localStorage.setItem(KEY,JSON.stringify(s));
+
+const Audio={
+  enabled:false,voice:null,
+  warmup(){
+    try{ speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(" ");
+      u.volume=0.01; speechSynthesis.speak(u);
+    }catch(_){}
+  },
+  pickVoice(name){
+    const vs=speechSynthesis.getVoices(); if(!vs||!vs.length) return null;
+    if(name){ const v=vs.find(x=>x.name===name); if(v) return v; }
+    const it=vs.filter(v=>(v.lang||"").toLowerCase().startsWith("it"));
+    const g=it.find(v=>/google/i.test(v.name));
+    return g||it[0]||vs[0];
+  },
+  speak(text,{rate=0.86,pitch=1.05}={}){
+    if(!this.enabled) return;
+    try{
+      speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(text);
+      u.lang="it-IT"; u.rate=rate; u.pitch=pitch; u.volume=1;
+      if(this.voice) u.voice=this.voice;
+      speechSynthesis.speak(u);
+    }catch(_){}
+  }
+};
+
+const confetti=()=>{
+  const w=document.createElement("div"); w.className="confetti";
+  for(let i=0;i<28;i++){
+    const c=document.createElement("i");
+    c.style.left=Math.floor(Math.random()*100)+"vw";
+    c.style.animationDelay=(Math.random()*0.15)+"s";
+    c.style.background=(Math.random()>0.6)?"rgba(63,94,246,.95)":"rgba(255,179,0,.95)";
+    w.appendChild(c);
+  }
+  document.body.appendChild(w);
+  setTimeout(()=>w.remove(),1400);
+};
+
+const gateQuestion=()=>{
+  const t=pick(["sum2","sum3","word"]);
+  if(t==="word"){
+    const w=pick([{p:"Scrivi la parola: COMANDANTE",a:"comandante"},
+                  {p:"Scrivi la parola: GALASSIA",a:"galassia"},
+                  {p:"Scrivi la parola: SPARKPLAY",a:"sparkplay"}]);
+    return {prompt:w.p,answer:w.a};
+  }
+  if(t==="sum3"){
+    const a=7+Math.floor(Math.random()*9),b=5+Math.floor(Math.random()*8),c=2+Math.floor(Math.random()*7);
+    return {prompt:`Quanto fa ${a}+${b}+${c}?`,answer:String(a+b+c)};
+  }
+  const a=12+Math.floor(Math.random()*18),b=6+Math.floor(Math.random()*15);
+  return {prompt:`Quanto fa ${a}+${b}?`,answer:String(a+b)};
+};
+
+let legendTimer=null;
+
+const App={
+  el:null,s:null,
+  init(){
+    const boot=()=>{
+      const el=document.getElementById(ROOT); if(!el){ setTimeout(boot,80); return; }
+      this.el=el; this.s=load(); this.bind();
+      if("speechSynthesis" in window){
+        speechSynthesis.onvoiceschanged=()=>{
+          if(this.s.audio.enabled){ Audio.voice=Audio.pickVoice(this.s.audio.voiceName); }
+        };
+      }
+      this.render();
+    };
+    if(document.readyState==="complete"||document.readyState==="interactive") boot();
+    else document.addEventListener("DOMContentLoaded",boot,{once:true});
+  },
+  bind(){
+    this.el.addEventListener("click",(e)=>{
+      const b=e.target.closest("[data-action]"); if(!b) return;
+      if(this.s.lock) return;
+      const a=b.getAttribute("data-action"),v=b.getAttribute("data-value");
+      this.act(a,v);
+    },{passive:true});
+  },
+  go(fsm){ this.s.fsm=fsm; save(this.s); this.render(); },
+  act(a,v){
+    switch(a){
+      case "UNLOCK_AUDIO": return this.unlockAudio();
+      case "AGE": return this.setAge(v);
+      case "START": return this.startMission();
+      case "SPEAK": return this.speakAll();
+      case "NEXT": return this.nextStep();
+      case "DONE": return this.complete();
+      case "HOME": return this.go("HOME");
+      case "OPEN_ALBUM": return this.album(true);
+      case "CLOSE_ALBUM": return this.album(false);
+      case "GATE": return this.parentGate();
+      case "LEGEND_START": return this.startLegend();
+      case "LEGEND_DONE": return this.legendDone();
+      case "RESET_TEST": return this.resetTest();
+      default: return;
+    }
+  },
+  unlockAudio(){
+    Audio.warmup();
+    Audio.voice=Audio.pickVoice(this.s.audio.voiceName);
+    Audio.enabled=true;
+    this.s.audio.enabled=true;
+    this.s.audio.voiceName=Audio.voice?.name||this.s.audio.voiceName||null;
+    save(this.s);
+    Audio.speak("Audio attivato. Benvenuto comandante.",{rate:0.9,pitch:1.03});
+    if(this.s.fsm==="WELCOME") this.go("AGE"); else this.render();
+  },
+  setAge(age){
+    this.s.age=age;
+    this.s.fsm="HOME";
+    this.s.quest=null; this.s.step=0;
+    save(this.s); this.render();
+    if(this.s.audio.enabled){
+      Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true;
+      Audio.speak(age==="big" ? "Modalità Comandante. Missioni con logica e silenzio." : "Modalità Esploratore. Giochiamo con calma.",{rate:0.86});
+    }
+  },
+  pickMission(){
+    const age=this.s.age==="big"?"big":"small";
+    const pool=DB[age];
+    const used=new Set(this.s.used[age]||[]);
+    let avail=pool.filter(m=>!used.has(m.id));
+    if(!avail.length){ this.s.used[age]=[]; avail=pool.slice(); }
+    return pick(avail);
+  },
+  buildQuest(m,legend=false){
+    return {
+      legend,
+      id: m.id,
+      badge: m.badge,
+      title: m.title,
+      story: m.story,
+      goal: m.goal,
+      propHero: m.propHero,
+      propName: m.propName,
+      parent: m.parent,
+      prop: m.prop,
+      steps: m.steps.slice(),
+      finale: m.finale,
+      q: m.q,
+      endsAt: legend ? Date.now()+120000 : null
+    };
+  },
+  startMission(){
+    if(!this.s.age) return this.go("AGE");
+    if(this.s.count>=3) return this.go("REWARD");
+    const m=this.pickMission();
+    this.s.quest=this.buildQuest(m,false);
+    this.s.step=0;
+    this.s.fsm="QUEST";
+    save(this.s); this.render();
+    if(this.s.audio.enabled){
+      Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true;
+      Audio.speak(`${this.s.quest.story} Pausa. Obiettivo: ${this.s.quest.goal}`,{rate:0.82});
+    }
+  },
+  speakAll(){
+    const q=this.s.quest; if(!q||!this.s.audio.enabled) return;
+    Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true;
+    const steps=q.steps.map((t,i)=>`Passo ${i+1}. ${t}`).join(" Pausa. ");
+    Audio.speak(`${q.story} Pausa. ${q.goal} Pausa. ${steps} Pausa. ${q.finale} Pausa. Domanda: ${q.q}`,{rate:0.82});
+  },
+  nextStep(){
+    const q=this.s.quest; if(!q) return;
+    this.s.step=clamp(this.s.step+1,0,q.steps.length-1);
+    save(this.s); this.render();
+    if(this.s.audio.enabled){
+      Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true;
+      Audio.speak(`Passo ${this.s.step+1}. ${q.steps[this.s.step]}`,{rate:0.82});
+    }
+  },
+  complete(){
+    const q=this.s.quest; if(!q) return;
+    this.s.lock=true; save(this.s);
+    this.s.count=clamp((this.s.count|0)+1,0,3);
+    this.s.xp=(this.s.xp|0)+1;
+    this.s.stats.totalMin=(this.s.stats.totalMin|0)+7;
+    this.s.stats.missionsTotal=(this.s.stats.missionsTotal|0)+1;
+    if(this.s.xp>=3){ this.s.lvl=(this.s.lvl|0)+1; this.s.xp=0; }
+    const age=this.s.age==="big"?"big":"small";
+    this.s.used[age]=this.s.used[age]||[];
+    this.s.used[age].push(q.id);
+    this.s.diary.unshift({day:this.s.day,badge:q.badge,title:q.title,age:this.s.age});
+    this.s.diary=this.s.diary.slice(0,30);
+    this.s.quest=null; this.s.step=0;
+    save(this.s);
+    confetti();
+    if(this.s.audio.enabled){
+      Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true;
+      Audio.speak("Missione completata. Ottimo lavoro.",{rate:0.9,pitch:1.08});
+    }
+    setTimeout(()=>{
+      this.s.lock=false;
+      this.s.fsm=(this.s.count>=3)?"REWARD":"HOME";
+      save(this.s); this.render();
+    },380);
+  },
+  parentGate(){
+    const q=gateQuestion();
+    const v=prompt("GENITORE: "+q.prompt);
+    if(v===null) return;
+    const ok=String(v).trim().toLowerCase()===String(q.answer).toLowerCase();
+    if(!ok){ alert("Non ancora. Riprova."); return; }
+    this.s.gateOk=true; save(this.s);
+    alert("Sblocco OK. Ora premi: Avvia Quest Speciale.");
+    this.render();
+  },
+  startLegend(){
+    if(!this.s.gateOk){ alert("Serve lo sblocco genitore."); return; }
+    if(this.s.legendDone){ alert("Già completata."); return; }
+    this.s.quest=this.buildQuest(LEGEND,true);
+    this.s.step=0;
+    this.s.fsm="QUEST";
+    save(this.s); this.render();
+    if(this.s.audio.enabled){
+      Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true;
+      Audio.speak("Quest speciale avviata. Hai due minuti. Calma e precisione.",{rate:0.85});
+    }
+  },
+  legendDone(){
+    this.s.legendDone=true;
+    this.s.gateOk=false;
+    this.s.quest=null; this.s.step=0;
+    save(this.s);
+    confetti();
+    if(this.s.audio.enabled){
+      Audio.voice=Audio.pickVoice(this.s.audio.voiceName); Audio.enabled=true;
+      Audio.speak("Quest speciale completata. Torna domani per una nuova avventura.",{rate:0.88});
+    }
+    this.go("REWARD");
+  },
+  resetTest(){
+    const q=gateQuestion();
+    const v=prompt("GENITORE: "+q.prompt);
+    if(v===null) return;
+    const ok=String(v).trim().toLowerCase()===String(q.answer).toLowerCase();
+    if(!ok){ alert("Non ancora."); return; }
+    this.s.count=0; this.s.legendDone=false; this.s.gateOk=false; this.s.quest=null; this.s.step=0;
+    save(this.s); this.go("HOME");
+  },
+  album(open){
+    const m=this.el.querySelector("#spAlbumModal");
+    if(m) m.classList.toggle("show",!!open);
+  },
+  render(){
+    const s=this.s;
+    const xpPct=clamp((s.xp/3)*100,0,100);
+    const count=`${s.count}/3`;
+    const ageLabel=s.age==="big"?"Comandante (8–10)":(s.age==="small"?"Esploratore (5–7)":"—");
+    const showNav=!(s.fsm==="WELCOME"||s.fsm==="AGE");
+    const nav=showNav?`
+      <div class="sp-top">
+        <div class="sp-nav">
+          <div class="badge lv"><span>LV</span> <b>${s.lvl||1}</b></div>
+          <div class="brand">SPARKPLAY</div>
+          <button class="link" data-action="OPEN_ALBUM">📚 Diario</button>
         </div>
-
-        <div id="mission" class="hidden">
-            <div class="card">
-                <div id="mission-badge" style="font-size: 40px;">🌙</div>
-                <div class="mission-title" id="m-title">Caricamento...</div>
-                <div class="mission-text" id="m-text"></div>
-                <button class="btn-main" onclick="finish()">MISSIONE COMPIUTA ✅</button>
-                <button class="btn-ghost" onclick="showHome()">ANNULLA</button>
-            </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:10px;">
+          <div class="badge xp"><span>OGGI</span> <b>${count}</b></div>
+          <div class="pill">🚀 Spazio • ${ageLabel}</div>
         </div>
-    </div>
-
-    <script>
-        const db = [
-            { t: "Segnale Perduto", b: "📡", text: "La base ha perso il segnale. Trova un calzino pulito (la tua antenna) e portalo in alto sopra un tavolo per riattivare i contatti." },
-            { t: "Pianeta Delicato", b: "🪐", text: "C'è un pianeta sensibile (un cuscino). Appoggialo a terra e camminaci intorno in punta di piedi senza fare rumore." },
-            { t: "Rifornimento Starship", b: "🔋", text: "La nave ha bisogno di energia. Trova un libro leggero, mettilo sulla testa e fai 5 passi senza farlo cadere." },
-            { t: "Satellite in Orbita", b: "🛰️", text: "Devi fluttuare nello spazio. Tocca 3 oggetti di colore blu nella stanza muovendoti lentissimo, come se non ci fosse gravità." }
-        ];
-
-        function startMission() {
-            const m = db[Math.floor(Math.random()*db.length)];
-            document.getElementById('m-title').innerText = m.t;
-            document.getElementById('m-text').innerText = m.text;
-            document.getElementById('mission-badge').innerText = m.b;
-            document.getElementById('home').classList.add('hidden');
-            document.getElementById('mission').classList.remove('hidden');
-        }
-
-        function finish() {
-            // Suono di vittoria
-            const ac = new (window.AudioContext || window.webkitAudioContext)();
-            const o = ac.createOscillator(); const g = ac.createGain();
-            o.connect(g); g.connect(ac.destination);
-            o.frequency.setValueAtTime(523, ac.currentTime);
-            o.frequency.exponentialRampToValueAtTime(880, ac.currentTime + 0.2);
-            g.gain.setValueAtTime(0.1, ac.currentTime); g.gain.linearRampToValueAtTime(0, ac.currentTime + 0.3);
-            o.start(); o.stop(ac.currentTime + 0.3);
-            
-            alert("Ottimo lavoro! Missione completata.");
-            showHome();
-        }
-
-        function showHome() {
-            document.getElementById('mission').classList.add('hidden');
-            document.getElementById('home').classList.remove('hidden');
-        }
-    </script>
+        <div class="progress"><div style="width:${xpPct}%"></div></div>
+      </div>`:
+      `<div class="sp-top"><div class="sp-nav"><div class="brand">SPARKPLAY</div><button class="link" data-action="OPEN_ALBUM">📚 Diario</button></div></div>`;
+    const welcome=`
+      <div class="state ${s.fsm==="WELCOME"?"active":""}">
+        <div class="hero card">
+          <div class="orb">🚀</div>
+          <div class="kv">
+            <div class="k">SPARKPLAY</div>
+            <div class="v">Il gioco è in casa.</div>
+            <div class="k" style="margin-top:6px;">Calmo. Sicuro. Immaginazione attiva.</div>
+          </div>
+        </div>
+        <div style="height:12px"></div>
+        <div class="card">
+          <div class="h1" style="margin-top:0">Benvenuto</div>
+          <p class="p">Oggi: 3 missioni Spazio. L’audio è opzionale (utile se non si vuole leggere).</p>
+          <div class="grid">
+            <button class="btn primary center" data-action="UNLOCK_AUDIO">Attiva audio 🔊</button>
+            <button class="btn ghost center" data-action="AGE" data-value="small">Inizia senza audio</button>
+          </div>
+          <p class="p" style="margin-top:12px;font-size:12px;">Regola: niente cucina, scale, altezza o oggetti pericolosi.</p>
+        </div>
+      </div>`;
+    const age=`
+      <div class="state ${s.fsm==="AGE"?"active":""}">
+        <div class="h1">Chi gioca oggi?</div>
+        <p class="p">Cambia il tipo di sfida: per i “Grandi” più logica e 2 oggetti.</p>
+        <div class="grid">
+          <button class="btn" data-action="AGE" data-value="small"><span>👦 5–7 anni — Esploratore</span><span>→</span></button>
+          <button class="btn" data-action="AGE" data-value="big"><span>🧠 8–10 anni — Comandante</span><span>→</span></button>
+        </div>
+      </div>`;
+    const home=`
+      <div class="state ${s.fsm==="HOME"?"active":""}">
+        <div class="h1">Missioni di oggi</div>
+        <p class="p">3 missioni = 1 capitolo → micro celebrazione → (opz.) quest speciale con genitore.</p>
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <div class="pill">📍 Oggi: <b style="color:#fff">${count}</b></div>
+            <div class="pill">🎯 Capitolo: <b style="color:#fff">${s.lvl||1}</b></div>
+          </div>
+          <div style="height:12px"></div>
+          <div class="grid">
+            <button class="btn primary center" data-action="START" ${s.count>=3?'disabled style="opacity:.55;cursor:not-allowed"':''}>Avvia missione Spazio 🚀</button>
+            <button class="btn ghost center" data-action="AGE">Cambia età</button>
+            <button class="btn ghost center" data-action="UNLOCK_AUDIO">${s.audio.enabled?"Audio attivo ✅":"Attiva audio 🔊"}</button>
+          </div>
+        </div>
+      </div>`;
+    const reward=`
+      <div class="state ${s.fsm==="REWARD"?"active":""}">
+        <div class="card" style="border-color:rgba(255,179,0,.30);background:rgba(255,179,0,.08);">
+          <div class="hero">
+            <div class="orb" style="border-color:rgba(255,179,0,.45);background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), rgba(255,179,0,.16));">🏅</div>
+            <div class="kv">
+              <div class="k">CAPITOLO COMPLETATO</div>
+              <div class="v">Ricompensa sbloccata</div>
+              <div class="k" style="margin-top:6px;">Suggerimento: “Cosa hai scoperto?”</div>
+            </div>
+          </div>
+        </div>
+        <div style="height:12px"></div>
+        <div class="card">
+          <div class="h1" style="margin-top:0">E adesso?</div>
+          <p class="p">Oggi hai finito le 3 missioni. La Quest Speciale richiede un genitore.</p>
+          <div class="grid">
+            ${!s.legendDone?`<button class="btn primary center" data-action="GATE">⚡ Sblocca Quest Speciale (Genitore)</button>`:`<button class="btn primary center" disabled style="opacity:.55;cursor:not-allowed">Quest Speciale completata ✅</button>`}
+            ${(!s.legendDone && s.gateOk)?`<button class="btn primary center" data-action="LEGEND_START">Avvia Quest Speciale ⚡ (120s)</button>`:""}
+            <button class="btn ghost center" data-action="OPEN_ALBUM">Apri Diario 📚</button>
+            <button class="btn ghost center" data-action="RESET_TEST">Reset oggi (solo test, genitore)</button>
+          </div>
+        </div>
+      </div>`;
+    let quest=`<div class="state ${s.fsm==="QUEST"?"active":""}"></div>`;
+    if(s.fsm==="QUEST" && s.quest){
+      const q=s.quest;
+      const cur=clamp(s.step,0,q.steps.length-1);
+      const steps=q.steps.map((t,i)=>`
+        <div class="step ${i===cur?"active":"dim"}">
+          <div class="n">${i+1}</div><div class="t">${esc(t)}</div>
+        </div>`).join("");
+      const timer=q.legend?`<div class="pill" id="legTimer" style="border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.10);color:#FFD0D0;">⏱️ 120s</div>`:"";
+      quest=`
+        <div class="state active">
+          <div class="card">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div class="pill">${esc(q.badge)} ${esc(q.title)}</div>${timer}
+            </div>
+            <div style="height:10px"></div>
+            <div class="hero">
+              <div class="orb">${esc(q.propHero)}</div>
+              <div class="kv">
+                <div class="k">OGGETTO NARRATIVO</div>
+                <div class="v">${esc(q.propName)}</div>
+                <div class="k" style="margin-top:6px;">Per il genitore: ${esc(q.parent)}</div>
+              </div>
+            </div>
+            <div style="height:12px"></div>
+            <div class="card" style="background:rgba(255,255,255,.03);box-shadow:none;">
+              <div class="k" style="font-weight:1000;">CONTESTO</div>
+              <div class="p" style="margin-top:6px;color:#D8E4FF">${esc(q.story)}</div>
+              <div class="k" style="margin-top:10px;font-weight:1000;">OBIETTIVO</div>
+              <div class="p" style="margin-top:6px;color:#D8E4FF"><b>${esc(q.goal)}</b></div>
+            </div>
+            <div style="height:10px"></div>
+            <div class="pill">🎒 Prendi: <b style="color:#fff">${esc(q.prop)}</b></div>
+            <div class="stepbox">${steps}</div>
+            <div style="height:12px"></div>
+            <div class="grid">
+              <button class="btn ghost center" data-action="SPEAK" ${s.audio.enabled?"":"disabled style='opacity:.55;cursor:not-allowed'"}>Ascolta guida 🔊</button>
+              <button class="btn center" data-action="NEXT">Prossimo passo →</button>
+            </div>
+            <div style="height:12px"></div>
+            <div class="card" style="background:rgba(255,179,0,.10);border-color:rgba(255,179,0,.25);box-shadow:none;">
+              <div class="k" style="color:#FFE3A6;font-weight:1000;">FINALE DI GLORIA</div>
+              <div class="p" style="margin-top:6px;color:#FFF6E0">${esc(q.finale)}</div>
+              <div class="k" style="margin-top:10px;color:#FFE3A6;font-weight:1000;">DOMANDA LENTA</div>
+              <div class="p" style="margin-top:6px;color:#FFF6E0">${esc(q.q)}</div>
+            </div>
+          </div>
+          <div style="height:12px"></div>
+          ${q.legend?`<button class="btn primary center" data-action="LEGEND_DONE">Completato ⚡</button>`:`<button class="btn primary center" data-action="DONE">Completato ✅</button>`}
+          <div style="height:10px"></div>
+          <button class="btn ghost center" data-action="HOME">Torna alle missioni</button>
+        </div>`;
+    }
+    const albumRows=(s.diary||[]).length ? s.diary.map(it=>`
+      <div class="item">
+        <div><b>${esc(it.badge||"🏅")}</b> ${esc(it.title||"")}<br><small>${esc(it.day||"")}</small></div>
+        <div><small>${it.age==="big"?"8–10":"5–7"}</small></div>
+      </div>`).join("") : `<div class="p">Nessuna missione salvata ancora.</div>`;
+    const album=`
+      <div class="modal" id="spAlbumModal" role="dialog" aria-modal="true">
+        <div class="sheet">
+          <div class="sheet-h">
+            <h3>Diario di bordo</h3>
+            <button class="link" data-action="CLOSE_ALBUM">Chiudi ✕</button>
+          </div>
+          <div class="sheet-b">
+            <div class="card" style="box-shadow:none;background:rgba(255,255,255,.03);">
+              <div class="k" style="color:#FFE3A6;font-weight:1000;">PARENT DASHBOARD</div>
+              <div class="p" style="margin-top:8px;font-size:13px;">
+                • Tempo attivo stimato: <b style="color:#fff">${s.stats.totalMin|0} min</b><br>
+                • Missioni oggi: <b style="color:#fff">${count}</b><br>
+                • Missioni totali: <b style="color:#fff">${s.stats.missionsTotal|0}</b>
+              </div>
+            </div>
+            <div style="height:10px"></div>
+            <div class="list">${albumRows}</div>
+          </div>
+        </div>
+      </div>`;
+    this.el.innerHTML=`
+      <div class="sp-shell">
+        ${nav}
+        <div class="sp-body">${welcome}${age}${home}${quest}${reward}</div>
+      </div>
+      ${album}
+    `;
+    if(s.fsm==="HOME" && s.count>=3){ this.go("REWARD"); return; }
+    if(s.fsm==="QUEST" && s.quest?.legend){
+      const el=this.el.querySelector("#legTimer");
+      if(el && !legendTimer){
+        legendTimer=setInterval(()=>{
+          const ms=s.quest.endsAt-Date.now();
+          const sec=Math.max(0,Math.ceil(ms/1000));
+          el.textContent=`⏱️ ${sec}s`;
+          if(sec<=0){
+            clearInterval(legendTimer); legendTimer=null;
+            this.s.quest=null; this.s.step=0; save(this.s);
+            alert("Tempo finito. La quest speciale si chiude. Riprova domani.");
+            this.go("REWARD");
+          }
+        },250);
+      }
+    } else { if(legendTimer){ clearInterval(legendTimer); legendTimer=null; } }
+  }
+};
+App.init();
+})();
+</script>
 </body>
 </html>
