@@ -1,615 +1,241 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>SparkPlay</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
+    <link rel="apple-touch-icon" href="https://files.oaiusercontent.com/file-B29eSrtP87rXkX4U2oK12Y?se=2026-02-16T17%3A19%3A46Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D0f39385b-6f85-4841-8f55-7ca548545e12.webp&sig=qEovqY53L/8eK7V7V4mN2/XG3jL3o9m3V9eE8uK4V4M%3D">
 
-  <style>
-    :root{
-      --bg:#0b1020;
-      --card:#121a33;
-      --card2:#0e1530;
-      --accent:#4f7cff;
-      --gold:#ffb703;
-      --text:#f1f5ff;
-      --muted:#9aa6d6;
-      --ok:#2dd4bf;
-      --danger:#ff4d6d;
-      --radius:22px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,Inter,system-ui,Segoe UI,Roboto,sans-serif;
-      background:linear-gradient(180deg,#060914,#0b1020);
-      color:var(--text);
-    }
-    .app{
-      max-width:420px;
-      margin:0 auto;
-      padding:16px;
-      padding-bottom:calc(24px + env(safe-area-inset-bottom));
-    }
-    .card{
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow:0 20px 40px rgba(0,0,0,.4);
-      margin-bottom:14px;
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:12px;
-    }
-    .brand{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      user-select:none;
-      -webkit-user-select:none;
-    }
-    .brand .t{
-      font-weight:1000;
-      letter-spacing:.6px;
-      font-size:14px;
-      line-height:1.1;
-    }
-    .brand .s{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.2;
-    }
-    .chip{
-      font-size:12px;
-      padding:8px 10px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      color:var(--text);
-      font-weight:900;
-      white-space:nowrap;
-    }
-    h1,h2{margin:0 0 8px;font-weight:1000;letter-spacing:.2px}
-    p{margin:0 0 12px;color:var(--muted);line-height:1.45;font-size:14px}
+    <title>SparkPlay</title>
+    <style>
+        :root {
+            --bg: #070B14; --accent: #3F5EF6; --gold: #FFB300; --ink: #EAF2FF;
+            --magic: #8E44AD; --detective: #2C3E50;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    .progress{
-      height:10px;
-      background:#1a244a;
-      border-radius:999px;
-      overflow:hidden;
-      margin-top:10px;
-      border:1px solid rgba(255,255,255,.10);
-    }
-    .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--gold));}
+        html, body {
+            height: 100%; margin: 0; overflow: hidden;
+            background: var(--bg); font-family: -apple-system, system-ui, sans-serif;
+            color: var(--ink);
+        }
 
-    button{
-      width:100%;
-      border:0;
-      border-radius:16px;
-      padding:14px;
-      font-weight:1000;
-      font-size:15px;
-      cursor:pointer;
-      background:linear-gradient(135deg,var(--accent),#7a6cff);
-      color:white;
-    }
-    button.secondary{
-      background:#1a244a;
-      color:var(--text);
-      border:1px solid rgba(255,255,255,.10);
-    }
-    button.gold{
-      background:linear-gradient(135deg,var(--gold),#ff8800);
-      color:#1b1400;
-    }
-    button:active{transform:scale(.99)}
-    .row{display:flex;gap:10px}
-    .row button{flex:1}
+        #SPARKPLAY_APP { height: 100vh; display: flex; flex-direction: column; transition: background 0.5s ease; }
 
-    .stepWrap{
-      background:var(--card2);
-      border-radius:18px;
-      padding:14px;
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .dots{display:flex;gap:6px;margin:0 0 12px}
-    .dot{
-      width:10px;height:10px;border-radius:999px;
-      background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.10);
-    }
-    .dot.on{background:linear-gradient(135deg,var(--accent),var(--gold));border-color:rgba(255,255,255,.20);}
-    .stepTitle{font-weight:1000;margin:0 0 8px;font-size:15px}
-    .stepText{margin:0;color:var(--text);line-height:1.42;font-size:14px}
+        /* THEME MODES */
+        .theme-spazio { background: radial-gradient(circle at top, #16213E 0%, #070B14 100%); }
+        .theme-magia { background: radial-gradient(circle at top, #4A235A 0%, #070B14 100%); }
+        .theme-detective { background: radial-gradient(circle at top, #1B2631 0%, #070B14 100%); }
 
-    .diary-item{
-      background:var(--card2);
-      border-radius:16px;
-      padding:12px;
-      margin-bottom:8px;
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .diary-meta{font-size:12px;color:var(--muted);margin-top:4px}
-    .center{text-align:center}
+        .header {
+            padding: env(safe-area-inset-top) 20px 15px;
+            display:flex; justify-content:space-between; align-items:center;
+        }
 
-    .banner{
-      position:sticky;top:10px;z-index:10;margin-bottom:12px;
-      padding:12px;border-radius:16px;
-      background:rgba(255,183,3,.18);
-      border:1px solid rgba(255,183,3,.35);
-      box-shadow:0 16px 30px rgba(0,0,0,.30);
-    }
-    .banner .btitle{font-weight:1000;margin:0 0 6px}
-    .banner .btext{margin:0 0 10px;color:rgba(241,245,255,.9);font-size:13px;line-height:1.35}
-    .banner .brow{display:flex;gap:10px}
-    .banner .brow button{padding:12px;border-radius:14px;font-size:14px}
+        .stage {
+            flex: 1;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding: 0 18px 30px;
+        }
 
-    .parentGate{
-      background:rgba(255,255,255,.05);
-      border:1px dashed rgba(255,255,255,.22);
-      padding:12px;
-      border-radius:16px;
-      margin-top:10px;
-    }
-    .tiny{font-size:12px;color:var(--muted);margin-top:8px}
-  </style>
+        .card-game {
+            width: 100%;
+            max-width: 420px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+            padding: 22px;
+        }
+
+        .world-selector {
+            display:flex; gap:10px; justify-content:center; margin-bottom:14px;
+        }
+        .badge-world {
+            padding:10px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            font-weight: 800;
+            border: 1px solid rgba(255,255,255,0.12);
+            opacity: 0.7;
+            cursor:pointer;
+            user-select:none;
+        }
+        .badge-world.active {
+            opacity: 1;
+            background: rgba(255,255,255,0.10);
+            border-color: rgba(255,255,255,0.25);
+        }
+
+        .instruction {
+            font-size: 18px;
+            line-height: 1.35;
+            font-weight: 700;
+            text-align:center;
+            margin: 10px 0 18px;
+        }
+
+        .btn-main {
+            width:100%;
+            border:0;
+            border-radius: 18px;
+            padding: 16px 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            font-size: 14px;
+            cursor:pointer;
+            color: white;
+            background: var(--accent);
+        }
+
+        .btn-spazio { background: var(--accent); }
+        .btn-magia { background: var(--magic); }
+        .btn-detective { background: var(--detective); }
+
+        .special-locked {
+            margin-top: 14px;
+            text-align:center;
+            opacity:0.7;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+    </style>
 </head>
 
 <body>
-<div class="app" id="app"></div>
+    <div id="SPARKPLAY_APP" class="theme-spazio"></div>
 
-<script>
-/** BUMP VERSION ON EACH RELEASE */
-const APP_VERSION = "2026.02.17-02";
+    <script>
+        (() => {
+            const KEY = "SPARKPLAY_V1_STATE";
+            const DEFAULT = { world: "spazio", audio: true, fsm: "HOME", step: 0, count: 0, specialReady: false };
 
-const KEY_STATE = "sparkplay_state_v2";
-const KEY_DEV   = "sparkplay_dev_mode";
+            const Narrator = {
+                enabled: true,
+                speak(text) {
+                    try{
+                        if(!this.enabled) return;
+                        speechSynthesis.cancel();
+                        const u = new SpeechSynthesisUtterance(text);
+                        u.lang = "it-IT";
+                        u.rate = 1.05;
+                        speechSynthesis.speak(u);
+                    }catch(e){}
+                }
+            };
 
-const MISSIONS = [
-  { phase:"Esplora", title:"Radar Spaziale", emoji:"🛰️",
-    steps:[
-      "Guarda la stanza: scegli 3 oggetti diversi.",
-      "Avvicinati lentamente a ciascuno come fossi su un pianeta alieno.",
-      "Descrivi a voce: forma, texture, ‘potere’ dell’oggetto."
-    ]
-  },
-  { phase:"Crea", title:"Costruisci la Base", emoji:"🧱",
-    steps:[
-      "Scegli 3 oggetti di casa (già tuoi).",
-      "Costruisci una mini base sul tavolo o sul pavimento.",
-      "Spiega a cosa serve ogni parte (energia, scudo, porta)."
-    ]
-  },
-  { phase:"Calma", title:"Respiro dell’Astronauta", emoji:"🌙",
-    steps:[
-      "Siediti comodo: schiena dritta, piedi fermi.",
-      "Conta lentamente da 5 a 1.",
-      "A ogni numero: un respiro profondo e lento."
-    ]
-  }
-];
+            const App = {
+                missions: {
+                    spazio: [
+                        "1) Esplora: trova 3 oggetti che sembrano tecnologia spaziale.",
+                        "2) Crea: costruisci una mini base sul tavolo con gli oggetti.",
+                        "3) Calma: respira lentamente e racconta la missione fatta."
+                    ],
+                    magia: [
+                        "1) Esplora: trova 3 oggetti che potrebbero essere magici.",
+                        "2) Crea: inventa un incantesimo e un rituale con quegli oggetti.",
+                        "3) Calma: chiudi gli occhi e descrivi il potere preferito."
+                    ],
+                    detective: [
+                        "1) Esplora: osserva 3 dettagli nella stanza come un detective.",
+                        "2) Crea: costruisci una pista usando 2 oggetti come indizi.",
+                        "3) Calma: racconta il caso risolto con una voce lenta e calma."
+                    ]
+                },
 
-/** Missione speciale: NON conta nel limite 3 */
-const SPECIAL_MISSIONS = [
-  { phase:"Speciale", title:"Oggetto Misterioso", emoji:"✨",
-    steps:[
-      "Scegli un oggetto a caso (senza dirlo).",
-      "Descrivilo con 3 indizi: forma, uso, suono.",
-      "Fai indovinare a un genitore o a un fratello."
-    ]
-  },
-  { phase:"Speciale", title:"Caccia alla Texture", emoji:"🔎",
-    steps:[
-      "Trova 3 superfici: liscia, ruvida, morbida.",
-      "Toccane una alla volta e descrivi la sensazione.",
-      "Scegli la ‘texture preferita’ e spiega perché."
-    ]
-  }
-];
+                init(){
+                    this.s = Object.assign({}, DEFAULT, JSON.parse(localStorage.getItem(KEY) || "null") || {});
+                    Narrator.enabled = this.s.audio;
+                    this.bind();
+                    this.render();
+                },
 
-const nowISO = () => new Date().toISOString();
-const todayKey = () => new Date().toDateString();
+                bind(){
+                    document.addEventListener("click", (e)=>{
+                        const act = e.target?.dataset?.action;
+                        const val = e.target?.dataset?.value;
+                        if (act) this.handle(act, val);
+                    });
+                },
 
-function safeParse(raw){ try{ return JSON.parse(raw); }catch(e){ return null; } }
-function escapeHtml(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-}
+                handle(act, val) {
+                    if (act === "SET_WORLD") this.s.world = val;
 
-let state = safeParse(localStorage.getItem(KEY_STATE)) || {
-  day: todayKey(),
-  missionIndex: 0,
-  stepIndex: 0,
-  diary: [],
-  lastSeenVersion: null,
+                    if (act === "TOGGLE_AUDIO") {
+                        this.s.audio = !this.s.audio; Narrator.enabled = this.s.audio;
+                        Narrator.speak(this.s.audio ? "Sistema audio attivato." : "");
+                    }
 
-  // Special mission state
-  specialActive: false,
-  specialIndex: 0,
-  specialStepIndex: 0
-};
+                    if (act === "START") {
+                        this.s.fsm = "PLAY"; this.s.step = 0;
+                        Narrator.speak("Nuova missione. " + this.missions[this.s.world][0]);
+                    }
 
-function save(){ localStorage.setItem(KEY_STATE, JSON.stringify(state)); }
+                    if (act === "NEXT") {
+                        if (this.s.step < this.missions[this.s.world].length - 1) {
+                            this.s.step++;
+                            Narrator.speak(this.missions[this.s.world][this.s.step]);
+                        } else {
+                            this.s.count++; this.s.fsm = "HOME";
+                            Narrator.speak("Missione completata. Ottimo lavoro!");
+                        }
+                    }
 
-function resetDay(){
-  state.day = todayKey();
-  state.missionIndex = 0;
-  state.stepIndex = 0;
-  save();
-}
-function resetAll(){
-  localStorage.removeItem(KEY_STATE);
-  state = {
-    day: todayKey(),
-    missionIndex: 0,
-    stepIndex: 0,
-    diary: [],
-    lastSeenVersion: null,
-    specialActive: false,
-    specialIndex: 0,
-    specialStepIndex: 0
-  };
-  save();
-}
+                    if (act === "UNLOCK_SPECIAL") {
+                        if (prompt("GENITORE: scrivi OK")?.toLowerCase() === "ok") {
+                            this.s.specialReady = true; Narrator.speak("Rituale speciale sbloccato.");
+                        }
+                    }
 
-if(state.day !== todayKey()){
-  state.day = todayKey();
-  state.missionIndex = 0;
-  state.stepIndex = 0;
-  state.specialActive = false;
-  state.specialStepIndex = 0;
-  save();
-}
+                    localStorage.setItem(KEY, JSON.stringify(this.s));
+                    this.render();
+                },
 
-/** DEV MODE (hidden): 5 taps on brand toggles */
-let tapCount = 0;
-let tapTimer = null;
-function toggleDev(){
-  const cur = (localStorage.getItem(KEY_DEV) === "1");
-  localStorage.setItem(KEY_DEV, cur ? "0" : "1");
-  render();
-}
-function isDev(){ return localStorage.getItem(KEY_DEV) === "1"; }
-function brandTap(){
-  tapCount++;
-  if(tapTimer) clearTimeout(tapTimer);
-  tapTimer = setTimeout(()=>{ tapCount=0; }, 2000);
-  if(tapCount >= 5){ tapCount = 0; toggleDev(); }
-}
+                render() {
+                    const { fsm, step, count, audio, world, specialReady } = this.s;
+                    const root = document.getElementById("SPARKPLAY_APP");
+                    document.body.className = `theme-${world}`;
 
-/** Anti-cache update check */
-let updateAvailable = false;
-let remoteVersion = null;
+                    let content = "";
+                    if (fsm === "HOME") {
+                        content = `
+                            <div class="card-game">
+                                <div class="world-selector">
+                                    <div class="badge-world ${world==='spazio'?'active':''}" data-action="SET_WORLD" data-value="spazio">SPAZIO</div>
+                                    <div class="badge-world ${world==='magia'?'active':''}" data-action="SET_WORLD" data-value="magia">MAGIA</div>
+                                    <div class="badge-world ${world==='detective'?'active':''}" data-action="SET_WORLD" data-value="detective">DETECTIVE</div>
+                                </div>
+                                <div class="instruction">In quale mondo vuoi viaggiare oggi?</div>
+                                <button class="btn-main btn-${world}" data-action="START">AVVIA MISSIONE</button>
+                                ${count >= 3 || specialReady ?
+                                    `<button class="btn-main" style="background:var(--gold);color:black;margin-top:15px;" data-action="UNLOCK_SPECIAL">MISSIONE SPECIALE</button>` :
+                                    `<div class="special-locked">MISSIONI COMPLETATE: ${count}/3</div>`}
+                            </div>`;
+                    } else {
+                        content = `
+                            <div class="card-game">
+                                <div style="font-size:12px; opacity:0.5; letter-spacing:2px">MISSIONE ${world.toUpperCase()}</div>
+                                <div class="instruction">${this.missions[world][step]}</div>
+                                <button class="btn-main btn-${world}" data-action="NEXT">${step === 2 ? 'RITUALE FINALE' : 'FATTO'}</button>
+                            </div>`;
+                    }
 
-async function checkForUpdate(){
-  try{
-    const url = window.location.href.split("#")[0];
-    const res = await fetch(url, { cache: "no-store" });
-    const txt = await res.text();
-    const m = txt.match(/const\s+APP_VERSION\s*=\s*"([^"]+)"/);
-    if(m && m[1]){
-      remoteVersion = m[1];
-      if(remoteVersion !== APP_VERSION){
-        updateAvailable = true;
-        render();
-      }
-    }
-  }catch(e){}
-}
-function forceReload(){
-  const base = window.location.href.split("#")[0].split("?")[0];
-  window.location.replace(base + "?v=" + encodeURIComponent(Date.now()));
-}
+                    root.innerHTML = `
+                        <div class="header">
+                            <div style="font-weight:900; letter-spacing:2px; font-size:14px;">SPARKPLAY</div>
+                            <div data-action="TOGGLE_AUDIO" style="font-size:24px; cursor:pointer;">${audio ? '🔊' : '🔇'}</div>
+                        </div>
+                        <div class="stage">${content}</div>`;
+                }
+            };
 
-/** Parent gate (session-only) */
-let parentUnlocked = false;
-
-function askParentGate(){
-  const a = 3 + Math.floor(Math.random()*7); // 3..9
-  const b = 2 + Math.floor(Math.random()*8); // 2..9
-  const ans = prompt(`Area Genitore\nRispondi: ${a} + ${b} = ?`);
-  if(ans === null) return false;
-  const ok = Number(ans) === (a+b);
-  if(ok) parentUnlocked = true;
-  return ok;
-}
-
-/** Long press helper */
-function attachLongPress(el, fn, ms=900){
-  let t=null;
-  const start=()=>{ t=setTimeout(()=>{ t=null; fn(); }, ms); };
-  const cancel=()=>{ if(t){ clearTimeout(t); t=null; } };
-  el.addEventListener("pointerdown", start);
-  el.addEventListener("pointerup", cancel);
-  el.addEventListener("pointercancel", cancel);
-  el.addEventListener("pointerleave", cancel);
-}
-
-/** Special mission */
-function startSpecial(){
-  state.specialIndex = Math.floor(Math.random() * SPECIAL_MISSIONS.length);
-  state.specialStepIndex = 0;
-  state.specialActive = true;
-  save();
-  render();
-}
-function completeSpecial(){
-  const m = SPECIAL_MISSIONS[state.specialIndex];
-  (state.diary ||= []).unshift({
-    phase: m.phase,
-    title: m.title,
-    emoji: m.emoji,
-    at: nowISO()
-  });
-  state.specialActive = false;
-  state.specialStepIndex = 0;
-  save();
-  render();
-}
-
-function renderTop(app){
-  const top = document.createElement("div");
-  top.className = "topbar";
-  top.innerHTML = `
-    <div class="brand" id="brand">
-      <div class="t">SPARKPLAY</div>
-      <div class="s">Montessori • gioco nel mondo reale</div>
-    </div>
-    <div class="chip">v ${APP_VERSION}</div>
-  `;
-  app.appendChild(top);
-  top.querySelector("#brand").addEventListener("click", brandTap);
-}
-
-function renderUpdateBanner(app){
-  if(!updateAvailable) return;
-  const banner = document.createElement("div");
-  banner.className = "banner";
-  banner.innerHTML = `
-    <div class="btitle">Aggiornamento disponibile</div>
-    <div class="btext">È pronta una versione più nuova (${escapeHtml(remoteVersion)}). Tocca aggiorna per caricarla.</div>
-    <div class="brow">
-      <button class="gold" id="btnUpdate">Aggiorna</button>
-      <button class="secondary" id="btnLater">Dopo</button>
-    </div>
-  `;
-  app.appendChild(banner);
-  banner.querySelector("#btnUpdate").addEventListener("click", forceReload);
-  banner.querySelector("#btnLater").addEventListener("click", ()=>{ updateAvailable=false; render(); });
-}
-
-function renderStepMission(app, mission, idx, totalSteps, onPrev, onNext, nextLabel){
-  const stepsCard = document.createElement("div");
-  stepsCard.className = "card";
-  stepsCard.innerHTML = `
-    <div class="stepWrap">
-      <div class="dots">
-        ${Array.from({length: totalSteps}).map((_,i)=>`<div class="dot ${i===idx ? "on":""}"></div>`).join("")}
-      </div>
-      <div class="stepTitle">Passo ${idx+1} di ${totalSteps}</div>
-      <p class="stepText">${escapeHtml(mission.steps[idx])}</p>
-    </div>
-    <div style="height:10px"></div>
-    <div class="row">
-      <button class="secondary" id="btnPrev" ${idx===0 ? "disabled style='opacity:.55'":""}>Indietro</button>
-      <button id="btnNext">${escapeHtml(nextLabel)}</button>
-    </div>
-  `;
-  app.appendChild(stepsCard);
-  stepsCard.querySelector("#btnPrev").addEventListener("click", onPrev);
-  stepsCard.querySelector("#btnNext").addEventListener("click", onNext);
-}
-
-function renderDiary(app){
-  const diary = document.createElement("div");
-  diary.className = "card";
-  diary.innerHTML = `<h2>📓 Diario missioni</h2><p>Piccolo storico delle missioni completate.</p>`;
-  const items = (state.diary || []).slice(0, 25);
-  if(items.length === 0){
-    diary.innerHTML += `<p>Nessuna missione registrata.</p>`;
-  }else{
-    diary.innerHTML += items.map(d=>{
-      const when = new Date(d.at).toLocaleString("it-IT");
-      return `
-        <div class="diary-item">
-          <b>${escapeHtml(d.emoji)} ${escapeHtml(d.phase)}</b> -- ${escapeHtml(d.title)}
-          <div class="diary-meta">${escapeHtml(when)}</div>
-        </div>
-      `;
-    }).join("");
-  }
-  app.appendChild(diary);
-  return diary;
-}
-
-function render(){
-  const app = document.getElementById("app");
-  app.innerHTML = "";
-
-  renderUpdateBanner(app);
-  renderTop(app);
-
-  // If special mission active, render it immediately (doesn't affect daily 3)
-  if(state.specialActive){
-    const m = SPECIAL_MISSIONS[state.specialIndex];
-    const idx = Math.max(0, Math.min(m.steps.length-1, state.specialStepIndex));
-
-    const head = document.createElement("div");
-    head.className = "card";
-    head.innerHTML = `
-      <h1>${escapeHtml(m.emoji)} Missione Speciale</h1>
-      <p><b>${escapeHtml(m.title)}</b><br>Extra: non conta nelle 3 missioni di oggi.</p>
-    `;
-    app.appendChild(head);
-
-    renderStepMission(
-      app, m, idx, m.steps.length,
-      ()=>{ if(state.specialStepIndex>0){ state.specialStepIndex--; save(); render(); } },
-      ()=>{ 
-        if(idx < m.steps.length-1){ state.specialStepIndex++; save(); render(); }
-        else { completeSpecial(); }
-      },
-      (idx === m.steps.length-1) ? "Completa" : "Avanti"
-    );
-
-    const back = document.createElement("div");
-    back.className = "card";
-    back.innerHTML = `<button class="secondary" id="exitSpecial">Esci (senza completare)</button>`;
-    app.appendChild(back);
-    back.querySelector("#exitSpecial").addEventListener("click", ()=>{
-      state.specialActive = false;
-      state.specialStepIndex = 0;
-      save();
-      render();
-    });
-    return;
-  }
-
-  const doneToday = state.missionIndex >= 3;
-
-  if(doneToday){
-    const stop = document.createElement("div");
-    stop.className = "card center";
-    stop.innerHTML = `
-      <h2>🌙 Fine per oggi</h2>
-      <p>SparkPlay si ferma qui: <b>3 missioni fatte bene</b> valgono più di 30 random.</p>
-      <p><b>Rituale genitore (30 sec):</b><br>Chiedi: "Qual è stata la tua parte preferita?"</p>
-
-      <div class="parentGate" id="parentGate">
-        <p style="margin:0;color:rgba(241,245,255,.9)"><b>Area Genitore</b></p>
-        <p style="margin:6px 0 0">Tieni premuto 1 secondo per sbloccare.</p>
-        <div class="tiny">Serve per ripartire / missione speciale. I bambini non ci arrivano per caso.</div>
-      </div>
-    `;
-    app.appendChild(stop);
-
-    // Attach long press on the parent gate box
-    const gate = stop.querySelector("#parentGate");
-    attachLongPress(gate, ()=>{
-      if(parentUnlocked || askParentGate()){
-        parentUnlocked = true;
-        render(); // rerender showing parent controls below
-      }
-    }, 900);
-
-    const diaryCard = renderDiary(app);
-
-    if(parentUnlocked){
-      const controls = document.createElement("div");
-      controls.className = "card";
-      controls.innerHTML = `
-        <h2>🔒 Area Genitore</h2>
-        <p>Strumenti rapidi (non visibili ai bambini).</p>
-        <div class="row">
-          <button class="gold" id="btnSpecial">Avvia Missione Speciale</button>
-        </div>
-        <div style="height:10px"></div>
-        <div class="row">
-          <button class="secondary" id="btnResetDay">Reset giorno</button>
-          <button class="secondary" id="btnResetAll">Reset totale</button>
-        </div>
-        <div class="tiny">Reset giorno = riparti con le 3 missioni. Speciale = extra senza contare.</div>
-      `;
-      app.appendChild(controls);
-
-      controls.querySelector("#btnSpecial").addEventListener("click", startSpecial);
-      controls.querySelector("#btnResetDay").addEventListener("click", ()=>{ resetDay(); parentUnlocked=false; render(); });
-      controls.querySelector("#btnResetAll").addEventListener("click", ()=>{ resetAll(); parentUnlocked=false; render(); });
-    }else if(isDev()){
-      // Dev mode still available (hidden) – only for you
-      const dev = document.createElement("div");
-      dev.className = "card";
-      dev.innerHTML = `
-        <h2>🛠️ Dev (test)</h2>
-        <p>Attivo perché hai Dev Mode. (5 tap su SPARKPLAY)</p>
-        <div class="row">
-          <button class="secondary" id="devResetDay">Reset giorno</button>
-          <button class="secondary" id="devResetAll">Reset totale</button>
-        </div>
-      `;
-      app.appendChild(dev);
-      dev.querySelector("#devResetDay").addEventListener("click", ()=>{ resetDay(); render(); });
-      dev.querySelector("#devResetAll").addEventListener("click", ()=>{ resetAll(); render(); });
-    }
-
-    return;
-  }
-
-  // Normal daily missions
-  const mission = MISSIONS[state.missionIndex];
-  const totalMissions = 3;
-  const progressPct = Math.round((state.missionIndex / totalMissions) * 100);
-
-  const head = document.createElement("div");
-  head.className = "card";
-  head.innerHTML = `
-    <h1>${escapeHtml(mission.emoji)} ${escapeHtml(mission.phase)}</h1>
-    <p><b>${escapeHtml(mission.title)}</b><br>Lo schermo guida. Il gioco succede nella stanza.</p>
-    <div class="progress"><div class="bar" style="width:${progressPct}%"></div></div>
-  `;
-  app.appendChild(head);
-
-  const steps = mission.steps;
-  const idx = Math.max(0, Math.min(steps.length - 1, state.stepIndex));
-
-  renderStepMission(
-    app, mission, idx, steps.length,
-    ()=>{ if(state.stepIndex>0){ state.stepIndex--; save(); render(); } },
-    ()=>{
-      if(idx < steps.length-1){
-        state.stepIndex++; save(); render();
-      }else{
-        // complete daily mission
-        (state.diary ||= []).unshift({
-          phase: mission.phase,
-          title: mission.title,
-          emoji: mission.emoji,
-          at: nowISO()
-        });
-        state.missionIndex++;
-        state.stepIndex = 0;
-        save();
-        render();
-      }
-    },
-    (idx === steps.length-1) ? "Finito" : "Avanti"
-  );
-
-  if(isDev()){
-    const dev = document.createElement("div");
-    dev.className = "card";
-    dev.innerHTML = `
-      <h2>🛠️ Dev (test)</h2>
-      <p>Solo per te. Non visibile ai clienti.</p>
-      <div class="row">
-        <button class="secondary" id="devResetDay">Reset giorno</button>
-        <button class="secondary" id="devStartSpecial">Speciale</button>
-      </div>
-      <div class="tiny">Disattiva: 5 tap su "SPARKPLAY".</div>
-    `;
-    app.appendChild(dev);
-    dev.querySelector("#devResetDay").addEventListener("click", ()=>{ resetDay(); render(); });
-    dev.querySelector("#devStartSpecial").addEventListener("click", startSpecial);
-  }
-}
-
-render();
-
-if(state.lastSeenVersion !== APP_VERSION){
-  state.lastSeenVersion = APP_VERSION;
-  save();
-}
-setTimeout(checkForUpdate, 600);
-</script>
+            App.init();
+        })();
+    </script>
 </body>
 </html>
