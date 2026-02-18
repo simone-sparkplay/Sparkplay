@@ -1,145 +1,116 @@
 <!doctype html>
 <html lang="it">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SparkPlay</title>
-    <link rel="apple-touch-icon" href="icona.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg0: #070B14; --bg1: #0B1220; --ink: #EAF2FF; --muted: #A9B7D6; --line: rgba(255,255,255,.10);
-            --accent: #3F5EF6; --gold: #FFB300; --radius: 26px; --shadow: 0 30px 70px rgba(0,0,0,.45);
-        }
-        body {
-            margin: 0; min-height: 100vh;
-            background: radial-gradient(1200px 800px at 30% 10%, rgba(63,94,246,.22), transparent 60%), linear-gradient(180deg, var(--bg0), var(--bg1));
-            font-family: 'Inter', system-ui, sans-serif; color: var(--ink);
-            display: flex; flex-direction: column;
-        }
-        .sp-root { width: 100%; max-width: 900px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
-        .sp-shell { border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,.02); box-shadow: var(--shadow); overflow: hidden; }
-        .sp-top { padding: 16px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; background: rgba(63,94,246,.1); }
-        .brand { font-weight: 900; letter-spacing: 1px; font-size: 18px; color: var(--gold); }
-        .card { background: rgba(255,255,255,.05); border: 1px solid var(--line); border-radius: 22px; padding: 20px; margin-bottom: 15px; }
-        .btn { border: none; border-radius: 18px; padding: 18px; font-weight: 900; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .btn-primary { background: linear-gradient(135deg, var(--accent), #5673FF); color: white; width: 100%; box-shadow: 0 10px 20px rgba(63,94,246,0.3); }
-        .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
-        .step { padding: 15px; border-radius: 12px; margin-bottom: 10px; background: rgba(0,0,0,0.2); border: 1px solid transparent; }
-        .step.active { border-color: var(--accent); background: rgba(63,94,246,0.1); color: var(--gold); }
-        .step.dim { opacity: 0.4; }
-        .orb { font-size: 50px; text-align: center; margin: 20px 0; animation: float 3s infinite ease-in-out; }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
-        .hidden { display: none; }
-    </style>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SparkPlay</title>
+<link rel="apple-touch-icon" href="icona.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg0:#070B14; --bg1:#0B1220; --ink:#EAF2FF; --muted:#A9B7D6; --line:rgba(255,255,255,.10);
+  --accent:#3F5EF6; --gold:#FFB300; --radius:26px; --shadow:0 30px 70px rgba(0,0,0,.45);
+}
+body{ margin:0; background: var(--bg0); font-family: Inter, sans-serif; color:var(--ink); overflow-x: hidden; }
+
+/* STELLE SULLO SFONDO */
+.stars-container {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+  background: radial-gradient(circle at 30% 30%, rgba(63,94,246,0.15), transparent), linear-gradient(180deg, var(--bg0), var(--bg1));
+}
+.star {
+  position: absolute; background: white; border-radius: 50%; opacity: 0.5;
+  animation: blink 3s infinite ease-in-out;
+}
+@keyframes blink { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+
+.sp-root{ max-width: 850px; margin: 0 auto; padding: 20px; position: relative; }
+.sp-shell{ border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); box-shadow: var(--shadow); overflow: hidden; }
+.sp-top{ padding: 16px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.brand{ font-weight: 900; color: var(--gold); }
+.card{ background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; margin-bottom: 15px; }
+.btn{ border: none; border-radius: 18px; padding: 18px; font-weight: 800; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-primary{ background: var(--accent); color: white; width: 100%; font-size: 18px; }
+.btn-ghost{ background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.step.active{ color: var(--gold); font-weight: 800; border-left: 4px solid var(--gold); padding-left: 10px; background: rgba(255,179,0,0.05); }
+.step.dim{ opacity: 0.4; }
+.orb{ font-size: 40px; text-align: center; animation: float 3s infinite ease-in-out; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+</style>
 </head>
 <body>
-    <div id="SPARKPLAY_APP" class="sp-root"></div>
+<div class="stars-container" id="stars"></div>
+<div id="SPARKPLAY_APP" class="sp-root"></div>
+<script>
+/* GENERATORE DI STELLE */
+const starsBox = document.getElementById('stars');
+for(let i=0; i<50; i++) {
+  const star = document.createElement('div');
+  star.className = 'star';
+  const size = Math.random() * 3 + 'px';
+  star.style.width = size; star.style.height = size;
+  star.style.top = Math.random() * 100 + '%';
+  star.style.left = Math.random() * 100 + '%';
+  star.style.animationDelay = Math.random() * 3 + 's';
+  starsBox.appendChild(star);
+}
 
-    <script>
-        (() => {
-            "use strict";
-            const DB = {
-                small: [{
-                    id: "s01", badge: "🌙", title: "Segnale Perduto",
-                    story: "La base ha perso il segnale. Senza di te, la galassia resta al buio.",
-                    goal: "Riaccendere l’antenna della base.",
-                    steps: ["Trova l’antenna (un calzino) e stringila forte.", "Portala nella tua base e appoggiala in alto.", "Fai 3 'bip' lenti: bip... bip... bip..."],
-                    finale: "Segnale tornato. Base salva!",
-                    q: "A chi manderesti il primo messaggio?"
-                }]
-            };
-
-            let state = { fsm: "WELCOME", audio: false, step: 0, quest: null };
-
-            const AudioEng = {
-                speak(text, onEnd) {
-                    if (!state.audio) { if (onEnd) onEnd(); return; }
-                    speechSynthesis.cancel();
-                    const u = new SpeechSynthesisUtterance(text);
-                    u.lang = "it-IT"; u.rate = 0.85;
-                    if (onEnd) u.onend = onEnd;
-                    speechSynthesis.speak(u);
-                }
-            };
-
-            function render() {
-                const root = document.getElementById("SPARKPLAY_APP");
-                if (state.fsm === "WELCOME") {
-                    root.innerHTML = `
-                        <div class="sp-shell">
-                            <div class="sp-top">
-                                <div class="brand">SPARKPLAY 🚀</div>
-                                <button class="btn btn-ghost" onclick="toggleAudio()">${state.audio ? '🔊' : '🔈'}</button>
-                            </div>
-                            <div style="padding:30px; text-align:center;">
-                                <div class="orb">🪐</div>
-                                <h1 style="margin-bottom:10px;">Pronto al Lancio?</h1>
-                                <p style="color: #A9B7D6; margin-bottom:30px;">Leggi la missione, posa il telefono e gioca!</p>
-                                <button class="btn btn-primary" onclick="startMission()">INIZIA MISSIONE</button>
-                            </div>
-                        </div>`;
-                } else if (state.fsm === "QUEST") {
-                    const q = state.quest;
-                    root.innerHTML = `
-                        <div class="sp-shell">
-                            <div class="sp-top">
-                                <button class="btn btn-ghost" onclick="toggleAudio()">${state.audio ? '🔊' : '🔈'}</button>
-                                <div class="brand">${q.title}</div>
-                                <button class="btn btn-ghost" onclick="goHome()">🏠</button>
-                            </div>
-                            <div style="padding:20px;">
-                                <div class="card"><b>Storia:</b> ${q.story}<br><br><b>Obiettivo:</b> ${q.goal}</div>
-                                <div class="steps-container">
-                                    ${q.steps.map((s, i) => `<div class="step ${i === state.step ? 'active' : 'dim'}"><b>${i + 1}.</b> ${s}</div>`).join("")}
-                                </div>
-                                <div style="height:10px;"></div>
-                                <button class="btn btn-primary" onclick="handleNext()">
-                                    ${state.step < q.steps.length - 1 ? 'PROSSIMO PASSO' : 'COMPLETA MISSIONE ✅'}
-                                </button>
-                            </div>
-                        </div>`;
-                }
-            }
-
-            window.toggleAudio = () => {
-                state.audio = !state.audio;
-                if (state.audio) AudioEng.speak("Audio attivato");
-                render();
-            };
-
-            window.startMission = () => {
-                state.fsm = "QUEST";
-                state.quest = DB.small[0];
-                state.step = 0;
-                render();
-                AudioEng.speak(state.quest.story + ". Obiettivo: " + state.quest.goal + ". Passo 1: " + state.quest.steps[0]);
-            };
-
-            window.handleNext = () => {
-                const q = state.quest;
-                if (state.step < q.steps.length - 1) {
-                    state.step++;
-                    render();
-                    AudioEng.speak("Passo " + (state.step + 1) + ". " + q.steps[state.step], () => {
-                        if (state.step === q.steps.length - 1) {
-                            setTimeout(() => {
-                                AudioEng.speak("Gran Finale. " + q.finale + ". Curiosità Spaziale. " + q.q);
-                            }, 1000);
-                        }
-                    });
-                } else {
-                    alert("🌟 MISSIONE COMPIUTA!\n\n" + q.finale);
-                    state.fsm = "WELCOME"; render();
-                }
-            };
-
-            window.goHome = () => { state.fsm = "WELCOME"; render(); };
-
-            render();
-        })();
-    </script>
+(()=>{"use strict";
+const DB={
+  small:[
+    {id:"s01",badge:"🌙",title:"Segnale Perduto",story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.",goal:"Riaccendere l’antenna della base.",steps:["Trova l’antenna (calzino) e stringila forte.","Portala nella tua base (tappeto) e appoggiala in alto.","Fai 3 bip lenti: bip... bip... bip..."],finale:"Segnale tornato. Base salva!",q:"A chi manderesti il primo messaggio?"},
+    {id:"s02",badge:"🛰️",title:"Satellite Smarrito",story:"Un piccolo satellite è uscito dall’orbita.",goal:"Riportarlo vicino alla base.",steps:["Prendi il satellite (peluche) con cura.","Fallo fluttuare lento fino alla base.","Giro d’orbita: un cerchio grande... e uno piccolo."],finale:"Orbita ripristinata!",q:"Che nome dai al satellite?"}
+  ]
+};
+let s = { fsm:"WELCOME", audio:false, step:0, quest:null };
+const Audio={
+  speak(t, cb){
+    if(!s.audio) { if(cb) cb(); return; }
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(t); u.lang="it-IT"; u.rate=0.85;
+    if(cb) u.onend=cb;
+    speechSynthesis.speak(u);
+  }
+};
+function render(){
+  const root = document.getElementById("SPARKPLAY_APP");
+  if(s.fsm==="WELCOME"){
+    root.innerHTML=`<div class="sp-shell"><div class="sp-top"><div class="brand">SPARKPLAY 🚀</div><button class="btn btn-ghost" onclick="toggleA()">${s.audio?'🔊':'🔈'}</button></div><div style="padding:20px;text-align:center;"><div class="orb">🪐</div><h1>Pronti al Lancio?</h1><button class="btn btn-primary" onclick="startQ()">AVVIA MISSIONE</button></div></div>`;
+  } else {
+    const q=s.quest;
+    root.innerHTML=`<div class="sp-shell">
+      <div class="sp-top">
+        <button class="btn btn-ghost" onclick="toggleA()">${s.audio?'🔊':'🔈'}</button>
+        <div class="brand">${q.title}</div>
+        <button class="btn btn-ghost" onclick="home()">🏠</button>
+      </div>
+      <div style="padding:20px;">
+        <div class="card"><b>Storia:</b> ${q.story}</div>
+        <div class="card"><b>Obiettivo:</b> ${q.goal}</div>
+        <div class="steps">${q.steps.map((txt,i)=>`<div class="step ${i===s.step?'active':'dim'}">${i+1}. ${txt}</div>`).join("")}</div>
+        <div style="height:20px"></div>
+        <div style="display:grid; grid-template-columns: 1fr 2fr; gap:10px;">
+          <button class="btn btn-ghost" onclick="prevS()" ${s.step===0?'disabled style="opacity:0.3"':''}>⬅️ Indietro</button>
+          <button class="btn btn-primary" onclick="nextS()">${s.step<q.steps.length-1?'PROSSIMO PASSO':'COMPLETA MISSIONE ✅'}</button>
+        </div>
+      </div>
+    </div>`;
+  }
+}
+window.toggleA=()=>{ s.audio=!s.audio; render(); if(s.audio) Audio.speak("Audio attivo"); };
+window.home=()=>{ s.fsm="WELCOME"; render(); };
+window.startQ=()=>{ s.fsm="QUEST"; s.quest=pick(DB.small); s.step=0; render(); Audio.speak(s.quest.story+". Passo 1. "+s.quest.steps[0]); };
+window.prevS=()=>{ if(s.step>0){ s.step--; render(); Audio.speak("Passo "+(s.step+1)+". "+s.quest.steps[s.step]); } };
+window.nextS=()=>{
+  if(s.step<s.quest.steps.length-1){
+    s.step++; render(); Audio.speak("Passo "+(s.step+1)+". "+s.quest.steps[s.step], ()=>{
+      if(s.step===s.quest.steps.length-1) setTimeout(()=>Audio.speak("Gran finale. "+s.quest.finale+". Curiosità spaziale. "+s.quest.q), 1000);
+    });
+  } else { alert("🌟 MISSIONE COMPIUTA!\n\n"+s.quest.finale); window.home(); }
+};
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+render();
+})();
+</script>
 </body>
 </html>
