@@ -18,12 +18,11 @@ body {
   margin: 0; background-color: var(--sfondo-profondo); font-family: 'Quicksand', sans-serif; 
   color: var(--bianco-latte); height: 100vh; overflow: hidden;
   background-image: radial-gradient(1px 1px at 25% 15%, white, transparent), radial-gradient(2px 2px at 75% 65%, var(--giallo-stella), transparent);
-  background-size: 100% 100%;
 }
 .sp-root { max-width: 600px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: env(safe-area-inset-top) 25px env(safe-area-inset-bottom); }
 .sp-top { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
 .brand { font-family: 'Fredoka One', cursive; font-size: 32px; color: var(--giallo-stella); text-shadow: 2px 2px var(--rossa-morbida); }
-.content-area { flex: 1; display: flex; flex-direction: column; gap: 20px; justify-content: center; }
+.content-area { flex: 1; display: flex; flex-direction: column; gap: 20px; justify-content: center; position: relative; }
 .testo-storia { font-size: 20px; line-height: 1.4; text-align: center; }
 .obiettivo-box { border: 3px dashed var(--blu-spaziale); border-radius: 25px; padding: 15px; text-align: center; font-weight: 700; color: var(--blu-spaziale); }
 .passo { padding: 15px; border-radius: 25px; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-weight: 700; }
@@ -31,11 +30,15 @@ body {
 .numero { background: var(--rossa-morbida); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One'; flex-shrink: 0; }
 .btn { border: none; font-family: 'Fredoka One', cursive; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 0px rgba(0,0,0,0.2); border-radius: 25px; }
 .btn:active { transform: translateY(3px); box-shadow: 0 2px 0px rgba(0,0,0,0.2); }
-.btn-avanti { background: var(--rossa-morbida); color: white; padding: 18px; width: 100%; font-size: 18px; }
-.btn-eta { background: rgba(0,210,255,0.2); color: white; border: 2px solid var(--blu-spaziale); padding: 20px; font-size: 20px; }
-.pianeta { font-size: 80px; text-align: center; animation: float 4s infinite ease-in-out; }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-.muro-frasi { font-style: italic; color: var(--giallo-stella); text-align: center; padding: 10px; font-size: 16px; margin-top: 10px; }
+.btn-avanti { background: var(--rossa-morbida); color: white; padding: 18px; width: 100%; font-size: 18px; margin-top: 10px; }
+.btn-eta { background: rgba(0,210,255,0.2); color: white; border: 2px solid var(--blu-spaziale); padding: 20px; font-size: 20px; width: 100%; margin-bottom: 10px; }
+.pianeta { font-size: 100px; text-align: center; animation: float 4s infinite ease-in-out; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+.muro-frasi { font-style: italic; color: var(--giallo-stella); text-align: center; padding: 10px; font-size: 16px; }
+
+/* EFFETTO STELLE A CASCATA */
+.cascata { position: absolute; pointer-events: none; top: -20px; animation: caduta 2s linear forwards; font-size: 24px; }
+@keyframes caduta { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
 </style>
 </head>
 <body>
@@ -47,19 +50,19 @@ const DB = {
   "5-7": [
     {t:"SEGNALE PERDUTO", s:"La base ha perso il segnale! La galassia è al buio!", o:"RIACCENDI L'ANTENNA!", p:["Trova un calzino stellare.","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."]},
     {t:"SATELLITE MORBIDO", s:"Un satellite è caduto tra le stelle!", o:"RECUPERALO!", p:["Trova un peluche-satellite.","Fagli fare un giro intorno al tavolo.","Mettilo a riposare in un posto alto."]},
-    {t:"POLVERE DI STELLE", s:"C'è troppa polvere spaziale sui motori!", o:"PULISCI TUTTO!", p:["Usa le mani come spazzole spaziali.","Pulisci 3 superfici diverse.","Fai un respiro profondo e soffia via la polvere."]}
+    {t:"POLVERE DI STELLE", s:"C'è troppa polvere spaziale sui motori!", o:"PULISCI TUTTO!", p:["Usa le mani come spazzole spaziali.","Pulisci 3 superfici diverse.","Soffia via la polvere con un soffio magico."]}
   ],
   "8-10": [
-    {t:"MODULO VIBRANTE", s:"Il modulo 4 vibra forte. Serve silenzio assoluto!", o:"RIPARA IN SILENZIO", p:["Trova un foglio di carta.","Portalo alla base senza fare alcun rumore.","Piegalo in 4 e mettilo sotto un cuscino."]},
-    {t:"CODICE STELLARE", s:"Dobbiamo inviare un codice segreto alla Terra!", o:"COMPONI IL CODICE", p:["Trova 3 oggetti dello stesso colore.","Mettili in fila dal più piccolo al più grande.","Salta sopra ogni oggetto pronunciando una lettera."]},
-    {t:"ANTIGRAVITÀ", s:"La gravità si è rotta! Tutto fluttua!", o:"MUOVITI LENTO", p:["Attraversa la stanza muovendoti al rallentatore.","Tocca terra solo con le punte dei piedi.","Raggiungi la base e siediti senza usare le mani."]}
+    {t:"MODULO VIBRANTE", s:"Il modulo 4 vibra forte. Serve silenzio assoluto!", o:"RIPARA IN SILENZIO", p:["Trova un foglio di carta.","Portalo alla base senza fare rumore.","Piegalo in 4 e mettilo sotto un cuscino."]},
+    {t:"CODICE STELLARE", s:"Dobbiamo inviare un codice segreto alla Terra!", o:"COMPONI IL CODICE", p:["Trova 3 oggetti dello stesso colore.","Mettili in fila dal più piccolo al più grande.","Salta sopra ogni oggetto dicendo una lettera."]},
+    {t:"ANTIGRAVITÀ", s:"La gravità si è rotta! Tutto fluttua!", o:"MUOVITI LENTO", p:["Attraversa la stanza al rallentatore.","Tocca terra solo con le punte dei piedi.","Siediti alla base senza usare le mani."]}
   ],
   speciale: {t:"MISSIONE SINCRONIA 🤝", s:"I motori hanno bisogno di due piloti insieme!", o:"SQUADRA SPAZIALE", p:["Prendetevi per mano (Genitore + Bambino).","Fate 10 passi sincronizzati insieme.","Dite 'Pronti al lancio' nello stesso istante!"], f:"Siete una squadra imbattibile!"}
 };
 
-const FRASI = ["L'immaginazione è l'unica astronave che arriva ovunque.", "Oggi sei un astronauta, domani il re di un nuovo mondo.", "Il gioco è il lavoro più serio del mondo.", "Nello spazio di SparkPlay, tu crei le regole."];
+const FRASI = ["L'immaginazione è l'unica astronave che arriva ovunque.", "Il gioco è il lavoro più serio del mondo.", "Nello spazio di SparkPlay, tu crei le regole."];
 
-let s = { fsm:"INIZIO", eta:null, passo:0, missioniFatte:0, missioneAttuale:null, audio:false, specialeSbloccata:false };
+let s = { fsm:"INIZIO", eta:null, passo:0, missioniFatte:0, missioneAttuale:null, audio:false };
 
 function parla(testo){
   if(!s.audio) return;
@@ -69,22 +72,34 @@ function parla(testo){
   speechSynthesis.speak(m);
 }
 
+function cascataStelle() {
+  for(let i=0; i<15; i++) {
+    const stella = document.createElement("div");
+    stella.className = "cascata";
+    stella.innerHTML = "⭐";
+    stella.style.left = Math.random() * 100 + "vw";
+    stella.style.animationDuration = (Math.random() * 1 + 1) + "s";
+    document.body.appendChild(stella);
+    setTimeout(() => stella.remove(), 2000);
+  }
+}
+
 function disegna(){
   const root = document.getElementById("SPARKPLAY_APP");
-  const icone = ["🪐","🚀","🛰️","🌠"];
-  const iconaRandom = icone[Math.floor(Date.now()/5000)%icone.length];
+  const icone3D = ["🪐","🚀","🛰️","🌠","☄️"];
+  const icona = icone3D[Math.floor(Date.now()/5000)%icone3D.length];
 
   if(s.fsm === "INIZIO"){
     root.innerHTML = `<div class="sp-top"><div class="brand">SPARKPLAY</div><button class="btn" style="background:none;font-size:24px;" onclick="toggleAudio()">${s.audio?'🔊':'🔈'}</button></div>
-      <div class="content-area"><div class="pianeta">${iconaRandom}</div><h1 style="text-align:center;color:var(--giallo-stella)">PRONTI?</h1>
-      <button class="btn btn-avanti" onclick="vaiEta()">AVVIA MISSIONE</button>
+      <div class="content-area"><div class="pianeta">${icona}</div><h1 style="text-align:center;color:var(--giallo-stella)">PRONTI?</h1>
+      <button class="btn btn-avanti" style="width:70%; margin:0 auto;" onclick="vaiEta()">AVVIA MISSIONE</button>
       <div class="muro-frasi">"${FRASI[Math.floor(Math.random()*FRASI.length)]}"</div></div>`;
   } 
   else if(s.fsm === "ETA"){
     root.innerHTML = `<div class="sp-top"><div class="brand">ETÀ</div></div>
-      <div class="content-area" style="gap:15px">
-        <button class="btn btn-eta" onclick="scegliEta('5-7')">5 - 7 ANNI</button>
-        <button class="btn btn-eta" onclick="scegliEta('8-10')">8 - 10 ANNI</button>
+      <div class="content-area">
+        <button class="btn btn-eta" onclick="scegliEta('5-7')">5 - 7 ANNI 👦</button>
+        <button class="btn btn-eta" onclick="scegliEta('8-10')">8 - 10 ANNI 🧠</button>
       </div>`;
   }
   else if(s.fsm === "GIOCO"){
@@ -100,8 +115,18 @@ function disegna(){
         <div class="passaggi">${m.p.map((t,i)=>`<div class="passo ${i===s.passo?'attivo':(i<s.passo?'':'sfumato')}"><div class="numero">${i+1}</div>${t}</div>`).join('')}</div>
         <div style="display:flex;gap:10px">
           <button class="btn btn-eta" style="flex:1;font-size:14px" onclick="precedente()" ${s.passo===0?'style="visibility:hidden"':''}>INDIETRO</button>
-          <button class="btn btn-avanti" style="flex:2" onclick="successivo()">${s.passo < m.p.length-1 ? 'AVANTI' : 'COMPLETA'}</button>
+          <button class="btn btn-avanti" style="flex:2" onclick="successivo()">${s.passo < m.p.length-1 ? 'AVANTI' : 'COMPLETA ✅'}</button>
         </div>
+      </div>`;
+  }
+  else if(s.fsm === "SCELTA_GENITORE"){
+    root.innerHTML = `<div class="sp-top"><div class="brand">GENITORE</div></div>
+      <div class="content-area">
+        <h2 style="text-align:center;">Capitolo Finito! 🏆</h2>
+        <p style="text-align:center;">Cosa vuoi fare ora?</p>
+        <button class="btn btn-eta" onclick="sblocca('SPECIALE')">SBLOCCA MISSIONE SPECIALE 🤝</button>
+        <button class="btn btn-eta" onclick="sblocca('ALTRE')">FAI ALTRE 3 MISSIONI 🚀</button>
+        <button class="btn btn-avanti" style="background:#4a5568;" onclick="home()">FINISCI PER OGGI</button>
       </div>`;
   }
 }
@@ -109,27 +134,26 @@ function disegna(){
 window.toggleAudio = () => { s.audio = !s.audio; if(s.audio) parla("Audio attivo"); else speechSynthesis.cancel(); disegna(); };
 window.vaiEta = () => { s.fsm = "ETA"; disegna(); };
 window.scegliEta = (e) => { s.eta = e; s.missioniFatte = 0; s.fsm = "GIOCO"; proproxima(); };
-window.home = () => { s.fsm = "INIZIO"; s.passo=0; s.missioneAttuale=null; speechSynthesis.cancel(); disegna(); };
+window.home = () => { s.fsm = "INIZIO"; s.passo=0; s.missioniFatte=0; s.missioneAttuale=null; disegna(); };
+
+function sblocca(tipo) {
+  const pin = prompt("GENITORE: Quanto fa 4 + 3?");
+  if(pin === "7") {
+    if(tipo === 'SPECIALE') {
+      s.fsm = "GIOCO"; s.missioneAttuale = DB.speciale; s.passo = 0; disegna();
+    } else {
+      s.missioniFatte = 0; s.fsm = "GIOCO"; proproxima();
+    }
+  } else { alert("Risposta sbagliata!"); }
+}
 
 function proproxima(){
   if(s.missioniFatte < 3){
     s.missioneAttuale = DB[s.eta][s.missioniFatte];
     s.passo = 0; disegna();
     parla(s.missioneAttuale.s + " Obiettivo: " + s.missioneAttuale.o);
-  } else if(!s.specialeSbloccata){
-    const pin = prompt("GENITORE: Quanto fa 5 + 3?");
-    if(pin === "8"){
-      s.specialeSbloccata = true;
-      s.missioneAttuale = DB.speciale;
-      s.passo = 0; disegna();
-      parla("Missione speciale sbloccata! " + s.missioneAttuale.s);
-    } else { home(); }
   } else {
-    if(confirm("Missioni finite! Vuoi farne altre 3? (Richiede sblocco genitore)")){
-      const pin2 = prompt("GENITORE: Quanto fa 4 + 2?");
-      if(pin2 === "6"){ s.missioniFatte = 0; s.specialeSbloccata = false; proproxima(); }
-      else home();
-    } else home();
+    s.fsm = "SCELTA_GENITORE"; disegna();
   }
 }
 
@@ -137,15 +161,17 @@ window.successivo = () => {
   if(s.passo < s.missioneAttuale.p.length - 1){
     s.passo++; disegna(); parla(s.missioneAttuale.p[s.passo]);
   } else {
-    s.missioniFatte++;
-    alert("Grande! Missione completata!");
-    proproxima();
+    cascataStelle();
+    setTimeout(() => {
+      s.missioniFatte++;
+      proproxima();
+    }, 1500);
   }
 };
 window.precedente = () => { if(s.passo > 0){ s.passo--; disegna(); parla(s.missioneAttuale.p[s.passo]); } };
 
 disegna();
-setInterval(disegna, 5000); // Aggiorna icona random
+setInterval(disegna, 5000);
 })();
 </script>
 </body>
