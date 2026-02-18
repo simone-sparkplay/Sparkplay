@@ -20,15 +20,23 @@ body {
   background-image: radial-gradient(circle at 50% 50%, #16224f 0%, var(--sfondo) 100%);
 }
 
-/* NUOVA NEBULOSA SOFFUSA (Sostituisce la cometa fastidiosa) */
-.nebulosa {
-  position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
-  width: 300px; height: 300px; 
-  background: radial-gradient(circle, rgba(0, 210, 255, 0.15) 0%, transparent 70%);
-  filter: blur(40px); border-radius: 50%; z-index: -1;
-  animation: pulseNebula 6s infinite ease-in-out;
+/* LO SPARK: ICONA NEUTRA CREATIVA */
+.spark-container {
+  width: 160px; height: 160px; margin: 0 auto 20px; position: relative;
+  display: flex; align-items: center; justify-content: center;
 }
-@keyframes pulseNebula { 0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); } }
+.spark-core {
+  width: 40px; height: 40px; background: white; border-radius: 50%;
+  box-shadow: 0 0 40px 10px white, 0 0 70px 20px var(--blu);
+  animation: pulseCore 3s infinite ease-in-out;
+}
+.spark-ring {
+  position: absolute; width: 100%; height: 100%;
+  border: 2px dashed rgba(255,255,255,0.2); border-radius: 50%;
+  animation: rotateRing 10s linear infinite;
+}
+@keyframes pulseCore { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.2); opacity: 1; } }
+@keyframes rotateRing { to { transform: rotate(360deg); } }
 
 .sp-root { max-width: 600px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: env(safe-area-inset-top) 25px env(safe-area-inset-bottom); position: relative; }
 .sp-top { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
@@ -45,11 +53,16 @@ body {
 .btn-avanti { background: var(--rossa); color: white; padding: 20px; width: 100%; font-size: 20px; box-shadow: 0 6px 0 #c43d4a; }
 .btn-avanti:active { transform: translateY(4px); box-shadow: 0 2px 0 #c43d4a; }
 
-/* DIARIO MODERNO A SCHEDE */
+/* DIARIO MODERNO CON EMOJI */
 #diario-modal { position: fixed; inset: 0; background: linear-gradient(180deg, #101a3b, var(--sfondo)); z-index: 2000; display: none; flex-direction: column; padding: 40px 25px; overflow-y: auto; }
-.scheda-ricordo { background: rgba(255,255,255,0.08); padding: 22px; border-radius: 24px; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.1); position: relative; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
-.scheda-ricordo b { display: block; font-size: 22px; color: var(--giallo); margin-bottom: 4px; }
-.scheda-ricordo small { color: var(--blu); font-weight: 800; font-size: 13px; }
+.scheda-ricordo { 
+    background: rgba(255,255,255,0.08); padding: 20px; border-radius: 24px; margin-bottom: 15px; 
+    border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px;
+}
+.emoji-diario { font-size: 32px; flex-shrink: 0; }
+.testo-diario { flex: 1; }
+.testo-diario b { display: block; font-size: 18px; color: var(--giallo); }
+.testo-diario small { color: var(--blu); font-weight: 800; font-size: 12px; }
 
 #overlay-success { position: fixed; inset: 0; pointer-events: none; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 3000; background: rgba(10, 17, 40, 0.9); }
 .messaggio-vittoria { font-family: 'Fredoka One'; font-size: 48px; color: var(--giallo); text-shadow: 4px 4px var(--rossa); text-align: center; }
@@ -63,7 +76,7 @@ body {
 
 <div id="diario-modal">
     <div class="sp-top">
-        <div class="brand">I TUOI RICORDI</div>
+        <div class="brand">DIARIO</div>
         <button class="btn" style="background:var(--rossa); color:white; padding:10px 20px;" onclick="chiudiDiario()">CHIUDI</button>
     </div>
     <div id="lista-diario" style="margin-top:20px; padding-bottom:40px;"></div>
@@ -75,19 +88,19 @@ body {
 (()=>{"use strict";
 const DB = {
   "5-7": [
-    {t:"SEGNALE PERDUTO", s:"La base ha perso il segnale! La galassia è al buio!", o:"RIACCENDI L'ANTENNA!", p:["Trova un calzino stellare.","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."]},
-    {t:"SATELLITE MORBIDO", s:"Un satellite è caduto tra le stelle!", o:"RECUPERALO!", p:["Trova un peluche-satellite.","Fagli fare un giro intorno al tavolo.","Mettilo a riposare in un posto alto."]},
-    {t:"POLVERE DI STELLE", s:"C'è troppa polvere spaziale sui motori!", o:"PULISCI TUTTO!", p:["Usa le mani come spazzole spaziali.","Pulisci 3 superfici diverse.","Soffia via la polvere."]}
+    {t:"SEGNALE PERDUTO", e:"📡", s:"La base ha perso il segnale! La galassia è al buio!", o:"RIACCENDI L'ANTENNA!", p:["Trova un calzino stellare.","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."]},
+    {t:"SATELLITE MORBIDO", e:"🧸", s:"Un satellite è caduto tra le stelle!", o:"RECUPERALO!", p:["Trova un peluche-satellite.","Fagli fare un giro intorno al tavolo.","Mettilo a riposare in un posto alto."]},
+    {t:"POLVERE DI STELLE", e:"✨", s:"C'è troppa polvere spaziale sui motori!", o:"PULISCI TUTTO!", p:["Usa le mani come spazzole spaziali.","Pulisci 3 superfici diverse.","Soffia via la polvere."]}
   ],
   "8-10": [
-    {t:"MODULO VIBRANTE", s:"Il modulo 4 vibra forte. Serve silenzio assoluto!", o:"RIPARA IN SILENZIO", p:["Trova un foglio di carta.","Portalo alla base senza fare rumore.","Piegalo in 4 e mettilo sotto un cuscino."]},
-    {t:"CODICE STELLARE", s:"Dobbiamo inviare un codice segreto alla Terra!", o:"COMPONI IL CODICE", p:["Trova 3 oggetti dello stesso colore.","Mettili in fila dal più piccolo al più grande.","Salta sopra ogni oggetto."]},
-    {t:"ANTIGRAVITÀ", s:"La gravità si è rotta! Tutto fluttua!", o:"MUOVITI LENTO", p:["Attraversa la stanza al rallentatore.","Tocca terra solo con le punte dei piedi.","Siediti senza usare le mani."]}
+    {t:"MODULO VIBRANTE", e:"⚙️", s:"Il modulo 4 vibra forte. Serve silenzio assoluto!", o:"RIPARA IN SILENZIO", p:["Trova un foglio di carta.","Portalo alla base senza fare rumore.","Piegalo in 4 e mettilo sotto un cuscino."]},
+    {t:"CODICE STELLARE", e:"📟", s:"Dobbiamo inviare un codice segreto alla Terra!", o:"COMPONI IL CODICE", p:["Trova 3 oggetti dello stesso colore.","Mettili in fila dal più piccolo al più grande.","Salta sopra ogni oggetto."]},
+    {t:"ANTIGRAVITÀ", e:"☁️", s:"La gravità si è rotta! Tutto fluttua!", o:"MUOVITI LENTO", p:["Attraversa la stanza al rallentatore.","Tocca terra solo con le punte dei piedi.","Siediti senza usare le mani."]}
   ],
-  speciale: {t:"MISSIONE SINCRONIA 🤝", s:"I motori hanno bisogno di due piloti insieme!", o:"SQUADRA SPAZIALE", p:["Prendetevi per mano (Genitore + Bambino).","Fate 10 passi sincronizzati insieme.","Dite 'Pronti al lancio' nello stesso istante!"], f:"Siete una squadra imbattibile!"}
+  speciale: {t:"MISSIONE SINCRONIA 🤝", e:"🤝", s:"I motori hanno bisogno di due piloti insieme!", o:"SQUADRA SPAZIALE", p:["Prendetevi per mano (Genitore + Bambino).","Fate 10 passi sincronizzati insieme.","Dite 'Pronti al lancio' nello stesso istante!"], f:"Siete una squadra imbattibile!"}
 };
 
-const FRASI = ["L'immaginazione è l'unica astronave che arriva ovunque.", "Il gioco è il lavoro più serio del mondo.", "Oggi sei un esploratore di mondi nuovi."];
+const FRASI = ["L'immaginazione è l'unica astronave che arriva ovunque.", "Il gioco è il lavoro più serio del mondo.", "Un piccolo Spark accende una grande avventura."];
 
 let s = { fsm:"INIZIO", eta:null, passo:0, missioniFatte:0, missioneAttuale:null, audio:false, diario: [], specialeFatta: false };
 
@@ -125,17 +138,19 @@ function disegna(){
   const root = document.getElementById("SPARKPLAY_APP");
 
   if(s.fsm === "INIZIO"){
-    root.innerHTML = `<div class="nebulosa"></div>
-      <div class="sp-top">
+    root.innerHTML = `<div class="sp-top">
         <button class="btn" style="background:none;font-size:32px;" onclick="apriDiario()">📚</button>
         <div class="brand">SPARKPLAY</div>
         <button class="btn" style="background:none;font-size:32px;" onclick="toggleAudio()">${s.audio?'🔊':'🔈'}</button>
       </div>
       <div class="content-area">
-        <h1 style="text-align:center;color:var(--giallo);font-size:52px;margin:0;">PRONTI?</h1>
-        <p style="text-align:center;opacity:0.8;margin-bottom:20px; font-weight:700;">L'avventura ti aspetta...</p>
-        <button class="btn btn-avanti" style="width:85%; margin:0 auto;" onclick="vaiEta()">INIZIA MISSIONE</button>
-        <div style="margin-top:40px; font-style:italic; text-align:center; color:var(--giallo); padding:0 20px;">"${FRASI[Math.floor(Math.random()*FRASI.length)]}"</div>
+        <div class="spark-container">
+            <div class="spark-ring"></div>
+            <div class="spark-core"></div>
+        </div>
+        <h1 style="text-align:center;color:var(--giallo);font-size:48px;margin:0;">PRONTI?</h1>
+        <button class="btn btn-avanti" style="width:80%; margin:20px auto 0;" onclick="vaiEta()">INIZIA MISSIONE</button>
+        <div style="margin-top:40px; font-style:italic; text-align:center; color:var(--giallo); padding:0 20px; font-size:14px; opacity:0.8;">"${FRASI[Math.floor(Math.random()*FRASI.length)]}"</div>
       </div>`;
   } 
   else if(s.fsm === "ETA"){
@@ -164,7 +179,6 @@ function disegna(){
   }
   else if(s.fsm === "SCELTA_GENITORE"){
     const btnSpeciale = s.specialeFatta ? '' : `<button class="btn" style="background:var(--blu);color:white;padding:22px;width:100%;margin-bottom:18px;font-size:20px;" onclick="sblocca('SPECIALE')">MISSIONE SPECIALE 🤝</button>`;
-    
     root.innerHTML = `<div class="sp-top"><div class="brand">GENITORE</div></div>
       <div class="content-area">
         <h2 style="text-align:center;font-size:32px;color:var(--giallo);">CAPITOLO FINITO! 🏆</h2>
@@ -179,9 +193,11 @@ window.apriDiario = () => {
     const lista = document.getElementById("lista-diario");
     lista.innerHTML = s.diario.length ? s.diario.map(m => `
         <div class="scheda-ricordo">
-            <small>${m.data}</small>
-            <b>${m.titolo}</b>
-            <div style="font-size:14px;opacity:0.9;">Esplorazione Spaziale Riuscita!</div>
+            <div class="emoji-diario">${m.emoji || '⭐'}</div>
+            <div class="testo-diario">
+                <small>${m.data}</small>
+                <b>${m.titolo}</b>
+            </div>
         </div>`).join('') : "<p style='text-align:center;opacity:0.6;'>Il tuo diario è vuoto. Inizia una missione!</p>";
     document.getElementById("diario-modal").style.display = "flex";
 }
@@ -192,8 +208,8 @@ window.scegliEta = (e) => { s.eta = e; s.missioniFatte = 0; s.specialeFatta = fa
 window.home = () => { s.fsm = "INIZIO"; s.passo=0; s.missioniFatte=0; s.missioneAttuale=null; s.specialeFatta = false; disegna(); };
 
 window.sblocca = (tipo) => {
-  const pin = prompt("GENITORE: Quanto fa 2 + 2?");
-  if(pin === "4") {
+  const pin = prompt("GENITORE: Quanto fa 4 + 4?");
+  if(pin === "8") {
     if(tipo === 'SPECIALE') {
       s.missioneAttuale = DB.speciale; s.fsm = "GIOCO"; s.passo = 0; s.specialeFatta = true; disegna();
     } else {
@@ -215,11 +231,10 @@ window.successivo = () => {
     s.passo++; disegna(); parla(s.missioneAttuale.p[s.passo]);
   } else {
     celebra();
-    s.diario.unshift({ titolo: s.missioneAttuale.t, data: new Date().toLocaleDateString('it-IT') });
+    s.diario.unshift({ titolo: s.missioneAttuale.t, emoji: s.missioneAttuale.e, data: new Date().toLocaleDateString('it-IT') });
     salvaStato();
     setTimeout(() => { 
         document.getElementById("overlay-success").style.display = "none";
-        // Se era la speciale, s.missioniFatte rimane 3 così torna a SCELTA_GENITORE
         if (s.fsm === "GIOCO" && s.missioneAttuale === DB.speciale) {
             s.fsm = "SCELTA_GENITORE"; disegna();
         } else {
