@@ -14,10 +14,13 @@
             --yellow: #ffe66d;
             --bg: #0a1128;
             --white: #f7fff7;
-            --glass: rgba(255, 255, 255, 0.1);
+            --glass: rgba(255, 255, 255, 0.10);
+            --glass2: rgba(255, 255, 255, 0.06);
             --safe-top: env(safe-area-inset-top);
         }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
         body {
             margin: 0; padding: 0;
             background-color: var(--bg);
@@ -27,456 +30,634 @@
             overflow: hidden;
             background-image: radial-gradient(circle at 50% 50%, #1a2a5a 0%, #0a1128 100%);
         }
+
         header {
             position: fixed; top: 0; left: 0; right: 0;
             height: calc(70px + var(--safe-top));
             padding-top: var(--safe-top);
             display: flex; align-items: center; justify-content: space-between;
             padding-left: 20px; padding-right: 20px;
-            background: rgba(10, 17, 40, 0.8);
+            background: rgba(10, 17, 40, 0.80);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             z-index: 100;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
         }
+
         .brand-group { text-align: center; flex: 1; }
         .brand { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--yellow); text-shadow: 2px 2px var(--coral); margin: 0; }
         .sub-brand { font-size: 14px; font-weight: 700; color: var(--cyan); letter-spacing: 2px; text-transform: uppercase; }
+
         .btn-header {
             background: var(--glass);
-            border: none;
+            border: 1px solid rgba(255,255,255,0.10);
             border-radius: 15px;
             width: 46px; height: 46px;
             color: white; font-size: 22px;
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
         }
+
         #main-container {
             margin-top: calc(80px + var(--safe-top));
             height: calc(100vh - 80px - var(--safe-top));
-            padding: 20px;
+            padding: 18px;
             display: flex; flex-direction: column;
             align-items: center;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
-        .screen { display: none; width: 100%; max-width: 500px; flex-direction: column; align-items: center; }
-        .screen.active { display: flex; animation: fadeIn 0.4s ease-out; }
+
+        .screen { display: none; width: 100%; max-width: 520px; flex-direction: column; align-items: center; }
+        .screen.active { display: flex; animation: fadeIn 0.35s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .multiverso-wrap {
-            width: 200px; height: 200px;
-            position: relative;
-            margin-bottom: 30px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .orbit-icon { position: absolute; font-size: 45px; animation: rotateOrbit 10s linear infinite; }
-        .o1 { animation-delay: 0s; }
-        .o2 { animation-delay: -3.3s; }
-        .o3 { animation-delay: -6.6s; }
-        .center-spark { width: 60px; height: 60px; background: white; border-radius: 50%; box-shadow: 0 0 30px var(--yellow); z-index: 5; display: flex; align-items: center; justify-content: center; font-size: 30px; }
-        @keyframes rotateOrbit {
-            from { transform: rotate(0deg) translateX(85px) rotate(0deg); }
-            to { transform: rotate(360deg) translateX(85px) rotate(-360deg); }
-        }
+        /* CARD GLASS (centrata bene) */
         .glass-card {
             background: var(--glass);
             border-radius: 30px;
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.10);
+            padding: 22px;
             width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.30);
+            margin-bottom: 16px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* FIX: centra contenuti (home orbit compreso) */
         }
+
+        /* MULTIVERSO ORBITALE HOME (FIX centratura) */
+        .multiverso-wrap {
+            width: 210px; height: 210px;
+            position: relative;
+            margin: 0 auto 22px; /* FIX: sempre centrato */
+            display: flex; align-items: center; justify-content: center;
+        }
+        .orbit-icon {
+            position: absolute;
+            font-size: 46px;
+            animation: rotateOrbit 10s linear infinite;
+            will-change: transform;
+        }
+        .o1 { animation-delay: 0s; }
+        .o2 { animation-delay: -3.3s; }
+        .o3 { animation-delay: -6.6s; }
+        .center-spark {
+            width: 64px; height: 64px; background: white; border-radius: 50%;
+            box-shadow: 0 0 30px var(--yellow);
+            z-index: 5; display: flex; align-items: center; justify-content: center;
+            font-size: 32px;
+        }
+        @keyframes rotateOrbit {
+            from { transform: rotate(0deg) translateX(88px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(88px) rotate(-360deg); }
+        }
+
+        /* BUTTONS */
         .btn-big {
             background: var(--coral);
             border: none;
             border-radius: 25px;
-            padding: 22px 40px;
+            padding: 20px 26px;
             color: white;
             font-family: 'Fredoka One', cursive;
             font-size: 26px;
             cursor: pointer;
             width: 100%;
             box-shadow: 0 8px 0 #b03a45;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             transition: transform 0.1s;
         }
         .btn-big:active { transform: translateY(4px); box-shadow: 0 4px 0 #b03a45; }
+
         .btn-cyan { background: var(--cyan); box-shadow: 0 8px 0 #00a0c2; }
         .btn-cyan:active { box-shadow: 0 4px 0 #00a0c2; }
+
         .btn-yellow { background: var(--yellow); color: var(--bg); box-shadow: 0 8px 0 #c9b000; }
         .btn-yellow:active { box-shadow: 0 4px 0 #c9b000; }
-        .chip-row { display: flex; gap: 10px; margin-top: 10px; }
-        .chip { background: rgba(0,0,0,0.4); padding: 8px 15px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); }
 
-        .mission-title { font-family: 'Fredoka One', cursive; font-size: 28px; color: var(--yellow); margin-bottom: 10px; }
-        .mission-story { font-size: 18px; line-height: 1.5; color: #cbd5e1; margin-bottom: 20px; }
-        .objective-box { background: rgba(0, 210, 255, 0.1); border: 2px dashed var(--cyan); border-radius: 20px; padding: 15px; margin-bottom: 20px; }
-        .objective-box b { color: var(--cyan); display: block; margin-bottom: 5px; }
+        /* FIX: finisci per oggi bello e non "sdoppiato" */
+        .btn-dark {
+            background: #3b4658;
+            box-shadow: 0 8px 0 #222b38;
+            color: #fff;
+        }
+        .btn-dark:active { box-shadow: 0 4px 0 #222b38; }
 
-        .step { display: flex; align-items: center; gap: 15px; padding: 15px; border-radius: 20px; background: rgba(255,255,255,0.05); margin-bottom: 10px; opacity: 0.3; transition: 0.3s; text-align: left; }
-        .step.active { opacity: 1; background: rgba(255,255,255,0.15); border: 2px solid var(--yellow); transform: scale(1.02); }
-        .step-num { width: 32px; height: 32px; background: var(--coral); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0; }
+        .chip-row { display: flex; gap: 10px; margin-top: 8px; justify-content: center; flex-wrap: wrap; }
+        .chip {
+            background: rgba(0,0,0,0.35);
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 800;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
 
-        .game-controls { display: flex; gap: 15px; width: 100%; margin-top: 10px; }
-        .btn-ctrl { flex: 1; padding: 18px; border-radius: 20px; border: none; font-family: 'Fredoka One', cursive; font-size: 20px; color: white; cursor: pointer; }
+        /* GAME UI (FIX: no pulsanti tagliati + meno scroll) */
+        #screen-gioco { flex: 1; min-height: 0; }
+        #screen-gioco .glass-card { padding: 18px; }
 
-        #overlay-complete { position: fixed; inset: 0; background: rgba(10,17,40,0.95); z-index: 1000; display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
-        #overlay-diario { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; padding: calc(var(--safe-top) + 20px) 25px 30px; }
-        .diary-list { flex: 1; overflow-y: auto; width: 100%; max-width: 500px; margin: 0 auto; }
-        .diary-entry { background: var(--glass); padding: 18px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid var(--cyan); }
-        .diary-entry b { font-size: 18px; }
-        .diary-meta { font-size: 12px; color: var(--cyan); font-weight: 700; text-transform: uppercase; }
+        .mission-title { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--yellow); margin: 0 0 10px; }
+        .mission-story { font-size: 16.5px; line-height: 1.45; color: #cbd5e1; margin: 0 0 14px; }
+        .objective-box {
+            background: rgba(0, 210, 255, 0.10);
+            border: 2px dashed var(--cyan);
+            border-radius: 18px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            width: 100%;
+        }
+        .objective-box b { color: var(--cyan); display: block; margin-bottom: 6px; letter-spacing: 1px; }
 
-        .parent-gate { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 25px; }
-        .gate-box { background: #1e293b; padding: 35px; border-radius: 35px; width: 100%; max-width: 340px; text-align: center; border: 2px solid var(--cyan); }
-        .gate-box input { width: 100%; padding: 18px; border-radius: 15px; border: none; margin: 25px 0; font-size: 32px; text-align: center; background: #0f172a; color: white; -webkit-appearance: none; }
+        .step {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 12px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.05);
+            margin-bottom: 10px;
+            opacity: 0.30;
+            transition: 0.25s;
+            text-align: left;
+        }
+        .step.active {
+            opacity: 1;
+            background: rgba(255,255,255,0.14);
+            border: 2px solid rgba(255, 230, 109, 0.85);
+            transform: scale(1.01);
+        }
+        .step-num {
+            width: 30px; height: 30px;
+            background: var(--coral);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            margin-top: 10px;
+            padding-bottom: 6px;
+        }
+        .btn-ctrl {
+            flex: 1;
+            padding: 14px 12px; /* FIX: più piccolo */
+            border-radius: 18px;
+            border: none;
+            font-family: 'Fredoka One', cursive;
+            font-size: 18px; /* FIX: più piccolo */
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Overlay */
+        #overlay-complete {
+            position: fixed; inset: 0;
+            background: rgba(10,17,40,0.95);
+            z-index: 1000;
+            display: none;
+            align-items: center; justify-content: center;
+            flex-direction: column; text-align: center;
+        }
+
+        /* Diario (FIX: più brio) */
+        #overlay-diario {
+            position: fixed; inset: 0;
+            background: radial-gradient(circle at 30% 20%, #1a2a5a 0%, #0a1128 55%, #070c1c 100%);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            padding: calc(var(--safe-top) + 18px) 20px 24px;
+        }
+        .diary-list {
+            flex: 1;
+            overflow-y: auto;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            padding-bottom: 10px;
+        }
+        .diary-entry {
+            position: relative;
+            background: rgba(255,255,255,0.08);
+            padding: 16px 16px 16px 18px;
+            border-radius: 22px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.10);
+            overflow: hidden;
+        }
+        .diary-entry::before{
+            content:"";
+            position:absolute; left:0; top:0; bottom:0;
+            width: 10px;
+            background: linear-gradient(180deg, var(--cyan), rgba(255,94,108,0.9));
+        }
+        .diary-left { display:flex; align-items:center; gap:12px; }
+        .diary-emoji { font-size: 26px; }
+        .diary-title { font-family:'Fredoka One', cursive; font-size: 18px; margin: 0; }
+        .diary-sub { font-size: 12px; opacity: 0.7; margin-top: 3px; }
+        .diary-badge {
+            font-weight: 900;
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(0,0,0,0.28);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: var(--cyan);
+            letter-spacing: 1px;
+        }
+
+        /* Parent gate */
+        .parent-gate {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 3000;
+            display: none;
+            align-items: center; justify-content: center;
+            padding: 25px;
+        }
+        .gate-box {
+            background: #1e293b;
+            padding: 32px;
+            border-radius: 32px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            border: 2px solid var(--cyan);
+        }
+        .gate-box input {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            margin: 22px 0;
+            font-size: 30px;
+            text-align: center;
+            background: #0f172a;
+            color: white;
+            -webkit-appearance: none;
+        }
+
+        /* Mobile compact: riduci ancora un filo su schermi bassi */
+        @media (max-height: 740px) {
+            #main-container { padding: 14px; }
+            .glass-card { padding: 18px; }
+            .btn-big { font-size: 24px; padding: 18px 22px; }
+            .mission-title { font-size: 24px; }
+            .mission-story { font-size: 15.5px; }
+            .step { padding: 11px 11px; margin-bottom: 9px; }
+            .btn-ctrl { padding: 13px 10px; font-size: 17px; }
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <button class="btn-header" onclick="spark.openDiary()">📚</button>
-    <div class="brand-group">
-        <h1 class="brand">SPARKPLAY</h1>
-        <div class="sub-brand">Spazio</div>
-    </div>
-    <button class="btn-header" id="audioBtn" onclick="spark.toggleAudio()">🔊</button>
-</header>
+    <header>
+        <button class="btn-header" onclick="spark.openDiary()">📚</button>
+        <div class="brand-group">
+            <h1 class="brand">SPARKPLAY</h1>
+            <div class="sub-brand">Spazio</div>
+        </div>
+        <button class="btn-header" id="audioBtn" onclick="spark.toggleAudio()">🔊</button>
+    </header>
 
-<div id="main-container">
-    <section id="screen-home" class="screen active">
-        <div class="glass-card">
-            <div class="multiverso-wrap">
-                <div class="center-spark">✨</div>
-                <div class="orbit-icon o1">🚀</div>
-                <div class="orbit-icon o2">🪄</div>
-                <div class="orbit-icon o3">🔍</div>
+    <div id="main-container">
+        <section id="screen-home" class="screen active">
+            <div class="glass-card">
+                <div class="multiverso-wrap">
+                    <div class="center-spark">✨</div>
+                    <div class="orbit-icon o1">🚀</div>
+                    <div class="orbit-icon o2">🪄</div>
+                    <div class="orbit-icon o3">🔍</div>
+                </div>
+                <h2 style="font-family: 'Fredoka One', cursive; font-size: 50px; margin: 0 0 18px; color: var(--yellow);">PRONTI?</h2>
+                <button class="btn-big" onclick="spark.goToEta()">AVVIA MISSIONE</button>
+                <div class="chip-row">
+                    <div class="chip" id="chip-today">OGGI: 0/3</div>
+                    <div class="chip" id="chip-eta">ETÀ: --</div>
+                </div>
             </div>
-            <h2 style="font-family: 'Fredoka One', cursive; font-size: 50px; margin: 0 0 25px; color: var(--yellow);">PRONTI?</h2>
-            <button class="btn-big" onclick="spark.goToEta()">AVVIA MISSIONE</button>
-            <div class="chip-row">
-                <div class="chip" id="chip-today">OGGI: 0/3</div>
-                <div class="chip" id="chip-eta">ETÀ: --</div>
+        </section>
+
+        <section id="screen-eta" class="screen">
+            <div class="glass-card">
+                <h2 class="mission-title">Quanti anni hai?</h2>
+                <button class="btn-big" onclick="spark.selectEta('5-7')">5 - 7 ANNI</button>
+                <button class="btn-big btn-cyan" onclick="spark.selectEta('8-10')">8 - 10 ANNI</button>
+                <button style="background:none; border:none; color:white; margin-top:10px; font-weight:800; opacity:.85; cursor:pointer;" onclick="spark.showScreen('home')">Indietro</button>
+            </div>
+        </section>
+
+        <section id="screen-gioco" class="screen">
+            <div class="glass-card" id="mission-ui"></div>
+            <div class="game-controls">
+                <button id="btn-back" class="btn-ctrl" style="background:#4a5568;" onclick="spark.prevStep()">INDIETRO</button>
+                <button id="btn-next" class="btn-ctrl" style="background:var(--coral);" onclick="spark.nextStep()">AVANTI</button>
+            </div>
+        </section>
+
+        <section id="screen-genitore" class="screen">
+            <div class="glass-card">
+                <div style="font-size: 66px;">🏆</div>
+                <h2 class="mission-title" style="margin: 10px 0;">CAPITOLO FINITO!</h2>
+                <p style="opacity: 0.80; margin: 0 0 18px;">Hai completato le missioni di oggi!</p>
+                <button class="btn-big btn-yellow" id="btn-special" onclick="spark.askParent('spec')">MISSIONE SPECIALE 🤝</button>
+                <button class="btn-big btn-cyan" onclick="spark.askParent('more')">FAI ALTRE 3 MISSIONI 🚀</button>
+                <button class="btn-big btn-dark" onclick="spark.finishToday()">FINISCI PER OGGI</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="overlay-complete">
+        <div style="font-size: 110px;">🌟</div>
+        <h2 style="font-family: 'Fredoka One', cursive; font-size: 44px; color: var(--yellow); margin: 10px 0 0;">MISSIONE<br>COMPLETATA!</h2>
+    </div>
+
+    <div id="overlay-diario">
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; max-width:520px; margin:0 auto 12px;">
+            <div>
+                <h2 style="font-family:'Fredoka One', cursive; font-size: 32px; margin:0;">DIARIO</h2>
+                <div style="font-weight:800; color: var(--cyan); letter-spacing:1px; opacity:.9; margin-top:3px;">I tuoi ricordi di missione ✨</div>
+            </div>
+            <button class="btn-header" style="background: var(--coral);" onclick="spark.closeDiary()">✕</button>
+        </div>
+        <div class="diary-list" id="diary-list"></div>
+    </div>
+
+    <div id="parent-gate" class="parent-gate">
+        <div class="gate-box">
+            <h3 style="font-family: 'Fredoka One', cursive; color: var(--cyan); margin:0;">AREA GENITORI</h3>
+            <p style="opacity:.9; margin: 10px 0 0;">Quanto fa 5 + 5?</p>
+            <input type="number" id="gate-input" pattern="[0-9]*" inputmode="numeric" placeholder="?">
+            <div style="display: flex; gap: 12px;">
+                <button class="btn-ctrl" style="background:#4a5568;" onclick="spark.closeParent()">CHIUDI</button>
+                <button class="btn-ctrl" style="background:var(--cyan);" onclick="spark.verifyParent()">SBLOCCA</button>
             </div>
         </div>
-    </section>
-
-    <section id="screen-eta" class="screen">
-        <div class="glass-card">
-            <h2 class="mission-title">Quanti anni hai?</h2>
-            <button class="btn-big" onclick="spark.selectEta('5-7')">5 - 7 ANNI</button>
-            <button class="btn-big btn-cyan" onclick="spark.selectEta('8-10')">8 - 10 ANNI</button>
-            <button style="background:none; border:none; color:white; margin-top:15px; font-weight:700;" onclick="spark.showScreen('home')">Indietro</button>
-        </div>
-    </section>
-
-    <section id="screen-gioco" class="screen">
-        <div class="glass-card" id="mission-ui"></div>
-        <div class="game-controls">
-            <button id="btn-back" class="btn-ctrl" style="background:#4a5568;" onclick="spark.prevStep()">INDIETRO</button>
-            <button id="btn-next" class="btn-ctrl" style="background:var(--coral);" onclick="spark.nextStep()">AVANTI</button>
-        </div>
-    </section>
-
-    <section id="screen-genitore" class="screen">
-        <div class="glass-card">
-            <div style="font-size: 70px;">🏆</div>
-            <h2 class="mission-title" style="margin: 15px 0;">CAPITOLO FINITO!</h2>
-            <p style="opacity: 0.8; margin-bottom: 30px;">Hai completato le missioni di oggi!</p>
-            <button class="btn-big btn-yellow" id="btn-special" onclick="spark.askParent('spec')">MISSIONE SPECIALE 🤝</button>
-            <button class="btn-big btn-cyan" onclick="spark.askParent('more')">FAI ALTRE 3 MISSIONI 🚀</button>
-            <button class="btn-big" style="background:#4a5568;" onclick="spark.finishToday()">FINISCI PER OGGI</button>
-        </div>
-    </section>
-</div>
-
-<div id="overlay-complete">
-    <div style="font-size: 110px;">🌟</div>
-    <h2 style="font-family: 'Fredoka One', cursive; font-size: 44px; color: var(--yellow);">MISSIONE<br>COMPLETATA!</h2>
-</div>
-
-<div id="overlay-diario" class="modal">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2 style="font-family: 'Fredoka One', cursive; font-size: 30px;">DIARIO 📚</h2>
-        <button class="btn-header" style="background: var(--coral);" onclick="spark.closeDiary()">✕</button>
     </div>
-    <div class="diary-list" id="diary-list"></div>
-</div>
 
-<div id="parent-gate" class="parent-gate">
-    <div class="gate-box">
-        <h3 style="font-family: 'Fredoka One', cursive; color: var(--cyan);">AREA GENITORI</h3>
-        <p>Quanto fa 5 + 5?</p>
-        <input type="number" id="gate-input" pattern="[0-9]*" inputmode="numeric" placeholder="?">
-        <div style="display: flex; gap: 15px;">
-            <button class="btn-ctrl" style="background:#4a5568;" onclick="spark.closeParent()">CHIUDI</button>
-            <button class="btn-ctrl" style="background:var(--cyan);" onclick="spark.verifyParent()">SBLOCCA</button>
-        </div>
-    </div>
-</div>
+    <script>
+        const DB = {
+            "5-7": [
+                { id: "s1", t: "Antenna Spaziale", s: "La base ha perso il segnale satellitare.", o: "Crea un'antenna magica.", p: ["Trova un cucchiaio o un oggetto lungo.", "Portalo vicino a una finestra e tienilo in alto.", "Dì 'Bip Bip Bip' per 3 volte."] },
+                { id: "s2", t: "Polvere di Stelle", s: "Un'onda di polvere ha coperto i motori.", o: "Pulisci i pannelli solari.", p: ["Prendi un calzino o un panno morbido.", "Pulisci tre superfici diverse nella stanza.", "Soffia forte su ogni punto pulito!"] },
+                { id: "s3", t: "Gravità Zero", s: "Il computer ha tolto la gravità!", o: "Muoviti come se fluttuassi.", p: ["Fai 5 passi lentissimi alzando molto le ginocchia.", "Tocca un mobile alto con la punta delle dita.", "Fai un salto e atterra senza fare rumore."] },
+                { id: "s4", t: "Ghiaccio Stellare", s: "Serve energia fredda per il reattore.", o: "Recupera i cristalli spaziali.", p: ["Trova 5 piccoli oggetti bianchi in casa.", "Portali uno alla volta nella tua base.", "Mettili in ordine dal più piccolo al più grande."] },
+                { id: "s5", t: "Mappa Galattica", s: "Le stelle sono disordinate oggi.", o: "Riordina la mappa dei pianeti.", p: ["Trova tre cuscini o tre libri.", "Mettili a terra creando un triangolo.", "Salta dentro al triangolo e dì 'Orbita!'"] },
+                { id: "s6", t: "Luci di Emergenza", s: "L'astronave è troppo buia.", o: "Riaccendi le luci di bordo.", p: ["Tocca 4 angoli diversi della stanza.", "Dì 'Clic' ogni volta che ne tocchi uno.", "Torna al centro e batti le mani."] }
+            ],
+            "8-10": [
+                { id: "b1", t: "Riparazione Modulo", s: "Un bullone si è allentato fuori dallo scafo.", o: "Esegui una riparazione tecnica.", p: ["Trova un oggetto con tappo a vite (es. bottiglia).", "Svita e riavvita il tappo per 5 volte.", "Stringi fortissimo alla fine e dì 'Fatto!'"] },
+                { id: "b2", t: "Codice Binario", s: "Dobbiamo inviare un segnale criptato.", o: "Componi il ritmo del codice.", p: ["Batti le mani 3 volte forte e 2 piano.", "Ripeti la sequenza saltando sul posto.", "Fai un inchino spaziale verso la Terra."] },
+                { id: "b3", t: "Scanner Alieno", s: "Il radar ha intercettato un oggetto ignoto.", o: "Analizza l'area intorno a te.", p: ["Chiudi gli occhi e ascolta per 10 secondi.", "Trova un oggetto che non hai mai toccato oggi.", "Descrivi a voce alta di che materiale è fatto."] },
+                { id: "b4", t: "Navigazione Silenziosa", s: "Dobbiamo passare vicino a un buco nero.", o: "Attraversa il settore senza rumore.", p: ["Cammina per la stanza senza far sentire i passi.", "Sposta una sedia senza strisciarla a terra.", "Siediti lentamente senza fare alcun suono."] },
+                { id: "b5", t: "Equilibrio Orbitale", s: "L'astronave sta oscillando troppo.", o: "Stabilizza il centro di massa.", p: ["Metti un libro o un cuscino sulla testa.", "Fai 5 passi senza farlo cadere.", "Girati su te stesso e siediti piano."] },
+                { id: "b6", t: "Lancio d'Emergenza", s: "La capsula deve essere pronta al distacco.", o: "Controlla i sistemi di lancio.", p: ["Fai 10 saltelli sul posto velocissimi.", "Fai 3 respiri profondi per calmare il cuore.", "Conta da 10 a 0 a voce alta e dì 'Lancio!'"] }
+            ],
+            "spec": { id: "spec", t: "Sincronia Stellare 🤝", s: "I motori richiedono due piloti sincronizzati.", o: "Muovetevi insieme.", p: ["Prendetevi per mano (Genitore e Bambino).", "Fate 10 passi sincronizzati senza lasciarvi.", "Sussurrate 'Pronti al lancio' nello stesso istante!"] }
+        };
 
-<script>
-const DB = {
-  "5-7": [
-    { id: "s1", t: "Antenna Spaziale", s: "La base ha perso il segnale satellitare.", o: "Crea un'antenna magica.", p: ["Trova un cucchiaio o un oggetto lungo.", "Portalo vicino a una finestra e tienilo in alto.", "Dì 'Bip Bip Bip' per 3 volte."] },
-    { id: "s2", t: "Polvere di Stelle", s: "Un'onda di polvere ha coperto i motori.", o: "Pulisci i pannelli solari.", p: ["Prendi un calzino o un panno morbido.", "Pulisci tre superfici diverse nella stanza.", "Soffia forte su ogni punto pulito!"] },
-    { id: "s3", t: "Gravità Zero", s: "Il computer ha tolto la gravità!", o: "Muoviti come se fluttuassi.", p: ["Fai 5 passi lentissimi alzando molto le ginocchia.", "Tocca un mobile alto con la punta delle dita.", "Fai un salto e atterra senza fare rumore."] },
-    { id: "s4", t: "Ghiaccio Stellare", s: "Serve energia fredda per il reattore.", o: "Recupera i cristalli spaziali.", p: ["Trova 5 piccoli oggetti bianchi in casa.", "Portali uno alla volta nella tua base.", "Mettili in ordine dal più piccolo al più grande."] },
-    { id: "s5", t: "Mappa Galattica", s: "Le stelle sono disordinate oggi.", o: "Riordina la mappa dei pianeti.", p: ["Trova tre cuscini o tre libri.", "Mettili a terra creando un triangolo.", "Salta dentro al triangolo e dì 'Orbita!'"] },
-    { id: "s6", t: "Luci di Emergenza", s: "L'astronave è troppo buia.", o: "Riaccendi le luci di bordo.", p: ["Tocca 4 angoli diversi della stanza.", "Dì 'Clic' ogni volta che ne tocchi uno.", "Torna al centro e batti le mani."] }
-  ],
-  "8-10": [
-    { id: "b1", t: "Riparazione Modulo", s: "Un bullone si è allentato fuori dallo scafo.", o: "Esegui una riparazione tecnica.", p: ["Trova un oggetto con tappo a vite (es. bottiglia).", "Svita e riavvita il tappo per 5 volte.", "Stringi fortissimo alla fine e dì 'Fatto!'"] },
-    { id: "b2", t: "Codice Binario", s: "Dobbiamo inviare un segnale criptato.", o: "Componi il ritmo del codice.", p: ["Batti le mani 3 volte forte e 2 piano.", "Ripeti la sequenza saltando sul posto.", "Fai un inchino spaziale verso la Terra."] },
-    { id: "b3", t: "Scanner Alieno", s: "Il radar ha intercettato un oggetto ignoto.", o: "Analizza l'area intorno a te.", p: ["Chiudi gli occhi e ascolta per 10 secondi.", "Trova un oggetto che non hai mai toccato oggi.", "Descrivi a voce alta di che materiale è fatto."] },
-    { id: "b4", t: "Navigazione Silenziosa", s: "Dobbiamo passare vicino a un buco nero.", o: "Attraversa il settore senza rumore.", p: ["Cammina per la stanza senza far sentire i passi.", "Sposta una sedia senza strisciarla a terra.", "Siediti lentamente senza fare alcun suono."] },
-    { id: "b5", t: "Equilibrio Orbitale", s: "L'astronave sta oscillando troppo.", o: "Stabilizza il centro di massa.", p: ["Metti un libro o un cuscino sulla testa.", "Fai 5 passi senza farlo cadere.", "Girati su te stesso e siediti piano."] },
-    { id: "b6", t: "Lancio d'Emergenza", s: "La capsula deve essere pronta al distacco.", o: "Controlla i sistemi di lancio.", p: ["Fai 10 saltelli sul posto velocissimi.", "Fai 3 respiri profondi per calmare il cuore.", "Conta da 10 a 0 a voce alta e dì 'Lancio!'"] }
-  ],
-  "spec": { id: "spec", t: "Sincronia Stellare 🤝", s: "I motori richiedono due piloti sincronizzati.", o: "Muovetevi insieme.", p: ["Prendetevi per mano (Genitore e Bambino).", "Fate 10 passi sincronizzati senza lasciarvi.", "Sussurrate 'Pronti al lancio' nello stesso istante!"] }
-};
+        const spark = {
+            state: {
+                dayKey: new Date().toLocaleDateString('it-IT'),
+                missionsDoneToday: 0,
+                specialDoneToday: false,
+                usedMissionIds: [],
+                diary: [],
+                audioOn: true,
+                eta: null,
+                currentMissionId: null,
+                passo: 0,
+                fsm: 'home'
+            },
 
-const spark = {
-  state: {
-    dayKey: "",
-    missionsDoneToday: 0,
-    specialDoneToday: false,
-    usedMissionIds: [],
-    diary: [],
-    audioOn: true,
-    eta: null,
-    currentMissionId: null,
-    passo: 0,
-    fsm: 'home'
-  },
+            init() {
+                const saved = localStorage.getItem('sparkplay_vNext_state');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.dayKey === this.state.dayKey) {
+                        this.state = parsed;
+                    } else {
+                        this.state.diary = parsed.diary || [];
+                        this.state.audioOn = parsed.audioOn !== undefined ? parsed.audioOn : true;
+                    }
+                }
+                this.updateUI();
+            },
 
-  _todayKey(){
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,'0');
-    const da = String(d.getDate()).padStart(2,'0');
-    return `${y}-${m}-${da}`;
-  },
+            save() {
+                localStorage.setItem('sparkplay_vNext_state', JSON.stringify(this.state));
+            },
 
-  init() {
-    this.state.dayKey = this._todayKey();
+            showScreen(id) {
+                this.state.fsm = id;
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                const target = document.getElementById('screen-' + id);
+                if (target) target.classList.add('active');
+                this.save();
+            },
 
-    const saved = localStorage.getItem('sparkplay_vNext_state');
-    if (saved) {
-      try{
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.dayKey === this.state.dayKey) {
-          this.state = parsed;
-        } else if(parsed) {
-          this.state.diary = parsed.diary || [];
-          this.state.audioOn = parsed.audioOn !== undefined ? parsed.audioOn : true;
-        }
-      }catch(e){}
-    }
-    this.updateUI();
-  },
+            updateUI() {
+                document.getElementById('chip-today').innerText = `OGGI: ${this.state.missionsDoneToday}/3`;
+                document.getElementById('chip-eta').innerText = `ETÀ: ${this.state.eta || '--'}`;
+                document.getElementById('audioBtn').innerText = this.state.audioOn ? '🔊' : '🔈';
+                this.showScreen(this.state.fsm);
+            },
 
-  save() {
-    localStorage.setItem('sparkplay_vNext_state', JSON.stringify(this.state));
-  },
+            toggleAudio() {
+                this.state.audioOn = !this.state.audioOn;
+                if (!this.state.audioOn) window.speechSynthesis.cancel();
+                document.getElementById('audioBtn').innerText = this.state.audioOn ? '🔊' : '🔈';
+                this.save();
+            },
 
-  showScreen(id) {
-    this.state.fsm = id;
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const target = document.getElementById('screen-' + id);
-    if (target) target.classList.add('active');
-    this.save();
-  },
+            speak(text) {
+                if (!this.state.audioOn) return;
+                window.speechSynthesis.cancel();
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.lang = 'it-IT'; msg.rate = 0.9;
+                window.speechSynthesis.speak(msg);
+            },
 
-  updateUI() {
-    document.getElementById('chip-today').innerText = `OGGI: ${this.state.missionsDoneToday}/3`;
-    document.getElementById('chip-eta').innerText = `ETÀ: ${this.state.eta || '--'}`;
-    document.getElementById('audioBtn').innerText = this.state.audioOn ? '🔊' : '🔈';
+            goToEta() { this.showScreen('eta'); },
 
-    this.showScreen(this.state.fsm);
+            selectEta(val) {
+                this.state.eta = val;
+                this.loadMission();
+            },
 
-    if(this.state.fsm === 'genitore'){
-      const btn = document.getElementById('btn-special');
-      if(btn) btn.style.display = this.state.specialDoneToday ? 'none' : 'block';
-    }
-  },
+            loadMission() {
+                const pool = DB[this.state.eta];
+                const available = pool.filter(m => !this.state.usedMissionIds.includes(m.id));
+                const chosen = available.length > 0 ? available[0] : pool[Math.floor(Math.random() * pool.length)];
 
-  toggleAudio() {
-    this.state.audioOn = !this.state.audioOn;
-    if (!this.state.audioOn && window.speechSynthesis) window.speechSynthesis.cancel();
-    document.getElementById('audioBtn').innerText = this.state.audioOn ? '🔊' : '🔈';
-    this.save();
-  },
+                this.state.currentMissionId = chosen.id;
+                this.state.passo = 0;
+                this.renderMission();
+                this.showScreen('gioco');
+                this.updateUI();
+                this.speak(chosen.s + ". OBIETTIVO: " + chosen.o + ". Passaggio 1: " + chosen.p[0]);
+            },
 
-  speak(text) {
-    if (!this.state.audioOn) return;
-    if(!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    const msg = new SpeechSynthesisUtterance(text);
-    msg.lang = 'it-IT'; msg.rate = 0.9;
-    window.speechSynthesis.speak(msg);
-  },
+            renderMission() {
+                const m = this.state.currentMissionId === 'spec'
+                    ? DB.spec
+                    : DB[this.state.eta].find(x => x.id === this.state.currentMissionId);
 
-  goToEta() { this.showScreen('eta'); },
+                const ui = document.getElementById('mission-ui');
+                ui.innerHTML = `
+                    <div class="mission-title">${m.t}</div>
+                    <p class="mission-story">${m.s}</p>
+                    <div class="objective-box"><b>OBIETTIVO</b>${m.o}</div>
+                    <div>
+                        ${m.p.map((txt, i) => `
+                            <div class="step ${i === this.state.passo ? 'active' : ''}">
+                                <div class="step-num">${i + 1}</div>
+                                <div>${txt}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                document.getElementById('btn-back').style.visibility = this.state.passo === 0 ? 'hidden' : 'visible';
+                document.getElementById('btn-next').innerText = (this.state.passo === m.p.length - 1) ? 'COMPLETA ✅' : 'AVANTI';
+            },
 
-  selectEta(val) {
-    this.state.eta = val;
-    this.save();
-    this.loadMission();
-  },
+            nextStep() {
+                const m = this.state.currentMissionId === 'spec'
+                    ? DB.spec
+                    : DB[this.state.eta].find(x => x.id === this.state.currentMissionId);
 
-  loadMission() {
-    const pool = DB[this.state.eta] || [];
-    if(!pool.length) return;
+                if (this.state.passo < m.p.length - 1) {
+                    this.state.passo++;
+                    this.renderMission();
+                    this.speak("Passaggio " + (this.state.passo + 1) + ": " + m.p[this.state.passo]);
+                    this.save();
+                } else {
+                    this.completeMission(m);
+                }
+            },
 
-    const available = pool.filter(m => !this.state.usedMissionIds.includes(m.id));
-    const chosen = available.length > 0 ? available[Math.floor(Math.random()*available.length)] : pool[Math.floor(Math.random() * pool.length)];
+            prevStep() {
+                if (this.state.passo > 0) {
+                    this.state.passo--;
+                    this.renderMission();
+                    this.save();
+                }
+            },
 
-    this.state.currentMissionId = chosen.id;
-    this.state.passo = 0;
-    this.renderMission();
-    this.showScreen('gioco');
-    this.updateUI();
-    this.speak(chosen.s + ". OBIETTIVO: " + chosen.o + ". Passaggio 1: " + chosen.p[0]);
-  },
+            completeMission(m) {
+                const overlay = document.getElementById('overlay-complete');
+                overlay.style.display = 'flex';
+                this.speak("Missione completata! Bravissimo!");
 
-  _getMission(){
-    if (this.state.currentMissionId === 'spec') return DB.spec;
-    return (DB[this.state.eta] || []).find(x => x.id === this.state.currentMissionId);
-  },
+                setTimeout(() => {
+                    overlay.style.display = 'none';
 
-  renderMission() {
-    const m = this._getMission();
-    if(!m) return;
+                    if (m.id !== 'spec') {
+                        this.state.missionsDoneToday++;
+                        this.state.usedMissionIds.push(m.id);
+                        this.state.diary.unshift({ t: m.t, d: new Date().toLocaleDateString('it-IT'), e: this.state.eta });
+                        if (this.state.diary.length > 80) this.state.diary.pop();
 
-    const ui = document.getElementById('mission-ui');
-    ui.innerHTML = `
-      <div class="mission-title">${m.t}</div>
-      <p class="mission-story">${m.s}</p>
-      <div class="objective-box"><b>OBIETTIVO</b>${m.o}</div>
-      <div>
-        ${m.p.map((txt, i) => `
-          <div class="step ${i === this.state.passo ? 'active' : ''}">
-            <div class="step-num">${i + 1}</div>
-            <div>${txt}</div>
-          </div>
-        `).join('')}
-      </div>
-    `;
-    document.getElementById('btn-back').style.visibility = this.state.passo === 0 ? 'hidden' : 'visible';
-    document.getElementById('btn-next').innerText = (this.state.passo === m.p.length - 1) ? 'COMPLETA ✅' : 'AVANTI';
-  },
+                        if (this.state.missionsDoneToday >= 3) {
+                            this.showScreen('genitore');
+                            // FIX id corretto: btn-special (non btn-speciale)
+                            document.getElementById('btn-special').style.display = this.state.specialDoneToday ? 'none' : 'block';
+                        } else {
+                            this.loadMission();
+                        }
+                    } else {
+                        this.state.specialDoneToday = true;
+                        this.showScreen('genitore');
+                        document.getElementById('btn-special').style.display = 'none';
+                    }
 
-  nextStep() {
-    const m = this._getMission();
-    if(!m) return;
+                    this.updateUI();
+                    this.save();
+                }, 1700);
+            },
 
-    if (this.state.passo < m.p.length - 1) {
-      this.state.passo++;
-      this.renderMission();
-      this.speak("Passaggio " + (this.state.passo + 1) + ": " + m.p[this.state.passo]);
-      this.save();
-    } else {
-      this.completeMission(m);
-    }
-  },
+            openDiary() {
+                const list = document.getElementById('diary-list');
 
-  prevStep() {
-    if (this.state.passo > 0) {
-      this.state.passo--;
-      this.renderMission();
-      this.save();
-    }
-  },
+                const pickEmoji = (title) => {
+                    const t = (title || "").toLowerCase();
+                    if (t.includes("ghiaccio")) return "🧊";
+                    if (t.includes("mappa") || t.includes("galatt")) return "🗺️";
+                    if (t.includes("luci")) return "💡";
+                    if (t.includes("gravità") || t.includes("gravita")) return "🛰️";
+                    if (t.includes("codice")) return "📡";
+                    return "⭐";
+                };
 
-  completeMission(m) {
-    const overlay = document.getElementById('overlay-complete');
-    overlay.style.display = 'flex';
-    this.speak("Missione completata! Bravissimo!");
+                list.innerHTML = this.state.diary.length ? this.state.diary.map(d => `
+                    <div class="diary-entry">
+                        <div class="diary-left">
+                            <div class="diary-emoji">${pickEmoji(d.t)}</div>
+                            <div>
+                                <div class="diary-title">${d.t}</div>
+                                <div class="diary-sub">${d.d}</div>
+                            </div>
+                        </div>
+                        <div class="diary-badge">${d.e}</div>
+                    </div>
+                `).join('') : '<p style="text-align:center; opacity:0.6; margin-top:60px; font-weight:800;">Nessun ricordo nel diario… per ora ✨</p>';
 
-    setTimeout(() => {
-      overlay.style.display = 'none';
+                document.getElementById('overlay-diario').style.display = 'flex';
+            },
 
-      if (m.id !== 'spec') {
-        this.state.missionsDoneToday++;
-        if(!this.state.usedMissionIds.includes(m.id)) this.state.usedMissionIds.push(m.id);
-        this.state.diary.unshift({ t: m.t, d: new Date().toLocaleDateString('it-IT'), e: this.state.eta });
-        if (this.state.diary.length > 80) this.state.diary.pop();
+            closeDiary() { document.getElementById('overlay-diario').style.display = 'none'; },
 
-        if (this.state.missionsDoneToday >= 3) {
-          this.showScreen('genitore');
-        } else {
-          this.loadMission();
-        }
-      } else {
-        this.state.specialDoneToday = true;
-        this.showScreen('genitore');
-      }
+            askParent(action) {
+                window.parentTask = action;
+                document.getElementById('gate-input').value = "";
+                document.getElementById('parent-gate').style.display = 'flex';
+            },
 
-      this.updateUI();
-      this.save();
-    }, 1800);
-  },
+            closeParent() { document.getElementById('parent-gate').style.display = 'none'; },
 
-  openDiary() {
-    const list = document.getElementById('diary-list');
-    const html = (this.state.diary || []).map(d => `
-      <div class="diary-entry">
-        <div><b>${d.t}</b><br><small>${d.d}</small></div>
-        <div class="diary-meta">${d.e}</div>
-      </div>
-    `).join('');
-    list.innerHTML = html || '<p style="text-align:center; opacity:0.5; margin-top:50px;">Nessun ricordo nel diario.</p>';
-    document.getElementById('overlay-diario').style.display = 'flex';
-  },
+            verifyParent() {
+                const val = document.getElementById('gate-input').value;
+                if (val === "10") {
+                    this.closeParent();
+                    if (window.parentTask === 'spec') {
+                        this.state.currentMissionId = 'spec';
+                        this.state.passo = 0;
+                        this.renderMission();
+                        this.showScreen('gioco');
+                        this.speak(DB.spec.s + ". OBIETTIVO: " + DB.spec.o);
+                    } else {
+                        this.state.missionsDoneToday = 0;
+                        this.state.usedMissionIds = [];
+                        this.showScreen('eta');
+                    }
+                    this.save();
+                } else {
+                    alert("Risposta errata!");
+                    this.closeParent();
+                }
+            },
 
-  closeDiary() { document.getElementById('overlay-diario').style.display = 'none'; },
+            // FIX PRINCIPALE: finisci per oggi torna HOME (non resta in genitore)
+            finishToday() {
+                window.speechSynthesis.cancel();
+                this.state.fsm = 'home';
+                this.state.currentMissionId = null;
+                this.state.passo = 0;
+                this.state.eta = null; // reset età per ripartire pulito
+                this.updateUI();
+                this.save();
+            }
+        };
 
-  askParent(action) {
-    window.parentTask = action;
-    document.getElementById('gate-input').value = "";
-    document.getElementById('parent-gate').style.display = 'flex';
-  },
-
-  closeParent() { document.getElementById('parent-gate').style.display = 'none'; },
-
-  verifyParent() {
-    const val = document.getElementById('gate-input').value;
-    if (val === "10") {
-      this.closeParent();
-      if (window.parentTask === 'spec') {
-        if(this.state.specialDoneToday){
-          this.showScreen('genitore');
-          return;
-        }
-        this.state.currentMissionId = 'spec';
-        this.state.passo = 0;
-        this.renderMission();
-        this.showScreen('gioco');
-        this.speak(DB.spec.s + ". OBIETTIVO: " + DB.spec.o + ". Passaggio 1: " + DB.spec.p[0]);
-      } else {
-        this.state.missionsDoneToday = 0;
-        this.state.usedMissionIds = [];
-        this.showScreen('eta');
-      }
-      this.save();
-      this.updateUI();
-    } else {
-      alert("Risposta errata!");
-      this.closeParent();
-    }
-  },
-
-  finishToday() { location.reload(); }
-};
-
-// ✅ CRITICO: rendi spark accessibile agli onclick inline
-window.spark = spark;
-
-window.onload = () => spark.init();
-</script>
+        window.onload = () => spark.init();
+    </script>
 </body>
 </html>
