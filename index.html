@@ -5,233 +5,213 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>SparkPlay - Spazio Master</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<title>SparkPlay</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
 <style>
 :root {
-  --bg0: #070B14;
-  --bg1: #0B1220;
-  --ink: #EAF2FF;
-  --muted: #A9B7D6;
-  --line: rgba(255, 255, 255, 0.12);
-  --accent: #3F5EF6;
-  --gold: #FFB300;
-  --radius: 28px;
-  --card-bg: rgba(255, 255, 255, 0.06);
+  --nintendo-red: #E60012;
+  --nintendo-blue: #00A0E9;
+  --nintendo-yellow: #FFD200;
+  --bg-deep: #050A1A;
+  --text: #FFFFFF;
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body { 
   margin: 0; 
-  background-color: var(--bg0); 
-  font-family: 'Inter', sans-serif; 
-  color: var(--ink); 
+  background-color: var(--bg-deep); 
+  font-family: 'Quicksand', sans-serif; 
+  color: var(--text); 
   height: 100vh;
-  overflow: hidden; /* Evita scroll brutti su mobile */
+  overflow: hidden;
+  /* Sfondo stellato fisso su tutto il corpo */
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15) 1px, transparent 1px),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.1) 1px, transparent 1px),
+    radial-gradient(circle at 40% 80%, rgba(255,255,255,0.2) 2px, transparent 2px);
+  background-size: 100px 100px, 150px 150px, 200px 200px;
 }
 
-/* SFONDO STELLATO PERSISTENTE */
-#stars-canvas {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  z-index: -1;
-  background: radial-gradient(circle at 50% 50%, #121b33 0%, #070b14 100%);
-}
-
-.star {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.3;
-  animation: blink var(--d) infinite ease-in-out;
-}
-@keyframes blink { 0%, 100% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.3); } }
-
-/* LAYOUT SPACING */
+/* Rimosso il guscio (sp-shell): ora tutto fluttua nello spazio */
 .sp-root { 
-  max-width: 500px; 
+  max-width: 600px; 
   margin: 0 auto; 
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 30px 20px;
+  position: relative;
 }
 
-.sp-shell { 
+/* Header fluttuante */
+.sp-top { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.brand { 
+  font-family: 'Fredoka One', cursive;
+  font-size: 28px;
+  color: var(--nintendo-yellow);
+  text-shadow: 3px 3px 0px var(--nintendo-red);
+  letter-spacing: 2px;
+}
+
+/* Blocchi di testo trasparenti e spaziosi */
+.content-area {
   flex: 1;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--line); 
-  border-radius: var(--radius); 
-  background: rgba(255, 255, 255, 0.02); 
-  backdrop-filter: blur(15px);
-  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-  overflow-y: auto;
+  gap: 25px;
 }
 
-.sp-top { 
-  padding: 24px; 
-  border-bottom: 1px solid var(--line); 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
+.story-text {
+  font-size: 20px;
+  line-height: 1.4;
+  text-align: center;
+  color: #CFD9FF;
 }
 
-.brand { font-weight: 900; color: var(--gold); letter-spacing: 1px; font-size: 14px; }
-
-/* CONTENUTO PIÙ DISTANZIATO */
-.sp-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
-
-.card { 
-  background: var(--card-bg); 
-  border: 1px solid var(--line);
-  border-radius: 22px; 
-  padding: 22px; 
-  line-height: 1.6;
+.goal-box {
+  background: rgba(0, 160, 233, 0.2);
+  border: 4px solid var(--nintendo-blue);
+  border-radius: 20px;
+  padding: 15px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 22px;
 }
 
-.card-label { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
+/* Steps in stile "Level Select" */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
 
-h1 { font-size: 26px; font-weight: 900; margin: 10px 0; line-height: 1.2; }
-
-/* STEP DESIGN */
-.steps { display: flex; flex-direction: column; gap: 12px; margin: 10px 0; }
 .step { 
-  padding: 16px; 
-  border-radius: 16px; 
-  background: rgba(255,255,255,0.03); 
-  border: 1px solid transparent;
-  transition: 0.3s;
+  padding: 18px; 
+  border-radius: 25px; 
+  background: rgba(255, 255, 255, 0.05);
+  border: 3px solid transparent;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
+
 .step.active { 
-  background: rgba(63, 94, 246, 0.15); 
-  border-color: var(--accent); 
-  color: white; 
-  font-weight: 600;
-  transform: scale(1.02);
+  background: white;
+  color: var(--bg-deep);
+  border-color: var(--nintendo-yellow);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px var(--nintendo-yellow);
 }
-.step.dim { opacity: 0.3; filter: blur(0.5px); }
 
-/* BOTTONI */
-.btn-group { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; margin-top: auto; padding-top: 20px; }
-.btn { 
-  border: none; border-radius: 20px; padding: 20px; font-weight: 800; cursor: pointer; 
-  display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s;
+.step.dim { opacity: 0.2; }
+
+.num {
+  background: var(--nintendo-red);
+  color: white;
+  width: 35px; height: 35px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fredoka One';
 }
-.btn:active { transform: scale(0.96); }
-.btn-primary { background: var(--accent); color: white; font-size: 16px; box-shadow: 0 10px 25px rgba(63,94,246,0.4); }
-.btn-ghost { background: rgba(255,255,255,0.05); color: var(--ink); border: 1px solid var(--line); }
 
-.orb { font-size: 60px; margin: 20px 0; animation: float 4s infinite ease-in-out; }
-@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+/* Bottoni stile Console */
+.controls {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn {
+  flex: 1;
+  border: none;
+  border-radius: 50px;
+  padding: 20px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 8px 0px rgba(0,0,0,0.3);
+  transition: 0.1s;
+}
+
+.btn:active { transform: translateY(4px); box-shadow: 0 4px 0px rgba(0,0,0,0.3); }
+
+.btn-a { background: var(--nintendo-red); color: white; }
+.btn-b { background: #555; color: white; }
+
+.orb { font-size: 80px; text-align: center; margin: 20px 0; }
 </style>
 </head>
 <body>
 
-<div id="stars-canvas"></div>
-
 <div id="SPARKPLAY_APP" class="sp-root"></div>
 
 <script>
-/* GENERATORE STELLE FISSO */
-const canvas = document.getElementById('stars-canvas');
-for(let i=0; i<60; i++) {
-  const star = document.createElement('div');
-  star.className = 'star';
-  const size = Math.random() * 2 + 1 + 'px';
-  star.style.width = size; star.style.height = size;
-  star.style.top = Math.random() * 100 + '%';
-  star.style.left = Math.random() * 100 + '%';
-  star.style.setProperty('--d', (Math.random() * 3 + 2) + 's');
-  canvas.appendChild(star);
-}
-
 (()=>{"use strict";
 const DB={
   small:[
-    {id:"s01",badge:"🌙",title:"Segnale Perduto",story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.",goal:"Riaccendere l’antenna stellare.",steps:["Trova l’antenna (calzino) e stringila forte.","Portala nella tua base e appoggiala in alto.","Fai 3 bip lenti: bip... bip... bip..."],finale:"Segnale tornato. Base salva!",q:"A chi manderesti il primo messaggio?"},
-    {id:"s02",badge:"🛰️",title:"Satellite Smarrito",story:"Un piccolo satellite è uscito dall’orbita.",goal:"Riportarlo vicino alla base.",steps:["Prendi il satellite (peluche) con cura.","Fallo fluttuare lento fino alla base.","Fai un giro d’orbita: un cerchio grande..."],finale:"Orbita ripristinata!",q:"Che nome dai al satellite?"}
+    {title:"SEGNALE PERDUTO", badge:"📡", story:"La base ha perso il segnale! La galassia è al buio!", goal:"RIACCENDI L'ANTENNA!", steps:["Trova un calzino (l'antenna).","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."], finale:"SEGNALE OK!"}
   ]
 };
 
-let state = { fsm:"WELCOME", audio:false, step:0, quest:null };
+let state = { fsm:"WELCOME", step:0, quest:null };
 
 function render(){
   const root = document.getElementById("SPARKPLAY_APP");
   
   if(state.fsm === "WELCOME"){
     root.innerHTML = `
-      <div class="sp-shell">
-        <div class="sp-top">
-          <div class="brand">SPARKPLAY 🚀</div>
-          <button class="btn-ghost" style="padding:10px; border-radius:12px;" onclick="toggleAudio()">${state.audio?'🔊':'🔈'}</button>
-        </div>
-        <div class="sp-body" style="text-align:center; justify-content:center; flex:1;">
-          <div class="orb">🪐</div>
-          <h1>Esplorazione Spaziale</h1>
-          <p style="color:var(--muted); margin-bottom:30px;">Pronto per la tua missione quotidiana Comandante?</p>
-          <button class="btn btn-primary" onclick="startMission()">INIZIA ORA</button>
-        </div>
+      <div class="sp-top"><div class="brand">SPARKPLAY</div></div>
+      <div class="content-area" style="text-align:center; justify-content:center;">
+        <div class="orb">🚀</div>
+        <h1 style="font-family:'Fredoka One'; font-size:40px; color:var(--nintendo-yellow);">PRONTO?</h1>
+        <button class="btn btn-a" onclick="start()">START MISSION</button>
       </div>`;
   } else {
     const q = state.quest;
     root.innerHTML = `
-      <div class="sp-shell">
-        <div class="sp-top">
-          <button class="btn-ghost" style="padding:10px; border-radius:12px;" onclick="toggleAudio()">${state.audio?'🔊':'🔈'}</button>
-          <div class="brand">${q.title}</div>
-          <button class="btn-ghost" style="padding:10px; border-radius:12px;" onclick="goHome()">🏠</button>
+      <div class="sp-top">
+        <div class="brand">MISSION</div>
+        <button class="btn btn-b" style="padding:10px; border-radius:15px; flex:0;" onclick="home()">EXIT</button>
+      </div>
+      <div class="content-area">
+        <div class="story-text">${q.story}</div>
+        <div class="goal-box">${q.goal}</div>
+        <div class="steps">
+          ${q.steps.map((text, i) => `
+            <div class="step ${i === state.step ? 'active' : (i < state.step ? '' : 'dim')}">
+              <div class="num">${i + 1}</div> ${text}
+            </div>
+          `).join('')}
         </div>
-        <div class="sp-body">
-          <div class="card">
-            <span class="card-label">La tua missione</span>
-            <div style="font-size:15px;">${q.story}</div>
-          </div>
-          
-          <div class="card" style="border-color: var(--accent);">
-            <span class="card-label" style="color:var(--accent);">Obiettivo</span>
-            <div style="font-weight:700;">${q.goal}</div>
-          </div>
-
-          <div class="steps">
-            ${q.steps.map((text, i) => `
-              <div class="step ${i === state.step ? 'active' : (i < state.step ? '' : 'dim')}">
-                ${i + 1}. ${text}
-              </div>
-            `).join('')}
-          </div>
-
-          <div class="btn-group">
-            <button class="btn btn-ghost" onclick="prevStep()" ${state.step===0?'disabled style="opacity:0.2"':''}>Indietro</button>
-            <button class="btn btn-primary" onclick="nextStep()">
-              ${state.step < q.steps.length - 1 ? 'Avanti' : 'Completa'}
-            </button>
-          </div>
+        <div class="controls">
+          <button class="btn btn-b" onclick="prev()" ${state.step===0?'style="opacity:0"':''}>BACK</button>
+          <button class="btn btn-a" onclick="next()">NEXT</button>
         </div>
       </div>`;
   }
 }
 
-window.toggleAudio = () => { state.audio = !state.audio; render(); };
-window.goHome = () => { state.fsm = "WELCOME"; render(); };
-window.startMission = () => { 
-  state.fsm = "QUEST"; 
-  state.quest = DB.small[Math.floor(Math.random()*DB.small.length)]; 
-  state.step = 0; 
-  render(); 
-};
-window.prevStep = () => { if(state.step > 0) { state.step--; render(); } };
-window.nextStep = () => {
+window.start = () => { state.fsm="QUEST"; state.quest=DB.small[0]; state.step=0; render(); };
+window.home = () => { state.fsm="WELCOME"; render(); };
+window.prev = () => { if(state.step>0) { state.step--; render(); } };
+window.next = () => {
   if(state.step < state.quest.steps.length - 1) {
-    state.step++;
-    render();
+    state.step++; render();
   } else {
-    alert("🌟 MISSIONE COMPIUTA!\n\n" + state.quest.finale);
-    goHome();
+    alert("MISSIONE COMPIUTA! 🌟");
+    home();
   }
 };
-
 render();
 })();
 </script>
