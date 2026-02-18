@@ -26,7 +26,6 @@ body {
   color: var(--bianco-latte); 
   height: 100vh;
   overflow: hidden;
-  /* Stelle fluttuanti senza blocchi */
   background-image: 
     radial-gradient(1px 1px at 25% 15%, white, transparent),
     radial-gradient(1px 1px at 50% 40%, white, transparent),
@@ -45,7 +44,6 @@ body {
   padding: env(safe-area-inset-top) 25px env(safe-area-inset-bottom);
 }
 
-/* Header pulito */
 .sp-top { 
   display: flex; 
   justify-content: space-between; 
@@ -60,7 +58,6 @@ body {
   text-shadow: 2px 2px var(--rossa-morbida);
 }
 
-/* Area contenuti senza contenitori grigi */
 .content-area {
   flex: 1;
   display: flex;
@@ -102,7 +99,6 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
-  transition: 0.3s;
 }
 
 .passo.attivo { 
@@ -124,7 +120,6 @@ body {
   flex-shrink: 0;
 }
 
-/* Pulsanti Morbidi */
 .controlli {
   display: flex;
   gap: 20px;
@@ -132,12 +127,8 @@ body {
 }
 
 .btn {
-  flex: 1;
   border: none;
-  border-radius: 35px;
-  padding: 22px;
   font-family: 'Fredoka One', cursive;
-  font-size: 20px;
   cursor: pointer;
   transition: 0.2s;
   box-shadow: 0 6px 0px rgba(0,0,0,0.2);
@@ -145,8 +136,29 @@ body {
 
 .btn:active { transform: translateY(4px); box-shadow: 0 2px 0px rgba(0,0,0,0.2); }
 
-.btn-avanti { background: var(--rossa-morbida); color: white; }
-.btn-indietro { background: #4a5568; color: white; }
+/* Pulsante missione rimpicciolito */
+.btn-avanti { 
+  background: var(--rossa-morbida); 
+  color: white; 
+  padding: 15px 30px; 
+  border-radius: 25px; 
+  font-size: 18px;
+  width: auto;
+  margin: 0 auto;
+}
+
+.btn-pieno { width: 100%; padding: 22px; font-size: 20px; border-radius: 35px; }
+
+.btn-indietro { background: #4a5568; color: white; border-radius: 35px; padding: 22px; font-size: 20px; flex: 1; }
+
+.btn-audio {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 10px;
+  border-radius: 15px;
+  font-size: 20px;
+  box-shadow: none;
+}
 
 .pianeta { font-size: 100px; text-align: center; }
 </style>
@@ -161,23 +173,27 @@ const MISSIONI = [
   {titolo:"SEGNALE PERDUTO", badge:"📡", storia:"La base ha perso il segnale! La galassia è al buio!", obiettivo:"RIACCENDI L'ANTENNA!", passaggi:["Trova un calzino (l'antenna).","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."], finale:"SEGNALE RIPRISTINATO!"}
 ];
 
-let stato = { schermata:"INIZIO", passo:0, missione:null };
+let stato = { schermata:"INIZIO", passo:0, missione:null, audio:false };
 
 function disegna(){
   const contenitore = document.getElementById("SPARKPLAY_APP");
   
   if(stato.schermata === "INIZIO"){
     contenitore.innerHTML = `
-      <div class="sp-top"><div class="brand">SPARKPLAY 🚀</div></div>
+      <div class="sp-top">
+        <div class="brand">SPARKPLAY 🚀</div>
+        <button class="btn btn-audio" onclick="alternaAudio()">${stato.audio ? '🔊' : '🔈'}</button>
+      </div>
       <div class="content-area">
         <div class="pianeta">🪐</div>
         <h1 style="font-family:'Fredoka One'; font-size:45px; color:var(--giallo-stella); text-align:center;">PRONTI?</h1>
-        <button class="btn btn-avanti" onclick="inizia()">VIA ALLA MISSIONE!</button>
+        <button class="btn btn-avanti btn-pieno" onclick="inizia()">VIA ALLA MISSIONE!</button>
       </div>`;
   } else {
     const m = stato.missione;
     contenitore.innerHTML = `
       <div class="sp-top">
+        <button class="btn btn-audio" onclick="alternaAudio()">${stato.audio ? '🔊' : '🔈'}</button>
         <div class="brand" style="font-size:20px;">MISSIONE</div>
         <button class="btn btn-indietro" style="padding:10px 20px; flex:0; font-size:14px;" onclick="esci()">ESCI</button>
       </div>
@@ -193,23 +209,62 @@ function disegna(){
         </div>
         <div class="controlli">
           <button class="btn btn-indietro" onclick="precedente()" ${stato.passo===0?'style="visibility:hidden"':''}>INDIETRO</button>
-          <button class="btn btn-avanti" onclick="successivo()">${stato.passo < m.passaggi.length - 1 ? 'AVANTI' : 'FINITO! ✅'}</button>
+          <button class="btn btn-avanti btn-pieno" onclick="successivo()">${stato.passo < m.passaggi.length - 1 ? 'AVANTI' : 'FINITO! ✅'}</button>
         </div>
       </div>`;
   }
 }
 
-window.inizia = () => { stato.schermata="GIOCO"; stato.missione=MISSIONI[0]; stato.passo=0; disegna(); };
-window.esci = () => { stato.schermata="INIZIO"; disegna(); };
-window.precedente = () => { if(stato.passo > 0) { stato.passo--; disegna(); } };
+window.alternaAudio = () => {
+  stato.audio = !stato.audio;
+  if(stato.audio) parla("Audio attivato");
+  else speechSynthesis.cancel();
+  disegna();
+};
+
+function parla(testo){
+  if(!stato.audio) return;
+  speechSynthesis.cancel();
+  const msg = new SpeechSynthesisUtterance(testo);
+  msg.lang = "it-IT";
+  msg.rate = 0.9;
+  speechSynthesis.speak(msg);
+}
+
+window.inizia = () => { 
+  stato.schermata="GIOCO"; 
+  stato.missione=MISSIONI[0]; 
+  stato.passo=0; 
+  disegna();
+  parla(stato.missione.storia + ". Obiettivo: " + stato.missione.obiettivo + ". Primo passaggio: " + stato.missione.passaggi[0]);
+};
+
+window.esci = () => { 
+  stato.schermata="INIZIO"; 
+  speechSynthesis.cancel();
+  disegna(); 
+};
+
+window.precedente = () => { 
+  if(stato.passo > 0) { 
+    stato.passo--; 
+    disegna(); 
+    parla(stato.missione.passaggi[stato.passo]);
+  } 
+};
+
 window.successivo = () => {
   if(stato.passo < stato.missione.passaggi.length - 1) {
-    stato.passo++; disegna();
+    stato.passo++; 
+    disegna(); 
+    parla(stato.missione.passaggi[stato.passo]);
   } else {
+    parla(stato.missione.finale);
     alert("EVVIVA! MISSIONE COMPIUTA! 🌟");
     esci();
   }
 };
+
 disegna();
 })();
 </script>
