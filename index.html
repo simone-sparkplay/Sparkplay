@@ -10,145 +10,145 @@
 
 <style>
 :root {
-  --nintendo-red: #E60012;
-  --nintendo-blue: #00A0E9;
-  --nintendo-yellow: #FFD200;
-  --bg-deep: #050A1A;
-  --text: #FFFFFF;
+  --rossa-morbida: #ff5e6c;
+  --blu-spaziale: #00d2ff;
+  --giallo-stella: #ffe66d;
+  --sfondo-profondo: #0a1128;
+  --bianco-latte: #f7fff7;
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body { 
   margin: 0; 
-  background-color: var(--bg-deep); 
+  background-color: var(--sfondo-profondo); 
   font-family: 'Quicksand', sans-serif; 
-  color: var(--text); 
+  color: var(--bianco-latte); 
   height: 100vh;
   overflow: hidden;
-  /* Sfondo stellato fisso su tutto il corpo */
+  /* Stelle fluttuanti senza blocchi */
   background-image: 
-    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15) 1px, transparent 1px),
-    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.1) 1px, transparent 1px),
-    radial-gradient(circle at 40% 80%, rgba(255,255,255,0.2) 2px, transparent 2px);
-  background-size: 100px 100px, 150px 150px, 200px 200px;
+    radial-gradient(1px 1px at 25% 15%, white, transparent),
+    radial-gradient(1px 1px at 50% 40%, white, transparent),
+    radial-gradient(2px 2px at 75% 65%, var(--giallo-stella), transparent),
+    radial-gradient(1px 1px at 15% 85%, white, transparent),
+    radial-gradient(2px 2px at 85% 25%, white, transparent);
+  background-size: 100% 100%;
 }
 
-/* Rimosso il guscio (sp-shell): ora tutto fluttua nello spazio */
 .sp-root { 
   max-width: 600px; 
   margin: 0 auto; 
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 30px 20px;
-  position: relative;
+  padding: env(safe-area-inset-top) 25px env(safe-area-inset-bottom);
 }
 
-/* Header fluttuante */
+/* Header pulito */
 .sp-top { 
   display: flex; 
   justify-content: space-between; 
   align-items: center;
-  margin-bottom: 40px;
+  padding: 20px 0;
 }
 
 .brand { 
   font-family: 'Fredoka One', cursive;
-  font-size: 28px;
-  color: var(--nintendo-yellow);
-  text-shadow: 3px 3px 0px var(--nintendo-red);
-  letter-spacing: 2px;
+  font-size: 32px;
+  color: var(--giallo-stella);
+  text-shadow: 2px 2px var(--rossa-morbida);
 }
 
-/* Blocchi di testo trasparenti e spaziosi */
+/* Area contenuti senza contenitori grigi */
 .content-area {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 30px;
+  justify-content: center;
 }
 
-.story-text {
-  font-size: 20px;
+.testo-storia {
+  font-size: 22px;
   line-height: 1.4;
   text-align: center;
-  color: #CFD9FF;
+  font-weight: 500;
 }
 
-.goal-box {
-  background: rgba(0, 160, 233, 0.2);
-  border: 4px solid var(--nintendo-blue);
-  border-radius: 20px;
-  padding: 15px;
+.obiettivo-box {
+  background: rgba(0, 210, 255, 0.15);
+  border: 3px dashed var(--blu-spaziale);
+  border-radius: 25px;
+  padding: 20px;
   text-align: center;
   font-weight: 700;
-  font-size: 22px;
+  font-size: 24px;
+  color: var(--blu-spaziale);
 }
 
-/* Steps in stile "Level Select" */
-.steps {
+.passaggi {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
-.step { 
-  padding: 18px; 
-  border-radius: 25px; 
-  background: rgba(255, 255, 255, 0.05);
-  border: 3px solid transparent;
-  font-size: 18px;
+.passo { 
+  padding: 20px; 
+  border-radius: 30px; 
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 20px;
   font-weight: 700;
   display: flex;
   align-items: center;
   gap: 15px;
+  transition: 0.3s;
 }
 
-.step.active { 
-  background: white;
-  color: var(--bg-deep);
-  border-color: var(--nintendo-yellow);
+.passo.attivo { 
+  background: var(--bianco-latte);
+  color: var(--sfondo-profondo);
   transform: scale(1.05);
-  box-shadow: 0 0 20px var(--nintendo-yellow);
+  box-shadow: 0 10px 30px rgba(255, 230, 109, 0.3);
 }
 
-.step.dim { opacity: 0.2; }
+.passo.sfumato { opacity: 0.25; }
 
-.num {
-  background: var(--nintendo-red);
+.numero {
+  background: var(--rossa-morbida);
   color: white;
-  width: 35px; height: 35px;
+  width: 40px; height: 40px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Fredoka One';
+  flex-shrink: 0;
 }
 
-/* Bottoni stile Console */
-.controls {
+/* Pulsanti Morbidi */
+.controlli {
   display: flex;
-  gap: 15px;
-  margin-top: 30px;
+  gap: 20px;
+  padding-bottom: 30px;
 }
 
 .btn {
   flex: 1;
   border: none;
-  border-radius: 50px;
-  padding: 20px;
+  border-radius: 35px;
+  padding: 22px;
   font-family: 'Fredoka One', cursive;
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
-  box-shadow: 0 8px 0px rgba(0,0,0,0.3);
-  transition: 0.1s;
+  transition: 0.2s;
+  box-shadow: 0 6px 0px rgba(0,0,0,0.2);
 }
 
-.btn:active { transform: translateY(4px); box-shadow: 0 4px 0px rgba(0,0,0,0.3); }
+.btn:active { transform: translateY(4px); box-shadow: 0 2px 0px rgba(0,0,0,0.2); }
 
-.btn-a { background: var(--nintendo-red); color: white; }
-.btn-b { background: #555; color: white; }
+.btn-avanti { background: var(--rossa-morbida); color: white; }
+.btn-indietro { background: #4a5568; color: white; }
 
-.orb { font-size: 80px; text-align: center; margin: 20px 0; }
+.pianeta { font-size: 100px; text-align: center; }
 </style>
 </head>
 <body>
@@ -157,62 +157,60 @@ body {
 
 <script>
 (()=>{"use strict";
-const DB={
-  small:[
-    {title:"SEGNALE PERDUTO", badge:"📡", story:"La base ha perso il segnale! La galassia è al buio!", goal:"RIACCENDI L'ANTENNA!", steps:["Trova un calzino (l'antenna).","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."], finale:"SEGNALE OK!"}
-  ]
-};
+const MISSIONI = [
+  {titolo:"SEGNALE PERDUTO", badge:"📡", storia:"La base ha perso il segnale! La galassia è al buio!", obiettivo:"RIACCENDI L'ANTENNA!", passaggi:["Trova un calzino (l'antenna).","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."], finale:"SEGNALE RIPRISTINATO!"}
+];
 
-let state = { fsm:"WELCOME", step:0, quest:null };
+let stato = { schermata:"INIZIO", passo:0, missione:null };
 
-function render(){
-  const root = document.getElementById("SPARKPLAY_APP");
+function disegna(){
+  const contenitore = document.getElementById("SPARKPLAY_APP");
   
-  if(state.fsm === "WELCOME"){
-    root.innerHTML = `
-      <div class="sp-top"><div class="brand">SPARKPLAY</div></div>
-      <div class="content-area" style="text-align:center; justify-content:center;">
-        <div class="orb">🚀</div>
-        <h1 style="font-family:'Fredoka One'; font-size:40px; color:var(--nintendo-yellow);">PRONTO?</h1>
-        <button class="btn btn-a" onclick="start()">START MISSION</button>
+  if(stato.schermata === "INIZIO"){
+    contenitore.innerHTML = `
+      <div class="sp-top"><div class="brand">SPARKPLAY 🚀</div></div>
+      <div class="content-area">
+        <div class="pianeta">🪐</div>
+        <h1 style="font-family:'Fredoka One'; font-size:45px; color:var(--giallo-stella); text-align:center;">PRONTI?</h1>
+        <button class="btn btn-avanti" onclick="inizia()">VIA ALLA MISSIONE!</button>
       </div>`;
   } else {
-    const q = state.quest;
-    root.innerHTML = `
+    const m = stato.missione;
+    contenitore.innerHTML = `
       <div class="sp-top">
-        <div class="brand">MISSION</div>
-        <button class="btn btn-b" style="padding:10px; border-radius:15px; flex:0;" onclick="home()">EXIT</button>
+        <div class="brand" style="font-size:20px;">MISSIONE</div>
+        <button class="btn btn-indietro" style="padding:10px 20px; flex:0; font-size:14px;" onclick="esci()">ESCI</button>
       </div>
       <div class="content-area">
-        <div class="story-text">${q.story}</div>
-        <div class="goal-box">${q.goal}</div>
-        <div class="steps">
-          ${q.steps.map((text, i) => `
-            <div class="step ${i === state.step ? 'active' : (i < state.step ? '' : 'dim')}">
-              <div class="num">${i + 1}</div> ${text}
+        <div class="testo-storia">${m.storia}</div>
+        <div class="obiettivo-box">${m.obiettivo}</div>
+        <div class="passaggi">
+          ${m.passaggi.map((testo, i) => `
+            <div class="passo ${i === stato.passo ? 'attivo' : (i < stato.passo ? '' : 'sfumato')}">
+              <div class="numero">${i + 1}</div> ${testo}
             </div>
           `).join('')}
         </div>
-        <div class="controls">
-          <button class="btn btn-b" onclick="prev()" ${state.step===0?'style="opacity:0"':''}>BACK</button>
-          <button class="btn btn-a" onclick="next()">NEXT</button>
+        <div class="controlli">
+          <button class="btn btn-indietro" onclick="precedente()" ${stato.passo===0?'style="visibility:hidden"':''}>INDIETRO</button>
+          <button class="btn btn-avanti" onclick="successivo()">${stato.passo < m.passaggi.length - 1 ? 'AVANTI' : 'FINITO! ✅'}</button>
         </div>
       </div>`;
   }
 }
 
-window.start = () => { state.fsm="QUEST"; state.quest=DB.small[0]; state.step=0; render(); };
-window.home = () => { state.fsm="WELCOME"; render(); };
-window.prev = () => { if(state.step>0) { state.step--; render(); } };
-window.next = () => {
-  if(state.step < state.quest.steps.length - 1) {
-    state.step++; render();
+window.inizia = () => { stato.schermata="GIOCO"; stato.missione=MISSIONI[0]; stato.passo=0; disegna(); };
+window.esci = () => { stato.schermata="INIZIO"; disegna(); };
+window.precedente = () => { if(stato.passo > 0) { stato.passo--; disegna(); } };
+window.successivo = () => {
+  if(stato.passo < stato.missione.passaggi.length - 1) {
+    stato.passo++; disegna();
   } else {
-    alert("MISSIONE COMPIUTA! 🌟");
-    home();
+    alert("EVVIVA! MISSIONE COMPIUTA! 🌟");
+    esci();
   }
 };
-render();
+disegna();
 })();
 </script>
 </body>
