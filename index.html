@@ -5,157 +5,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#5B7CFF">
+<meta name="theme-color" content="#0B1220">
 <title>SparkPlay – Spazio</title>
 
 <style>
 :root{
-  --bg:#5B7CFF;
-  --card:#ffffff;
-  --text:#1f2a44;
-  --accent:#FFB703;
-  --radius:22px;
+ --bg:#0B1220;
+ --card:#121A2F;
+ --ink:#EAF2FF;
+ --muted:#9FB2D6;
+ --accent:#5B7CFF;
+ --radius:24px;
 }
 *{box-sizing:border-box}
 body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Inter",system-ui;
-  background:linear-gradient(180deg,#5B7CFF,#8FA8FF);
-  color:var(--text);
+ margin:0;
+ font-family:-apple-system,BlinkMacSystemFont,Inter,system-ui;
+ background:radial-gradient(1200px 600px at 50% -20%,#1B2550,#0B1220);
+ color:var(--ink);
 }
-#app{
-  max-width:520px;
-  margin:0 auto;
-  padding:16px 14px 32px;
-}
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  color:#fff;
-  margin-bottom:14px;
-}
-.header h1{
-  font-size:22px;
-  margin:0;
-  font-weight:800;
-}
-.header .audio{
-  background:rgba(255,255,255,.25);
-  border:0;
-  border-radius:999px;
-  padding:8px 12px;
-  font-size:16px;
-  color:#fff;
-}
+.wrap{max-width:520px;margin:0 auto;padding:24px}
 .card{
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:18px;
-  margin-bottom:14px;
-  box-shadow:0 10px 30px rgba(0,0,0,.15);
+ background:linear-gradient(180deg,#16204A,#0F1733);
+ border-radius:var(--radius);
+ padding:22px;
+ margin-bottom:18px;
+ box-shadow:0 20px 40px rgba(0,0,0,.35);
 }
-.card h2{
-  margin:0 0 8px;
-  font-size:26px;
-}
-.card p{
-  margin:0 0 12px;
-  line-height:1.4;
-}
-.step{
-  background:#F2F5FF;
-  border-radius:16px;
-  padding:14px;
-  margin-bottom:10px;
-}
-.step strong{display:block;margin-bottom:4px}
+h1{margin:0 0 10px;font-size:28px}
+p{color:var(--muted);line-height:1.45}
 .btn{
-  width:100%;
-  border:0;
-  border-radius:18px;
-  padding:14px;
-  font-size:18px;
-  font-weight:700;
-}
-.btn.primary{
-  background:var(--accent);
-}
-.btn.secondary{
-  background:#E9ECFF;
+ display:inline-block;
+ padding:14px 20px;
+ border-radius:16px;
+ background:var(--accent);
+ color:white;
+ text-decoration:none;
+ font-weight:700;
+ border:none;
 }
 .footer{
-  text-align:center;
-  color:#fff;
-  opacity:.9;
-  margin-top:10px;
-  font-size:14px;
+ text-align:center;
+ color:var(--muted);
+ margin-top:40px;
 }
 </style>
 </head>
 
 <body>
-<div id="app"></div>
+<div class="wrap">
 
-<script>
-(() => {
-  const app = document.getElementById("app");
+<div class="card">
+<h1>☄️ Caccia ai Meteoriti</h1>
+<p>Fallo nel mondo reale. Qui dentro hai solo la guida.</p>
+</div>
 
-  const state = {
-    audioOn: true
-  };
+<div class="card">
+<p><strong>1)</strong> Nascondi 8 piccoli oggetti in una stanza.</p>
+<p><strong>2)</strong> Cammina piano come in gravità bassa.</p>
+<p><strong>3)</strong> Metti ogni meteorite trovato in una scatola.</p>
+<p><strong>4)</strong> Se sono 8 → missione completata.</p>
+<button class="btn" onclick="alert('Missione completata! 🚀')">
+Fine missione
+</button>
+</div>
 
-  function render(){
-    app.innerHTML = `
-      <div class="header">
-        <h1>🚀 Spazio</h1>
-        <button class="audio" onclick="toggleAudio()">
-          ${state.audioOn ? "🔊" : "🔇"}
-        </button>
-      </div>
+<div class="footer">
+Gioca meglio · Cresci meglio
+</div>
 
-      <div class="card">
-        <h2>☄️ Caccia ai Meteoriti</h2>
-        <p>Fallo nel mondo reale. Qui dentro hai solo la guida.</p>
-
-        <div class="step">
-          <strong>1️⃣ Prepara</strong>
-          Scegli 8 oggetti piccoli e nascondili nella stanza.
-        </div>
-
-        <div class="step">
-          <strong>2️⃣ Missione</strong>
-          Trovali camminando piano, come in gravità bassa.
-        </div>
-
-        <div class="step">
-          <strong>3️⃣ Raccolta</strong>
-          Ogni oggetto trovato va messo in una scatola.
-        </div>
-
-        <div class="step">
-          <strong>4️⃣ Conta</strong>
-          Se sono 8, missione completata!
-        </div>
-
-        <button class="btn primary" onclick="alert('Missione completata! 🚀')">
-          Fine missione
-        </button>
-      </div>
-
-      <div class="footer">
-        Gioca meglio · Cresci meglio
-      </div>
-    `;
-  }
-
-  window.toggleAudio = () => {
-    state.audioOn = !state.audioOn;
-    render();
-  };
-
-  render();
-})();
-</script>
+</div>
 </body>
 </html>
