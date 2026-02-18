@@ -4,144 +4,148 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-touch-icon" href="icona.png">
-<title>SparkPlay Premium</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SparkPlay</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --rossa-morbida: #ff5e6c;
-  --blu-spaziale: #00d2ff;
-  --giallo-stella: #ffe66d;
-  --sfondo-profondo: #0a1128;
-  --bianco-latte: #f7fff7;
+  --rossa-morbida: #ff5e6c; --blu-spaziale: #00d2ff; --giallo-stella: #ffe66d;
+  --sfondo-profondo: #0a1128; --bianco-latte: #f7fff7;
 }
-
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
 body { 
-  margin: 0; background-color: var(--sfondo-profondo); 
-  font-family: 'Quicksand', sans-serif; color: var(--bianco-latte); 
-  height: 100vh; overflow: hidden;
-  background-image: radial-gradient(1px 1px at 25% 15%, white, transparent), radial-gradient(1px 1px at 50% 40%, white, transparent), radial-gradient(2px 2px at 75% 65%, var(--giallo-stella), transparent);
+  margin: 0; background-color: var(--sfondo-profondo); font-family: 'Quicksand', sans-serif; 
+  color: var(--bianco-latte); height: 100vh; overflow: hidden;
+  background-image: radial-gradient(1px 1px at 25% 15%, white, transparent), radial-gradient(2px 2px at 75% 65%, var(--giallo-stella), transparent);
+  background-size: 100% 100%;
 }
-
 .sp-root { max-width: 600px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: env(safe-area-inset-top) 25px env(safe-area-inset-bottom); }
-
 .sp-top { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
 .brand { font-family: 'Fredoka One', cursive; font-size: 32px; color: var(--giallo-stella); text-shadow: 2px 2px var(--rossa-morbida); }
-
-.badge-info { display: flex; gap: 10px; margin-bottom: 10px; justify-content: center; }
-.pillola { background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 700; border: 1px solid rgba(255,255,255,0.2); }
-
 .content-area { flex: 1; display: flex; flex-direction: column; gap: 20px; justify-content: center; }
-.obiettivo-box { background: rgba(0, 210, 255, 0.15); border: 3px dashed var(--blu-spaziale); border-radius: 25px; padding: 18px; text-align: center; font-weight: 700; font-size: 22px; color: var(--blu-spaziale); }
-
-.passo { padding: 18px; border-radius: 30px; background: rgba(255, 255, 255, 0.08); font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
-.passo.attivo { background: var(--bianco-latte); color: var(--sfondo-profondo); transform: scale(1.03); box-shadow: 0 10px 30px rgba(255, 230, 109, 0.3); }
-
-.btn { border: none; font-family: 'Fredoka One', cursive; cursor: pointer; transition: 0.2s; box-shadow: 0 6px 0px rgba(0,0,0,0.2); }
-.btn:active { transform: translateY(4px); box-shadow: 0 2px 0px rgba(0,0,0,0.2); }
-.btn-avvio { background: var(--rossa-morbida); color: white; padding: 15px 40px; border-radius: 30px; font-size: 18px; margin: 0 auto; display: block; }
-.btn-pieno { width: 100%; padding: 20px; font-size: 20px; border-radius: 35px; background: var(--rossa-morbida); color: white; }
-.btn-indietro { background: #4a5568; color: white; border-radius: 35px; padding: 20px; font-size: 20px; flex: 1; }
-
-.pianeta { font-size: 100px; text-align: center; animation: fluttua 4s infinite ease-in-out; }
-@keyframes fluttua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-/* Modale Diario */
-.modale { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-.foglio { background: var(--sfondo-profondo); border: 2px solid var(--line); border-radius: 26px; width: 100%; max-width: 400px; padding: 20px; max-height: 80vh; overflow-y: auto; }
+.testo-storia { font-size: 20px; line-height: 1.4; text-align: center; }
+.obiettivo-box { border: 3px dashed var(--blu-spaziale); border-radius: 25px; padding: 15px; text-align: center; font-weight: 700; color: var(--blu-spaziale); }
+.passo { padding: 15px; border-radius: 25px; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-weight: 700; }
+.passo.attivo { background: var(--bianco-latte); color: var(--sfondo-profondo); transform: scale(1.02); }
+.numero { background: var(--rossa-morbida); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One'; flex-shrink: 0; }
+.btn { border: none; font-family: 'Fredoka One', cursive; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 0px rgba(0,0,0,0.2); border-radius: 25px; }
+.btn:active { transform: translateY(3px); box-shadow: 0 2px 0px rgba(0,0,0,0.2); }
+.btn-avanti { background: var(--rossa-morbida); color: white; padding: 18px; width: 100%; font-size: 18px; }
+.btn-eta { background: rgba(0,210,255,0.2); color: white; border: 2px solid var(--blu-spaziale); padding: 20px; font-size: 20px; }
+.pianeta { font-size: 80px; text-align: center; animation: float 4s infinite ease-in-out; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.muro-frasi { font-style: italic; color: var(--giallo-stella); text-align: center; padding: 10px; font-size: 16px; margin-top: 10px; }
 </style>
 </head>
 <body>
-
 <div id="SPARKPLAY_APP" class="sp-root"></div>
 
 <script>
 (()=>{"use strict";
+const DB = {
+  "5-7": [
+    {t:"SEGNALE PERDUTO", s:"La base ha perso il segnale! La galassia è al buio!", o:"RIACCENDI L'ANTENNA!", p:["Trova un calzino stellare.","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."]},
+    {t:"SATELLITE MORBIDO", s:"Un satellite è caduto tra le stelle!", o:"RECUPERALO!", p:["Trova un peluche-satellite.","Fagli fare un giro intorno al tavolo.","Mettilo a riposare in un posto alto."]},
+    {t:"POLVERE DI STELLE", s:"C'è troppa polvere spaziale sui motori!", o:"PULISCI TUTTO!", p:["Usa le mani come spazzole spaziali.","Pulisci 3 superfici diverse.","Fai un respiro profondo e soffia via la polvere."]}
+  ],
+  "8-10": [
+    {t:"MODULO VIBRANTE", s:"Il modulo 4 vibra forte. Serve silenzio assoluto!", o:"RIPARA IN SILENZIO", p:["Trova un foglio di carta.","Portalo alla base senza fare alcun rumore.","Piegalo in 4 e mettilo sotto un cuscino."]},
+    {t:"CODICE STELLARE", s:"Dobbiamo inviare un codice segreto alla Terra!", o:"COMPONI IL CODICE", p:["Trova 3 oggetti dello stesso colore.","Mettili in fila dal più piccolo al più grande.","Salta sopra ogni oggetto pronunciando una lettera."]},
+    {t:"ANTIGRAVITÀ", s:"La gravità si è rotta! Tutto fluttua!", o:"MUOVITI LENTO", p:["Attraversa la stanza muovendoti al rallentatore.","Tocca terra solo con le punte dei piedi.","Raggiungi la base e siediti senza usare le mani."]}
+  ],
+  speciale: {t:"MISSIONE SINCRONIA 🤝", s:"I motori hanno bisogno di due piloti insieme!", o:"SQUADRA SPAZIALE", p:["Prendetevi per mano (Genitore + Bambino).","Fate 10 passi sincronizzati insieme.","Dite 'Pronti al lancio' nello stesso istante!"], f:"Siete una squadra imbattibile!"}
+};
 
-// Collezione di pianeti casuali
-const PIANETI = ["🪐", "🚀", "☄️", "🛸", "🌍", "🌕", "🌟", "👨‍🚀"];
-const pianetaScelto = PIANETI[Math.floor(Math.random() * PIANETI.length)];
+const FRASI = ["L'immaginazione è l'unica astronave che arriva ovunque.", "Oggi sei un astronauta, domani il re di un nuovo mondo.", "Il gioco è il lavoro più serio del mondo.", "Nello spazio di SparkPlay, tu crei le regole."];
 
-const MISSIONI = [
-  {id:"s01", titolo:"SEGNALE PERDUTO", storia:"La base ha perso il segnale! La galassia è al buio!", obiettivo:"RIACCENDI L'ANTENNA!", passaggi:["Trova un calzino (l'antenna).","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."], finale:"SEGNALE RIPRISTINATO!"}
-];
+let s = { fsm:"INIZIO", eta:null, passo:0, missioniFatte:0, missioneAttuale:null, audio:false, specialeSbloccata:false };
 
-// Stato persistente (Premium)
-let dati = JSON.parse(localStorage.getItem('sp_dati')) || { lvl: 1, xp: 0, missioniOggi: 0, diario: [] };
-let stato = { schermata:"INIZIO", passo:0, missione:null, audio:false };
-
-function salva() { localStorage.setItem('sp_dati', JSON.stringify(dati)); }
+function parla(testo){
+  if(!s.audio) return;
+  speechSynthesis.cancel();
+  const m = new SpeechSynthesisUtterance(testo);
+  m.lang="it-IT"; m.rate=0.9;
+  speechSynthesis.speak(m);
+}
 
 function disegna(){
-  const contenitore = document.getElementById("SPARKPLAY_APP");
-  
-  if(stato.schermata === "INIZIO"){
-    contenitore.innerHTML = `
-      <div class="sp-top">
-        <div class="brand">SPARKPLAY</div>
-        <button class="btn" style="background:none; color:white; font-size:24px;" onclick="apriDiario()">📚</button>
-      </div>
-      <div class="badge-info">
-        <div class="pillola">LIVELLO ${dati.lvl}</div>
-        <div class="pillola">OGGI: ${dati.missioniOggi}/3</div>
-      </div>
-      <div class="content-area">
-        <div class="pianeta">${pianetaScelto}</div> <h1 style="font-family:'Fredoka One'; font-size:40px; color:var(--giallo-stella); text-align:center;">PRONTI?</h1>
-        <button class="btn btn-avvio" onclick="inizia()">VIA ALLA MISSIONE!</button>
+  const root = document.getElementById("SPARKPLAY_APP");
+  const icone = ["🪐","🚀","🛰️","🌠"];
+  const iconaRandom = icone[Math.floor(Date.now()/5000)%icone.length];
+
+  if(s.fsm === "INIZIO"){
+    root.innerHTML = `<div class="sp-top"><div class="brand">SPARKPLAY</div><button class="btn" style="background:none;font-size:24px;" onclick="toggleAudio()">${s.audio?'🔊':'🔈'}</button></div>
+      <div class="content-area"><div class="pianeta">${iconaRandom}</div><h1 style="text-align:center;color:var(--giallo-stella)">PRONTI?</h1>
+      <button class="btn btn-avanti" onclick="vaiEta()">AVVIA MISSIONE</button>
+      <div class="muro-frasi">"${FRASI[Math.floor(Math.random()*FRASI.length)]}"</div></div>`;
+  } 
+  else if(s.fsm === "ETA"){
+    root.innerHTML = `<div class="sp-top"><div class="brand">ETÀ</div></div>
+      <div class="content-area" style="gap:15px">
+        <button class="btn btn-eta" onclick="scegliEta('5-7')">5 - 7 ANNI</button>
+        <button class="btn btn-eta" onclick="scegliEta('8-10')">8 - 10 ANNI</button>
       </div>`;
-  } else {
-    const m = stato.missione;
-    contenitore.innerHTML = `
-      <div class="sp-top">
-        <button class="btn" onclick="alternaAudio()" style="background:none; font-size:24px;">${stato.audio ? '🔊' : '🔈'}</button>
-        <div class="brand" style="font-size:20px;">MISSIONE</div>
-        <button class="btn" onclick="esci()" style="background:none; color:white; font-size:24px;">❌</button>
+  }
+  else if(s.fsm === "GIOCO"){
+    const m = s.missioneAttuale;
+    root.innerHTML = `<div class="sp-top">
+        <button class="btn" style="background:none;font-size:24px;" onclick="toggleAudio()">${s.audio?'🔊':'🔈'}</button>
+        <div class="brand" style="font-size:18px">${m.t}</div>
+        <button class="btn" style="background:#4a5568;color:white;padding:5px 15px;" onclick="home()">ESCI</button>
       </div>
       <div class="content-area">
-        <div style="text-align:center; font-size:20px;">${m.storia}</div>
-        <div class="obiettivo-box">${m.obiettivo}</div>
-        <div class="passaggi">
-          ${m.passaggi.map((testo, i) => `
-            <div class="passo ${i === stato.passo ? 'attivo' : (i < stato.passo ? '' : 'sfumato')}">
-              <div class="numero">${i + 1}</div> ${testo}
-            </div>
-          `).join('')}
-        </div>
-        <div class="controlli">
-          <button class="btn btn-indietro" onclick="precedente()" ${stato.passo===0?'style="visibility:hidden"':''}>INDIETRO</button>
-          <button class="btn btn-pieno" style="flex:2;" onclick="successivo()">${stato.passo < m.passaggi.length - 1 ? 'AVANTI' : 'FINITO! ✅'}</button>
+        <div class="testo-storia">${m.s}</div>
+        <div class="obiettivo-box">OBIETTIVO: ${m.o}</div>
+        <div class="passaggi">${m.p.map((t,i)=>`<div class="passo ${i===s.passo?'attivo':(i<s.passo?'':'sfumato')}"><div class="numero">${i+1}</div>${t}</div>`).join('')}</div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-eta" style="flex:1;font-size:14px" onclick="precedente()" ${s.passo===0?'style="visibility:hidden"':''}>INDIETRO</button>
+          <button class="btn btn-avanti" style="flex:2" onclick="successivo()">${s.passo < m.p.length-1 ? 'AVANTI' : 'COMPLETA'}</button>
         </div>
       </div>`;
   }
 }
 
-// Funzioni logica Premium
-window.inizia = () => { stato.schermata="GIOCO"; stato.missione=MISSIONI[0]; stato.passo=0; disegna(); };
-window.esci = () => { stato.schermata="INIZIO"; disegna(); };
-window.successivo = () => {
-  if(stato.passo < stato.missione.passaggi.length - 1) {
-    stato.passo++; disegna();
-  } else {
-    dati.xp++; dati.missioniOggi++;
-    if(dati.xp >= 3) { dati.lvl++; dati.xp = 0; }
-    dati.diario.push({ titolo: stato.missione.titolo, data: new Date().toLocaleDateString() });
-    salva(); alert("MISSIONE COMPIUTA! 🌟"); esci();
-  }
-};
-window.precedente = () => { if(stato.passo > 0) { stato.passo--; disegna(); } };
-window.alternaAudio = () => { stato.audio = !stato.audio; disegna(); };
+window.toggleAudio = () => { s.audio = !s.audio; if(s.audio) parla("Audio attivo"); else speechSynthesis.cancel(); disegna(); };
+window.vaiEta = () => { s.fsm = "ETA"; disegna(); };
+window.scegliEta = (e) => { s.eta = e; s.missioniFatte = 0; s.fsm = "GIOCO"; proproxima(); };
+window.home = () => { s.fsm = "INIZIO"; s.passo=0; s.missioneAttuale=null; speechSynthesis.cancel(); disegna(); };
 
-window.apriDiario = () => {
-  const risp = prompt("GENITORE: Quanto fa 12 + 8?");
-  if(risp === "20") {
-    alert("DIARIO: Hai completato " + dati.diario.length + " missioni in totale!");
+function proproxima(){
+  if(s.missioniFatte < 3){
+    s.missioneAttuale = DB[s.eta][s.missioniFatte];
+    s.passo = 0; disegna();
+    parla(s.missioneAttuale.s + " Obiettivo: " + s.missioneAttuale.o);
+  } else if(!s.specialeSbloccata){
+    const pin = prompt("GENITORE: Quanto fa 5 + 3?");
+    if(pin === "8"){
+      s.specialeSbloccata = true;
+      s.missioneAttuale = DB.speciale;
+      s.passo = 0; disegna();
+      parla("Missione speciale sbloccata! " + s.missioneAttuale.s);
+    } else { home(); }
+  } else {
+    if(confirm("Missioni finite! Vuoi farne altre 3? (Richiede sblocco genitore)")){
+      const pin2 = prompt("GENITORE: Quanto fa 4 + 2?");
+      if(pin2 === "6"){ s.missioniFatte = 0; s.specialeSbloccata = false; proproxima(); }
+      else home();
+    } else home();
+  }
+}
+
+window.successivo = () => {
+  if(s.passo < s.missioneAttuale.p.length - 1){
+    s.passo++; disegna(); parla(s.missioneAttuale.p[s.passo]);
+  } else {
+    s.missioniFatte++;
+    alert("Grande! Missione completata!");
+    proproxima();
   }
 };
+window.precedente = () => { if(s.passo > 0){ s.passo--; disegna(); parla(s.missioneAttuale.p[s.passo]); } };
 
 disegna();
+setInterval(disegna, 5000); // Aggiorna icona random
 })();
 </script>
 </body>
