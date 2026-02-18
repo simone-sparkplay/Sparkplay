@@ -1,152 +1,647 @@
 <!doctype html>
 <html lang="it">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>SparkPlay</title>
-<link rel="apple-touch-icon" href="icona.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-<style>
-/* --- STILE ORIGINALE ZIP + LAYOUT LARGO --- */
-:root{
-  --bg0:#070B14; --bg1:#0B1220; --ink:#EAF2FF; --muted:#A9B7D6; --line:rgba(255,255,255,.10);
-  --accent:#3F5EF6; --gold:#FFB300; --radius:26px; --shadow:0 30px 70px rgba(0,0,0,.45);
-}
-body{
-  margin:0; min-height:100vh;
-  background: radial-gradient(1200px 800px at 30% 10%, rgba(63,94,246,.22), transparent 60%), linear-gradient(180deg, var(--bg0), var(--bg1));
-  font-family: Inter, system-ui, sans-serif; color:var(--ink);
-}
-.sp-root{ max-width:900px; margin:0 auto; padding:20px; }
-.sp-shell{ border:1px solid var(--line); border-radius:var(--radius); background:rgba(255,255,255,.02); box-shadow:var(--shadow); overflow:hidden;}
-.sp-top{ padding:16px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; background:rgba(63,94,246,.1);}
-.brand{ font-weight:1000; letter-spacing:1px; font-size:18px; color:var(--gold); }
-.card{ background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:22px; padding:20px; margin-bottom:15px; }
-.btn{ border:none; border-radius:18px; padding:18px; font-weight:900; cursor:pointer; font-size:16px; transition:0.3s; }
-.btn-primary{ background:linear-gradient(135deg, var(--accent), #5673FF); color:white; width:100%; box-shadow:0 10px 20px rgba(63,94,246,0.3); }
-.btn-ghost{ background:transparent; color:var(--ink); border:1px solid var(--line); }
-.step{ padding:15px; border-radius:12px; margin-bottom:10px; background:rgba(0,0,0,0.2); border:1px solid transparent; }
-.step.active{ border-color:var(--accent); background:rgba(63,94,246,0.1); }
-.step.dim{ opacity:0.4; }
-.hidden{ display:none; }
-.orb{ font-size:40px; margin-bottom:10px; animation: float 3s infinite ease-in-out; }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0B1220" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>SparkPlay — Spazio</title>
+
+  <link rel="apple-touch-icon" href="icona.png" />
+  <link rel="icon" href="icona.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg0:#070B14;
+      --bg1:#0B1220;
+      --card:#0F1A33;
+      --card2:#101F3D;
+      --ink:#EAF2FF;
+      --muted:#A9B7D9;
+      --soft:#7D90C7;
+      --accent:#3F5EF6;
+      --gold:#FFB300;
+      --radius:26px;
+      --shadow: 0 30px 70px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 700px at 30% 0%, rgba(63,94,246,.22), transparent 55%),
+        radial-gradient(900px 600px at 90% 10%, rgba(255,179,0,.10), transparent 50%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+    .wrap{
+      max-width:780px;
+      margin:0 auto;
+      padding:18px 16px 34px;
+      padding-top: max(18px, env(safe-area-inset-top));
+      padding-bottom: max(34px, env(safe-area-inset-bottom));
+    }
+    .topbar{
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:12px; margin-bottom:14px;
+    }
+    .brand h1{
+      margin:0;
+      font-size:20px;
+      letter-spacing:.2px;
+      font-weight:800;
+      line-height:1.1;
+    }
+    .brand .sub{
+      margin-top:4px;
+      font-size:14px;
+      color:var(--muted);
+      font-weight:600;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      box-shadow:0 10px 30px rgba(0,0,0,.22);
+      user-select:none;
+    }
+    .pill .v{font-size:12px; color:var(--muted); font-weight:700}
+    .pill .btnTiny{
+      cursor:pointer;
+      font-size:12px;
+      font-weight:800;
+      color:var(--ink);
+      background:rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.14);
+      padding:7px 10px;
+      border-radius:999px;
+    }
+    .cards{display:flex; flex-direction:column; gap:14px}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .card h2{
+      margin:0;
+      font-size:30px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .lead{
+      margin:10px 0 0;
+      font-size:18px;
+      font-weight:650;
+      color:var(--muted);
+      line-height:1.35;
+    }
+    .metaRow{
+      margin-top:14px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px 12px;
+      align-items:center;
+      color:var(--soft);
+      font-weight:700;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--muted);
+      font-weight:800;
+      font-size:13px;
+    }
+    .actions{margin-top:16px; display:flex; flex-direction:column; gap:10px}
+    .btn{
+      width:100%;
+      border:none;
+      cursor:pointer;
+      border-radius:18px;
+      padding:16px 16px;
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:.2px;
+      color:var(--ink);
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .btn.primary{
+      background:linear-gradient(180deg, rgba(63,94,246,.95), rgba(63,94,246,.78));
+      border:1px solid rgba(63,94,246,.35);
+      box-shadow:0 20px 55px rgba(63,94,246,.22);
+    }
+    .btn.ghost{
+      background:rgba(255,255,255,.05);
+    }
+    .btn:active{transform:translateY(1px)}
+    .small{font-size:13px; color:var(--soft); font-weight:700; margin-top:8px}
+    .divider{height:1px; background:rgba(255,255,255,.10); margin:14px 0}
+    .diaryTitle{
+      display:flex; align-items:center; gap:10px;
+      font-size:26px; font-weight:900; margin:0;
+    }
+    .diarySub{margin:8px 0 0; color:var(--muted); font-weight:650; line-height:1.35}
+    .diaryList{margin-top:12px; display:flex; flex-direction:column; gap:10px}
+    .entry{
+      padding:14px 14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.20);
+    }
+    .entry .t{font-weight:900; font-size:16px}
+    .entry .d{margin-top:4px; font-size:12px; color:var(--soft); font-weight:800}
+    .footer{
+      text-align:center;
+      margin-top:18px;
+      color:rgba(234,242,255,.65);
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
+    /* Modal recovery */
+    .overlay{
+      position:fixed; inset:0;
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      background:rgba(0,0,0,.45);
+      padding:16px;
+      padding-bottom:max(16px, env(safe-area-inset-bottom));
+      z-index:999999;
+    }
+    .modal{
+      width:min(720px, 100%);
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(16,25,45,.98), rgba(10,14,24,.98));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 30px 90px rgba(0,0,0,.55);
+      padding:16px;
+    }
+    .modal h3{margin:0; font-size:18px; font-weight:900}
+    .modal p{margin:10px 0 0; color:var(--muted); font-weight:650; line-height:1.35}
+    .rowBtns{display:flex; gap:10px; margin-top:14px}
+    .rowBtns .btn{padding:14px 14px; font-size:16px; border-radius:16px}
+    .rowBtns .btn.primary{flex:1}
+    .rowBtns .btn.warn{
+      flex:1;
+      background:linear-gradient(180deg, rgba(255,179,0,.95), rgba(255,179,0,.75));
+      border:1px solid rgba(255,179,0,.25);
+      color:#1B1400;
+      font-weight:950;
+    }
+    .rowBtns .btn.close{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      flex:.9;
+    }
+  </style>
 </head>
+
 <body>
-<div id="SPARKPLAY_APP" class="sp-root"></div>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <h1>SparkPlay</h1>
+        <div class="sub">Montessori • Spazio</div>
+      </div>
+
+      <div class="pill">
+        <div class="v" id="versionPill">v2026.02.18-01</div>
+        <button class="btnTiny" id="audioBtn" type="button" title="Audio ON/OFF">🔊</button>
+      </div>
+    </div>
+
+    <div class="cards" id="app"></div>
+
+    <div class="footer">Gioca meglio • Cresci meglio</div>
+  </div>
+
+  <!-- Recovery modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h3>🛠️ Modalità recupero</h3>
+      <p id="recoveryText">
+        SparkPlay non si è avviato correttamente. Può succedere dopo un aggiornamento o se la cache è in conflitto.
+        <br><br>
+        Prova prima: <b>Ricarica</b>. Se non basta: <b>Reset dati (solo test)</b>.
+      </p>
+      <div class="rowBtns">
+        <button class="btn primary" id="btnReload" type="button">Ricarica</button>
+        <button class="btn warn" id="btnReset" type="button">Reset dati</button>
+        <button class="btn close" id="btnClose" type="button">Chiudi</button>
+      </div>
+    </div>
+  </div>
 
 <script>
-(()=>{"use strict";
+(() => {
+  "use strict";
 
-const DB = {
-  small: [
-    {id:"s01", badge:"🌙", title:"Segnale Perduto", story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.", goal:"Riaccendere l’antenna della base.", prop:"un calzino", steps:["Trova l’antenna (calzino) e stringila forte.","Portala nella tua base (un tappeto) e appoggiala in alto.","Fai 3 'bip' lenti: bip... bip... bip..."], finale:"Segnale tornato. Base salva!", q:"A chi manderesti il primo messaggio?"}
-    // ... qui aggiungeremo le altre dello ZIP
-  ]
-};
+  // ===== CONFIG =====
+  const ROOT_ID = "app";
+  const KEY = "sp_spazio_premium_v1";
+  const VERSION = "v2026.02.18-01";
+  const DAILY_LIMIT = 3;
 
-const COOPERATIVE = {
-  title: "Sincronia Stellare 🤝",
-  story: "I motori della Starship hanno bisogno di due piloti che si muovono insieme.",
-  goal: "Completate la manovra senza mai lasciarvi.",
-  steps: ["Prendetevi per mano: siete un solo equipaggio.", "Fate 5 passi lentissimi insieme intorno alla base senza staccarvi.", "Sussurrate 'Pronti al lancio' nello stesso istante."],
-  finale: "Sincronia perfetta! Siete una squadra imbattibile.",
-  q:"Cosa è stato più difficile del muoversi insieme?"
-};
+  // ===== SAFE AUDIO (NO CRASH) =====
+  const audio = {
+    enabled: true,
+    speak(text){
+      try{
+        if(!this.enabled) return;
+        if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "it-IT";
+        u.rate = 1.03;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+      }catch(_){}
+    }
+  };
 
-let state = { fsm:"WELCOME", audio:false, age:null, step:0, quest:null };
+  // ===== HELPERS =====
+  const $ = (sel) => document.querySelector(sel);
+  const el = (tag, attrs={}, children=[]) => {
+    const n = document.createElement(tag);
+    for(const [k,v] of Object.entries(attrs)){
+      if(k === "class") n.className = v;
+      else if(k === "html") n.innerHTML = v;
+      else if(k.startsWith("on") && typeof v === "function") n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v);
+    }
+    for(const c of children){
+      if(typeof c === "string") n.appendChild(document.createTextNode(c));
+      else if(c) n.appendChild(c);
+    }
+    return n;
+  };
 
-const AudioEng = {
-  speak(text, onEnd) {
-    if(!state.audio) { if(onEnd) onEnd(); return; }
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang="it-IT"; u.rate=0.85;
-    if(onEnd) u.onend = onEnd;
-    speechSynthesis.speak(u);
+  const now = () => new Date();
+  const todayKey = () => {
+    const d = now();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth()+1).padStart(2,"0");
+    const dd = String(d.getDate()).padStart(2,"0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+  const fmtTs = (d) => {
+    const dd = String(d.getDate()).padStart(2,"0");
+    const mm = String(d.getMonth()+1).padStart(2,"0");
+    const yyyy = d.getFullYear();
+    const hh = String(d.getHours()).padStart(2,"0");
+    const mi = String(d.getMinutes()).padStart(2,"0");
+    const ss = String(d.getSeconds()).padStart(2,"0");
+    return `${dd}/${mm}/${yyyy}, ${hh}:${mi}:${ss}`;
+  };
+
+  // ===== STORAGE =====
+  const defaults = () => ({
+    v: VERSION,
+    day: todayKey(),
+    doneToday: 0,
+    usedIds: [],
+    diary: [],
+    lastMission: null
+  });
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if(!raw) return defaults();
+      const obj = JSON.parse(raw);
+      const base = { ...defaults(), ...obj };
+
+      // Daily reset if day changed
+      if(base.day !== todayKey()){
+        base.day = todayKey();
+        base.doneToday = 0;
+        base.usedIds = [];
+        base.lastMission = null;
+      }
+      return base;
+    }catch(_){
+      return defaults();
+    }
   }
-};
 
-function render(){
-  const root = document.getElementById("SPARKPLAY_APP");
-  
-  if(state.fsm === "WELCOME"){
-    root.innerHTML = `
-      <div class="sp-shell">
-        <div class="sp-top">
-          <div class="brand">SPARKPLAY 🚀</div>
-          <button class="btn btn-ghost" onclick="toggleAudio()">${state.audio?'🔊':'🔈'}</button>
-        </div>
-        <div style="padding:20px; text-align:center;">
-          <div class="orb">🪐</div>
-          <h1>Benvenuto, Esploratore</h1>
-          <p>Usa il telefono per leggere, poi posalo e gioca nel mondo reale.</p>
-          <button class="btn btn-primary" onclick="startAge()">INIZIA AVVENTURA</button>
-        </div>
-      </div>`;
+  function save(){
+    try{
+      state.v = VERSION;
+      localStorage.setItem(KEY, JSON.stringify(state));
+    }catch(_){}
   }
 
-  if(state.fsm === "QUEST"){
-    const q = state.quest;
-    root.innerHTML = `
-      <div class="sp-shell">
-        <div class="sp-top">
-          <button class="btn btn-ghost" onclick="toggleAudio()">${state.audio?'🔊':'🔈'}</button>
-          <div class="brand">${q.title}</div>
-          <button class="btn btn-ghost" onclick="goHome()">🏠</button>
-        </div>
-        <div style="padding:20px;">
-          <div class="card"><b>Storia:</b> ${q.story}<br><br><b>Obiettivo:</b> ${q.goal}</div>
-          <div class="steps-container">
-            ${q.steps.map((s,i)=>`<div class="step ${i===state.step?'active':'dim'}"><b>${i+1}.</b> ${s}</div>`).join("")}
-          </div>
-          <button class="btn btn-primary" id="btn-next" onclick="handleNext()">
-            ${state.step < q.steps.length-1 ? 'PROSSIMO PASSO' : 'COMPLETA MISSIONE ✅'}
-          </button>
-        </div>
-      </div>`;
+  function hardReset(){
+    try{ localStorage.removeItem(KEY); }catch(_){}
   }
-}
 
-window.toggleAudio = () => {
-  state.audio = !state.audio;
-  if(state.audio) AudioEng.speak("Audio attivato");
-  else speechSynthesis.cancel();
-  render();
-};
+  // ===== MISSIONS (SPAZIO) =====
+  const missions = [
+    { id:"radar", title:"Radar Spaziale", icon:"🛰️", steps:[
+      "Trova una torcia (o la luce del telefono con l’aiuto del genitore).",
+      "Accendi la torcia e fai ‘scansioni’ lente sul pavimento come un radar.",
+      "Ogni volta che vedi un oggetto, dai un nome da pianeta (es: Pianeta Calzino).",
+      "Scegli 3 ‘pianeti’ e mettili in fila: hai creato la tua rotta spaziale."
+    ], parent:"Chiedi: “Quale pianeta ti è piaciuto di più e perché?”" },
 
-window.startAge = () => {
-  state.fsm = "QUEST";
-  state.quest = DB.small[0]; // Iniziamo con la prima dello ZIP
-  state.step = 0;
-  render();
-  AudioEng.speak(state.quest.story + ". Obiettivo: " + state.quest.goal + ". Passo 1: " + state.quest.steps[0]);
-};
+    { id:"base", title:"Costruisci la Base", icon:"🧱", steps:[
+      "Prendi 6 oggetti di casa (libro, scatola, cuscino, cucchiaio, ecc.).",
+      "Costruisci una ‘base lunare’ sul tappeto: 1 ingresso, 1 laboratorio, 1 zona riposo.",
+      "Dai un nome a ogni zona e spiega a cosa serve.",
+      "Fai una prova: entra, riposa 10 secondi, poi esci come astronauta."
+    ], parent:"Chiedi: “Quale stanza della base useresti per prima?”" },
 
-window.handleNext = () => {
-  if(state.step < state.quest.steps.length - 1) {
-    state.step++;
+    { id:"respiro", title:"Respiro dell’Astronauta", icon:"🌙", steps:[
+      "Siediti comodo. Mani sulla pancia.",
+      "Inspira 4 secondi (come se riempiessi la tuta).",
+      "Trattieni 2 secondi (silenzio nello spazio).",
+      "Espira 6 secondi (svuoti la tuta lentamente).",
+      "Ripeti 3 volte. Poi scegli un ‘pensiero stellare’ (una cosa bella di oggi)."
+    ], parent:"Chiedi: “Che cosa ti ha fatto sentire più calmo?”" },
+
+    { id:"aliens", title:"Messaggio Alieno", icon:"👽", steps:[
+      "Prendi carta e matita. Disegna 5 simboli inventati (lingua aliena).",
+      "Assegna un significato a ogni simbolo (es: ⚡ = energia).",
+      "Scrivi un mini messaggio di 5 simboli e poi traducilo.",
+      "Mostra il messaggio a un genitore: lui/lei prova a indovinare cosa significa."
+    ], parent:"Chiedi: “Che cosa volevi comunicare con i simboli?”" },
+
+    { id:"meteoriti", title:"Caccia ai Meteoriti", icon:"☄️", steps:[
+      "Scegli 8 oggetti piccoli (meteoriti) e nascondili in una stanza (visibili ma sparsi).",
+      "Imposta una missione: trovali tutti camminando piano (come in gravità bassa).",
+      "Ogni meteorite trovato va messo in un ‘contenitore’ (scatola).",
+      "Conta i meteoriti: se sono 8, missione completata."
+    ], parent:"Chiedi: “Qual è stato il meteorite più difficile da trovare?”" }
+  ];
+
+  function pickMission(){
+    const used = new Set(state.usedIds || []);
+    const pool = missions.filter(m => !used.has(m.id));
+    const list = pool.length ? pool : missions.slice(); // if exhausted, allow repeats
+    const m = list[Math.floor(Math.random() * list.length)];
+    if(!used.has(m.id)) state.usedIds.push(m.id);
+    state.lastMission = m.id;
+    save();
+    return m;
+  }
+
+  // ===== UI STATE =====
+  let state = load();
+  let view = "HOME";     // HOME | MISSION | DONE
+  let currentMission = null;
+
+  // ===== RENDER =====
+  function render(){
+    $("#versionPill").textContent = VERSION;
+
+    const root = document.getElementById(ROOT_ID);
+    root.innerHTML = "";
+
+    // Audio button
+    const audioBtn = $("#audioBtn");
+    audioBtn.textContent = audio.enabled ? "🔊" : "🔇";
+    audioBtn.onclick = () => {
+      audio.enabled = !audio.enabled;
+      audioBtn.textContent = audio.enabled ? "🔊" : "🔇";
+      try{
+        if(audio.enabled) audio.speak("Audio attivo");
+      }catch(_){}
+    };
+
+    if(view === "HOME"){
+      root.appendChild(cardHome());
+      root.appendChild(cardDiary());
+      return;
+    }
+
+    if(view === "MISSION"){
+      root.appendChild(cardMission(currentMission));
+      return;
+    }
+
+    if(view === "DONE"){
+      root.appendChild(cardDone());
+      root.appendChild(cardDiary());
+      return;
+    }
+  }
+
+  function cardHome(){
+    const done = Number(state.doneToday || 0);
+    const left = Math.max(0, DAILY_LIMIT - done);
+
+    const title = el("h2", {}, ["🚀 Missione Spazio"]);
+    const lead = el("div", { class:"lead" }, [
+      "Usa oggetti di casa per creare una missione spaziale."
+    ]);
+
+    const meta = el("div", { class:"metaRow" }, [
+      el("div", { class:"chip" }, [`Missioni fatte oggi: ${done}/${DAILY_LIMIT}`]),
+      el("div", { class:"chip" }, [`Oggi: ${state.day}`])
+    ]);
+
+    const actions = el("div", { class:"actions" }, [
+      el("button", {
+        class: "btn primary",
+        type:"button",
+        onclick: () => startMission()
+      }, [ left > 0 ? "Avvia missione" : "Fine per oggi 🌙" ]),
+      el("button", {
+        class:"btn ghost",
+        type:"button",
+        onclick: () => newDayTest()
+      }, [ "Nuova giornata (test)" ])
+    ]);
+
+    const note = el("div", { class:"small" }, [
+      left > 0
+        ? "Obiettivo: 3 missioni fatte bene valgono più di 30 casuali."
+        : "Hai già fatto 3 missioni oggi. Domani si riparte."
+    ]);
+
+    const c = el("div", { class:"card" }, [title, lead, meta, actions, note]);
+    return c;
+  }
+
+  function cardMission(m){
+    const title = el("h2", {}, [`${m.icon} ${m.title}`]);
+    const lead = el("div", { class:"lead" }, [
+      "Fallo nel mondo reale. Qui dentro hai solo la guida."
+    ]);
+
+    const steps = el("div", { class:"diaryList" }, m.steps.map((s, i) =>
+      el("div", { class:"entry" }, [
+        el("div", { class:"t" }, [`${i+1}) ${s}`])
+      ])
+    ));
+
+    const parent = el("div", { class:"entry" }, [
+      el("div", { class:"t" }, ["👨‍👩‍👧 Consiglio per il genitore"]),
+      el("div", { class:"d" }, [m.parent])
+    ]);
+
+    const actions = el("div", { class:"actions" }, [
+      el("button", { class:"btn primary", type:"button", onclick:() => completeMission(m) }, ["Ho completato ✅"]),
+      el("button", { class:"btn ghost", type:"button", onclick:() => goHome() }, ["Torna alla Home"])
+    ]);
+
+    const c = el("div", { class:"card" }, [title, lead, el("div",{class:"divider"}), steps, parent, actions]);
+    return c;
+  }
+
+  function cardDone(){
+    const title = el("h2", {}, ["🌙 Fine per oggi"]);
+    const lead = el("div", { class:"lead" }, [
+      `SparkPlay si ferma qui: ${state.doneToday || 0} missioni fatte bene valgono più di 30 random.`
+    ]);
+
+    const parent = el("div", { class:"entry" }, [
+      el("div", { class:"t" }, ["Rituale genitore (30 sec):"]),
+      el("div", { class:"d" }, ['Chiedi: "Qual è stata la tua parte preferita?"'])
+    ]);
+
+    const actions = el("div", { class:"actions" }, [
+      el("button", { class:"btn primary", type:"button", onclick:() => goHome() }, ["Torna alla Home"])
+    ]);
+
+    return el("div", { class:"card" }, [title, lead, el("div",{class:"divider"}), parent, actions]);
+  }
+
+  function cardDiary(){
+    const title = el("div", { class:"diaryTitle" }, ["📘 Diario missioni"]);
+    const sub = el("div", { class:"diarySub" }, ["Piccolo storico delle missioni completate."]);
+
+    const list = el("div", { class:"diaryList" }, []);
+    const diary = Array.isArray(state.diary) ? state.diary.slice() : [];
+    if(!diary.length){
+      list.appendChild(el("div", { class:"entry" }, [
+        el("div", { class:"t" }, ["Ancora nessuna missione salvata."]),
+        el("div", { class:"d" }, ["Completa una missione per vederla qui."])
+      ]));
+    } else {
+      diary.slice(0, 12).forEach(e => {
+        list.appendChild(el("div", { class:"entry" }, [
+          el("div", { class:"t" }, [`${e.icon} ${e.world} — ${e.title}`]),
+          el("div", { class:"d" }, [e.when])
+        ]));
+      });
+    }
+
+    return el("div", { class:"card" }, [title, sub, list]);
+  }
+
+  // ===== ACTIONS =====
+  function startMission(){
+    state = load();
+    const done = Number(state.doneToday || 0);
+    if(done >= DAILY_LIMIT){
+      view = "DONE";
+      render();
+      return;
+    }
+    currentMission = pickMission();
+    view = "MISSION";
+    try{ audio.speak("Missione avviata"); }catch(_){}
     render();
-    AudioEng.speak("Passo " + (state.step+1) + ". " + state.quest.steps[state.step], () => {
-       // Se è l'ultimo passo, dopo averlo letto, legge il finale
-       if(state.step === state.quest.steps.length - 1) {
-          setTimeout(() => {
-            AudioEng.speak("Gran Finale. " + state.quest.finale + ". Curiosità Spaziale. " + state.quest.q);
-          }, 1000);
-       }
-    });
-  } else {
-    alert("🌟 MISSIONE COMPIUTA!\n\n" + state.quest.finale);
-    goHome();
   }
-};
 
-window.goHome = () => { state.fsm = "WELCOME"; state.step = 0; render(); };
+  function completeMission(m){
+    state = load();
+    const done = Number(state.doneToday || 0);
+    if(done >= DAILY_LIMIT){
+      view = "DONE";
+      render();
+      return;
+    }
+    state.doneToday = done + 1;
 
-render();
+    // diary entry
+    const entry = {
+      world: "Spazio",
+      icon: m.icon,
+      title: m.title,
+      when: fmtTs(now())
+    };
+    state.diary = Array.isArray(state.diary) ? state.diary : [];
+    state.diary.unshift(entry);
+
+    save();
+
+    if(state.doneToday >= DAILY_LIMIT){
+      view = "DONE";
+    } else {
+      view = "HOME";
+    }
+    try{ audio.speak("Completata"); }catch(_){}
+    render();
+  }
+
+  function newDayTest(){
+    // Only for testing: resets daily counters without wiping diary
+    state = load();
+    state.day = todayKey();
+    state.doneToday = 0;
+    state.usedIds = [];
+    state.lastMission = null;
+    save();
+    view = "HOME";
+    render();
+  }
+
+  function goHome(){
+    view = "HOME";
+    render();
+  }
+
+  // ===== RECOVERY / ERROR HANDLING =====
+  const overlay = $("#overlay");
+  $("#btnReload").onclick = () => location.reload();
+  $("#btnReset").onclick = () => { hardReset(); location.reload(); };
+  $("#btnClose").onclick = () => { overlay.style.display = "none"; };
+
+  window.onerror = function(msg, src, line, col, err){
+    try{
+      const t = $("#recoveryText");
+      const detail = (msg ? String(msg) : "Errore") + (line ? ` (linea ${line})` : "");
+      t.innerHTML =
+        "SparkPlay non si è avviato correttamente.<br><br>" +
+        "Può succedere dopo un aggiornamento o se la cache del browser è in conflitto.<br><br>" +
+        "<b>Dettaglio:</b> " + detail + "<br><br>" +
+        "Prova prima: <b>Ricarica</b>.<br>" +
+        "Se non basta: <b>Reset dati (solo test)</b>.";
+      overlay.style.display = "flex";
+    }catch(_){}
+    return true; // prevent default
+  };
+
+  // ===== INIT =====
+  $("#versionPill").textContent = VERSION;
+  state = load();
+  view = "HOME";
+  render();
+
 })();
 </script>
+
 </body>
 </html>
