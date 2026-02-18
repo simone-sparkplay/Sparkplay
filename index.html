@@ -1,792 +1,384 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>SparkPlay</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --rossa:#ff5e6c; --blu:#00d2ff; --giallo:#ffe66d;
-      --sfondo:#0a1128; --latte:#f7fff7;
-      --shadow:0 6px 0 rgba(0,0,0,0.30);
-    }
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none}
-    body{
-      margin:0; background-color:var(--sfondo);
-      font-family:'Quicksand',sans-serif; color:var(--latte);
-      height:100vh; overflow:hidden;
-      background-image:radial-gradient(circle at 50% 50%, #16224f 0%, var(--sfondo) 100%);
-    }
-    .sp-root{
-      max-width:600px; margin:0 auto; height:100vh;
-      display:flex; flex-direction:column;
-      padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
-    }
-    .sp-top{
-      display:flex; justify-content:space-between; align-items:center;
-      padding:15px 0; z-index:10;
-    }
-    .brand{
-      font-family:'Fredoka One',cursive; font-size:32px; color:var(--giallo);
-      text-shadow:3px 3px var(--rossa); letter-spacing:1px;
-      user-select:none;
-    }
-    .btn{
-      border:none; cursor:pointer; border-radius:20px;
-      display:flex; align-items:center; justify-content:center;
-      font-family:'Fredoka One',cursive;
-      transition:transform .1s; box-shadow:var(--shadow);
-    }
-    .btn:active{ transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,0.30); }
-    .btn-circle{ width:55px; height:55px; background:rgba(255,255,255,.10); color:white; font-size:24px; box-shadow:none; }
-    .btn-primary{ background:var(--rossa); color:white; padding:20px; width:100%; font-size:22px; }
-    .btn-secondary{ background:var(--blu); color:white; padding:18px; width:100%; font-size:20px; }
-    .btn-ghost{ background:rgba(255,255,255,.10); color:white; padding:10px 20px; font-family:'Quicksand'; font-weight:700; box-shadow:none; border-radius:16px; }
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>SparkPlay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rossa: #ff5e6c; --blu: #00d2ff; --giallo: #ffe66d;
+            --sfondo: #0a1128; --latte: #f7fff7;
+            --shadow: 0 6px 0 rgba(0,0,0,0.3);
+        }
 
-    /* Home orbit */
-    .intro-container{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; }
-    .orbit-box{ width:220px; height:220px; position:relative; display:flex; align-items:center; justify-content:center; margin-bottom:30px; }
-    .orbit-item{ position:absolute; font-size:50px; animation:orbitRotate 8s linear infinite; }
-    .orbit-1{ animation-delay:0s; }
-    .orbit-2{ animation-delay:-2.66s; opacity:.55; filter:saturate(.6); }
-    .orbit-3{ animation-delay:-5.33s; opacity:.55; filter:saturate(.6); }
-    @keyframes orbitRotate{
-      from{ transform:rotate(0deg) translateX(85px) rotate(0deg); }
-      to{ transform:rotate(360deg) translateX(85px) rotate(-360deg); }
-    }
-    .center-spark{
-      width:70px; height:70px; background:white; border-radius:50%;
-      box-shadow:0 0 40px var(--giallo); z-index:5;
-      font-size:35px; display:flex; align-items:center; justify-content:center;
-    }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
-    /* Game */
-    .game-area{ flex:1; display:flex; flex-direction:column; gap:15px; overflow-y:auto; padding-bottom:20px; }
-    .card-story{ font-size:19px; line-height:1.4; text-align:center; color:#cbd5e1; padding:0 10px; }
-    .box-goal{ border:3px dashed var(--blu); border-radius:25px; padding:15px; text-align:center; font-weight:800; color:var(--blu); background:rgba(0,210,255,0.05); font-size:20px; }
-    .steps-list{ display:flex; flex-direction:column; gap:12px; }
-    .passo{
-      padding:18px; border-radius:22px;
-      background:rgba(255,255,255,.05);
-      display:flex; align-items:center; gap:15px;
-      transition:.25s;
-      color:rgba(247,255,247,.40);
-    }
-    .passo.attivo{
-      background:var(--latte); color:var(--sfondo);
-      transform:scale(1.02);
-      box-shadow:0 10px 20px rgba(0,0,0,.30);
-      opacity:1;
-    }
-    .passo-num{
-      width:32px; height:32px; border-radius:50%;
-      background:var(--rossa); color:white;
-      display:flex; align-items:center; justify-content:center;
-      font-family:'Fredoka One'; flex-shrink:0;
-    }
-    .top-minirow{
-      display:flex; justify-content:space-between; align-items:center;
-      gap:10px;
-    }
-    .pill{
-      background:rgba(0,210,255,0.18);
-      border:2px solid rgba(0,210,255,0.55);
-      color:white;
-      padding:6px 10px;
-      border-radius:12px;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.4px;
-    }
-    .pill2{
-      background:rgba(255,94,108,0.16);
-      border:2px solid rgba(255,94,108,0.55);
-    }
-    .hint{
-      font-size:13px;
-      opacity:.75;
-      text-align:center;
-      margin-top:-6px;
-      padding:0 10px;
-    }
+        body {
+            margin: 0;
+            background-color: var(--sfondo);
+            font-family: 'Quicksand', sans-serif;
+            color: var(--latte);
+            height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #16224f 0%, var(--sfondo) 100%);
+        }
 
-    /* Modals & overlays */
-    .modal{
-      position:fixed; inset:0; background:var(--sfondo);
-      z-index:1000; display:none; flex-direction:column;
-      padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
-      overflow-y:auto;
-    }
-    .full-overlay{
-      position:fixed; inset:0; z-index:2000;
-      background:rgba(10,17,40,0.95);
-      display:none; align-items:center; justify-content:center;
-      flex-direction:column; text-align:center; padding:30px;
-    }
+        .sp-root {
+            max-width: 600px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
+        }
 
-    /* Diary */
-    .diary-card{
-      background:rgba(255,255,255,0.07);
-      padding:20px; border-radius:20px;
-      margin-bottom:12px;
-      border-left:6px solid var(--blu);
-      display:flex; align-items:center; gap:15px;
-    }
-    .diary-card:nth-child(even){ border-left-color:var(--rossa); }
-    .testo-diario b{ display:block; font-size:18px; color:var(--giallo); font-family:'Fredoka One'; letter-spacing:.3px; }
-    .testo-diario small{ display:block; opacity:.7; margin-bottom:6px; }
+        .sp-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            z-index: 10;
+        }
 
-    /* Parent lock */
-    .lock-box{
-      background:#1e293b; padding:30px;
-      border-radius:30px; border:4px solid var(--blu);
-      width:100%; max-width:340px;
-    }
-    .lock-input{
-      width:100%; padding:15px; border-radius:15px;
-      border:none; font-size:24px; text-align:center;
-      margin:20px 0; background:#0f172a; color:white;
-      font-weight:900;
-    }
-    .success-text{
-      font-family:'Fredoka One';
-      font-size:45px; color:var(--giallo);
-      text-shadow:4px 4px var(--rossa);
-      text-align:center;
-    }
-    .hidden{ display:none !important; }
+        .brand {
+            font-family: 'Fredoka One', cursive;
+            font-size: 32px;
+            color: var(--giallo);
+            text-shadow: 3px 3px var(--rossa);
+            letter-spacing: 1px;
+        }
 
-    /* Error overlay */
-    #overlay-error .lock-box{ border-color: var(--rossa); }
-    #error-text{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size:12px;
-      text-align:left;
-      background:rgba(0,0,0,0.25);
-      border:1px solid rgba(255,255,255,0.10);
-      padding:12px;
-      border-radius:14px;
-      max-height:38vh;
-      overflow:auto;
-      white-space:pre-wrap;
-      color:#fff;
-    }
-  </style>
+        .btn {
+            border: none;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            transition: transform 0.1s;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
+        .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+        .btn-circle { width: 55px; height: 55px; background: rgba(255,255,255,0.1); color: white; font-size: 24px; box-shadow: none; }
+        .btn-primary { background: var(--rossa); color: white; padding: 20px; width: 100%; font-size: 22px; }
+        .btn-secondary { background: var(--blu); color: white; padding: 18px; width: 100%; font-size: 20px; }
+        .btn-ghost { background: rgba(255,255,255,0.1); color: white; padding: 10px 20px; font-family: 'Quicksand'; font-weight: 700; box-shadow: none; }
+
+        /* Multiverso Orbitale (Home) */
+        .intro-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .orbit-box { width: 220px; height: 220px; position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
+        .orbit-item { position: absolute; font-size: 50px; animation: orbitRotate 8s linear infinite; }
+        .orbit-1 { animation-delay: 0s; }
+        .orbit-2 { animation-delay: -2.66s; }
+        .orbit-3 { animation-delay: -5.33s; }
+
+        @keyframes orbitRotate {
+            from { transform: rotate(0deg) translateX(85px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(85px) rotate(-360deg); }
+        }
+
+        .center-spark { width: 70px; height: 70px; background: white; border-radius: 50%; box-shadow: 0 0 40px var(--giallo); z-index: 5; font-size: 35px; display: flex; align-items: center; justify-content: center; }
+
+        /* Gioco */
+        .game-area { flex: 1; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; padding-bottom: 20px; }
+        .card-story { font-size: 19px; line-height: 1.4; text-align: center; color: #cbd5e1; padding: 0 10px; }
+        .box-goal { border: 3px dashed var(--blu); border-radius: 25px; padding: 15px; text-align: center; font-weight: 700; color: var(--blu); background: rgba(0,210,255,0.05); font-size: 20px; }
+        .steps-list { display: flex; flex-direction: column; gap: 12px; }
+        .passo { padding: 18px; border-radius: 22px; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; gap: 15px; transition: 0.3s; color: rgba(247, 255, 247, 0.4); }
+        .passo.attivo { background: var(--latte); color: var(--sfondo); transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.3); opacity: 1; }
+        .passo-num { width: 32px; height: 32px; border-radius: 50%; background: var(--rossa); color: white; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One'; flex-shrink: 0; }
+
+        /* Modali */
+        .modal { position: fixed; inset: 0; background: var(--sfondo); z-index: 1000; display: none; flex-direction: column; padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom); overflow-y: auto; }
+        .full-overlay { position: fixed; inset: 0; z-index: 2000; background: rgba(10, 17, 40, 0.95); display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 30px; }
+        
+        /* Diario Neutro */
+        .diary-card { background: rgba(255,255,255,0.07); padding: 20px; border-radius: 20px; margin-bottom: 12px; border-left: 6px solid var(--blu); display: flex; align-items: center; gap: 15px; }
+        .diary-card:nth-child(even) { border-left-color: var(--rossa); }
+
+        .lock-box { background: #1e293b; padding: 30px; border-radius: 30px; border: 4px solid var(--blu); width: 100%; max-width: 320px; }
+        .lock-input { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 24px; text-align: center; margin: 20px 0; background: #0f172a; color: white; }
+
+        .success-text { font-family: 'Fredoka One'; font-size: 45px; color: var(--giallo); text-shadow: 4px 4px var(--rossa); text-align: center; }
+        .hidden { display: none !important; }
+    </style>
 </head>
-
 <body>
 
-  <div id="SPARKPLAY_APP" class="sp-root">
-    <header class="sp-top">
-      <button class="btn btn-circle" onclick="spark.ui.openDiary()">📚</button>
-      <div class="brand">SPARKPLAY</div>
-      <button id="audio-toggle" class="btn btn-circle" onclick="spark.ui.toggleAudio()">🔊</button>
-    </header>
+    <div id="SPARKPLAY_APP" class="sp-root">
+        <header class="sp-top">
+            <button class="btn btn-circle" onclick="spark.ui.openDiary()">📚</button>
+            <div class="brand">SPARKPLAY</div>
+            <button id="audio-toggle" class="btn btn-circle" onclick="spark.ui.toggleAudio()">🔊</button>
+        </header>
 
-    <!-- INIZIO -->
-    <main id="view-inizio" class="intro-container">
-      <div class="orbit-box">
-        <div class="center-spark">✨</div>
-        <div class="orbit-item orbit-1" title="Spazio">🚀</div>
-        <div class="orbit-item orbit-2" title="Magia (bloccato)">🪄</div>
-        <div class="orbit-item orbit-3" title="Detective (bloccato)">🔍</div>
-      </div>
-      <h1 style="font-family:'Fredoka One'; font-size:48px; color:var(--giallo); margin:0;">PRONTI?</h1>
-      <p id="muro-frasi" style="font-style:italic; text-align:center; margin:20px 0 18px; opacity:0.85; max-width:420px;"></p>
+        <main id="view-inicio" class="intro-container">
+            <div class="orbit-box">
+                <div class="center-spark">✨</div>
+                <div class="orbit-item orbit-1">🚀</div>
+                <div class="orbit-item orbit-2">🪄</div>
+                <div class="orbit-item orbit-3">🔍</div>
+            </div>
+            <h1 style="font-family:'Fredoka One'; font-size:48px; color:var(--giallo); margin:0;">PRONTI?</h1>
+            <p id="muro-frasi" style="font-style:italic; text-align:center; margin:20px 0 30px; opacity:0.8;"></p>
+            <button class="btn btn-primary" style="width:80%" onclick="spark.engine.goTo('ETA')">AVVIA MISSIONE</button>
+        </main>
 
-      <div style="display:flex; gap:10px; width:100%; justify-content:center; margin-bottom:18px; flex-wrap:wrap;">
-        <div class="pill" id="pill-day">OGGI: 0/3</div>
-        <div class="pill pill2" id="pill-age">ETÀ: --</div>
-      </div>
+        <main id="view-eta" class="intro-container hidden">
+            <h2 style="font-family:'Fredoka One'; font-size:32px; margin-bottom:30px;">CHI GIOCA OGGI?</h2>
+            <button class="btn btn-secondary" style="margin-bottom:20px; display:flex; justify-content:space-between; padding:25px;" onclick="spark.engine.startWorld('5-7')">
+                <span style="font-size:40px;">🚀</span>
+                <div style="text-align:right;"><b>ESPLORATORE</b><br><small>5-7 ANNI</small></div>
+            </button>
+            <button class="btn btn-secondary" style="background:var(--rossa); display:flex; justify-content:space-between; padding:25px;" onclick="spark.engine.startWorld('8-10')">
+                <span style="font-size:40px;">🧠</span>
+                <div style="text-align:right;"><b>COMANDANTE</b><br><small>8-10 ANNI</small></div>
+            </button>
+        </main>
 
-      <button class="btn btn-primary" style="width:80%" onclick="spark.engine.goTo('ETA')">AVVIA MISSIONE</button>
+        <main id="view-gioco" class="game-area hidden">
+            <div style="display:flex; justify-content: space-between; align-items:center;">
+                <span id="label-eta" style="background:var(--blu); padding:5px 12px; border-radius:10px; font-size:12px; font-weight:800;"></span>
+                <button class="btn btn-ghost" onclick="spark.engine.goTo('INIZIO')">ESCI</button>
+            </div>
+            <h2 id="mission-title" style="font-family:'Fredoka One'; font-size:26px; color:var(--giallo); text-align:center;"></h2>
+            <div id="mission-story" class="card-story"></div>
+            <div id="mission-goal" class="box-goal"></div>
+            <div id="mission-steps" class="steps-list"></div>
+            <div style="margin-top:auto; display:flex; gap:10px;">
+                <button id="btn-back" class="btn btn-secondary" style="flex:1; background:#4a5568;" onclick="spark.engine.prevStep()">INDIETRO</button>
+                <button id="btn-next" class="btn btn-primary" style="flex:2;" onclick="spark.engine.nextStep()">AVANTI</button>
+            </div>
+        </main>
 
-      <div class="hint" id="hint-resume" style="margin-top:14px;"></div>
-    </main>
-
-    <!-- ETA -->
-    <main id="view-eta" class="intro-container hidden">
-      <h2 style="font-family:'Fredoka One'; font-size:32px; margin-bottom:30px;">CHI GIOCA OGGI?</h2>
-
-      <button class="btn btn-secondary" style="margin-bottom:20px; display:flex; justify-content:space-between; padding:25px;" onclick="spark.engine.startWorld('5-7')">
-        <span style="font-size:40px;">🚀</span>
-        <div style="text-align:right;"><b>ESPLORATORE</b><br><small>5-7 ANNI</small></div>
-      </button>
-
-      <button class="btn btn-secondary" style="background:var(--rossa); display:flex; justify-content:space-between; padding:25px;" onclick="spark.engine.startWorld('8-10')">
-        <span style="font-size:40px;">🧠</span>
-        <div style="text-align:right;"><b>COMANDANTE</b><br><small>8-10 ANNI</small></div>
-      </button>
-
-      <button class="btn btn-ghost" style="margin-top:18px;" onclick="spark.engine.goTo('INIZIO')">⬅︎ Torna</button>
-    </main>
-
-    <!-- GIOCO -->
-    <main id="view-gioco" class="game-area hidden">
-      <div class="top-minirow">
-        <span id="label-eta" class="pill"></span>
-        <button class="btn btn-ghost" onclick="spark.engine.goTo('INIZIO')">ESCI</button>
-      </div>
-
-      <h2 id="mission-title" style="font-family:'Fredoka One'; font-size:26px; color:var(--giallo); text-align:center; margin:4px 0 0;"></h2>
-      <div id="mission-story" class="card-story"></div>
-      <div id="mission-goal" class="box-goal"></div>
-      <div id="mission-steps" class="steps-list"></div>
-
-      <div style="margin-top:auto; display:flex; gap:10px;">
-        <button id="btn-back" class="btn btn-secondary" style="flex:1; background:#4a5568;" onclick="spark.engine.prevStep()">INDIETRO</button>
-        <button id="btn-next" class="btn btn-primary" style="flex:2;" onclick="spark.engine.nextStep()">AVANTI</button>
-      </div>
-    </main>
-
-    <!-- GENITORE -->
-    <main id="view-scelta_genitore" class="intro-container hidden">
-      <h2 style="font-family:'Fredoka One'; font-size:32px; color:var(--giallo); margin:0 0 12px;">CAPITOLO FINITO! 🏆</h2>
-      <p style="text-align:center; opacity:.85; max-width:420px; margin:0 0 22px;">
-        Qui decide un genitore. Puoi fare la missione speciale oppure sbloccare altre 3 missioni oggi.
-      </p>
-
-      <button id="btn-speciale" class="btn btn-secondary" style="margin-bottom:15px;" onclick="spark.ui.openLock('SPECIALE')">MISSIONE SPECIALE 🤝</button>
-      <button class="btn btn-secondary" style="margin-bottom:15px; background:rgba(255,255,255,0.10);" onclick="spark.ui.openLock('ALTRE')">FAI ALTRE 3 MISSIONI 🚀</button>
-      <button class="btn btn-primary" style="background:#4a5568;" onclick="spark.engine.goTo('INIZIO')">FINISCI PER OGGI</button>
-    </main>
-  </div>
-
-  <!-- DIARIO -->
-  <div id="modal-diario" class="modal">
-    <header class="sp-top">
-      <div class="brand">I TUOI RICORDI</div>
-      <button class="btn btn-circle" style="background:var(--rossa)" onclick="spark.ui.closeDiary()">✕</button>
-    </header>
-    <div id="diario-list" style="padding-top:20px"></div>
-  </div>
-
-  <!-- LOCK GENITORE -->
-  <div id="overlay-lock" class="full-overlay">
-    <div class="lock-box">
-      <h3 style="font-family:'Fredoka One'; color:var(--blu); margin:0 0 8px;">GENITORE</h3>
-      <p style="margin:0; opacity:.9;">Quanto fa <b>5 + 5</b>?</p>
-      <input type="number" id="lock-input" class="lock-input" placeholder="?" inputmode="numeric">
-      <div style="display:flex; gap:10px;">
-        <button class="btn btn-secondary" style="flex:1; background:#4a5568;" onclick="spark.ui.closeLock()">ANNULLA</button>
-        <button class="btn btn-secondary" style="flex:1;" onclick="spark.ui.checkLock()">SBLOCCA</button>
-      </div>
-      <p style="margin:14px 0 0; opacity:.65; font-size:12px;">(Serve solo a proteggere le scelte "da grandi".)</p>
+        <main id="view-genitore" class="intro-container hidden">
+            <h2 style="font-family:'Fredoka One'; font-size:32px; color:var(--giallo);">CAPITOLO FINITO! 🏆</h2>
+            <button id="btn-speciale" class="btn btn-secondary" style="margin-bottom:15px;" onclick="spark.ui.openLock('SPECIALE')">MISSIONE SPECIALE 🤝</button>
+            <button class="btn btn-secondary" style="margin-bottom:15px; background:rgba(255,255,255,0.1);" onclick="spark.ui.openLock('ALTRE')">FAI ALTRE 3 MISSIONI 🚀</button>
+            <button class="btn btn-primary" style="background:#4a5568;" onclick="spark.engine.goTo('INIZIO')">FINISCI PER OGGI</button>
+        </main>
     </div>
-  </div>
 
-  <!-- SUCCESS -->
-  <div id="overlay-success" class="full-overlay">
-    <div class="success-text">MISSIONE<br>COMPLETATA!</div>
-    <div style="font-size:60px; margin-top:20px;">🌟✨⭐</div>
-  </div>
-
-  <!-- ERROR -->
-  <div id="overlay-error" class="full-overlay">
-    <div class="lock-box">
-      <h3 style="font-family:'Fredoka One'; color:var(--rossa); margin:0 0 8px;">OPS!</h3>
-      <p style="margin:0 0 12px; opacity:.9;">È successo un errore. Copia il testo e mandamelo.</p>
-      <div id="error-text"></div>
-      <div style="display:flex; gap:10px; margin-top:12px;">
-        <button class="btn btn-secondary" style="flex:1; background:#4a5568;" onclick="location.reload()">RICARICA</button>
-        <button class="btn btn-secondary" style="flex:1;" onclick="spark.engine.resetTest()">RESET (TEST)</button>
-      </div>
+    <div id="modal-diario" class="modal">
+        <header class="sp-top">
+            <div class="brand">I TUOI RICORDI</div>
+            <button class="btn btn-circle" style="background:var(--rossa)" onclick="spark.ui.closeDiary()">✕</button>
+        </header>
+        <div id="diario-list" style="padding-top:20px"></div>
     </div>
-  </div>
 
-<script>
-(function(){
-  "use strict";
+    <div id="overlay-lock" class="full-overlay">
+        <div class="lock-box">
+            <h3 style="font-family:'Fredoka One'; color:var(--blu);">GENITORE</h3>
+            <p>Quanto fa 5 + 5?</p>
+            <input type="number" id="lock-input" class="lock-input" placeholder="?">
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-secondary" style="flex:1; background:#4a5568;" onclick="spark.ui.closeLock()">ANNULLA</button>
+                <button class="btn btn-secondary" style="flex:1;" onclick="spark.ui.checkLock()">SBLOCCA</button>
+            </div>
+        </div>
+    </div>
 
-  const showError = (msg) => {
-    try{
-      const over = document.getElementById("overlay-error");
-      const box = document.getElementById("error-text");
-      if(box) box.textContent = msg;
-      if(over) over.style.display = "flex";
-    }catch(e){}
-  };
+    <div id="overlay-success" class="full-overlay">
+        <div class="success-text">MISSIONE<br>COMPLETATA!</div>
+        <div style="font-size:60px; margin-top:20px;">🌟✨⭐</div>
+    </div>
 
-  window.onerror = function(message, src, line, col, err){
-    const text =
-      "JS ERROR:\n" +
-      String(message) + "\n" +
-      (src || "") + ":" + (line || 0) + ":" + (col || 0) + "\n\n" +
-      (err && err.stack ? err.stack : "");
-    showError(text);
-    return false;
-  };
+    <script>
+        "use strict";
 
-  function localDayKey(){
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,"0");
-    const da = String(d.getDate()).padStart(2,"0");
-    return y + "-" + m + "-" + da;
-  }
-  function clamp(n,a,b){
-    n = Number(n);
-    if(!Number.isFinite(n)) return a;
-    return Math.max(a, Math.min(b, n));
-  }
-  function safeJsonParse(str, fallback){
-    try{ return JSON.parse(str); }catch(e){ return fallback; }
-  }
-  function randInt(max){ return Math.floor(Math.random()*max); }
-  function escapeHtml(str){
-    return String(str)
-      .split("&").join("&amp;")
-      .split("<").join("&lt;")
-      .split(">").join("&gt;")
-      .split('"').join("&quot;")
-      .split("'").join("&#039;");
-  }
-
-  const DB_SPAZIO = {
-    "5-7": [
-      { id:"s5_1", titolo:"SEGNALE PERDUTO", storiaBreve:"La base ha perso il segnale! La galassia è al buio!", obiettivo:"RIACCENDI L'ANTENNA!", passaggi:["Trova un calzino stellare.","Portalo sulla base (tappeto).","Dì 3 "Bip!" lentamente."], parentTip:"Fai fare al bambino la voce della radio: lo rende protagonista." },
-      { id:"s5_2", titolo:"SATELLITE MORBIDO", storiaBreve:"Un satellite è uscito dall’orbita.", obiettivo:"RIPORTALO A CASA", passaggi:["Prendi un peluche (satellite).","Fai 3 giri intorno a una sedia.","Mettilo in un posto alto (orbita sicura)."], parentTip:"Se è piccolo, fai tu il primo giro e lui copia." },
-      { id:"s5_3", titolo:"POLVERE DI STELLE", storiaBreve:"C’è polvere spaziale sui motori!", obiettivo:"PULISCI TUTTO!", passaggi:["Usa le mani come spazzole spaziali.","Pulisci 3 superfici diverse.","Soffia via la polvere come vento spaziale."], parentTip:"Dai un "OK motori" dopo ogni superficie." },
-      { id:"s5_4", titolo:"CRATERE NASCOSTO", storiaBreve:"Un cratere è apparso nella stanza.", obiettivo:"TROVALO!", passaggi:["Metti un cuscino a terra (cratere).","Fai 10 passi in punta di piedi senza toccarlo.","Alla fine fai un salto "luna" sul posto."], parentTip:"Se serve, riduci a 5 passi." },
-      { id:"s5_5", titolo:"PIANETI IN FILA", storiaBreve:"Serve l’ordine dei pianeti!", obiettivo:"CREA LA FILA", passaggi:["Scegli 5 oggetti come pianeti.","Mettili in fila dal più piccolo al più grande.","Tocca ogni pianeta e dì il suo nome inventato."], parentTip:"Lascia inventare: autonomia creativa." },
-      { id:"s5_6", titolo:"LANCIO DEL RAZZO", storiaBreve:"Il razzo è pronto ma manca il conto alla rovescia.", obiettivo:"CONTO ALLA ROVESCIA", passaggi:["Stai fermo come una statua.","Conta da 5 a 1 lentamente.","Al via fai un salto e alza le braccia."], parentTip:"Fate insieme il conto: calma e ritmo." },
-      { id:"s5_7", titolo:"ROBOT DI BORDO", storiaBreve:"Il robot aiuta solo se lo programmi.", obiettivo:"COMANDI SEMPLICI", passaggi:["Scegli un oggetto (robot).","Dagli 3 comandi: avanti, stop, gira.","Muovi il robot seguendo i comandi."], parentTip:"Tu muovi, lui comanda: ruoli chiari." },
-      { id:"s5_8", titolo:"ASTRONAUTA LENTO", storiaBreve:"In gravità bassa tutto è lento.", obiettivo:"MUOVITI LENTO", passaggi:["Attraversa la stanza al rallentatore.","Tocca terra solo con le punte dei piedi.","Fermati e fai un saluto spaziale."], parentTip:"1 passo = 1 respiro, se si agita." },
-      { id:"s5_9", titolo:"BOLLE D’ARIA", storiaBreve:"La tuta perde aria! Serve controllo.", obiettivo:"TESTA LA TUTA", passaggi:["Gonfia le guance come un pallone.","Soffia piano per 3 secondi.","Ripeti 3 volte con calma."], parentTip:"Ottimo per autoregolazione." },
-      { id:"s5_10", titolo:"RADAR ATTIVO", storiaBreve:"Il radar deve sentire 3 suoni.", obiettivo:"ASCOLTA E TROVA", passaggi:["Chiudi gli occhi 3 secondi.","Ascolta un suono (cucchiaio).","Indica da dove arriva il suono."], parentTip:"Invertite i ruoli dopo 1 giro." },
-      { id:"s5_11", titolo:"CINTURA DI ASTEROIDI", storiaBreve:"Asteroidi ovunque! Serve passare in mezzo.", obiettivo:"PERCORSO SICURO", passaggi:["Metti 6 oggetti a terra (asteroidi).","Passa in mezzo senza toccarli.","Se tocchi: stop 2 secondi."], parentTip:"Riduci gli oggetti se è troppo." },
-      { id:"s5_12", titolo:"PACCO DALLA TERRA", storiaBreve:"È arrivato un pacco speciale!", obiettivo:"CONSEGNA ALLA BASE", passaggi:["Prendi un libro (pacco).","Portalo alla base senza farlo cadere.","Appoggialo e fai "Beep consegna"."], parentTip:"Lascia scegliere il ‘pacco’ al bambino." },
-      { id:"s5_13", titolo:"ALIEN AMICHEVOLE", storiaBreve:"Un alieno buono vuole salutare.", obiettivo:"SALUTO SPECIALE", passaggi:["Scegli un pupazzetto (alieno).","Fai 3 saluti diversi.","Mettilo in un posto "sicuro"."], parentTip:"Inventare saluti = autonomia." },
-      { id:"s5_14", titolo:"BANDIERA SULLA LUNA", storiaBreve:"Serve piantare la bandiera.", obiettivo:"PIANTA LA BANDIERA", passaggi:["Arrotola un foglio (bandiera).","Scegli un punto (luna).","Piantala e fai una foto mentale."], parentTip:"Niente foto vera: poco schermo." },
-      { id:"s5_15", titolo:"CARBURANTE", storiaBreve:"Il carburante è nascosto in casa.", obiettivo:"TROVALO!", passaggi:["Scegli 3 oggetti gialli (carburante).","Mettili in un contenitore.","Portali alla base."], parentTip:"Se manca giallo: scegli un colore." },
-      { id:"s5_16", titolo:"SISTEMA SOLARE", storiaBreve:"Serve un mini sistema solare.", obiettivo:"CREA 4 PIANETI", passaggi:["Scegli 4 oggetti diversi.","Dai un nome a ciascuno.","Fai orbitare la mano attorno a loro 1 giro."], parentTip:"Nomi semplici e divertenti." }
-    ],
-    "8-10": [
-      { id:"s8_1", titolo:"MODULO VIBRANTE", storiaBreve:"Il modulo vibra forte. Serve silenzio assoluto!", obiettivo:"RIPARA IN SILENZIO", passaggi:["Trova un foglio di carta.","Portalo alla base senza fare rumore.","Piegalo in 4 e mettilo sotto un cuscino."], parentTip:"Premia il controllo: "Ottimo, zero rumore!"" },
-      { id:"s8_2", titolo:"CODICE STELLARE", storiaBreve:"Dobbiamo inviare un codice alla Terra!", obiettivo:"COMPONI IL CODICE", passaggi:["Trova 3 oggetti dello stesso colore.","Mettili in fila dal più piccolo al più grande.","Tocca ogni oggetto e dì un numero."], parentTip:"Dai 1 esempio e poi lascia fare." },
-      { id:"s8_3", titolo:"ANTIGRAVITÀ", storiaBreve:"La gravità si è rotta! Tutto fluttua.", obiettivo:"MUOVITI CON CONTROLLO", passaggi:["Attraversa la stanza al rallentatore.","Tocca terra solo con le punte dei piedi.","Siediti senza usare le mani."], parentTip:"Se frustrante, togli l’ultima prova." },
-      { id:"s8_4", titolo:"RIPARA LA STAZIONE", storiaBreve:"La stazione ha 3 pezzi fuori posto.", obiettivo:"METTI IN ORDINE", passaggi:["Scegli 6 oggetti come ‘pezzi’.","Sposta 3 pezzi in un nuovo ordine.","Controlla: è stabile?"], parentTip:"Fai domande, non dare soluzioni." },
-      { id:"s8_5", titolo:"MAPPA COSMICA", storiaBreve:"Serve una mappa del settore.", obiettivo:"DISEGNA LA MAPPA", passaggi:["Prendi carta e matita.","Disegna 3 punti (pianeti).","Traccia un percorso tra i punti."], parentTip:"Non correggere: conta il processo." },
-      { id:"s8_6", titolo:"EQUIPAGGIO PRONTO", storiaBreve:"L’equipaggio deve preparare 5 oggetti.", obiettivo:"KIT SPAZIALE", passaggi:["Trova 5 oggetti utili (torcia, cucchiaio...).","Mettili insieme come kit.","Spiega a cosa serve ogni oggetto."], parentTip:"2 esempi e poi autonomia." },
-      { id:"s8_7", titolo:"ALLARME ASTEROIDI", storiaBreve:"Un allarme segnala asteroidi.", obiettivo:"EVITA GLI OSTACOLI", passaggi:["Metti 8 oggetti a terra.","Crea un percorso senza toccarli.","Se tocchi: torna indietro di 2 passi."], parentTip:"Errore = regola, non rimprovero." },
-      { id:"s8_8", titolo:"LAB DI BORDO", storiaBreve:"Il laboratorio vuole prove rapide.", obiettivo:"TESTA 3 OGGETTI", passaggi:["Scegli 3 oggetti diversi.","Decidi: rotola? rimbalza? scivola?","Prova e scrivi 1 parola per oggetto."], parentTip:"Basta una parola." },
-      { id:"s8_9", titolo:"TUTA A TENUTA", storiaBreve:"La tuta deve passare un test.", obiettivo:"RESPIRI CONTATI", passaggi:["Fai 3 respiri lenti.","Conta 3 secondi in inspiro.","Conta 3 secondi in espiro."], parentTip:"Ottimo per calmare." },
-      { id:"s8_10", titolo:"MESSAGGIO SEGRETO", storiaBreve:"La Terra capisce messaggi corti.", obiettivo:"CODICE DI 3 PAROLE", passaggi:["Scegli 3 parole (Luna, Base, Via).","Dille in ordine.","Ripeti più piano una seconda volta."], parentTip:"Aiuta con opzioni se si blocca." },
-      { id:"s8_11", titolo:"ORBITA PERFETTA", storiaBreve:"Serve un’orbita senza toccare i pianeti.", obiettivo:"PERCORSO PRECISO", passaggi:["Scegli 5 oggetti come pianeti.","Cammina attorno senza toccarli.","Fai 2 giri: lento e normale."], parentTip:"Reset tranquillo se sbaglia." },
-      { id:"s8_12", titolo:"CARICO NAVICELLA", storiaBreve:"Il carico va sistemato bene.", obiettivo:"ORDINA PER PESO", passaggi:["Scegli 4 oggetti diversi.","Mettili dal più leggero al più pesante.","Spiega perché pensi così."], parentTip:"Conta la logica, non la perfezione." },
-      { id:"s8_13", titolo:"RADIO DI BORDO", storiaBreve:"La radio riceve segnali.", obiettivo:"SEGUI IL RITMO", passaggi:["Batti 1 volta le mani.","Batti 2 volte le mani.","Batti 3 volte le mani."], parentTip:"Poi invertite i ruoli." },
-      { id:"s8_14", titolo:"CAMPO MAGNETICO", storiaBreve:"Il campo magnetico cambia la rotta.", obiettivo:"CAMBIA DIREZIONE", passaggi:["Scegli un punto di partenza.","Fai 5 passi avanti.","Gira a destra e fai 5 passi."], parentTip:"Parole semplici, niente teoria." },
-      { id:"s8_15", titolo:"EMERGENZA ACQUA", storiaBreve:"Serve acqua per l’equipaggio.", obiettivo:"CONSEGNA SICURA", passaggi:["Prendi un bicchiere vuoto.","Portalo alla base senza rovesciare (immagina acqua).","Appoggialo lentamente."], parentTip:"Niente acqua vera: zero rischio." },
-      { id:"s8_16", titolo:"DIARIO DI BORDO", storiaBreve:"Ogni comandante scrive una nota.", obiettivo:"1 NOTA BREVE", passaggi:["Scrivi 1 parola sulla missione.","Disegna una piccola stella.","Firma con un simbolo."], parentTip:"Ok anche solo un simbolo." }
-    ],
-    speciale: {
-      id:"spec", titolo:"SINCRONIA STELLARE 🤝",
-      storiaBreve:"I motori hanno bisogno di due piloti sincronizzati.",
-      obiettivo:"MUOVETEVI INSIEME",
-      passaggi:["Genitore e bambino si prendono per mano.","Fate 10 passi lentissimi insieme.","Sussurrate insieme: "Pronti al lancio!""],
-      parentTip:"Non è una gara. È coordinazione e calma."
-    }
-  };
-
-  const STORAGE_KEY = "sparkplay_state_v1";
-
-  const spark = {
-    state: {
-      version:"spazio_v1",
-      dayKey:"",
-      fsm:"INIZIO",
-      eta:"",
-      passo:0,
-      missionsDoneToday:0,
-      specialDoneToday:false,
-      audioOn:true,
-      usedMissionIds:[],
-      currentMissionId:null,
-      currentMissionEta:null,
-      diary:[]
-    },
-    currentAction:null,
-
-    engine:{
-      init(){
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if(saved){
-          const obj = safeJsonParse(saved, null);
-          if(obj && typeof obj === "object"){
-            spark.state = Object.assign({}, spark.state, obj);
-          }
-        }
-        if(!Array.isArray(spark.state.usedMissionIds)) spark.state.usedMissionIds = [];
-        if(!Array.isArray(spark.state.diary)) spark.state.diary = [];
-        spark.state.missionsDoneToday = clamp(spark.state.missionsDoneToday, 0, 99);
-        spark.state.passo = clamp(spark.state.passo, 0, 99);
-        if(spark.state.fsm !== "INIZIO" && spark.state.fsm !== "ETA" && spark.state.fsm !== "GIOCO" && spark.state.fsm !== "SCELTA_GENITORE"){
-          spark.state.fsm = "INIZIO";
-        }
-        if(spark.state.eta !== "5-7" && spark.state.eta !== "8-10") spark.state.eta = "";
-
-        const today = localDayKey();
-        if(spark.state.dayKey !== today){
-          spark.state.dayKey = today;
-          spark.state.missionsDoneToday = 0;
-          spark.state.usedMissionIds = [];
-          spark.state.specialDoneToday = false;
-          spark.state.currentMissionId = null;
-          spark.state.currentMissionEta = null;
-          spark.state.passo = 0;
-        }
-
-        const frasi = [
-          "L'immaginazione è l'unica astronave che arriva ovunque.",
-          "Il gioco è il lavoro più serio del mondo.",
-          "Oggi si parte: poco schermo, tanta avventura.",
-          "Tre missioni fatte bene valgono più di trenta fatte male."
-        ];
-        const muro = document.getElementById("muro-frasi");
-        if(muro) muro.textContent = frasi[randInt(frasi.length)];
-
-        spark.engine.save();
-        spark.ui.refresh();
-      },
-
-      save(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(spark.state)); }catch(e){} },
-
-      resetTest(){
-        spark.state = {
-          version:"spazio_v1",
-          dayKey: localDayKey(),
-          fsm:"INIZIO",
-          eta:"",
-          passo:0,
-          missionsDoneToday:0,
-          specialDoneToday:false,
-          audioOn:true,
-          usedMissionIds:[],
-          currentMissionId:null,
-          currentMissionEta:null,
-          diary:[]
+        const DB_SPAZIO = {
+            "5-7": [
+                { id: "s1", titolo: "SEGNALE PERDUTO", storiaBreve: "La base ha perso il segnale! La galassia è al buio!", obiettivo: "RIACCENDI L'ANTENNA!", passaggi: ["Trova un calzino stellare.", "Portalo sulla base (tappeto).", "Dì 3 Bip! lentamente."] },
+                { id: "s2", titolo: "SATELLITE MORBIDO", storiaBreve: "Un satellite è uscito dall'orbita.", obiettivo: "RIPORTALO A CASA", passaggi: ["Prendi il satellite (un peluche).", "Fagli fare 3 cerchi intorno a te.", "Mettilo a riposare in un posto alto."] },
+                { id: "s3", titolo: "POLVERE DI STELLE", storiaBreve: "C'è troppa polvere spaziale sui motori!", obiettivo: "PULISCI TUTTO!", passaggi: ["Usa le mani come spazzole spaziali.", "Pulisci 3 superfici diverse.", "Soffia via la polvere."] }
+                // ... aggiungere qui le altre 13 missioni per completare il database
+            ],
+            "8-10": [
+                { id: "b1", titolo: "MODULO VIBRANTE", storiaBreve: "Il modulo vibra forte. Serve silenzio assoluto!", obiettivo: "RIPARA IN SILENZIO", passaggi: ["Trova un foglio di carta.", "Portalo alla base senza fare rumore.", "Piegalo in 4 e mettilo sotto un cuscino."] },
+                { id: "b2", titolo: "CODICE STELLARE", storiaBreve: "Dobbiamo inviare un codice alla Terra!", obiettivo: "COMPONI IL CODICE", passaggi: ["Trova 3 oggetti dello stesso colore.", "Mettili in fila dal più piccolo al più grande.", "Salta sopra ogni oggetto."] }
+                // ... aggiungere qui le altre 14 missioni
+            ],
+            speciale: { id: "spec", titolo: "SINCRONIA STELLARE 🤝", storiaBreve: "I motori hanno bisogno di due piloti sincronizzati.", obiettivo: "MUOVETEVI INSIEME", passaggi: ["Genitore e bambino si prendono per mano.", "Fate 10 passi lentissimi insieme.", "Sussurrate 'Pronti al lancio!'"] }
         };
-        spark.engine.save();
-        location.reload();
-      },
 
-      goTo(view){
-        spark.state.fsm = view;
-        if(view === "INIZIO"){
-          spark.state.passo = 0;
-          try{ if("speechSynthesis" in window) speechSynthesis.cancel(); }catch(e){}
-        }
-        spark.engine.save();
-        spark.ui.refresh();
-      },
+        const spark = {
+            state: {
+                version: "spazio_v1", dayKey: "", fsm: "INIZIO", eta: "", passo: 0,
+                missionsDoneToday: 0, specialDoneToday: false, audioOn: true,
+                usedMissionIds: [], currentMissionId: null, diary: []
+            },
 
-      startWorld(eta){
-        spark.state.eta = eta;
+            engine: {
+                init() {
+                    const saved = localStorage.getItem('sparkplay_state_v1');
+                    if (saved) spark.state = JSON.parse(saved);
+                    
+                    const today = new Date().toISOString().split('T')[0];
+                    if (spark.state.dayKey !== today) {
+                        spark.state.dayKey = today; spark.state.missionsDoneToday = 0;
+                        spark.state.usedMissionIds = []; spark.state.specialDoneToday = false;
+                        spark.state.currentMissionId = null; spark.state.passo = 0;
+                    }
 
-        if(spark.state.missionsDoneToday >= 3){
-          spark.engine.goTo("SCELTA_GENITORE");
-          return;
-        }
+                    spark.ui.refresh();
+                    document.getElementById('muro-frasi').innerText = "L'immaginazione è l'unica astronave che arriva ovunque.";
+                },
 
-        // Resume only if same eta and mission exists
-        if(spark.state.currentMissionId && spark.state.currentMissionEta === eta){
-          spark.engine.goTo("GIOCO");
-          spark.ui.speakOnEnter();
-          return;
-        }
+                save() { localStorage.setItem('sparkplay_state_v1', JSON.stringify(spark.state)); },
 
-        spark.engine.pickMission(false);
-        spark.engine.goTo("GIOCO");
-        spark.ui.speakOnEnter();
-      },
+                goTo(view) {
+                    spark.state.fsm = view;
+                    if(view === 'INIZIO') { spark.state.passo = 0; speechSynthesis.cancel(); }
+                    spark.ui.refresh();
+                    spark.engine.save();
+                },
 
-      pickMission(forceResetUsed){
-        const eta = spark.state.eta;
-        const pool = DB_SPAZIO[eta] || [];
-        if(!pool.length){
-          spark.state.currentMissionId = null;
-          spark.state.currentMissionEta = eta;
-          spark.state.passo = 0;
-          spark.engine.save();
-          return;
-        }
+                startWorld(eta) {
+                    spark.state.eta = eta;
+                    if(!spark.state.currentMissionId) spark.engine.pickMission();
+                    spark.engine.goTo('GIOCO');
+                },
 
-        if(forceResetUsed) spark.state.usedMissionIds = [];
+                pickMission() {
+                    const pool = DB_SPAZIO[spark.state.eta];
+                    const available = pool.filter(m => !spark.state.usedMissionIds.includes(m.id));
+                    const chosen = available.length > 0 ? available[0] : pool[0];
+                    spark.state.currentMissionId = chosen.id;
+                    spark.state.passo = 0;
+                },
 
-        const used = new Set(spark.state.usedMissionIds || []);
-        let available = pool.filter(m => !used.has(m.id));
-        if(available.length === 0){
-          spark.state.usedMissionIds = [];
-          available = pool.slice();
-        }
-        const chosen = available[randInt(available.length)];
-        spark.state.currentMissionId = chosen.id;
-        spark.state.currentMissionEta = eta;
-        spark.state.passo = 0;
-        spark.engine.save();
-      },
+                getCurrentMission() {
+                    if (spark.state.currentMissionId === 'spec') return DB_SPAZIO.speciale;
+                    return DB_SPAZIO[spark.state.eta].find(m => m.id === spark.state.currentMissionId) || DB_SPAZIO[spark.state.eta][0];
+                },
 
-      getCurrentMission(){
-        if(spark.state.currentMissionId === "spec") return DB_SPAZIO.speciale;
-        const eta = spark.state.eta;
-        const pool = DB_SPAZIO[eta] || [];
-        const found = pool.find(m => m.id === spark.state.currentMissionId);
-        return found || pool[0] || DB_SPAZIO.speciale;
-      },
+                nextStep() {
+                    const m = spark.engine.getCurrentMission();
+                    if (spark.state.passo < m.passaggi.length - 1) {
+                        spark.state.passo++; spark.ui.refresh();
+                        spark.ui.speak("Passaggio " + (spark.state.passo + 1) + ": " + m.passaggi[spark.state.passo]);
+                    } else {
+                        spark.engine.completeMission();
+                    }
+                    spark.engine.save();
+                },
 
-      nextStep(){
-        const m = spark.engine.getCurrentMission();
-        if(!m || !m.passaggi || !m.passaggi.length) return;
-        if(spark.state.passo < m.passaggi.length - 1){
-          spark.state.passo++;
-          spark.engine.save();
-          spark.ui.refresh();
-          spark.ui.speak("Passaggio " + (spark.state.passo + 1) + ": " + m.passaggi[spark.state.passo]);
-        }else{
-          spark.engine.completeMission();
-        }
-      },
+                prevStep() {
+                    if (spark.state.passo > 0) {
+                        spark.state.passo--; spark.ui.refresh();
+                        spark.ui.speak(spark.engine.getCurrentMission().passaggi[spark.state.passo]);
+                    }
+                    spark.engine.save();
+                },
 
-      prevStep(){
-        const m = spark.engine.getCurrentMission();
-        if(!m || !m.passaggi || !m.passaggi.length) return;
-        if(spark.state.passo > 0){
-          spark.state.passo--;
-          spark.engine.save();
-          spark.ui.refresh();
-          spark.ui.speak("Passaggio " + (spark.state.passo + 1) + ": " + m.passaggi[spark.state.passo]);
-        }
-      },
+                completeMission() {
+                    const m = spark.engine.getCurrentMission();
+                    if(m.id !== 'spec') {
+                        spark.state.diary.unshift({ iso: new Date().toISOString(), title: m.titolo, eta: spark.state.eta });
+                        if(spark.state.diary.length > 80) spark.state.diary.pop();
+                        spark.state.usedMissionIds.push(m.id);
+                        spark.state.missionsDoneToday++;
+                        spark.state.currentMissionId = null;
+                    } else {
+                        spark.state.specialDoneToday = true;
+                        spark.state.currentMissionId = null;
+                    }
 
-      completeMission(){
-        const m = spark.engine.getCurrentMission();
-        if(!m) return;
+                    spark.ui.showSuccess(() => {
+                        if (spark.state.missionsDoneToday >= 3) spark.engine.goTo('SCELTA_GENITORE');
+                        else { spark.engine.pickMission(); spark.ui.refresh(); }
+                        spark.engine.save();
+                    });
+                }
+            },
 
-        if(m.id !== "spec"){
-          spark.state.diary.unshift({ iso:new Date().toISOString(), title:m.titolo, world:"Spazio", eta:spark.state.eta });
-          if(spark.state.diary.length > 80) spark.state.diary.pop();
+            ui: {
+                refresh() {
+                    ['inicio', 'eta', 'gioco', 'genitore'].forEach(v => document.getElementById('view-' + v).classList.add('hidden'));
+                    document.getElementById('view-' + spark.state.fsm.toLowerCase()).classList.remove('hidden');
+                    document.getElementById('audio-toggle').innerText = spark.state.audioOn ? '🔊' : '🔈';
 
-          if(!spark.state.usedMissionIds.includes(m.id)) spark.state.usedMissionIds.push(m.id);
-          spark.state.missionsDoneToday = clamp(spark.state.missionsDoneToday + 1, 0, 99);
+                    if (spark.state.fsm === 'GIOCO') {
+                        const m = spark.engine.getCurrentMission();
+                        document.getElementById('label-eta').innerText = spark.state.eta;
+                        document.getElementById('mission-title').innerText = m.titolo;
+                        document.getElementById('mission-story').innerText = m.storiaBreve;
+                        document.getElementById('mission-goal').innerText = m.obiettivo;
+                        
+                        const stepsCont = document.getElementById('mission-steps');
+                        stepsCont.innerHTML = '';
+                        m.passaggi.forEach((txt, i) => {
+                            const div = document.createElement('div');
+                            div.className = 'passo' + (i === spark.state.passo ? ' attivo' : '');
+                            div.innerHTML = `<div class="passo-num">${i + 1}</div><div>${txt}</div>`;
+                            stepsCont.appendChild(div);
+                        });
 
-          spark.state.currentMissionId = null;
-          spark.state.currentMissionEta = null;
-          spark.state.passo = 0;
-        }else{
-          spark.state.specialDoneToday = true;
-          spark.state.currentMissionId = null;
-          spark.state.currentMissionEta = null;
-          spark.state.passo = 0;
-        }
+                        document.getElementById('btn-back').style.visibility = spark.state.passo === 0 ? 'hidden' : 'visible';
+                        document.getElementById('btn-next').innerText = (spark.state.passo === m.passaggi.length - 1) ? 'COMPLETA ✅' : 'AVANTI';
+                        
+                        if(spark.state.passo === 0) {
+                            spark.ui.speak(m.storiaBreve + ". Obiettivo: " + m.obiettivo + ". Passaggio 1: " + m.passaggi[0]);
+                        }
+                    }
+                    if (spark.state.fsm === 'SCELTA_GENITORE') {
+                        document.getElementById('btn-speciale').style.display = spark.state.specialDoneToday ? 'none' : 'flex';
+                    }
+                },
 
-        spark.engine.save();
+                toggleAudio() {
+                    spark.state.audioOn = !spark.state.audioOn;
+                    if(!spark.state.audioOn) speechSynthesis.cancel();
+                    spark.ui.refresh(); spark.engine.save();
+                },
 
-        spark.ui.showSuccess(function(){
-          if(spark.state.missionsDoneToday >= 3 || m.id === "spec"){
-            spark.engine.goTo("SCELTA_GENITORE");
-            return;
-          }
-          spark.engine.pickMission(false);
-          spark.engine.goTo("GIOCO");
-          spark.ui.speakOnEnter();
-        });
-      },
+                speak(text) {
+                    if (!spark.state.audioOn) return;
+                    speechSynthesis.cancel();
+                    const msg = new SpeechSynthesisUtterance(text);
+                    msg.lang = 'it-IT'; msg.rate = 0.9;
+                    speechSynthesis.speak(msg);
+                },
 
-      startSpecial(){
-        spark.state.currentMissionId = "spec";
-        spark.state.currentMissionEta = spark.state.eta || "5-7";
-        spark.state.passo = 0;
-        spark.engine.save();
-        spark.engine.goTo("GIOCO");
-        spark.ui.speakOnEnter();
-      },
+                showSuccess(cb) {
+                    const over = document.getElementById('overlay-success');
+                    over.style.display = 'flex';
+                    setTimeout(() => { over.style.display = 'none'; if(cb) cb(); }, 2500);
+                },
 
-      unlockMore(){
-        spark.state.missionsDoneToday = 0;
-        spark.state.usedMissionIds = [];
-        spark.state.currentMissionId = null;
-        spark.state.currentMissionEta = null;
-        spark.state.passo = 0;
-        spark.engine.save();
-        spark.engine.goTo("ETA");
-      }
-    },
+                openDiary() {
+                    const list = document.getElementById('diario-list');
+                    list.innerHTML = spark.state.diary.length ? spark.state.diary.map(e => `
+                        <div class="diary-card">
+                            <div style="font-size:30px;">📖</div>
+                            <div class="testo-diario">
+                                <small>${new Date(e.iso).toLocaleDateString()} - ${e.eta}</small>
+                                <b>${e.title}</b>
+                            </div>
+                        </div>`).join('') : '<p style="text-align:center; opacity:0.5; margin-top:40px;">Il diario è vuoto.</p>';
+                    document.getElementById('modal-diario').style.display = 'flex';
+                },
 
-    ui:{
-      refresh(){
-        const map = {
-          "INIZIO":"view-inizio",
-          "ETA":"view-eta",
-          "GIOCO":"view-gioco",
-          "SCELTA_GENITORE":"view-scelta_genitore"
-        };
-        const all = ["view-inizio","view-eta","view-gioco","view-scelta_genitore"];
-        for(let i=0;i<all.length;i++){
-          const el = document.getElementById(all[i]);
-          if(el) el.classList.add("hidden");
-        }
-        const cur = document.getElementById(map[spark.state.fsm] || "view-inizio");
-        if(cur) cur.classList.remove("hidden");
-
-        const audioBtn = document.getElementById("audio-toggle");
-        if(audioBtn) audioBtn.textContent = spark.state.audioOn ? "🔊" : "🔈";
-
-        const pillDay = document.getElementById("pill-day");
-        const pillAge = document.getElementById("pill-age");
-        if(pillDay) pillDay.textContent = "OGGI: " + clamp(spark.state.missionsDoneToday,0,99) + "/3";
-        if(pillAge) pillAge.textContent = "ETÀ: " + (spark.state.eta ? spark.state.eta : "--");
-
-        const hint = document.getElementById("hint-resume");
-        if(hint){
-          hint.textContent = (spark.state.currentMissionId && spark.state.eta) ? "Hai una missione in corso. Seleziona l’età per riprendere." : "";
-        }
-
-        if(spark.state.fsm === "SCELTA_GENITORE"){
-          const b = document.getElementById("btn-speciale");
-          if(b) b.style.display = spark.state.specialDoneToday ? "none" : "flex";
-        }
-
-        if(spark.state.fsm === "GIOCO"){
-          const m = spark.engine.getCurrentMission();
-          const labelEta = document.getElementById("label-eta");
-          if(labelEta) labelEta.textContent = spark.state.eta ? ("ETÀ " + spark.state.eta) : "ETÀ --";
-
-          const title = document.getElementById("mission-title");
-          const story = document.getElementById("mission-story");
-          const goal  = document.getElementById("mission-goal");
-          if(title) title.textContent = m.titolo;
-          if(story) story.textContent = m.storiaBreve;
-          if(goal)  goal.textContent  = "OBIETTIVO: " + m.obiettivo;
-
-          const stepsCont = document.getElementById("mission-steps");
-          if(stepsCont){
-            stepsCont.innerHTML = "";
-            for(let i=0;i<m.passaggi.length;i++){
-              const div = document.createElement("div");
-              div.className = "passo" + (i === spark.state.passo ? " attivo" : "");
-              div.innerHTML = '<div class="passo-num">' + (i+1) + '</div><div>' + escapeHtml(m.passaggi[i]) + '</div>';
-              stepsCont.appendChild(div);
+                closeDiary() { document.getElementById('modal-diario').style.display = 'none'; },
+                openLock(action) { spark.currentAction = action; document.getElementById('overlay-lock').style.display = 'flex'; },
+                closeLock() { document.getElementById('overlay-lock').style.display = 'none'; },
+                checkLock() {
+                    if (document.getElementById('lock-input').value === "10") {
+                        spark.ui.closeLock();
+                        if (spark.currentAction === 'SPECIALE') { spark.state.currentMissionId = 'spec'; spark.state.passo = 0; spark.engine.goTo('GIOCO'); }
+                        else { spark.state.missionsDoneToday = 0; spark.engine.pickMission(); spark.engine.goTo('GIOCO'); }
+                    } else { alert("Riprova!"); spark.ui.closeLock(); }
+                }
             }
-          }
+        };
 
-          const backBtn = document.getElementById("btn-back");
-          if(backBtn) backBtn.style.visibility = spark.state.passo === 0 ? "hidden" : "visible";
-
-          const nextBtn = document.getElementById("btn-next");
-          if(nextBtn) nextBtn.textContent = (spark.state.passo === m.passaggi.length - 1) ? "COMPLETA ✅" : "AVANTI";
-        }
-      },
-
-      toggleAudio(){
-        spark.state.audioOn = !spark.state.audioOn;
-        try{ if(!spark.state.audioOn && "speechSynthesis" in window) speechSynthesis.cancel(); }catch(e){}
-        spark.engine.save();
-        spark.ui.refresh();
-      },
-
-      speak(text){
-        if(!spark.state.audioOn) return;
-        try{
-          if(!("speechSynthesis" in window)) return;
-          speechSynthesis.cancel();
-          const msg = new SpeechSynthesisUtterance(String(text));
-          msg.lang = "it-IT";
-          msg.rate = 0.9;
-          speechSynthesis.speak(msg);
-        }catch(e){}
-      },
-
-      speakOnEnter(){
-        try{
-          const m = spark.engine.getCurrentMission();
-          spark.ui.speak(m.storiaBreve + ". Obiettivo: " + m.obiettivo + ". Passaggio 1: " + m.passaggi[0]);
-        }catch(e){}
-      },
-
-      showSuccess(cb){
-        const over = document.getElementById("overlay-success");
-        if(over) over.style.display = "flex";
-        setTimeout(function(){
-          if(over) over.style.display = "none";
-          if(typeof cb === "function") cb();
-        }, 2200);
-      },
-
-      openDiary(){
-        const list = document.getElementById("diario-list");
-        if(!list) return;
-
-        const d = spark.state.diary || [];
-        if(d.length){
-          list.innerHTML = d.map(function(e){
-            const date = new Date(e.iso);
-            const when = date.toLocaleDateString("it-IT") + " • " + date.toLocaleTimeString("it-IT", {hour:"2-digit", minute:"2-digit"});
-            const world = e.world || "Spazio";
-            const eta = e.eta || "";
-            return (
-              '<div class="diary-card">' +
-                '<div style="font-size:30px;">📖</div>' +
-                '<div class="testo-diario">' +
-                  '<small>' + escapeHtml(when) + (eta ? (" • " + escapeHtml(eta)) : "") + ' • ' + escapeHtml(world) + '</small>' +
-                  '<b>' + escapeHtml(e.title || "Missione") + '</b>' +
-                '</div>' +
-              '</div>'
-            );
-          }).join("");
-        }else{
-          list.innerHTML = '<p style="text-align:center; opacity:0.55; margin-top:40px;">Il diario è vuoto.</p>';
-        }
-
-        const modal = document.getElementById("modal-diario");
-        if(modal) modal.style.display = "flex";
-      },
-
-      closeDiary(){
-        const modal = document.getElementById("modal-diario");
-        if(modal) modal.style.display = "none";
-      },
-
-      openLock(action){
-        spark.currentAction = action;
-        const input = document.getElementById("lock-input");
-        if(input) input.value = "";
-        const over = document.getElementById("overlay-lock");
-        if(over) over.style.display = "flex";
-        setTimeout(function(){ try{ if(input) input.focus(); }catch(e){} }, 80);
-      },
-
-      closeLock(){
-        const over = document.getElementById("overlay-lock");
-        if(over) over.style.display = "none";
-      },
-
-      checkLock(){
-        const input = document.getElementById("lock-input");
-        const val = input ? input.value : "";
-        if(String(val).trim() === "10"){
-          spark.ui.closeLock();
-          if(spark.currentAction === "SPECIALE"){
-            if(!spark.state.specialDoneToday) spark.engine.startSpecial();
-            else spark.engine.goTo("SCELTA_GENITORE");
-          }else if(spark.currentAction === "ALTRE"){
-            spark.engine.unlockMore();
-          }
-          spark.currentAction = null;
-        }else{
-          spark.ui.closeLock();
-          alert("Riprova 😊");
-        }
-      }
-    }
-  };
-
-  window.spark = spark;
-  window.onload = spark.engine.init;
-
-})();
-</script>
+        window.onload = spark.engine.init;
+    </script>
 </body>
 </html>
