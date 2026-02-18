@@ -32,16 +32,22 @@ body {
 .btn:active { transform: translateY(3px); box-shadow: 0 2px 0px rgba(0,0,0,0.2); }
 .btn-avanti { background: var(--rossa-morbida); color: white; padding: 18px; width: 100%; font-size: 18px; margin-top: 10px; }
 .btn-eta { background: rgba(0,210,255,0.2); color: white; border: 2px solid var(--blu-spaziale); padding: 20px; font-size: 20px; width: 100%; margin-bottom: 10px; }
-.pianeta { font-size: 100px; text-align: center; animation: float 4s infinite ease-in-out; }
+.pianeta { font-size: 110px; text-align: center; animation: float 4s infinite ease-in-out; }
 @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
 .muro-frasi { font-style: italic; color: var(--giallo-stella); text-align: center; padding: 10px; font-size: 16px; }
 
-/* EFFETTO STELLE A CASCATA */
-.cascata { position: absolute; pointer-events: none; top: -20px; animation: caduta 2s linear forwards; font-size: 24px; }
-@keyframes caduta { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+/* SCRITTA COMPLETA E CASCATA */
+#overlay-success { position: fixed; inset: 0; pointer-events: none; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; background: rgba(10, 17, 40, 0.6); }
+.messaggio-vittoria { font-family: 'Fredoka One'; font-size: 42px; color: var(--giallo-stella); text-align: center; text-shadow: 4px 4px var(--rossa-morbida); animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+.cascata { position: absolute; pointer-events: none; top: -20px; animation: caduta 2s linear forwards; font-size: 28px; }
+@keyframes caduta { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
 </style>
 </head>
 <body>
+<div id="overlay-success">
+    <div class="messaggio-vittoria">MISSIONE<br>COMPLETATA!</div>
+</div>
 <div id="SPARKPLAY_APP" class="sp-root"></div>
 
 <script>
@@ -72,21 +78,25 @@ function parla(testo){
   speechSynthesis.speak(m);
 }
 
-function cascataStelle() {
-  for(let i=0; i<15; i++) {
+function celebra() {
+  const overlay = document.getElementById("overlay-success");
+  overlay.style.display = "flex";
+  for(let i=0; i<20; i++) {
     const stella = document.createElement("div");
     stella.className = "cascata";
-    stella.innerHTML = "⭐";
+    stella.innerHTML = Math.random() > 0.5 ? "⭐" : "✨";
     stella.style.left = Math.random() * 100 + "vw";
     stella.style.animationDuration = (Math.random() * 1 + 1) + "s";
     document.body.appendChild(stella);
     setTimeout(() => stella.remove(), 2000);
   }
+  setTimeout(() => { overlay.style.display = "none"; }, 2000);
 }
 
 function disegna(){
   const root = document.getElementById("SPARKPLAY_APP");
-  const icone3D = ["🪐","🚀","🛰️","🌠","☄️"];
+  // Icone Apple 3D senza bordi bianchi
+  const icone3D = ["☄️","🪐","🚀","🛰️","🌠"]; 
   const icona = icone3D[Math.floor(Date.now()/5000)%icone3D.length];
 
   if(s.fsm === "INIZIO"){
@@ -122,8 +132,8 @@ function disegna(){
   else if(s.fsm === "SCELTA_GENITORE"){
     root.innerHTML = `<div class="sp-top"><div class="brand">GENITORE</div></div>
       <div class="content-area">
-        <h2 style="text-align:center;">Capitolo Finito! 🏆</h2>
-        <p style="text-align:center;">Cosa vuoi fare ora?</p>
+        <h2 style="text-align:center; font-size:32px;">Capitolo Finito! 🏆</h2>
+        <p style="text-align:center; font-size:18px;">Cosa vuoi fare ora?</p>
         <button class="btn btn-eta" onclick="sblocca('SPECIALE')">SBLOCCA MISSIONE SPECIALE 🤝</button>
         <button class="btn btn-eta" onclick="sblocca('ALTRE')">FAI ALTRE 3 MISSIONI 🚀</button>
         <button class="btn btn-avanti" style="background:#4a5568;" onclick="home()">FINISCI PER OGGI</button>
@@ -136,24 +146,35 @@ window.vaiEta = () => { s.fsm = "ETA"; disegna(); };
 window.scegliEta = (e) => { s.eta = e; s.missioniFatte = 0; s.fsm = "GIOCO"; proproxima(); };
 window.home = () => { s.fsm = "INIZIO"; s.passo=0; s.missioniFatte=0; s.missioneAttuale=null; disegna(); };
 
-function sblocca(tipo) {
+window.sblocca = (tipo) => {
   const pin = prompt("GENITORE: Quanto fa 4 + 3?");
   if(pin === "7") {
     if(tipo === 'SPECIALE') {
-      s.fsm = "GIOCO"; s.missioneAttuale = DB.speciale; s.passo = 0; disegna();
+      s.missioneAttuale = DB.speciale;
+      s.fsm = "GIOCO";
+      s.passo = 0;
+      disegna();
+      parla("Missione speciale sbloccata!");
     } else {
-      s.missioniFatte = 0; s.fsm = "GIOCO"; proproxima();
+      s.missioniFatte = 0;
+      s.fsm = "GIOCO";
+      proproxima();
     }
-  } else { alert("Risposta sbagliata!"); }
-}
+  } else if (pin !== null) {
+    alert("Risposta sbagliata!");
+  }
+};
 
 function proproxima(){
   if(s.missioniFatte < 3){
     s.missioneAttuale = DB[s.eta][s.missioniFatte];
-    s.passo = 0; disegna();
+    s.passo = 0;
+    s.fsm = "GIOCO";
+    disegna();
     parla(s.missioneAttuale.s + " Obiettivo: " + s.missioneAttuale.o);
   } else {
-    s.fsm = "SCELTA_GENITORE"; disegna();
+    s.fsm = "SCELTA_GENITORE";
+    disegna();
   }
 }
 
@@ -161,11 +182,11 @@ window.successivo = () => {
   if(s.passo < s.missioneAttuale.p.length - 1){
     s.passo++; disegna(); parla(s.missioneAttuale.p[s.passo]);
   } else {
-    cascataStelle();
+    celebra();
     setTimeout(() => {
       s.missioniFatte++;
       proproxima();
-    }, 1500);
+    }, 2100);
   }
 };
 window.precedente = () => { if(s.passo > 0){ s.passo--; disegna(); parla(s.missioneAttuale.p[s.passo]); } };
