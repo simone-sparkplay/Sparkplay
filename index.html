@@ -32,22 +32,34 @@ body {
 .btn:active { transform: translateY(3px); box-shadow: 0 2px 0px rgba(0,0,0,0.2); }
 .btn-avanti { background: var(--rossa-morbida); color: white; padding: 18px; width: 100%; font-size: 18px; margin-top: 10px; }
 .btn-eta { background: rgba(0,210,255,0.2); color: white; border: 2px solid var(--blu-spaziale); padding: 20px; font-size: 20px; width: 100%; margin-bottom: 10px; }
-.pianeta { font-size: 110px; text-align: center; animation: float 4s infinite ease-in-out; }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
-.muro-frasi { font-style: italic; color: var(--giallo-stella); text-align: center; padding: 10px; font-size: 16px; }
+.muro-frasi { font-style: italic; color: var(--giallo-stella); text-align: center; padding: 10px; font-size: 16px; margin-top: 20px; }
 
-/* SCRITTA COMPLETA E CASCATA */
-#overlay-success { position: fixed; inset: 0; pointer-events: none; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; background: rgba(10, 17, 40, 0.6); }
-.messaggio-vittoria { font-family: 'Fredoka One'; font-size: 42px; color: var(--giallo-stella); text-align: center; text-shadow: 4px 4px var(--rossa-morbida); animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+/* OVERLAY SUCCESSO */
+#overlay-success { position: fixed; inset: 0; pointer-events: none; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; background: rgba(10, 17, 40, 0.8); }
+.messaggio-vittoria { font-family: 'Fredoka One'; font-size: 42px; color: var(--giallo-stella); text-shadow: 4px 4px var(--rossa-morbida); text-align: center; }
+
+/* DIARIO MODALE */
+#diario-modal { position: fixed; inset: 0; background: var(--sfondo-profondo); z-index: 2000; display: none; flex-direction: column; padding: 40px 25px; overflow-y: auto; }
+.voce-diario { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 5px solid var(--blu-spaziale); }
+
 .cascata { position: absolute; pointer-events: none; top: -20px; animation: caduta 2s linear forwards; font-size: 28px; }
 @keyframes caduta { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
 </style>
 </head>
 <body>
+
 <div id="overlay-success">
     <div class="messaggio-vittoria">MISSIONE<br>COMPLETATA!</div>
 </div>
+
+<div id="diario-modal">
+    <div class="sp-top">
+        <div class="brand">DIARIO</div>
+        <button class="btn" style="background:var(--rossa-morbida); color:white; padding:10px 20px;" onclick="chiudiDiario()">CHIUDI</button>
+    </div>
+    <div id="lista-diario" style="margin-top:20px;"></div>
+</div>
+
 <div id="SPARKPLAY_APP" class="sp-root"></div>
 
 <script>
@@ -56,19 +68,27 @@ const DB = {
   "5-7": [
     {t:"SEGNALE PERDUTO", s:"La base ha perso il segnale! La galassia è al buio!", o:"RIACCENDI L'ANTENNA!", p:["Trova un calzino stellare.","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."]},
     {t:"SATELLITE MORBIDO", s:"Un satellite è caduto tra le stelle!", o:"RECUPERALO!", p:["Trova un peluche-satellite.","Fagli fare un giro intorno al tavolo.","Mettilo a riposare in un posto alto."]},
-    {t:"POLVERE DI STELLE", s:"C'è troppa polvere spaziale sui motori!", o:"PULISCI TUTTO!", p:["Usa le mani come spazzole spaziali.","Pulisci 3 superfici diverse.","Soffia via la polvere con un soffio magico."]}
+    {t:"POLVERE DI STELLE", s:"C'è troppa polvere spaziale sui motori!", o:"PULISCI TUTTO!", p:["Usa le mani come spazzole spaziali.","Pulisci 3 superfici diverse.","Soffia via la polvere."]}
   ],
   "8-10": [
     {t:"MODULO VIBRANTE", s:"Il modulo 4 vibra forte. Serve silenzio assoluto!", o:"RIPARA IN SILENZIO", p:["Trova un foglio di carta.","Portalo alla base senza fare rumore.","Piegalo in 4 e mettilo sotto un cuscino."]},
-    {t:"CODICE STELLARE", s:"Dobbiamo inviare un codice segreto alla Terra!", o:"COMPONI IL CODICE", p:["Trova 3 oggetti dello stesso colore.","Mettili in fila dal più piccolo al più grande.","Salta sopra ogni oggetto dicendo una lettera."]},
-    {t:"ANTIGRAVITÀ", s:"La gravità si è rotta! Tutto fluttua!", o:"MUOVITI LENTO", p:["Attraversa la stanza al rallentatore.","Tocca terra solo con le punte dei piedi.","Siediti alla base senza usare le mani."]}
+    {t:"CODICE STELLARE", s:"Dobbiamo inviare un codice segreto alla Terra!", o:"COMPONI IL CODICE", p:["Trova 3 oggetti dello stesso colore.","Mettili in fila dal più piccolo al più grande.","Salta sopra ogni oggetto."]},
+    {t:"ANTIGRAVITÀ", s:"La gravità si è rotta! Tutto fluttua!", o:"MUOVITI LENTO", p:["Attraversa la stanza al rallentatore.","Tocca terra solo con le punte dei piedi.","Siediti senza usare le mani."]}
   ],
   speciale: {t:"MISSIONE SINCRONIA 🤝", s:"I motori hanno bisogno di due piloti insieme!", o:"SQUADRA SPAZIALE", p:["Prendetevi per mano (Genitore + Bambino).","Fate 10 passi sincronizzati insieme.","Dite 'Pronti al lancio' nello stesso istante!"], f:"Siete una squadra imbattibile!"}
 };
 
 const FRASI = ["L'immaginazione è l'unica astronave che arriva ovunque.", "Il gioco è il lavoro più serio del mondo.", "Nello spazio di SparkPlay, tu crei le regole."];
 
-let s = { fsm:"INIZIO", eta:null, passo:0, missioniFatte:0, missioneAttuale:null, audio:false };
+let s = { fsm:"INIZIO", eta:null, passo:0, missioniFatte:0, missioneAttuale:null, audio:false, diario: [] };
+
+function caricaStato() {
+    const salvato = localStorage.getItem('sparkplay_diario');
+    if(salvato) s.diario = JSON.parse(salvato);
+}
+function salvaStato() {
+    localStorage.setItem('sparkplay_diario', JSON.stringify(s.diario));
+}
 
 function parla(testo){
   if(!s.audio) return;
@@ -84,9 +104,8 @@ function celebra() {
   for(let i=0; i<20; i++) {
     const stella = document.createElement("div");
     stella.className = "cascata";
-    stella.innerHTML = Math.random() > 0.5 ? "⭐" : "✨";
+    stella.innerHTML = "⭐";
     stella.style.left = Math.random() * 100 + "vw";
-    stella.style.animationDuration = (Math.random() * 1 + 1) + "s";
     document.body.appendChild(stella);
     setTimeout(() => stella.remove(), 2000);
   }
@@ -95,15 +114,18 @@ function celebra() {
 
 function disegna(){
   const root = document.getElementById("SPARKPLAY_APP");
-  // Icone Apple 3D senza bordi bianchi
-  const icone3D = ["☄️","🪐","🚀","🛰️","🌠"]; 
-  const icona = icone3D[Math.floor(Date.now()/5000)%icone3D.length];
 
   if(s.fsm === "INIZIO"){
-    root.innerHTML = `<div class="sp-top"><div class="brand">SPARKPLAY</div><button class="btn" style="background:none;font-size:24px;" onclick="toggleAudio()">${s.audio?'🔊':'🔈'}</button></div>
-      <div class="content-area"><div class="pianeta">${icona}</div><h1 style="text-align:center;color:var(--giallo-stella)">PRONTI?</h1>
-      <button class="btn btn-avanti" style="width:70%; margin:0 auto;" onclick="vaiEta()">AVVIA MISSIONE</button>
-      <div class="muro-frasi">"${FRASI[Math.floor(Math.random()*FRASI.length)]}"</div></div>`;
+    root.innerHTML = `<div class="sp-top">
+        <button class="btn" style="background:none;font-size:24px;" onclick="apriDiario()">📚</button>
+        <div class="brand">SPARKPLAY</div>
+        <button class="btn" style="background:none;font-size:24px;" onclick="toggleAudio()">${s.audio?'🔊':'🔈'}</button>
+      </div>
+      <div class="content-area">
+        <h1 style="text-align:center;color:var(--giallo-stella);font-size:45px;">PRONTI?</h1>
+        <button class="btn btn-avanti" style="width:70%; margin:0 auto;" onclick="vaiEta()">AVVIA MISSIONE</button>
+        <div class="muro-frasi">"${FRASI[Math.floor(Math.random()*FRASI.length)]}"</div>
+      </div>`;
   } 
   else if(s.fsm === "ETA"){
     root.innerHTML = `<div class="sp-top"><div class="brand">ETÀ</div></div>
@@ -132,14 +154,21 @@ function disegna(){
   else if(s.fsm === "SCELTA_GENITORE"){
     root.innerHTML = `<div class="sp-top"><div class="brand">GENITORE</div></div>
       <div class="content-area">
-        <h2 style="text-align:center; font-size:32px;">Capitolo Finito! 🏆</h2>
-        <p style="text-align:center; font-size:18px;">Cosa vuoi fare ora?</p>
+        <h2 style="text-align:center;font-size:32px;">Capitolo Finito! 🏆</h2>
         <button class="btn btn-eta" onclick="sblocca('SPECIALE')">SBLOCCA MISSIONE SPECIALE 🤝</button>
         <button class="btn btn-eta" onclick="sblocca('ALTRE')">FAI ALTRE 3 MISSIONI 🚀</button>
         <button class="btn btn-avanti" style="background:#4a5568;" onclick="home()">FINISCI PER OGGI</button>
       </div>`;
   }
 }
+
+window.apriDiario = () => {
+    const modal = document.getElementById("diario-modal");
+    const lista = document.getElementById("lista-diario");
+    lista.innerHTML = s.diario.length ? s.diario.map(m => `<div class="voce-diario"><b>${m.titolo}</b><br><small>${m.data}</small></div>`).join('') : "<p>Ancora nessuna missione compiuta.</p>";
+    modal.style.display = "flex";
+}
+window.chiudiDiario = () => { document.getElementById("diario-modal").style.display = "none"; }
 
 window.toggleAudio = () => { s.audio = !s.audio; if(s.audio) parla("Audio attivo"); else speechSynthesis.cancel(); disegna(); };
 window.vaiEta = () => { s.fsm = "ETA"; disegna(); };
@@ -150,32 +179,19 @@ window.sblocca = (tipo) => {
   const pin = prompt("GENITORE: Quanto fa 4 + 3?");
   if(pin === "7") {
     if(tipo === 'SPECIALE') {
-      s.missioneAttuale = DB.speciale;
-      s.fsm = "GIOCO";
-      s.passo = 0;
-      disegna();
-      parla("Missione speciale sbloccata!");
+      s.missioneAttuale = DB.speciale; s.fsm = "GIOCO"; s.passo = 0; disegna();
     } else {
-      s.missioniFatte = 0;
-      s.fsm = "GIOCO";
-      proproxima();
+      s.missioniFatte = 0; s.fsm = "GIOCO"; proproxima();
     }
-  } else if (pin !== null) {
-    alert("Risposta sbagliata!");
-  }
+  } else if (pin !== null) alert("Risposta sbagliata!");
 };
 
 function proproxima(){
   if(s.missioniFatte < 3){
     s.missioneAttuale = DB[s.eta][s.missioniFatte];
-    s.passo = 0;
-    s.fsm = "GIOCO";
-    disegna();
+    s.passo = 0; s.fsm = "GIOCO"; disegna();
     parla(s.missioneAttuale.s + " Obiettivo: " + s.missioneAttuale.o);
-  } else {
-    s.fsm = "SCELTA_GENITORE";
-    disegna();
-  }
+  } else { s.fsm = "SCELTA_GENITORE"; disegna(); }
 }
 
 window.successivo = () => {
@@ -183,16 +199,15 @@ window.successivo = () => {
     s.passo++; disegna(); parla(s.missioneAttuale.p[s.passo]);
   } else {
     celebra();
-    setTimeout(() => {
-      s.missioniFatte++;
-      proproxima();
-    }, 2100);
+    s.diario.unshift({ titolo: s.missioneAttuale.t, data: new Date().toLocaleDateString('it-IT') });
+    salvaStato();
+    setTimeout(() => { s.missioniFatte++; proproxima(); }, 2100);
   }
 };
 window.precedente = () => { if(s.passo > 0){ s.passo--; disegna(); parla(s.missioneAttuale.p[s.passo]); } };
 
+caricaStato();
 disegna();
-setInterval(disegna, 5000);
 })();
 </script>
 </body>
