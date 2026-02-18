@@ -1,79 +1,674 @@
 <!doctype html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0B1220">
-<title>SparkPlay – Spazio</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0B1220" />
 
-<style>
-:root{
- --bg:#0B1220;
- --card:#121A2F;
- --ink:#EAF2FF;
- --muted:#9FB2D6;
- --accent:#5B7CFF;
- --radius:24px;
-}
-*{box-sizing:border-box}
-body{
- margin:0;
- font-family:-apple-system,BlinkMacSystemFont,Inter,system-ui;
- background:radial-gradient(1200px 600px at 50% -20%,#1B2550,#0B1220);
- color:var(--ink);
-}
-.wrap{max-width:520px;margin:0 auto;padding:24px}
-.card{
- background:linear-gradient(180deg,#16204A,#0F1733);
- border-radius:var(--radius);
- padding:22px;
- margin-bottom:18px;
- box-shadow:0 20px 40px rgba(0,0,0,.35);
-}
-h1{margin:0 0 10px;font-size:28px}
-p{color:var(--muted);line-height:1.45}
-.btn{
- display:inline-block;
- padding:14px 20px;
- border-radius:16px;
- background:var(--accent);
- color:white;
- text-decoration:none;
- font-weight:700;
- border:none;
-}
-.footer{
- text-align:center;
- color:var(--muted);
- margin-top:40px;
-}
-</style>
+  <title>SparkPlay -- Spazio</title>
+  <link rel="apple-touch-icon" href="icona.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg0:#07101c;
+      --bg1:#0b1220;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.085);
+      --stroke: rgba(255,255,255,.10);
+      --ink:#EAF2FF;
+      --muted:#A9B8D8;
+      --muted2:#7f93b8;
+      --accent:#5B7CFF;
+      --accent2:#2DCE89;
+      --warn:#FFB300;
+      --radius: 26px;
+      --shadow: 0 22px 60px rgba(0,0,0,.45);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 800px at 20% 10%, rgba(91,124,255,.25), transparent 55%),
+        radial-gradient(1200px 800px at 90% 35%, rgba(45,206,137,.14), transparent 55%),
+        radial-gradient(900px 700px at 50% 110%, rgba(255,179,0,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height:100%;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x:hidden;
+    }
+
+    .safe{
+      padding-top: max(18px, env(safe-area-inset-top));
+      padding-bottom: max(18px, env(safe-area-inset-bottom));
+      padding-left: max(14px, env(safe-area-inset-left));
+      padding-right: max(14px, env(safe-area-inset-right));
+    }
+
+    .wrap{
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 14px;
+    }
+
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      padding-top: 4px;
+    }
+    .brand .name{
+      font-weight: 800;
+      letter-spacing: .2px;
+      font-size: 28px;
+      line-height: 1.05;
+    }
+    .brand .sub{
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+      opacity:.95;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,.22);
+      padding: 10px 12px;
+      border-radius: 999px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.22);
+      user-select:none;
+      -webkit-user-select:none;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight:600;
+      white-space:nowrap;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.045));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin: 14px 0;
+      overflow:hidden;
+    }
+    .card.soft{
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 16px 44px rgba(0,0,0,.35);
+    }
+
+    .h1{
+      font-size: 34px;
+      line-height: 1.12;
+      margin: 0 0 8px 0;
+      letter-spacing: .1px;
+      font-weight: 800;
+    }
+    .h2{
+      font-size: 22px;
+      line-height: 1.18;
+      margin: 0 0 10px 0;
+      font-weight: 800;
+    }
+    .p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.45;
+      font-weight: 600;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media(min-width:820px){
+      .grid{
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .world{
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--stroke);
+    }
+    .world .row{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(91,124,255,.14);
+      border: 1px solid rgba(91,124,255,.22);
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing:.2px;
+    }
+    .tag.good{
+      background: rgba(45,206,137,.14);
+      border: 1px solid rgba(45,206,137,.22);
+    }
+
+    .btns{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .btn{
+      appearance:none;
+      border:0;
+      cursor:pointer;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: .2px;
+      color: var(--ink);
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 14px 40px rgba(0,0,0,.25);
+      text-align:left;
+    }
+    .btn.primary{
+      background: linear-gradient(180deg, rgba(91,124,255,.95), rgba(91,124,255,.72));
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .btn.good{
+      background: linear-gradient(180deg, rgba(45,206,137,.92), rgba(45,206,137,.68));
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .btn.warn{
+      background: linear-gradient(180deg, rgba(255,179,0,.92), rgba(255,179,0,.68));
+      border: 1px solid rgba(255,255,255,.14);
+      color:#0b1220;
+    }
+    .btn:active{ transform: translateY(1px); }
+
+    .mini{
+      font-size: 13px;
+      color: var(--muted2);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .divider{
+      height: 1px;
+      background: rgba(255,255,255,.10);
+      margin: 14px 0;
+    }
+
+    .steps{
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .step{
+      padding: 14px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+    .step strong{ color: var(--ink); }
+
+    .footer{
+      text-align:center;
+      color: rgba(234,242,255,.65);
+      font-weight: 700;
+      margin: 26px 0 6px;
+      letter-spacing:.2px;
+    }
+
+    .bar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.14);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .bar .big{ color: var(--ink); font-weight: 900; }
+
+    .log{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .logItem{
+      padding: 12px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-weight: 650;
+      line-height:1.35;
+      font-size: 14px;
+    }
+    .logItem b{ color: var(--ink); }
+    .empty{
+      color: rgba(169,184,216,.85);
+      font-weight: 700;
+      padding: 12px 0 0;
+      font-size: 14px;
+    }
+
+    .backRow{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-top: 14px;
+    }
+    .btn.small{
+      text-align:center;
+      padding: 12px 14px;
+      font-size: 15px;
+      border-radius: 16px;
+    }
+  </style>
 </head>
 
 <body>
-<div class="wrap">
+  <div class="safe">
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="name">SparkPlay</div>
+          <!-- QUI niente "Montessori": teniamo solo Spazio -->
+          <div class="sub" id="subtitle">Spazio</div>
+        </div>
+        <div class="pill" id="versionPill">v2026.02.18-APP</div>
+      </div>
 
-<div class="card">
-<h1>☄️ Caccia ai Meteoriti</h1>
-<p>Fallo nel mondo reale. Qui dentro hai solo la guida.</p>
-</div>
+      <div id="APP"></div>
 
-<div class="card">
-<p><strong>1)</strong> Nascondi 8 piccoli oggetti in una stanza.</p>
-<p><strong>2)</strong> Cammina piano come in gravità bassa.</p>
-<p><strong>3)</strong> Metti ogni meteorite trovato in una scatola.</p>
-<p><strong>4)</strong> Se sono 8 → missione completata.</p>
-<button class="btn" onclick="alert('Missione completata! 🚀')">
-Fine missione
-</button>
-</div>
+      <div class="footer">Gioca meglio · Cresci meglio</div>
+    </div>
+  </div>
 
-<div class="footer">
-Gioca meglio · Cresci meglio
-</div>
+<script>
+(() => {
+  "use strict";
 
-</div>
+  // =========================
+  // STORAGE + DAILY RESET
+  // =========================
+  const KEY = "sparkplay_spazio_v1";
+  const todayKey = () => {
+    // robust per fusi / iOS: usiamo YYYY-MM-DD locale
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    const da = String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${da}`;
+  };
+
+  const defaultState = () => ({
+    day: todayKey(),
+    route: "HOME",            // HOME | SPACE | MISSION
+    missionsDone: 0,          // 0..3
+    diary: [],                // {t, title, note}
+    currentMission: null      // {id, title, steps[]}
+  });
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if(!raw) return defaultState();
+      const s = JSON.parse(raw);
+      if(!s || typeof s !== "object") return defaultState();
+
+      // daily reset
+      const t = todayKey();
+      if(s.day !== t){
+        // reset contatore giornaliero, preserva diario
+        return {
+          ...defaultState(),
+          diary: Array.isArray(s.diary) ? s.diary : []
+        };
+      }
+
+      // normalize
+      s.route = s.route || "HOME";
+      s.missionsDone = Number.isFinite(s.missionsDone) ? s.missionsDone : 0;
+      s.diary = Array.isArray(s.diary) ? s.diary : [];
+      return s;
+    }catch(e){
+      return defaultState();
+    }
+  }
+
+  function save(){
+    try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  let state = load();
+
+  // =========================
+  // MISSIONS (Spazio)
+  // =========================
+  const MISSIONS = [
+    {
+      id: "meteoriti",
+      title: "☄️ Caccia ai Meteoriti",
+      steps: [
+        "Scegli 8 oggetti piccoli (meteoriti) e nascondili in una stanza (visibili ma sparsi).",
+        "Cammina piano per trovarli tutti (come in gravità bassa).",
+        "Ogni meteorite trovato va messo in un "contenitore" (scatola).",
+        "Conta i meteoriti: se sono 8 → missione completata."
+      ],
+      tip: "Consiglio per il genitore: fai scegliere al bambino gli oggetti, così si sente "comandante"."
+    },
+    {
+      id: "stazione",
+      title: "🛰️ Ripara la Stazione",
+      steps: [
+        "Metti 6 oggetti in fila (pezzi della stazione): cucchiaio, calzino, libro, matita, tazza, torcia.",
+        "Il bambino deve "riparare" 3 pezzi: sposta ogni pezzo nel posto giusto seguendo un ordine.",
+        "Regola: ci si muove lentamente e si parla piano (spazio!).",
+        "Alla fine: accendi la torcia 3 secondi → "stazione online"."
+      ],
+      tip: "Consiglio per il genitore: dai 2 ordini per volta, non tutti insieme."
+    },
+    {
+      id: "astronauta",
+      title: "👨‍🚀 Addestramento Astronauta",
+      steps: [
+        "Crea 4 "prove": salto su un cuscino, strisciare sotto un tavolo, equilibrio su una linea, prendere 3 oggetti.",
+        "Fai il tempo: 60 secondi totali (con calma, non gara).",
+        "Ogni prova completata = 1 punto missione.",
+        "Se fa 4/4 → astronauta promosso."
+      ],
+      tip: "Consiglio per il genitore: se è piccolo, dimezza le prove."
+    }
+  ];
+
+  function pickMission(){
+    // semplice: scegli in modo pseudo-casuale ma stabile (ruota sul giorno e sul contatore)
+    const t = todayKey();
+    let seed = 0;
+    for (let i=0;i<t.length;i++) seed = (seed*31 + t.charCodeAt(i)) >>> 0;
+    seed = (seed + state.missionsDone*97) >>> 0;
+    const idx = seed % MISSIONS.length;
+    return MISSIONS[idx];
+  }
+
+  // =========================
+  // ROUTER + ACTIONS
+  // =========================
+  const $ = (sel) => document.querySelector(sel);
+
+  function go(route){
+    state.route = route;
+    save();
+    render();
+  }
+
+  function startSpace(){
+    go("SPACE");
+  }
+
+  function startMission(){
+    if(state.missionsDone >= 3){
+      // già finito per oggi
+      alert("Hai già fatto 3 missioni oggi. Torna domani 🚀");
+      return;
+    }
+    state.currentMission = pickMission();
+    state.route = "MISSION";
+    save();
+    render();
+  }
+
+  function finishMission(){
+    if(!state.currentMission) { go("SPACE"); return; }
+
+    state.missionsDone = Math.min(3, (state.missionsDone||0) + 1);
+
+    // salva nel diario
+    state.diary.unshift({
+      t: new Date().toLocaleString("it-IT"),
+      title: state.currentMission.title,
+      note: "Completata ✅"
+    });
+
+    // pulisci missione corrente e torna a Spazio
+    state.currentMission = null;
+    state.route = "SPACE";
+    save();
+    render();
+
+    // feedback leggero
+    setTimeout(() => alert("Missione registrata nel Diario ✅"), 60);
+  }
+
+  function newDayTest(){
+    // reset contatore (solo test)
+    state.day = todayKey();
+    state.missionsDone = 0;
+    state.currentMission = null;
+    save();
+    render();
+  }
+
+  function resetAllTest(){
+    if(!confirm("Reset dati? (solo test)")) return;
+    state = defaultState();
+    save();
+    render();
+  }
+
+  // =========================
+  // UI
+  // =========================
+  function homeHTML(){
+    return `
+      <div class="card">
+        <div class="h1">Scegli un mondo</div>
+        <p class="p">Qui dentro hai la guida. La magia succede nel mondo reale.</p>
+        <div class="divider"></div>
+
+        <div class="grid">
+          <div class="world">
+            <div class="row">
+              <div>
+                <div class="h2">🚀 Spazio</div>
+                <div class="mini">Missioni fisiche in casa: esplorazione, ricerca, addestramento.</div>
+              </div>
+              <div class="tag">ATTIVO</div>
+            </div>
+
+            <div class="bar">
+              <span>Missioni oggi</span>
+              <span class="big">${state.missionsDone}/3</span>
+            </div>
+
+            <div class="btns">
+              <button class="btn primary" onclick="SP.startSpace()">Entra in Spazio</button>
+              <button class="btn" onclick="SP.resetAllTest()">Reset dati (test)</button>
+            </div>
+          </div>
+
+          <div class="world" style="opacity:.65">
+            <div class="row">
+              <div>
+                <div class="h2">✨ Magia</div>
+                <div class="mini">In arrivo dopo che Spazio è perfetto.</div>
+              </div>
+              <div class="tag good">DOPO</div>
+            </div>
+            <div class="btns">
+              <button class="btn" disabled style="opacity:.7; cursor:not-allowed;">Bloccato</button>
+            </div>
+          </div>
+
+          <div class="world" style="opacity:.65">
+            <div class="row">
+              <div>
+                <div class="h2">🕵️ Detective</div>
+                <div class="mini">In arrivo dopo che Spazio è perfetto.</div>
+              </div>
+              <div class="tag good">DOPO</div>
+            </div>
+            <div class="btns">
+              <button class="btn" disabled style="opacity:.7; cursor:not-allowed;">Bloccato</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      ${diaryCardHTML()}
+    `;
+  }
+
+  function spaceHTML(){
+    return `
+      <div class="card">
+        <div class="h1">🚀 Missione Spazio</div>
+        <p class="p">Usa oggetti di casa per creare una missione spaziale.</p>
+
+        <div class="bar" style="margin-top:14px;">
+          <span>Missioni fatte oggi</span>
+          <span class="big">${state.missionsDone}/3</span>
+        </div>
+
+        <div class="btns">
+          <button class="btn primary" onclick="SP.startMission()">Avvia missione</button>
+          <button class="btn" onclick="SP.newDayTest()">Nuova giornata (test)</button>
+          <button class="btn" onclick="SP.go('HOME')">Torna alla Home</button>
+        </div>
+      </div>
+
+      ${diaryCardHTML()}
+    `;
+  }
+
+  function missionHTML(){
+    const m = state.currentMission || pickMission();
+    const steps = (m.steps || []).map((s,i)=>`
+      <div class="step"><strong>${i+1})</strong> ${escapeHTML(s)}</div>
+    `).join("");
+
+    return `
+      <div class="card">
+        <div class="h1">${escapeHTML(m.title)}</div>
+        <p class="p">Fallo nel mondo reale. Qui dentro hai solo la guida.</p>
+
+        <div class="steps">${steps}</div>
+
+        <div class="divider"></div>
+
+        <div class="mini">${escapeHTML(m.tip || "")}</div>
+
+        <div class="backRow">
+          <button class="btn small" onclick="SP.go('SPACE')">⬅︎ Indietro</button>
+          <button class="btn primary small" onclick="SP.finishMission()">Fine missione ✅</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function diaryCardHTML(){
+    const items = (state.diary || []).slice(0,8);
+    const list = items.length
+      ? `<div class="log">
+           ${items.map(it => `
+             <div class="logItem">
+               <b>${escapeHTML(it.title || "Missione")}</b><br/>
+               <span>${escapeHTML(it.note || "")}</span><br/>
+               <span style="opacity:.75">${escapeHTML(it.t || "")}</span>
+             </div>
+           `).join("")}
+         </div>`
+      : `<div class="empty">Ancora nessuna missione salvata.</div>`;
+
+    return `
+      <div class="card soft">
+        <div class="h2">📘 Diario missioni</div>
+        <p class="p" style="margin-bottom:8px;">Piccolo storico delle missioni completate.</p>
+        ${list}
+      </div>
+    `;
+  }
+
+  function escapeHTML(str){
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function render(){
+    // aggiorna "Spazio" in alto
+    $("#subtitle").textContent = "Spazio";
+
+    const root = $("#APP");
+    if(!root) return;
+
+    if(state.route === "HOME") root.innerHTML = homeHTML();
+    else if(state.route === "SPACE") root.innerHTML = spaceHTML();
+    else root.innerHTML = missionHTML();
+  }
+
+  // API globale (per bottoni inline)
+  window.SP = {
+    go,
+    startSpace,
+    startMission,
+    finishMission,
+    newDayTest,
+    resetAllTest
+  };
+
+  render();
+})();
+</script>
 </body>
 </html>
