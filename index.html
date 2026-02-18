@@ -1,114 +1,237 @@
 <!doctype html>
 <html lang="it">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>SparkPlay</title>
-<link rel="apple-touch-icon" href="icona.png">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SparkPlay - Spazio Master</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg0:#070B14; --bg1:#0B1220; --ink:#EAF2FF; --muted:#A9B7D6; --line:rgba(255,255,255,.10);
-  --accent:#3F5EF6; --gold:#FFB300; --radius:26px; --shadow:0 30px 70px rgba(0,0,0,.45);
+:root {
+  --bg0: #070B14;
+  --bg1: #0B1220;
+  --ink: #EAF2FF;
+  --muted: #A9B7D6;
+  --line: rgba(255, 255, 255, 0.12);
+  --accent: #3F5EF6;
+  --gold: #FFB300;
+  --radius: 28px;
+  --card-bg: rgba(255, 255, 255, 0.06);
 }
-body{ margin:0; background: var(--bg0); font-family: Inter, sans-serif; color:var(--ink); overflow-x: hidden; }
 
-/* STELLE SULLO SFONDO */
-.stars-container {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-  background: radial-gradient(circle at 30% 30%, rgba(63,94,246,0.15), transparent), linear-gradient(180deg, var(--bg0), var(--bg1));
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body { 
+  margin: 0; 
+  background-color: var(--bg0); 
+  font-family: 'Inter', sans-serif; 
+  color: var(--ink); 
+  height: 100vh;
+  overflow: hidden; /* Evita scroll brutti su mobile */
 }
+
+/* SFONDO STELLATO PERSISTENTE */
+#stars-canvas {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 50%, #121b33 0%, #070b14 100%);
+}
+
 .star {
-  position: absolute; background: white; border-radius: 50%; opacity: 0.5;
-  animation: blink 3s infinite ease-in-out;
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: blink var(--d) infinite ease-in-out;
 }
-@keyframes blink { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+@keyframes blink { 0%, 100% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.3); } }
 
-.sp-root{ max-width: 850px; margin: 0 auto; padding: 20px; position: relative; }
-.sp-shell{ border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); box-shadow: var(--shadow); overflow: hidden; }
-.sp-top{ padding: 16px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
-.brand{ font-weight: 900; color: var(--gold); }
-.card{ background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; margin-bottom: 15px; }
-.btn{ border: none; border-radius: 18px; padding: 18px; font-weight: 800; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-primary{ background: var(--accent); color: white; width: 100%; font-size: 18px; }
-.btn-ghost{ background: transparent; color: var(--muted); border: 1px solid var(--line); }
-.step.active{ color: var(--gold); font-weight: 800; border-left: 4px solid var(--gold); padding-left: 10px; background: rgba(255,179,0,0.05); }
-.step.dim{ opacity: 0.4; }
-.orb{ font-size: 40px; text-align: center; animation: float 3s infinite ease-in-out; }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+/* LAYOUT SPACING */
+.sp-root { 
+  max-width: 500px; 
+  margin: 0 auto; 
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.sp-shell { 
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line); 
+  border-radius: var(--radius); 
+  background: rgba(255, 255, 255, 0.02); 
+  backdrop-filter: blur(15px);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  overflow-y: auto;
+}
+
+.sp-top { 
+  padding: 24px; 
+  border-bottom: 1px solid var(--line); 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+}
+
+.brand { font-weight: 900; color: var(--gold); letter-spacing: 1px; font-size: 14px; }
+
+/* CONTENUTO PIÙ DISTANZIATO */
+.sp-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+
+.card { 
+  background: var(--card-bg); 
+  border: 1px solid var(--line);
+  border-radius: 22px; 
+  padding: 22px; 
+  line-height: 1.6;
+}
+
+.card-label { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
+
+h1 { font-size: 26px; font-weight: 900; margin: 10px 0; line-height: 1.2; }
+
+/* STEP DESIGN */
+.steps { display: flex; flex-direction: column; gap: 12px; margin: 10px 0; }
+.step { 
+  padding: 16px; 
+  border-radius: 16px; 
+  background: rgba(255,255,255,0.03); 
+  border: 1px solid transparent;
+  transition: 0.3s;
+}
+.step.active { 
+  background: rgba(63, 94, 246, 0.15); 
+  border-color: var(--accent); 
+  color: white; 
+  font-weight: 600;
+  transform: scale(1.02);
+}
+.step.dim { opacity: 0.3; filter: blur(0.5px); }
+
+/* BOTTONI */
+.btn-group { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; margin-top: auto; padding-top: 20px; }
+.btn { 
+  border: none; border-radius: 20px; padding: 20px; font-weight: 800; cursor: pointer; 
+  display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s;
+}
+.btn:active { transform: scale(0.96); }
+.btn-primary { background: var(--accent); color: white; font-size: 16px; box-shadow: 0 10px 25px rgba(63,94,246,0.4); }
+.btn-ghost { background: rgba(255,255,255,0.05); color: var(--ink); border: 1px solid var(--line); }
+
+.orb { font-size: 60px; margin: 20px 0; animation: float 4s infinite ease-in-out; }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 </style>
 </head>
 <body>
-<div class="stars-container" id="stars"></div>
+
+<div id="stars-canvas"></div>
+
 <div id="SPARKPLAY_APP" class="sp-root"></div>
+
 <script>
-/* GENERATORE DI STELLE */
-const starsBox = document.getElementById('stars');
-for(let i=0; i<50; i++) {
+/* GENERATORE STELLE FISSO */
+const canvas = document.getElementById('stars-canvas');
+for(let i=0; i<60; i++) {
   const star = document.createElement('div');
   star.className = 'star';
-  const size = Math.random() * 3 + 'px';
+  const size = Math.random() * 2 + 1 + 'px';
   star.style.width = size; star.style.height = size;
   star.style.top = Math.random() * 100 + '%';
   star.style.left = Math.random() * 100 + '%';
-  star.style.animationDelay = Math.random() * 3 + 's';
-  starsBox.appendChild(star);
+  star.style.setProperty('--d', (Math.random() * 3 + 2) + 's');
+  canvas.appendChild(star);
 }
 
 (()=>{"use strict";
 const DB={
   small:[
-    {id:"s01",badge:"🌙",title:"Segnale Perduto",story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.",goal:"Riaccendere l’antenna della base.",steps:["Trova l’antenna (calzino) e stringila forte.","Portala nella tua base (tappeto) e appoggiala in alto.","Fai 3 bip lenti: bip... bip... bip..."],finale:"Segnale tornato. Base salva!",q:"A chi manderesti il primo messaggio?"},
-    {id:"s02",badge:"🛰️",title:"Satellite Smarrito",story:"Un piccolo satellite è uscito dall’orbita.",goal:"Riportarlo vicino alla base.",steps:["Prendi il satellite (peluche) con cura.","Fallo fluttuare lento fino alla base.","Giro d’orbita: un cerchio grande... e uno piccolo."],finale:"Orbita ripristinata!",q:"Che nome dai al satellite?"}
+    {id:"s01",badge:"🌙",title:"Segnale Perduto",story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.",goal:"Riaccendere l’antenna stellare.",steps:["Trova l’antenna (calzino) e stringila forte.","Portala nella tua base e appoggiala in alto.","Fai 3 bip lenti: bip... bip... bip..."],finale:"Segnale tornato. Base salva!",q:"A chi manderesti il primo messaggio?"},
+    {id:"s02",badge:"🛰️",title:"Satellite Smarrito",story:"Un piccolo satellite è uscito dall’orbita.",goal:"Riportarlo vicino alla base.",steps:["Prendi il satellite (peluche) con cura.","Fallo fluttuare lento fino alla base.","Fai un giro d’orbita: un cerchio grande..."],finale:"Orbita ripristinata!",q:"Che nome dai al satellite?"}
   ]
 };
-let s = { fsm:"WELCOME", audio:false, step:0, quest:null };
-const Audio={
-  speak(t, cb){
-    if(!s.audio) { if(cb) cb(); return; }
-    speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(t); u.lang="it-IT"; u.rate=0.85;
-    if(cb) u.onend=cb;
-    speechSynthesis.speak(u);
-  }
-};
+
+let state = { fsm:"WELCOME", audio:false, step:0, quest:null };
+
 function render(){
   const root = document.getElementById("SPARKPLAY_APP");
-  if(s.fsm==="WELCOME"){
-    root.innerHTML=`<div class="sp-shell"><div class="sp-top"><div class="brand">SPARKPLAY 🚀</div><button class="btn btn-ghost" onclick="toggleA()">${s.audio?'🔊':'🔈'}</button></div><div style="padding:20px;text-align:center;"><div class="orb">🪐</div><h1>Pronti al Lancio?</h1><button class="btn btn-primary" onclick="startQ()">AVVIA MISSIONE</button></div></div>`;
-  } else {
-    const q=s.quest;
-    root.innerHTML=`<div class="sp-shell">
-      <div class="sp-top">
-        <button class="btn btn-ghost" onclick="toggleA()">${s.audio?'🔊':'🔈'}</button>
-        <div class="brand">${q.title}</div>
-        <button class="btn btn-ghost" onclick="home()">🏠</button>
-      </div>
-      <div style="padding:20px;">
-        <div class="card"><b>Storia:</b> ${q.story}</div>
-        <div class="card"><b>Obiettivo:</b> ${q.goal}</div>
-        <div class="steps">${q.steps.map((txt,i)=>`<div class="step ${i===s.step?'active':'dim'}">${i+1}. ${txt}</div>`).join("")}</div>
-        <div style="height:20px"></div>
-        <div style="display:grid; grid-template-columns: 1fr 2fr; gap:10px;">
-          <button class="btn btn-ghost" onclick="prevS()" ${s.step===0?'disabled style="opacity:0.3"':''}>⬅️ Indietro</button>
-          <button class="btn btn-primary" onclick="nextS()">${s.step<q.steps.length-1?'PROSSIMO PASSO':'COMPLETA MISSIONE ✅'}</button>
+  
+  if(state.fsm === "WELCOME"){
+    root.innerHTML = `
+      <div class="sp-shell">
+        <div class="sp-top">
+          <div class="brand">SPARKPLAY 🚀</div>
+          <button class="btn-ghost" style="padding:10px; border-radius:12px;" onclick="toggleAudio()">${state.audio?'🔊':'🔈'}</button>
         </div>
-      </div>
-    </div>`;
+        <div class="sp-body" style="text-align:center; justify-content:center; flex:1;">
+          <div class="orb">🪐</div>
+          <h1>Esplorazione Spaziale</h1>
+          <p style="color:var(--muted); margin-bottom:30px;">Pronto per la tua missione quotidiana Comandante?</p>
+          <button class="btn btn-primary" onclick="startMission()">INIZIA ORA</button>
+        </div>
+      </div>`;
+  } else {
+    const q = state.quest;
+    root.innerHTML = `
+      <div class="sp-shell">
+        <div class="sp-top">
+          <button class="btn-ghost" style="padding:10px; border-radius:12px;" onclick="toggleAudio()">${state.audio?'🔊':'🔈'}</button>
+          <div class="brand">${q.title}</div>
+          <button class="btn-ghost" style="padding:10px; border-radius:12px;" onclick="goHome()">🏠</button>
+        </div>
+        <div class="sp-body">
+          <div class="card">
+            <span class="card-label">La tua missione</span>
+            <div style="font-size:15px;">${q.story}</div>
+          </div>
+          
+          <div class="card" style="border-color: var(--accent);">
+            <span class="card-label" style="color:var(--accent);">Obiettivo</span>
+            <div style="font-weight:700;">${q.goal}</div>
+          </div>
+
+          <div class="steps">
+            ${q.steps.map((text, i) => `
+              <div class="step ${i === state.step ? 'active' : (i < state.step ? '' : 'dim')}">
+                ${i + 1}. ${text}
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-ghost" onclick="prevStep()" ${state.step===0?'disabled style="opacity:0.2"':''}>Indietro</button>
+            <button class="btn btn-primary" onclick="nextStep()">
+              ${state.step < q.steps.length - 1 ? 'Avanti' : 'Completa'}
+            </button>
+          </div>
+        </div>
+      </div>`;
   }
 }
-window.toggleA=()=>{ s.audio=!s.audio; render(); if(s.audio) Audio.speak("Audio attivo"); };
-window.home=()=>{ s.fsm="WELCOME"; render(); };
-window.startQ=()=>{ s.fsm="QUEST"; s.quest=pick(DB.small); s.step=0; render(); Audio.speak(s.quest.story+". Passo 1. "+s.quest.steps[0]); };
-window.prevS=()=>{ if(s.step>0){ s.step--; render(); Audio.speak("Passo "+(s.step+1)+". "+s.quest.steps[s.step]); } };
-window.nextS=()=>{
-  if(s.step<s.quest.steps.length-1){
-    s.step++; render(); Audio.speak("Passo "+(s.step+1)+". "+s.quest.steps[s.step], ()=>{
-      if(s.step===s.quest.steps.length-1) setTimeout(()=>Audio.speak("Gran finale. "+s.quest.finale+". Curiosità spaziale. "+s.quest.q), 1000);
-    });
-  } else { alert("🌟 MISSIONE COMPIUTA!\n\n"+s.quest.finale); window.home(); }
+
+window.toggleAudio = () => { state.audio = !state.audio; render(); };
+window.goHome = () => { state.fsm = "WELCOME"; render(); };
+window.startMission = () => { 
+  state.fsm = "QUEST"; 
+  state.quest = DB.small[Math.floor(Math.random()*DB.small.length)]; 
+  state.step = 0; 
+  render(); 
 };
-function pick(a){return a[Math.floor(Math.random()*a.length)];}
+window.prevStep = () => { if(state.step > 0) { state.step--; render(); } };
+window.nextStep = () => {
+  if(state.step < state.quest.steps.length - 1) {
+    state.step++;
+    render();
+  } else {
+    alert("🌟 MISSIONE COMPIUTA!\n\n" + state.quest.finale);
+    goHome();
+  }
+};
+
 render();
 })();
 </script>
