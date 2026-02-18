@@ -3,44 +3,30 @@
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0B1220"><title>SparkPlay</title>
+<title>SparkPlay</title>
 <link rel="apple-touch-icon" href="icona.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
-/* --- DESIGN PREMIUM ORIGINALE (DNA ZIP) --- */
 :root{
   --bg0:#070B14; --bg1:#0B1220; --ink:#EAF2FF; --muted:#A9B7D6; --line:rgba(255,255,255,.10);
   --accent:#3F5EF6; --gold:#FFB300; --radius:26px; --shadow:0 30px 70px rgba(0,0,0,.45);
-  --soft:0 18px 40px rgba(63,94,246,.20);
 }
-*{box-sizing:border-box}
-html,body{height:100%; overflow-x: hidden;}
 body{
-  margin:0;
-  background: radial-gradient(1200px 800px at 30% 10%, rgba(63,94,246,.22), transparent 60%),
-              radial-gradient(900px 700px at 80% 30%, rgba(255,179,0,.10), transparent 60%),
-              linear-gradient(180deg, var(--bg0), var(--bg1));
-  font-family: Inter, system-ui, -apple-system, sans-serif;
-  color:var(--ink);
+  margin:0; background: linear-gradient(180deg, var(--bg0), var(--bg1));
+  font-family: Inter, system-ui, sans-serif; color:var(--ink);
 }
-.sp-root{max-width:800px; margin:0 auto; padding:18px 16px calc(22px + env(safe-area-inset-bottom));}
-.sp-shell{border:1px solid var(--line); border-radius:var(--radius); background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02)); box-shadow:var(--shadow); overflow:hidden;}
-.sp-top{padding:16px; border-bottom:1px solid var(--line); background:radial-gradient(700px 220px at 20% 0%, rgba(63,94,246,.22), transparent 60%); display:flex; justify-content:space-between; align-items:center;}
-.brand{font-weight:1000; letter-spacing:1.4px; font-size:13px;}
-.badge{display:inline-flex; align-items:center; gap:8px; padding:7px 12px; border-radius:999px; font-weight:900; font-size:12px; border:1px solid var(--line); background:rgba(255,255,255,.03); cursor:pointer;}
-.sp-body{padding:16px;}
-.state{display:none; opacity:0; transform:translateY(8px) scale(.98); transition:0.35s ease;}
-.state.active{display:block; opacity:1; transform:translateY(0) scale(1);}
-.card{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03)); border:1px solid rgba(255,255,255,0.1); border-radius:22px; padding:16px; box-shadow:var(--soft); margin-bottom:12px;}
-.btn{width:100%; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.04); color:var(--ink); padding:18px; border-radius:20px; cursor:pointer; font-weight:900; font-size:16px; display:flex; align-items:center; justify-content:center; transition:0.2s;}
-.btn-primary{background:linear-gradient(180deg, var(--accent), #334ed7); box-shadow:0 18px 40px rgba(63,94,246,.26); border:none;}
-.btn-ghost{background:transparent; border:1px solid var(--line); color:var(--muted);}
-.orb{width:60px; height:60px; border-radius:20px; background:rgba(63,94,246,0.2); border:1px solid rgba(63,94,246,0.3); display:flex; align-items:center; justify-content:center; font-size:30px; margin-bottom:20px; animation:float 3.3s ease-in-out infinite;}
-@keyframes float{0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);}}
-.step{display:flex; gap:12px; padding:14px; border-bottom:1px solid rgba(255,255,255,0.08); align-items:flex-start;}
-.step.active{background:linear-gradient(90deg, rgba(63,94,246,0.15), transparent); border-left: 4px solid var(--accent); color: #fff;}
-.step.dim{opacity:0.35;}
+/* Layout Adattivo: Stretto su mobile, Largo su PC */
+.sp-root{ max-width: 800px; margin: 0 auto; padding: 20px; }
+.sp-shell{ border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,.02); box-shadow: var(--shadow); overflow: hidden; }
+.sp-top{ padding: 16px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.brand{ font-weight: 900; letter-spacing: 1px; }
+.btn{ border: none; border-radius: 18px; padding: 15px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+.btn-primary{ background: var(--accent); color: white; width: 100%; font-size: 18px; }
+.btn-ghost{ background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.card{ background: rgba(255,255,255,.05); border-radius: 20px; padding: 20px; margin-bottom: 15px; }
+.step.active{ color: var(--gold); font-weight: 800; }
+.step.dim{ opacity: 0.5; }
+.hidden{ display: none; }
 </style>
 </head>
 <body>
@@ -48,89 +34,91 @@ body{
 
 <script>
 (()=>{"use strict";
-/* --- ENGINE CORE v1.3 --- */
 const DB={
   small:[
-    {id:"s01",badge:"🌙",title:"Segnale Perduto",story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.",
-     goal:"Riaccendere l’antenna della base.",propHero:"📡",steps:[
-       "Trova l’antenna (un calzino pulito) e stringila forte.",
-       "Portala nella tua base (un tappeto o sotto un tavolo).",
-       "Fai 3 piccoli 'bip' lenti: bip… bip… bip…"
-     ],finale:"Gran Finale 🌟: Segnale ripristinato. Missione compiuta Comandante!",q:"Curiosità Spaziale 🤔: Quale pianeta visiteresti per primo?"
-    },
-    {id:"s02",badge:"🔋",title:"Cristallo Energia",story:"I motori della nave sono quasi scarichi.",
-     goal:"Portare nuova energia al modulo centrale.",propHero:"🔋",steps:[
-       "Trova un cristallo (un libro o un foglio).",
-       "Portalo al petto per scaldarlo per 5 secondi.",
-       "Appoggialo piano nella tua base sussurrando 'Energia'..."
-     ],finale:"Gran Finale 🌟: Motori stabili e pronti al salto spaziale!",q:"Curiosità Spaziale 🤔: Dove nasconderesti il cristallo per tenerlo al sicuro?"
-    }
-  ],
-  legend:{
-    id:"L01",title:"Sincronia Stellare 🤝",
-    story:"Per ripartire serve la spinta coordinata di due astronauti.",
-    goal:"Collaborazione totale con il genitore.",propHero:"🤝",
-    steps:[
-      "Prenditi per mano con il genitore: ora siete un solo equipaggio.",
-      "Fate 5 passi lentissimi insieme verso la base senza staccarvi mai.",
-      "Contate insieme ad alta voce: '3... 2... 1... Decollo!'"
-    ],
-    finale:"Gran Finale 🌟: Siete una squadra formidabile!",
-    q:"Curiosità Spaziale 🤔: Cosa vi è piaciuto di più del muovervi insieme?"
-  }
+    {id:"s01",badge:"🌙",title:"Segnale Perduto",story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.",goal:"Riaccendere l’antenna della base.",prop:"un calzino",steps:["Trovalo e stringilo forte.","Portalo nella base (tappeto).","Fai 3 bip lenti."],finale:"Segnale tornato!",q:"A chi scriveresti?"}
+  ]
 };
 
-let state = { fsm:"WELCOME", audio:false, step:0, quest:null };
+const LEGEND={
+  title:"Sincronia Stellare 🤝",
+  story:"Il motore ha bisogno di due piloti sincronizzati.",
+  goal:"Muovetevi insieme come un solo equipaggio.",
+  steps:["Genitore e bambino si prendono per mano.","Fate 5 passi lentissimi insieme senza lasciarvi.","Sussurrate 'Pronti al lancio' nello stesso istante."],
+  finale:"Siete una squadra imbattibile!",
+  q:"Cosa vi è piaciuto fare insieme?"
+};
 
-function speak(text){
-  if(!state.audio) return;
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang="it-IT"; u.rate=0.88; u.pitch=1.02;
-  speechSynthesis.speak(u);
-}
+let state = { fsm:"WELCOME", audio:false, count:0, step:0, quest:null };
+
+const AudioEng = {
+  speak(text){
+    if(!state.audio) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang="it-IT"; u.rate=0.9;
+    speechSynthesis.speak(u);
+  }
+};
 
 function render(){
   const root = document.getElementById("SPARKPLAY_APP");
-  if(state.fsm === "WELCOME"){
-    root.innerHTML = `<div class="sp-shell">
-      <div class="sp-top"><div class="brand">SPARKPLAY</div><div class="badge" onclick="toggleAudio()">${state.audio?'🔊 ON':'🔈 OFF'}</div></div>
-      <div class="sp-body">
-        <div class="orb">🚀</div><h1 style="font-weight:900; margin-bottom:10px;">Benvenuto Comandante</h1>
-        <p style="color:var(--muted); line-height:1.5; margin-bottom:20px;">Le missioni di oggi richiedono calma e precisione. Posa lo schermo, attiva la mente.</p>
-        <button class="btn btn-primary" onclick="startQuest()">AVVIA MISSIONE</button>
-        <div style="height:12px"></div>
-        <button class="btn btn-ghost" onclick="startLegend()">SINCRONIA STELLARE 🤝</button>
-      </div></div>`;
-  } else {
-    const q = state.quest;
-    root.innerHTML = `<div class="sp-shell">
-      <div class="sp-top"><div class="brand">${q.title}</div><div class="badge" onclick="toggleAudio()">${state.audio?'🔊':'🔈'}</div></div>
-      <div class="sp-body">
-        <div class="card" style="font-size:14px;"><b>Contesto:</b> ${q.story}</div>
-        <div class="card" style="font-size:14px; border-color:var(--accent);"><b>Obiettivo:</b> ${q.goal}</div>
-        <div class="card" style="background:rgba(0,0,0,0.2); padding:0;">
-          ${q.steps.map((t,i)=>`<div class="step ${i===state.step?'active':'dim'}"><b>${i+1}</b> ${t}</div>`).join("")}
+  if(state.fsm === "WELCOME") {
+    root.innerHTML = `
+      <div class="sp-shell">
+        <div class="sp-top"><div class="brand">SPARKPLAY 🚀</div></div>
+        <div class="sp-body" style="padding:20px;">
+          <h1>Benvenuto</h1>
+          <button class="btn btn-primary" onclick="toggleAudio()">${state.audio ? '🔊 Audio Attivo' : '🔈 Audio Disattivato'}</button>
+          <div style="height:10px"></div>
+          <button class="btn btn-ghost" onclick="start()">Inizia Gioco</button>
         </div>
-        <button class="btn btn-primary" onclick="nextStep()">
-          ${state.step < q.steps.length-1 ? 'PROSSIMO PASSO' : 'COMPLETATO ✅'}
-        </button>
-      </div></div>`;
+      </div>`;
+  } else if(state.fsm === "QUEST") {
+    const q = state.quest;
+    root.innerHTML = `
+      <div class="sp-shell">
+        <div class="sp-top">
+          <button class="btn btn-ghost" onclick="toggleAudio()">${state.audio ? '🔊' : '🔈'}</button>
+          <div class="brand">${q.title}</div>
+          <button class="btn btn-ghost" onclick="home()">Home</button>
+        </div>
+        <div class="sp-body" style="padding:20px;">
+          <div class="card">${q.story}</div>
+          <div class="card"><b>Obiettivo:</b> ${q.goal}</div>
+          <div class="step-box">
+            ${q.steps.map((s,i)=>`<div class="step ${i===state.step?'active':'dim'}">${i+1}. ${s}</div>`).join("")}
+          </div>
+          <div style="height:20px"></div>
+          <button class="btn btn-primary" onclick="nextStep()">${state.step < q.steps.length-1 ? 'Prossimo Passo' : 'Gran Finale 🌟'}</button>
+        </div>
+      </div>`;
   }
 }
 
-window.toggleAudio = () => { state.audio = !state.audio; render(); if(state.audio) speak("Audio attivato"); };
-window.startQuest = () => { state.fsm="QUEST"; state.quest=DB.small[Math.floor(Math.random()*DB.small.length)]; state.step=0; render(); speak(state.quest.steps[0]); };
-window.startLegend = () => { state.fsm="QUEST"; state.quest=DB.legend; state.step=0; render(); speak(state.quest.steps[0]); };
+window.toggleAudio = () => { state.audio = !state.audio; render(); if(state.audio) AudioEng.speak("Audio attivato"); };
+window.start = () => { state.fsm = "QUEST"; state.quest = DB.small[0]; state.step = 0; render(); speakCurrent(); };
+window.home = () => { state.fsm = "WELCOME"; render(); };
 window.nextStep = () => {
-  if(state.step < state.quest.steps.length-1){
-    state.step++; render(); speak(state.quest.steps[state.step]);
+  if(state.step < state.quest.steps.length - 1) {
+    state.step++;
+    render(); speakCurrent();
   } else {
-    speak(state.quest.finale + " " + state.quest.q);
-    alert(state.quest.finale + "\n\n" + state.quest.q);
-    state.fsm="WELCOME"; render();
+    finish();
   }
 };
+
+function speakCurrent(){
+  const q = state.quest;
+  if(state.step < q.steps.length) AudioEng.speak(q.steps[state.step]);
+}
+
+function finish(){
+  const q = state.quest;
+  AudioEng.speak(q.finale + ". Curiosità Spaziale. " + q.q);
+  alert(q.finale + "\n\nCuriosità Spaziale: " + q.q);
+  window.home();
+}
 
 render();
 })();
