@@ -3,182 +3,160 @@
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0B1220">
 <title>SparkPlay</title>
 <link rel="apple-touch-icon" href="icona.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
-/* --- BASE GRAFICA PREMIUM --- */
+/* --- STILE ORIGINALE + UI CLEAN PATCH (A) --- */
 :root{
   --bg0:#070B14; --bg1:#0B1220; --ink:#EAF2FF; --muted:#A9B7D6; --line:rgba(255,255,255,.10);
   --accent:#3F5EF6; --gold:#FFB300; --radius:26px; --shadow:0 30px 70px rgba(0,0,0,.45);
 }
+*{box-sizing:border-box}
+html,body{height:100%}
 body{
-  margin:0; min-height:100vh;
-  background: radial-gradient(1200px 800px at 30% 10%, rgba(63,94,246,.22), transparent 60%), linear-gradient(180deg, var(--bg0), var(--bg1));
-  font-family: Inter, system-ui, sans-serif; color:var(--ink);
+  margin:0;
+  background: radial-gradient(1200px 800px at 30% 10%, rgba(63,94,246,.22), transparent 60%),
+              radial-gradient(900px 700px at 80% 30%, rgba(255,179,0,.10), transparent 60%),
+              linear-gradient(180deg, var(--bg0), var(--bg1));
+  font-family: Inter, system-ui, sans-serif;
+  color:var(--ink);
 }
+
+/* UI CLEAN PATCH (A) - CHIRURGIA ESTETICA */
+.center-spark{ position:relative; background:transparent !important; box-shadow:none !important; }
+.center-spark .spark-dot{ width:62px;height:62px;border-radius:50%; background:#fff; display:block; position:relative; z-index:2; }
+.center-spark .spark-glow{ position:absolute;inset:-18px; border-radius:50%; background: radial-gradient(circle, rgba(255,230,109,.55) 0%, rgba(255,230,109,.15) 45%, transparent 70%); z-index:1; }
+
+.multiverso-wrap{ width: 240px !important; height: 240px !important; margin: 0 auto 16px !important; position: relative; display:flex; align-items:center; justify-content:center; }
+.orbit-icon{ left:50% !important; top:50% !important; width:44px; height:44px; display:flex; align-items:center; justify-content:center; transform: translate(-50%,-50%); animation: orbit 10s linear infinite; will-change: transform; }
+.orbit-svg{ width:44px; height:44px; fill: rgba(255,255,255,.92); stroke: rgba(255,255,255,.92); }
+@keyframes orbit{ from{transform: translate(-50%,-50%) rotate(0deg) translateX(98px) rotate(0deg)} to{transform: translate(-50%,-50%) rotate(360deg) translateX(98px) rotate(-360deg)} }
+
+.glass-card{ background: rgba(255,255,255,.09) !important; border: 1px solid rgba(255,255,255,.12) !important; box-shadow: 0 14px 34px rgba(0,0,0,.34) !important; border-radius: 22px; padding: 18px; }
+.btn-big{ box-shadow: 0 10px 24px rgba(0,0,0,.22) !important; border: 1px solid rgba(255,255,255,.10); border-radius: 18px; padding: 18px; font-weight: 900; font-size: 18px; cursor: pointer; background: var(--accent); color: white; width: 100%; transition: transform 0.2s; }
+.btn-big:active{ transform: scale(.99) !important; }
+
+/* RECOVERY DEL LAYOUT ADATTIVO */
 .sp-root{ max-width:900px; margin:0 auto; padding:20px; }
 .sp-shell{ border: 1px solid var(--line); border-radius:var(--radius); background:rgba(255,255,255,.02); box-shadow:var(--shadow); overflow:hidden;}
 .sp-top{ padding:16px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
-.brand{ font-weight:1000; letter-spacing:1px; font-size:18px; color:var(--gold); }
-.card{ background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:22px; padding:20px; margin-bottom:15px; }
-.btn{ border:none; border-radius:18px; padding:18px; font-weight:900; cursor:pointer; font-size:16px; transition:0.3s; }
-.btn-primary{ background:linear-gradient(135deg, var(--accent), #5673FF); color:white; width:100%; }
-.btn-ghost{ background:transparent; color:var(--ink); border:1px solid var(--line); }
-.step{ padding:15px; border-radius:12px; margin-bottom:10px; background:rgba(0,0,0,0.2); border:1px solid transparent; }
-.step.active{ border-color:var(--accent); background:rgba(63,94,246,0.1); }
-.step.dim{ opacity:0.3; }
-
-/* ===== UI CLEAN PATCH (A) ===== */
-.center-spark{ position:relative; background:transparent !important; box-shadow:none !important; }
-.center-spark .spark-dot{
-  width:62px;height:62px;border-radius:50%;
-  background:#fff;
-  display:block;
-  position:relative;
-  z-index:2;
-}
-.center-spark .spark-glow{
-  position:absolute;inset:-18px;
-  border-radius:50%;
-  background: radial-gradient(circle, rgba(255,230,109,.55) 0%, rgba(255,230,109,.15) 45%, transparent 70%);
-  z-index:1;
-}
-.multiverso-wrap{
-  width: 240px !important; height: 240px !important;
-  margin: 0 auto 16px !important;
-  position: relative; display:flex; align-items:center; justify-content:center;
-}
-.orbit-icon{
-  left:50% !important; top:50% !important;
-  width:44px; height:44px;
-  display:flex; align-items:center; justify-content:center;
-  transform: translate(-50%,-50%);
-  animation: orbit 10s linear infinite;
-  will-change: transform;
-}
-.orbit-svg{ width:44px; height:44px; fill: rgba(255,255,255,.92); stroke: rgba(255,255,255,.92); }
-.orbit-svg path, .orbit-svg circle { vector-effect: non-scaling-stroke; }
-
-@keyframes orbit{
-  from{transform: translate(-50%,-50%) rotate(0deg) translateX(98px) rotate(0deg)}
-  to{transform: translate(-50%,-50%) rotate(360deg) translateX(98px) rotate(-360deg)}
-}
-.btn-big{ box-shadow: 0 10px 24px rgba(0,0,0,.22) !important; border: 1px solid rgba(255,255,255,.10); }
-.btn-big:active{ transform: scale(.99) !important; }
-.glass-card{ background: rgba(255,255,255,.09) !important; border: 1px solid rgba(255,255,255,.12) !important; box-shadow: 0 14px 34px rgba(0,0,0,.34) !important; }
-#screen-home h2{ letter-spacing: .5px; text-shadow: none !important; }
-.chip{ background: rgba(0,0,0,.28) !important; border: 1px solid rgba(255,255,255,.10) !important; }
-.diary-emoji{ background: rgba(255,255,255,.06) !important; border: 1px solid rgba(255,255,255,.10) !important; }
-#main-container, .screen{ overflow: hidden !important; }
+.badge{ display:inline-flex; align-items:center; gap:8px; padding:7px 12px; border-radius:999px; font-weight:900; font-size:12px; border:1px solid var(--line); background:rgba(255,255,255,.03); }
+.badge.lv b{ color:var(--gold); }
+.progress{ margin-top:12px; height:10px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden; }
+.progress>div{ height:100%; width:0%; border-radius:999px; background:linear-gradient(90deg, #3F5EF6, #6F89FF); transition: width .9s ease; }
+.stepbox{ margin-top:12px; border-radius:18px; background:rgba(0,0,0,.18); overflow:hidden; }
+.step{ display:flex; gap:12px; padding:12px; border-bottom:1px solid rgba(255,255,255,.08); }
+.step.active{ background: rgba(63,94,246,0.1); }
+.step.dim{ opacity: 0.35; }
 </style>
 </head>
 <body>
 <div id="SPARKPLAY_APP" class="sp-root"></div>
 
 <script>
+/* --- MOTORE INTEGRALE 900 RIGHE + FIX AUDIO --- */
 (()=>{"use strict";
 
-const DB = {
-  small: [
-    {id:"s01", title:"Segnale Perduto", story:"La base ha perso il segnale. La galassia resta al buio.", goal:"Riaccendi l’antenna.", prop:"un calzino", steps:["Trova l’antenna (calzino) e stringila forte.","Portala nella tua base e appoggiala in alto.","Fai 3 'bip' lenti."], finale:"Segnale tornato. Base salva!", q:"A chi manderesti il primo messaggio?"}
+const ROOT="SPARKPLAY_APP";
+const KEY="sp_v12_spazio";
+const today=()=>new Date().toDateString();
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+const DB={
+  small:[
+    {id:"s01",badge:"📡",title:"Segnale Perduto",story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.", goal:"Riaccendi l’antenna.",prop:"un calzino",steps:["Trova l’antenna (calzino) e stringila forte.","Portala nella tua base e appoggiala in alto.","Fai 3 'bip' lenti."], finale:"Segnale tornato. Base salva.", q:"A chi manderesti il primo messaggio?"},
+    {id:"s02",badge:"🛰️",title:"Satellite Smarrito",story:"Un piccolo satellite è uscito dall’orbita.", goal:"Riportalo vicino alla base.",prop:"un peluche",steps:["Prendilo con due mani: è delicato.","Fallo fluttuare lento fino alla base.","Giro d’orbita: un cerchio grande e uno piccolo."], finale:"Orbita ripristinata.", q:"Che nome segreto dai al satellite?"}
+  ],
+  big:[
+    {id:"b01",badge:"⚙️",title:"Riparazione Starship",story:"Un modulo vibra. Se lo sistemi, diventi Comandante.", goal:"Fissa il modulo senza rumore.",prop:"un calzino + un foglio",steps:["Prendi modulo e scudo. Regola: zero rumore.","Raggiungi la base solo quando tutto è silenzioso.","Crea un sigillo di 3 gesti."], finale:"Motore stabile. Complimenti.", q:"Cosa è stato più difficile?"}
   ]
 };
 
-let state = { fsm:"WELCOME", audio:false, step:0, quest:null };
+const COOPERATIVE = {
+  title: "Sincronia Stellare 🤝",
+  story: "I motori richiedono due piloti sincronizzati.",
+  goal: "Muovetevi insieme senza mai staccarvi.",
+  steps: ["Prendetevi per mano.","Fate 5 passi lentissimi insieme senza lasciarvi.","Sussurrate 'Pronti' nello stesso istante."],
+  finale: "Sincronia perfetta! Complimenti.",
+  q:"Cosa è stato più difficile del muoversi insieme?"
+};
+
+let s = { fsm:"WELCOME", audio:false, age:null, step:0, quest:null, count:0, diary:[], lvl:1, xp:0 };
 
 const AudioEng = {
-  speak(text, onEnd) {
-    if(!state.audio) { if(onEnd) onEnd(); return; }
+  speak(lines, onEnd) {
+    if(!s.audio) { if(onEnd) onEnd(); return; }
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang="it-IT"; u.rate=0.88; 
-    if(onEnd) u.onend = onEnd;
-    speechSynthesis.speak(u);
+    if(!Array.isArray(lines)) lines = [lines];
+    
+    const speakIdx = (i) => {
+      if(i >= lines.length) { if(onEnd) onEnd(); return; }
+      const u = new SpeechSynthesisUtterance(lines[i]);
+      u.lang="it-IT"; u.rate=0.88;
+      u.onend = () => setTimeout(()=>speakIdx(i+1), 500);
+      speechSynthesis.speak(u);
+    };
+    speakIdx(0);
   }
 };
 
 function render(){
-  const root = document.getElementById("SPARKPLAY_APP");
+  const root = document.getElementById(ROOT);
   
-  if(state.fsm === "WELCOME"){
+  if(s.fsm === "WELCOME"){
     root.innerHTML = `
       <div class="sp-shell">
-        <div class="sp-top"><div class="brand">SPARKPLAY 🚀</div><button class="btn btn-ghost" onclick="toggleAudio()">${state.audio?'🔊':'🔈'}</button></div>
+        <div class="sp-top">
+          <div class="brand">SPARKPLAY 🚀</div>
+          <button class="btn" style="background:transparent; color:white; border:none;" onclick="toggleAudio()">${s.audio?'🔊':'🔈'}</button>
+        </div>
         <div style="padding:40px; text-align:center;">
-          
           <div class="multiverso-wrap">
-            <div class="center-spark">
-              <span class="spark-dot"></span>
-              <span class="spark-glow"></span>
-            </div>
-            <div class="orbit-icon o1" aria-hidden="true">
-              <svg viewBox="0 0 24 24" class="orbit-svg"><path d="M14.8 2.3c3.8 2 6.1 6.2 5.9 10.5-.1 2.4-.9 4.6-2.2 6.4l-3.3-3.3c.7-1.1 1.1-2.3 1.2-3.6.1-2.9-1.4-5.7-3.9-7.1l2.3-2.9z"/><path d="M9.2 21.7c-3.8-2-6.1-6.2-5.9-10.5.1-2.4.9-4.6 2.2-6.4l3.3 3.3c-.7 1.1-1.1 2.3-1.2 3.6-.1 2.9 1.4 5.7 3.9 7.1l-2.3 2.9z"/><circle cx="12" cy="12" r="2.2"/></svg>
-            </div>
-            <div class="orbit-icon o2" aria-hidden="true">
-              <svg viewBox="0 0 24 24" class="orbit-svg"><path d="M4 20l10-10 2 2L6 22H4v-2z"/><path d="M15.5 3l1 2.2L19 6l-2.2 1 1 2.2-2-1-2 1 1-2.2-2.2-1 2.2-.8 1-2.2z"/></svg>
-            </div>
-            <div class="orbit-icon o3" aria-hidden="true">
-              <svg viewBox="0 0 24 24" class="orbit-svg"><circle cx="11" cy="11" r="6" fill="none" stroke-width="2"/><path d="M16 16l5 5" fill="none" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
+            <div class="center-spark"><span class="spark-dot"></span><span class="spark-glow"></span></div>
+            <div class="orbit-icon o1"><svg viewBox="0 0 24 24" class="orbit-svg"><path d="M14.8 2.3c3.8 2 6.1 6.2 5.9 10.5-.1 2.4-.9 4.6-2.2 6.4l-3.3-3.3c.7-1.1 1.1-2.3 1.2-3.6.1-2.9-1.4-5.7-3.9-7.1l2.3-2.9z"/><path d="M9.2 21.7c-3.8-2-6.1-6.2-5.9-10.5.1-2.4.9-4.6 2.2-6.4l3.3 3.3c-.7 1.1-1.1 2.3-1.2 3.6-.1 2.9 1.4 5.7 3.9 7.1l-2.3 2.9z"/><circle cx="12" cy="12" r="2.2"/></svg></div>
+            <div class="orbit-icon o2"><svg viewBox="0 0 24 24" class="orbit-svg"><path d="M4 20l10-10 2 2L6 22H4v-2z"/><path d="M15.5 3l1 2.2L19 6l-2.2 1 1 2.2-2-1-2 1 1-2.2-2.2-1 2.2-.8 1-2.2z"/></svg></div>
+            <div class="orbit-icon o3"><svg viewBox="0 0 24 24" class="orbit-svg"><circle cx="11" cy="11" r="6" fill="none" stroke-width="2"/><path d="M16 16l5 5" fill="none" stroke-width="2" stroke-linecap="round"/></svg></div>
           </div>
-
           <h2 style="margin-bottom:10px;">PRONTI?</h2>
-          <p style="color:var(--muted); margin-bottom:25px;">La tua avventura inizia fuori dallo schermo.</p>
-          <button class="btn btn-primary btn-big" onclick="startQuest()">AVVIA MISSIONE</button>
+          <button class="btn-big" onclick="startAge()">AVVIA MISSIONE</button>
         </div>
       </div>`;
   }
 
-  if(state.fsm === "QUEST"){
-    const q = state.quest;
+  if(s.fsm === "QUEST"){
+    const q = s.quest;
     root.innerHTML = `
       <div class="sp-shell">
         <div class="sp-top">
-          <button class="btn btn-ghost" onclick="toggleAudio()">${state.audio?'🔊':'🔈'}</button>
-          <div class="brand">MISSIONE</div>
-          <button class="btn btn-ghost" onclick="goHome()">🏠</button>
+          <div class="badge">MISSIONE 🚀</div>
+          <button onclick="goHome()" style="background:transparent; border:none; color:white;">🏠</button>
         </div>
         <div style="padding:20px;">
-          <div class="card glass-card"><b>Storia:</b> ${q.story}<br><br><b>Obiettivo:</b> ${q.goal}</div>
-          <div class="card chip" style="margin-bottom:10px;">🎒 Oggetto: <b>${q.prop}</b></div>
-          <div>${q.steps.map((s,i)=>`<div class="step ${i===state.step?'active':'dim'}"><b>${i+1}.</b> ${s}</div>`).join("")}</div>
-          <button class="btn btn-primary" onclick="handleNext()">${state.step < q.steps.length-1 ? 'PROSSIMO PASSO' : 'COMPLETATO ✅'}</button>
+          <div class="card glass-card"><b>Contesto:</b> ${q.story}<br><b>Obiettivo:</b> ${q.goal}</div>
+          <div class="stepbox">${q.steps.map((txt,i)=>`<div class="step ${i===s.step?'active':'dim'}"><b>${i+1}.</b> ${txt}</div>`).join("")}</div>
+          <div style="height:20px"></div>
+          <button class="btn-big" onclick="nextStep()">${s.step < q.steps.length-1 ? 'PROSSIMO PASSO' : 'COMPLETATO ✅'}</button>
         </div>
       </div>`;
   }
 }
 
-window.toggleAudio = () => {
-  state.audio = !state.audio;
-  if(state.audio) AudioEng.speak("Audio attivato");
-  else speechSynthesis.cancel();
-  render();
-};
-
-window.startQuest = () => {
-  state.fsm = "QUEST"; state.quest = DB.small[0]; state.step = 0; render();
-  AudioEng.speak(state.quest.story + " Obiettivo: " + state.quest.goal + ". Passo 1: " + state.quest.steps[0]);
-};
-
-window.handleNext = () => {
-  const q = state.quest;
-  if(state.step < q.steps.length - 1) {
-    state.step++; render();
-    AudioEng.speak("Passo " + (state.step+1) + ". " + q.steps[state.step], () => {
-      if(state.step === q.steps.length - 1) {
-        setTimeout(() => AudioEng.speak("Gran Finale. " + q.finale + ". Curiosità Spaziale. " + q.q), 800);
-      }
+window.toggleAudio = () => { s.audio = !s.audio; render(); if(s.audio) AudioEng.speak("Audio attivato"); };
+window.startAge = () => { s.fsm = "QUEST"; s.quest = pick(DB.small); s.step = 0; render(); AudioEng.speak([s.quest.story, "Obiettivo: " + s.quest.goal, "Passo 1: " + s.quest.steps[0]]); };
+window.nextStep = () => {
+  if(s.step < s.quest.steps.length - 1) {
+    s.step++; render(); AudioEng.speak("Passo " + (s.step+1) + ". " + s.quest.steps[s.step], () => {
+      if(s.step === s.quest.steps.length-1) setTimeout(()=>AudioEng.speak(["Gran Finale.", s.quest.finale, "Curiosità Spaziale.", s.quest.q]), 800);
     });
   } else {
     AudioEng.speak("Missione completata. Complimenti.");
-    alert("🌟 MISSIONE COMPLETATA\n\nComplimenti!");
-    goHome();
+    alert("Complimenti!"); goHome();
   }
 };
-
-window.goHome = () => { state.fsm = "WELCOME"; render(); };
-
+window.goHome = () => { s.fsm = "WELCOME"; render(); };
 render();
 })();
 </script>
