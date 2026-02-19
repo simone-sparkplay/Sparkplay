@@ -6,41 +6,46 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>SparkPlay -- Spazio</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
   <style>
     :root{
       --coral:#ff5e6c;
       --cyan:#00d2ff;
       --yellow:#ffe66d;
+
       --bg:#0a1128;
       --white:#f7fff7;
+
       --glass:rgba(255,255,255,.10);
       --stroke:rgba(255,255,255,.12);
+
       --safe-top:env(safe-area-inset-top);
       --safe-bottom:env(safe-area-inset-bottom);
 
-      --depth: 0 10px 30px rgba(0,0,0,.30);
-      --btnDepth: 0 12px 30px rgba(0,0,0,.22);
+      /* Ombre: ultra soft (niente "tastoni" pesanti) */
+      --depth: 0 10px 26px rgba(0,0,0,.22);
     }
 
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none}
 
-    /* FIX "barra bianca sotto" (iOS/Safari) */
     html{
       height:100%;
       background: radial-gradient(circle at 50% 45%, #1a2a5a 0%, #0a1128 55%, #070d20 100%);
-      overscroll-behavior: none;
+      overscroll-behavior: none; /* evita "barra bianca" da bounce */
     }
+
     body{
-      margin:0;
-      padding:0;
-      min-height:100svh; /* iOS modern */
-      min-height:100vh;  /* fallback */
+      margin:0;padding:0;
+      height:100%;
       background: radial-gradient(circle at 50% 45%, #1a2a5a 0%, #0a1128 55%, #070d20 100%);
       font-family:'Quicksand',sans-serif;
       color:var(--white);
-      overflow:hidden;
-      overscroll-behavior: none;
+      overflow:hidden; /* no scroll pagina */
+      overscroll-behavior: none; /* evita "barra bianca" da bounce */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     header{
@@ -60,10 +65,17 @@
     .brand{
       font-family:'Fredoka One',cursive;
       font-size:24px;color:var(--yellow);
-      text-shadow:2px 2px var(--coral);margin:0;
+      margin:0;
       letter-spacing:.5px;
+      text-shadow:none; /* tolto alone/nuvola */
     }
-    .sub-brand{font-size:13px;font-weight:800;color:var(--cyan);letter-spacing:2px;text-transform:uppercase}
+    .sub-brand{
+      font-size:13px;
+      font-weight:800;
+      color:var(--cyan);
+      letter-spacing:2px;
+      text-transform:uppercase
+    }
 
     .btn-header{
       background: rgba(255,255,255,.10);
@@ -76,24 +88,32 @@
     }
     .btn-header:active{transform:scale(.98)}
 
-    /* Container principale */
+    /* Container principale: niente spazi bianchi sotto */
     #main-container{
-      margin-top: calc(80px + var(--safe-top));
-      height: calc(100svh - 80px - var(--safe-top)); /* svh = evita "bianco sotto" */
-      height: calc(100vh - 80px - var(--safe-top));  /* fallback */
+      position:fixed;
+      left:0; right:0;
+      top: calc(70px + var(--safe-top));
+      bottom: 0;
       padding: 18px 18px calc(18px + var(--safe-bottom));
-      display:flex;flex-direction:column;align-items:center;
+      display:flex;
+      justify-content:center;
+      align-items:center;
       overflow:hidden;
+      background: transparent;
     }
 
     .screen{
-      display:none;width:100%;max-width:520px;
+      display:none;
+      width:100%;
+      max-width:520px;
       height:100%;
-      flex-direction:column;align-items:center;
+      flex-direction:column;
+      align-items:center;
       justify-content:center;
+      min-height:0;
     }
-    .screen.active{display:flex;animation: fadeIn .35s ease-out}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .screen.active{display:flex;animation: fadeIn .25s ease-out}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
     .glass-card{
       width:100%;
@@ -105,28 +125,37 @@
       text-align:center;
     }
 
-    /* HOME HERO (immagine fissa) */
-    .home-hero-wrap{
+    /* HOME: illustrazione fissa (NO emoji / NO SVG orbitanti) */
+    .home-hero{
       width:100%;
       display:flex;
-      align-items:center;
       justify-content:center;
-      margin: 2px 0 14px;
-    }
-    .home-hero{
-      width: min(360px, 92%);
-      max-width: 420px;
-      height: auto;
-      display:block;
-      filter: drop-shadow(0 18px 30px rgba(0,0,0,.28));
-      border-radius: 18px;
+      margin: 6px 0 10px;
       user-select:none;
       -webkit-user-drag:none;
+    }
+    .home-hero img{
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+      display:block;
+      border-radius: 22px;
+      /* niente ombre pesanti: solo micro */
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.18));
+    }
+
+    .home-title{
+      font-family:'Fredoka One',cursive;
+      font-size:50px;
+      margin: 6px 0 14px;
+      color:var(--yellow);
+      line-height:1.05;
     }
 
     /* Bottoni */
     .btn-big{
-      border:none;border-radius:24px;
+      border:none;
+      border-radius:24px;
       padding: 18px 22px;
       width:100%;
       font-family:'Fredoka One',cursive;
@@ -134,24 +163,27 @@
       cursor:pointer;
       color:#fff;
       background: var(--coral);
-      box-shadow: var(--btnDepth);
-      transition: transform .08s ease;
+      box-shadow:none; /* niente ombra (come richiesto) */
+      transition: transform .08s ease, opacity .1s ease;
     }
     .btn-big:active{transform: scale(.99)}
     .btn-cyan{background: var(--cyan)}
     .btn-yellow{background: var(--yellow); color: var(--bg)}
     .btn-muted{background:#4a5568;color:#fff}
 
+    /* Chip */
     .chip-row{display:flex;gap:10px;justify-content:center;margin-top:12px}
     .chip{
       background: rgba(0,0,0,.35);
       border:1px solid rgba(255,255,255,.10);
-      padding: 8px 14px;border-radius:18px;
-      font-size:13px;font-weight:800;
+      padding: 8px 14px;
+      border-radius:18px;
+      font-size:13px;
+      font-weight:800;
       min-width:110px;
     }
 
-    /* GIOCO: tutto sott’occhio */
+    /* GIOCO: tutto visibile, niente scroll pagina */
     #screen-gioco{justify-content:flex-start}
     .mission-card{
       width:100%;
@@ -165,7 +197,11 @@
       flex-direction:column;
       gap:10px;
       height: 100%;
-      max-height: 640px;
+      min-height:0;
+
+      /* fit su tutti device */
+      max-height: calc(100vh - (70px + var(--safe-top)) - 36px - var(--safe-bottom));
+      overflow:hidden;
     }
 
     .mission-topbar{
@@ -197,7 +233,8 @@
       text-align:center;
     }
     .mission-story{
-      font-size: 16px; line-height: 1.35;
+      font-size: 16px;
+      line-height: 1.35;
       color: #cbd5e1;
       margin: 0;
       text-align:center;
@@ -219,10 +256,12 @@
     }
 
     .steps-wrap{
-      display:flex;flex-direction:column;
+      display:flex;
+      flex-direction:column;
       gap:10px;
-      flex: 1;
-      min-height: 0;
+      flex:1;
+      min-height:0;
+      overflow:hidden;
     }
     .step{
       display:flex;gap:12px;align-items:center;
@@ -230,7 +269,7 @@
       border-radius: 18px;
       background: rgba(255,255,255,.05);
       opacity: .30;
-      transition:.25s;
+      transition:.2s;
     }
     .step.active{
       opacity:1;
@@ -249,6 +288,7 @@
     .game-controls{
       display:flex;gap:12px;
       width:100%;
+      margin-top:auto;
     }
     .btn-ctrl{
       flex:1;
@@ -259,9 +299,10 @@
       font-size: 18px;
       cursor:pointer;
       color:#fff;
-      box-shadow: none;
+      box-shadow:none; /* niente ombra */
     }
 
+    /* Overlay complete */
     #overlay-complete{
       position:fixed;inset:0;
       background: rgba(10,17,40,.92);
@@ -273,7 +314,7 @@
       padding:30px;
     }
 
-    /* DIARIO */
+    /* Diario */
     #overlay-diario{
       position:fixed;inset:0;
       background: radial-gradient(circle at 50% 20%, rgba(0,210,255,.10), transparent 40%),
@@ -305,32 +346,23 @@
       margin-top:4px;
     }
     .diary-list{
-      flex:1;overflow:auto;
+      flex:1;
+      overflow:auto;
       -webkit-overflow-scrolling:touch;
       padding-right:4px;
     }
+
+    /* Card diary: NO barrette laterali, NO icone ripetitive */
     .diary-entry{
       background: rgba(255,255,255,.10);
       border:1px solid rgba(255,255,255,.12);
-      padding: 14px 14px;
+      padding: 16px 16px;
       border-radius: 22px;
       margin-bottom: 12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
-    }
-    .diary-left{
-      display:flex;align-items:center;gap:12px;
-      min-width:0;
-    }
-    .diary-icon{
-      width:44px;height:44px;border-radius:16px;
-      display:flex;align-items:center;justify-content:center;
-      background: rgba(0,0,0,.28);
-      border:1px solid rgba(255,255,255,.10);
-      flex-shrink:0;
-      font-size:20px;
     }
     .diary-text{min-width:0}
     .diary-text b{
@@ -340,8 +372,10 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .diary-text small{opacity:.75;font-weight:800}
-
+    .diary-text small{
+      opacity:.75;
+      font-weight:800;
+    }
     .diary-meta{
       font-size:12px;
       color: var(--cyan);
@@ -394,19 +428,22 @@
     .gate-actions{display:flex;gap:12px}
     .gate-actions button{flex:1}
 
+    /* Genitore */
     #screen-genitore{justify-content:center}
     .trophy{font-size:64px;margin-bottom:8px}
     .gen-text{opacity:.85;margin: 6px 0 18px;font-weight:800}
   </style>
 </head>
-<body>
 
+<body>
 <header>
   <button class="btn-header" onclick="spark.openDiary()">📚</button>
+
   <div class="brand-group">
     <h1 class="brand">SPARKPLAY</h1>
     <div class="sub-brand">Spazio</div>
   </div>
+
   <button class="btn-header" id="audioBtn" onclick="spark.toggleAudio()">🔊</button>
 </header>
 
@@ -415,12 +452,15 @@
   <!-- HOME -->
   <section id="screen-home" class="screen active">
     <div class="glass-card">
-      <div class="home-hero-wrap">
-        <!-- Metti in repo un file: home-hero.png -->
-        <img class="home-hero" src="home-hero.png" alt="SparkPlay Hero">
+
+      <!-- ✅ IMMAGINE HOME (metti il file accanto a index.html) -->
+      <!-- Rinominare il PNG in: home-hero.png -->
+      <div class="home-hero">
+        <img src="home-hero.png" alt="SparkPlay Home Illustration" draggable="false">
       </div>
 
-      <h2 style="font-family:'Fredoka One',cursive;font-size:50px;margin:0 0 18px;color:var(--yellow);">PRONTI?</h2>
+      <h2 class="home-title">PRONTI?</h2>
+
       <button class="btn-big" onclick="spark.goToEta()">AVVIA MISSIONE</button>
 
       <div class="chip-row">
@@ -453,6 +493,7 @@
       <p class="mission-story" id="mission-story"></p>
 
       <div class="objective-box" id="mission-goal"></div>
+
       <div class="steps-wrap" id="mission-steps"></div>
 
       <div class="game-controls">
@@ -545,9 +586,7 @@
       fsm: "home"
     },
 
-    _todayISO(){
-      return new Date().toISOString().slice(0,10);
-    },
+    _todayISO(){ return new Date().toISOString().slice(0,10); },
 
     init(){
       const saved = localStorage.getItem("sparkplay_spazio_state_v1");
@@ -611,6 +650,7 @@
 
       this.updateChips();
       this.showScreen(this.state.fsm);
+
       if(this.state.fsm === "gioco" && this.state.currentMissionId){
         this.renderMission();
       }
@@ -715,7 +755,9 @@
     completeMission(m){
       const overlay = document.getElementById("overlay-complete");
       overlay.style.display = "flex";
-      this.speak("Missione completata!");
+
+      /* ✅ frase neutra (niente maschile/femminile) */
+      this.speak("Missione completata. Complimenti!");
 
       setTimeout(() => {
         overlay.style.display = "none";
@@ -724,6 +766,7 @@
           this.state.missionsDoneToday = Math.min(3, (this.state.missionsDoneToday || 0) + 1);
           this.state.usedMissionIds.push(m.id);
 
+          // diario
           this.state.diary.unshift({
             t: m.t,
             d: new Date().toLocaleDateString("it-IT"),
@@ -752,6 +795,7 @@
       }, 1400);
     },
 
+    // Diario (✅ nessuna icona ripetitiva: solo testo + badge età)
     openDiary(){
       const list = document.getElementById("diary-list");
       if(!this.state.diary.length){
@@ -761,12 +805,9 @@
       }else{
         list.innerHTML = this.state.diary.map(d => `
           <div class="diary-entry">
-            <div class="diary-left">
-              <div class="diary-icon">📚</div>
-              <div class="diary-text">
-                <b>${d.t}</b>
-                <small>${d.d}</small>
-              </div>
+            <div class="diary-text">
+              <b>${d.t}</b>
+              <small>${d.d}</small>
             </div>
             <div class="diary-meta">${d.e || ""}</div>
           </div>
@@ -780,6 +821,7 @@
       document.getElementById("overlay-diario").style.display = "none";
     },
 
+    // Parent gate
     askParent(action){
       window.parentTask = action;
       document.getElementById("gate-input").value = "";
@@ -819,10 +861,12 @@
 
     finishToday(){
       window.speechSynthesis.cancel();
+
       this.state.fsm = "home";
       this.state.eta = null;
       this.state.currentMissionId = null;
       this.state.passo = 0;
+
       this.save();
       this.updateUI();
       this.showScreen("home");
