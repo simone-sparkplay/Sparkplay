@@ -1,44 +1,37 @@
 <!doctype html>
 <html lang="it">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0B1220">
-    <title>SparkPlay — Spazio</title>
-    <link rel="apple-touch-icon" href="icona.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg0: #070B14; --bg1: #0B1220; --ink: #EAF2FF; --muted: #A9B7D6;
-            --accent: #3F5EF6; --gold: #FFB300; --radius: 26px; --line: rgba(255,255,255,.10);
-        }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            margin: 0; min-height: 100vh; color: var(--ink);
-            font-family: 'Inter', system-ui, sans-serif;
-            background: radial-gradient(1200px 800px at 30% 10%, rgba(63,94,246,.15), transparent 60%),
-                        linear-gradient(180deg, var(--bg0), var(--bg1));
-            display: flex; justify-content: center;
-        }
-        /* Layout Adattivo Premium */
-        .sp-root { width: 100%; max-width: 900px; padding: 20px; padding-top: max(20px, env(safe-area-inset-top)); }
-        .sp-shell { border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,.02); backdrop-filter: blur(10px); overflow: hidden; }
-        .sp-top { padding: 16px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
-        .brand { font-weight: 900; letter-spacing: 1px; color: var(--gold); font-size: 18px; }
-        .card { background: rgba(255,255,255,.05); border: 1px solid var(--line); border-radius: 22px; padding: 20px; margin-bottom: 15px; }
-        .btn { border: none; border-radius: 18px; padding: 18px; font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 16px; }
-        .btn-primary { background: var(--accent); color: white; width: 100%; box-shadow: 0 10px 30px rgba(63,94,246,0.3); }
-        .btn-ghost { background: rgba(255,255,255,0.05); color: var(--ink); border: 1px solid var(--line); }
-        .step { padding: 15px; border-radius: 14px; margin-bottom: 8px; background: rgba(0,0,0,0.2); border: 1px solid transparent; }
-        .step.active { border-color: var(--accent); background: rgba(63,94,246,0.1); }
-        .step.dim { opacity: 0.35; }
-        /* Icone SVG per stabilità su Mac/iPhone */
-        .icon-svg { width: 40px; height: 40px; fill: var(--gold); margin-bottom: 10px; }
-        .hidden { display: none; }
-    </style>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SparkPlay</title>
+<link rel="apple-touch-icon" href="icona.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+/* --- RIPRISTINO GRAFICA ORIGINALE ZIP --- */
+:root{
+  --bg0:#070B14; --bg1:#0B1220; --ink:#EAF2FF; --muted:#A9B7D6; --line:rgba(255,255,255,.10);
+  --accent:#3F5EF6; --gold:#FFB300; --radius:26px; --shadow:0 30px 70px rgba(0,0,0,.45);
+}
+body{
+  margin:0; min-height:100vh;
+  background: radial-gradient(1200px 800px at 30% 10%, rgba(63,94,246,.22), transparent 60%), linear-gradient(180deg, var(--bg0), var(--bg1));
+  font-family: Inter, system-ui, sans-serif; color:var(--ink);
+}
+.sp-root{ max-width:900px; margin:0 auto; padding:20px; }
+.sp-shell{ border:1px solid var(--line); border-radius:var(--radius); background:rgba(255,255,255,.02); box-shadow:var(--shadow); overflow:hidden;}
+.sp-top{ padding:16px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+.brand{ font-weight:1000; letter-spacing:1px; font-size:18px; color:var(--gold); }
+.card{ background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:22px; padding:20px; margin-bottom:15px; }
+.btn{ border:none; border-radius:18px; padding:18px; font-weight:900; cursor:pointer; font-size:16px; transition:0.3s; }
+.btn-primary{ background:linear-gradient(135deg, var(--accent), #5673FF); color:white; width:100%; box-shadow:0 10px 20px rgba(63,94,246,0.3); }
+.btn-ghost{ background:transparent; color:var(--ink); border:1px solid var(--line); }
+.step{ padding:15px; border-radius:12px; margin-bottom:10px; background:rgba(0,0,0,0.2); border:1px solid transparent; }
+.step.active{ border-color:var(--accent); background:rgba(63,94,246,0.1); }
+.step.dim{ opacity:0.3; }
+.orb{ width:60px; height:60px; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; border-radius:18px; background:rgba(63,94,246,0.2); border:1px solid rgba(63,94,246,0.4); animation: float 3s infinite ease-in-out; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+svg { width:32px; height:32px; fill:white; }
+</style>
 </head>
 <body>
 <div id="SPARKPLAY_APP" class="sp-root"></div>
@@ -48,26 +41,18 @@
 
 const DB = {
   small: [
-    {id:"s01", title:"Segnale Perduto", story:"La base ha perso il segnale. La galassia resta al buio.", goal:"Riaccendi l’antenna.", prop:"un calzino", steps:["Trova l’antenna (calzino) e stringila forte.","Portala nella tua base e appoggiala in alto.","Fai 3 'bip' lenti."], finale:"Segnale tornato. Base salva.", q:"A chi manderesti il primo messaggio?"}
-  ],
-  cooperative: {
-    title: "Sincronia Stellare 🤝",
-    story: "Il motore richiede due piloti sincronizzati.",
-    goal: "Muovetevi insieme senza mai staccarvi.",
-    steps: ["Prendetevi per mano.","Fate 5 passi lentissimi insieme senza lasciarvi.","Sussurrate 'Pronti' nello stesso istante."],
-    finale: "Sincronia perfetta! Siete una squadra.",
-    q:"Cosa è stato più difficile del muoversi insieme?"
-  }
+    {id:"s01", badge:"<svg viewBox='0 0 24 24'><path d='M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z'/></svg>", title:"Segnale Perduto", story:"La base ha perso il segnale. Senza di te, la galassia resta al buio.", goal:"Riaccendi l’antenna della base.", prop:"un calzino", steps:["Trova l’antenna (calzino) e stringila forte.","Portala nella tua base e appoggiala in alto.","Fai 3 'bip' lenti."], finale:"Segnale tornato. Base salva!", q:"A chi manderesti il primo messaggio?"}
+  ]
 };
 
-let state = { fsm:"WELCOME", audio:false, step:0, quest:null, count:0 };
+let state = { fsm:"WELCOME", audio:false, step:0, quest:null };
 
 const AudioEng = {
   speak(text, onEnd) {
     if(!state.audio) { if(onEnd) onEnd(); return; }
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang="it-IT"; u.rate=0.88; // Velocità calibrata per Mac/iPhone
+    u.lang="it-IT"; u.rate=0.88; 
     if(onEnd) u.onend = onEnd;
     speechSynthesis.speak(u);
   }
@@ -80,11 +65,11 @@ function render(){
     root.innerHTML = `
       <div class="sp-shell">
         <div class="sp-top"><div class="brand">SPARKPLAY 🚀</div><button class="btn btn-ghost" onclick="toggleAudio()">${state.audio?'🔊':'🔈'}</button></div>
-        <div style="padding:30px; text-align:center;">
-          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
-          <h1>Pronti al Lancio?</h1>
-          <p style="color:var(--muted)">Leggi la missione, posa il telefono e gioca.</p>
-          <button class="btn btn-primary" onclick="startQuest()">INIZIA MISSIONE</button>
+        <div style="padding:40px; text-align:center;">
+          <div class="orb">${DB.small[0].badge}</div>
+          <h1 style="margin-bottom:10px;">Benvenuto, Esploratore</h1>
+          <p style="color:var(--muted); margin-bottom:25px;">Usa il telefono per leggere, poi posalo e gioca nel mondo reale.</p>
+          <button class="btn btn-primary" onclick="startQuest()">INIZIA AVVENTURA</button>
         </div>
       </div>`;
   }
@@ -99,10 +84,10 @@ function render(){
           <button class="btn btn-ghost" onclick="goHome()">🏠</button>
         </div>
         <div style="padding:20px;">
-          <div class="card"><b>Storia:</b> ${q.story}<br><b>Obiettivo:</b> ${q.goal}</div>
-          <div class="card" style="background:rgba(255,179,0,0.05)">🎒 Prendi: <b>${q.prop || 'nessun oggetto'}</b></div>
+          <div class="card"><b>Storia:</b> ${q.story}<br><br><b>Obiettivo:</b> ${q.goal}</div>
+          <div class="card" style="background:rgba(255,179,0,0.05)">🎒 Oggetto: <b>${q.prop}</b></div>
           <div>${q.steps.map((s,i)=>`<div class="step ${i===state.step?'active':'dim'}"><b>${i+1}.</b> ${s}</div>`).join("")}</div>
-          <button class="btn btn-primary" onclick="handleNext()">${state.step < q.steps.length-1 ? 'PROSSIMO PASSO' : 'COMPLETATO ✅'}</button>
+          <button class="btn btn-primary" onclick="handleNext()">${state.step < q.steps.length-1 ? 'PROSSIMO PASSO' : 'COMPLETA MISSIONE ✅'}</button>
         </div>
       </div>`;
   }
@@ -117,7 +102,7 @@ window.toggleAudio = () => {
 
 window.startQuest = () => {
   state.fsm = "QUEST"; state.quest = DB.small[0]; state.step = 0; render();
-  AudioEng.speak(state.quest.story + " Obiettivo: " + state.quest.goal + " Prendi " + state.quest.prop + " Passo uno: " + state.quest.steps[0]);
+  AudioEng.speak(state.quest.story + " Obiettivo: " + state.quest.goal + ". Passo 1: " + state.quest.steps[0]);
 };
 
 window.handleNext = () => {
@@ -126,11 +111,11 @@ window.handleNext = () => {
     state.step++; render();
     AudioEng.speak("Passo " + (state.step+1) + ". " + q.steps[state.step], () => {
       if(state.step === q.steps.length - 1) {
-        setTimeout(() => AudioEng.speak("Gran Finale. " + q.finale + " Curiosità Spaziale. " + q.q), 800);
+        setTimeout(() => AudioEng.speak("Gran Finale. " + q.finale + ". Curiosità Spaziale. " + q.q), 800);
       }
     });
   } else {
-    AudioEng.speak("Missione completata. Complimenti."); // Audio neutro e professionale
+    AudioEng.speak("Missione completata. Complimenti.");
     alert("🌟 MISSIONE COMPLETATA\n\nComplimenti!");
     goHome();
   }
