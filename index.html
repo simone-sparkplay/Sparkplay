@@ -19,7 +19,13 @@
       --coral:#ff5e6c;
       --cyan:#00d2ff;
       --yellow:#ffe66d;
-      --bg:#0a1128;
+      --bg: radial-gradient(
+  circle at 50% 20%,
+  #3a7bd5 0%,
+  #2b5876 40%,
+  #1e2a78 70%,
+  #0a0f2c 100%
+);
       --white:#f7fff7;
       --glass:rgba(255,255,255,.10);
       --stroke:rgba(255,255,255,.12);
@@ -80,14 +86,17 @@
     }
     .btn-header:active{transform:scale(.98)}
 
-    #main-container{
-      position:absolute;
-      top: calc(70px + var(--safe-top));
-      left:0; right:0; bottom:0;
-      padding: 18px 18px calc(18px + var(--safe-bottom));
-      display:flex;flex-direction:column;align-items:center;
-      overflow:hidden;
-    }
+#main-container{
+  position: relative;
+  min-height: 100dvh;
+  width: 100%;
+  padding: 18px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+}
 
     .screen{
       display:none;width:100%;max-width:520px;
