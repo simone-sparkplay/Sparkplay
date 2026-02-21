@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#070d20">
-
   <title>SparkPlay -- Spazio</title>
 
-  <!-- ICONA APP / PWA -->
-  <link rel="apple-touch-icon" href="icona.png">
-  <link rel="icon" type="image/png" href="icona.png">
+  <!-- PWA / iOS icon hooks (usa icona.png in root) -->
+  <link rel="icon" href="icona.png?v=1">
+  <link rel="apple-touch-icon" href="icona.png?v=1">
+  <meta name="theme-color" content="#0a1128">
 
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
@@ -20,44 +19,32 @@
       --coral:#ff5e6c;
       --cyan:#00d2ff;
       --yellow:#ffe66d;
-      --bg:#070d20;
-      --bg2:#0b1a3a;
+      --bg:#0a1128;
       --white:#f7fff7;
-
-      --glass:rgba(255,255,255,.14);
+      --glass:rgba(255,255,255,.10);
       --stroke:rgba(255,255,255,.12);
-
       --safe-top:env(safe-area-inset-top);
       --safe-bottom:env(safe-area-inset-bottom);
-
       --depth: 0 10px 30px rgba(0,0,0,.30);
       --btnDepth: 0 12px 30px rgba(0,0,0,.22);
-
-      /* iOS vh fix (set via JS) */
-      --vh: 1vh;
     }
 
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none}
-
     html, body{
-      margin:0;padding:0;
-      width:100%;
       height:100%;
-      background: var(--bg);
-      overflow:hidden;              /* evita "bounce" e bordi bianchi */
-      overscroll-behavior: none;    /* android/chrome */
+      width:100%;
+      margin:0;
+      padding:0;
+      background: radial-gradient(circle at 50% 35%, #1a2a5a 0%, #0a1128 55%, #070d20 100%);
+      overflow:hidden;            /* elimina "striscia bianca" da overscroll */
+      overscroll-behavior:none;   /* elimina bounce bianco */
       -webkit-overflow-scrolling: auto;
       font-family:'Quicksand',sans-serif;
       color:var(--white);
     }
 
     body{
-      /* Background più "day sky premium" (meno cupo) */
-      background:
-        radial-gradient(circle at 50% 22%, rgba(0,210,255,.18) 0%, transparent 42%),
-        radial-gradient(circle at 82% 12%, rgba(255,230,109,.16) 0%, transparent 40%),
-        linear-gradient(180deg, #122a6a 0%, #0b1a3a 55%, #070d20 100%);
-      height: calc(var(--vh) * 100);
+      position:fixed; inset:0;    /* evita scroll di pagina su iOS */
     }
 
     header{
@@ -66,7 +53,7 @@
       padding-top: var(--safe-top);
       display:flex;align-items:center;justify-content:space-between;
       padding-left:20px;padding-right:20px;
-      background: rgba(10,17,40,.62);
+      background: rgba(10,17,40,.78);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       z-index: 100;
@@ -77,8 +64,7 @@
     .brand{
       font-family:'Fredoka One',cursive;
       font-size:24px;color:var(--yellow);
-      text-shadow:2px 2px var(--coral);
-      margin:0;
+      text-shadow:2px 2px var(--coral);margin:0;
       letter-spacing:.5px;
     }
     .sub-brand{font-size:13px;font-weight:800;color:var(--cyan);letter-spacing:2px;text-transform:uppercase}
@@ -94,10 +80,10 @@
     }
     .btn-header:active{transform:scale(.98)}
 
-    /* Container principale */
     #main-container{
-      margin-top: calc(80px + var(--safe-top));
-      height: calc((var(--vh) * 100) - 80px - var(--safe-top));
+      position:absolute;
+      top: calc(70px + var(--safe-top));
+      left:0; right:0; bottom:0;
       padding: 18px 18px calc(18px + var(--safe-bottom));
       display:flex;flex-direction:column;align-items:center;
       overflow:hidden;
@@ -109,12 +95,12 @@
       flex-direction:column;align-items:center;
       justify-content:center;
     }
-    .screen.active{display:flex;animation: fadeIn .35s ease-out}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .screen.active{display:flex;animation: fadeIn .25s ease-out}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
     .glass-card{
       width:100%;
-      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.08));
+      background: var(--glass);
       border: 1px solid var(--stroke);
       border-radius: 30px;
       box-shadow: var(--depth);
@@ -122,23 +108,24 @@
       text-align:center;
     }
 
-    /* HOME HERO (immagine unica, no icone orbit) */
-    .home-hero{
+    /* HOME hero */
+    .hero-wrap{
       width:100%;
-      border-radius:26px;
-      overflow:hidden;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 10px 28px rgba(0,0,0,.22);
-      margin: 6px 0 16px;
+      border-radius:24px;
+      background: rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.10);
+      padding:14px;
+      margin: 0 auto 14px;
     }
-    .home-hero img{
-      display:block;
+    .hero-img{
       width:100%;
       height:auto;
+      display:block;
+      border-radius:18px;
+      background: rgba(0,0,0,.08);
+      border:1px solid rgba(255,255,255,.08);
     }
 
-    /* Bottoni */
     .btn-big{
       border:none;border-radius:24px;
       padding: 18px 22px;
@@ -153,10 +140,9 @@
     }
     .btn-big:active{transform: scale(.99)}
     .btn-cyan{background: var(--cyan)}
-    .btn-yellow{background: var(--yellow); color: #08122a}
+    .btn-yellow{background: var(--yellow); color: var(--bg)}
     .btn-muted{background:#4a5568;color:#fff}
 
-    /* Chip */
     .chip-row{display:flex;gap:10px;justify-content:center;margin-top:12px}
     .chip{
       background: rgba(0,0,0,.35);
@@ -166,11 +152,11 @@
       min-width:110px;
     }
 
-    /* GIOCO */
+    /* GAME */
     #screen-gioco{justify-content:flex-start;}
     .mission-card{
       width:100%;
-      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.08));
+      background: var(--glass);
       border:1px solid var(--stroke);
       border-radius:30px;
       box-shadow: var(--depth);
@@ -180,9 +166,8 @@
       flex-direction:column;
       gap:10px;
       height: 100%;
-      max-height: 640px;
+      max-height: 680px;
     }
-
     .mission-topbar{
       display:flex;align-items:center;justify-content:space-between;
       gap:10px;
@@ -203,7 +188,6 @@
       cursor:pointer;
     }
     .btn-link:active{transform:scale(.99)}
-
     .mission-title{
       font-family:'Fredoka One',cursive;
       font-size: 22px;
@@ -232,12 +216,14 @@
       text-transform:uppercase;
       font-size: 13px;
     }
-
     .steps-wrap{
       display:flex;flex-direction:column;
       gap:10px;
       flex: 1;
       min-height: 0;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      padding-right:4px;
     }
     .step{
       display:flex;gap:12px;align-items:center;
@@ -245,13 +231,13 @@
       border-radius: 18px;
       background: rgba(255,255,255,.05);
       opacity: .30;
-      transition:.25s;
+      transition:.2s;
     }
     .step.active{
       opacity:1;
       background: rgba(255,255,255,.14);
       border: 2px solid rgba(255,230,109,.75);
-      transform: scale(1.01);
+      transform: scale(1.005);
     }
     .step-num{
       width:32px;height:32px;border-radius:50%;
@@ -260,7 +246,6 @@
       font-weight:900;
       flex-shrink:0;
     }
-
     .game-controls{display:flex;gap:12px;width:100%;}
     .btn-ctrl{
       flex:1;
@@ -289,10 +274,9 @@
     /* DIARIO */
     #overlay-diario{
       position:fixed;inset:0;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(0,210,255,.16) 0%, transparent 42%),
-        radial-gradient(circle at 22% 88%, rgba(255,94,108,.14) 0%, transparent 40%),
-        linear-gradient(180deg, #0b1a3a 0%, #070d20 100%);
+      background: radial-gradient(circle at 50% 20%, rgba(0,210,255,.10), transparent 40%),
+                  radial-gradient(circle at 20% 90%, rgba(255,94,108,.10), transparent 40%),
+                  var(--bg);
       z-index:2000;
       display:none;
       flex-direction:column;
@@ -323,14 +307,12 @@
       -webkit-overflow-scrolling:touch;
       padding-right:4px;
     }
-
-    /* Entry pulita: NO barrette laterali, UNA icona fissa 📚 */
     .diary-entry{
       background: rgba(255,255,255,.10);
       border:1px solid rgba(255,255,255,.12);
       padding: 14px 14px;
       border-radius: 22px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -343,7 +325,7 @@
     .diary-emoji{
       width:44px;height:44px;border-radius:16px;
       display:flex;align-items:center;justify-content:center;
-      background: rgba(0,0,0,.22);
+      background: rgba(0,0,0,.28);
       border:1px solid rgba(255,255,255,.10);
       flex-shrink:0;
       font-size:22px;
@@ -366,7 +348,7 @@
       flex-shrink:0;
       padding:8px 10px;
       border-radius:14px;
-      background: rgba(0,0,0,.28);
+      background: rgba(0,0,0,.30);
       border:1px solid rgba(255,255,255,.10);
     }
 
@@ -416,14 +398,13 @@
 </head>
 
 <body>
-
 <header>
-  <button class="btn-header" onclick="spark.openDiary()">📚</button>
+  <button class="btn-header" onclick="spark.openDiary()" aria-label="Diario">📚</button>
   <div class="brand-group">
     <h1 class="brand">SPARKPLAY</h1>
     <div class="sub-brand">Spazio</div>
   </div>
-  <button class="btn-header" id="audioBtn" onclick="spark.toggleAudio()">🔊</button>
+  <button class="btn-header" id="audioBtn" onclick="spark.toggleAudio()" aria-label="Audio">🔊</button>
 </header>
 
 <div id="main-container">
@@ -431,8 +412,8 @@
   <!-- HOME -->
   <section id="screen-home" class="screen active">
     <div class="glass-card">
-      <div class="home-hero" aria-hidden="true">
-        <img src="home-hero.png" alt="">
+      <div class="hero-wrap">
+        <img class="hero-img" src="home-hero.png" alt="SparkPlay mission box" loading="eager" decoding="async">
       </div>
 
       <h2 style="font-family:'Fredoka One',cursive;font-size:50px;margin:0 0 18px;color:var(--yellow);">PRONTI?</h2>
@@ -527,14 +508,6 @@
 </div>
 
 <script>
-  // iOS / Safari: elimina barre bianche e problemi 100vh (address bar dinamica)
-  function setVH(){
-    const vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  }
-  setVH();
-  window.addEventListener('resize', setVH);
-
   const DB = {
     "5-7": [
       { id:"s1", t:"Antenna Spaziale", s:"La base ha perso il segnale satellitare.", o:"Crea un'antenna magica.", p:["Trova un cucchiaio o un oggetto lungo.","Portalo vicino a una finestra e tienilo in alto.","Dì 'Bip Bip Bip' per 3 volte."] },
@@ -552,7 +525,7 @@
       { id:"b5", t:"Equilibrio Orbitale", s:"L'astronave sta oscillando troppo.", o:"Stabilizza il centro di massa.", p:["Metti un libro o un cuscino sulla testa.","Fai 5 passi senza farlo cadere.","Girati su te stesso e siediti piano."] },
       { id:"b6", t:"Lancio d'Emergenza", s:"La capsula deve essere pronta al distacco.", o:"Controlla i sistemi di lancio.", p:["Fai 10 saltelli sul posto velocissimi.","Fai 3 respiri profondi per calmare il cuore.","Conta da 10 a 0 a voce alta e dì 'Lancio!'"] }
     ],
-    "spec": { id:"spec", t:"Sincronia Stellare 🤝", s:"I motori richiedono due piloti sincronizzati.", o:"Muovetevi insieme.", p:["Prendetevi per mano (Genitore e Bambino).","Fate 10 passi sincronizzati senza lasciarvi.","Sussurrate 'Pronti al lancio' nello stesso istante!"] }
+    "spec": { id:"spec", t:"Sincronia Stellare", s:"I motori richiedono due piloti sincronizzati.", o:"Muovetevi insieme.", p:["Prendetevi per mano (Genitore e Bambino).","Fate 10 passi sincronizzati senza lasciarvi.","Sussurrate 'Pronti al lancio' nello stesso istante!"] }
   };
 
   const spark = {
@@ -569,9 +542,70 @@
       fsm: "home"
     },
 
+    // ===== AUDIO ENGINE (robusto, anti-taglio) =====
+    audio: {
+      token: 0,
+      speaking: false,
+      getProfile(){
+        const ua = navigator.userAgent || "";
+        const isMac = /Macintosh|Mac OS X/i.test(ua);
+        const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+        // più lento su Mac (Safari/Chrome spesso "corre")
+        return {
+          lang: "it-IT",
+          rate: isMac ? 0.74 : (isIOS ? 0.88 : 0.85),
+          pitch: 1.0,
+          volume: 1.0
+        };
+      },
+      warmupVoices(){
+        try{ window.speechSynthesis.getVoices(); }catch(e){}
+      },
+      stop(){
+        try{ window.speechSynthesis.cancel(); }catch(e){}
+        this.speaking = false;
+        this.token++;
+      },
+      say(text){
+        if(!spark.state.audioOn) return;
+
+        const clean = (text || "").toString().replace(/\s+/g," ").trim();
+        if(!clean) return;
+
+        this.token++;
+        const myToken = this.token;
+
+        // cancella e riparti con micro-delay: evita "frase a metà" su Mac
+        try{ window.speechSynthesis.cancel(); }catch(e){}
+
+        setTimeout(() => {
+          if(myToken !== this.token) return; // è arrivato un nuovo comando nel frattempo
+          const msg = new SpeechSynthesisUtterance(clean);
+          const p = this.getProfile();
+          msg.lang = p.lang;
+          msg.rate = p.rate;
+          msg.pitch = p.pitch;
+          msg.volume = p.volume;
+
+          msg.onstart = () => { if(myToken === this.token) this.speaking = true; };
+          msg.onend = () => { if(myToken === this.token) this.speaking = false; };
+          msg.onerror = () => { if(myToken === this.token) this.speaking = false; };
+
+          try{
+            window.speechSynthesis.speak(msg);
+          }catch(e){
+            this.speaking = false;
+          }
+        }, 70);
+      }
+    },
+
     _todayISO(){ return new Date().toISOString().slice(0,10); },
 
     init(){
+      this.audio.warmupVoices();
+
       const saved = localStorage.getItem("sparkplay_spazio_state_v1");
       const today = this._todayISO();
 
@@ -641,19 +675,9 @@
 
     toggleAudio(){
       this.state.audioOn = !this.state.audioOn;
-      if(!this.state.audioOn) window.speechSynthesis.cancel();
+      if(!this.state.audioOn) this.audio.stop();
       this.updateChips();
       this.save();
-    },
-
-    speak(text){
-      if(!this.state.audioOn) return;
-      window.speechSynthesis.cancel();
-      const msg = new SpeechSynthesisUtterance(text);
-      msg.lang = "it-IT";
-      msg.rate = 0.92;  // più naturale
-      msg.pitch = 1.0;
-      window.speechSynthesis.speak(msg);
     },
 
     goToEta(){ this.showScreen("eta"); },
@@ -676,6 +700,14 @@
       return pool.find(x => x.id === this.state.currentMissionId) || pool[0];
     },
 
+    _speakCurrentStep(){
+      const m = this.getMission();
+      if(!m) return;
+      const stepText = m.p[this.state.passo] || "";
+      const n = this.state.passo + 1;
+      this.audio.say(`Passaggio ${n}. ${stepText}`);
+    },
+
     loadMission(){
       if(!this.state.eta){ this.showScreen("eta"); return; }
       const id = this.pickMissionId();
@@ -688,7 +720,8 @@
       this.showScreen("gioco");
 
       const m = this.getMission();
-      this.speak(m.s + ". OBIETTIVO: " + m.o + ". Passaggio 1: " + m.p[0]);
+      // Intro + primo step (per bambini: più scandito)
+      this.audio.say(`${m.s} Obiettivo. ${m.o}. Passaggio 1. ${m.p[0]}`);
       this.save();
     },
 
@@ -721,7 +754,7 @@
       if(this.state.passo < m.p.length - 1){
         this.state.passo++;
         this.renderMission();
-        this.speak("Passaggio " + (this.state.passo+1) + ": " + m.p[this.state.passo]);
+        this._speakCurrentStep();   // SEMPRE rilegge
         this.save();
       }else{
         this.completeMission(m);
@@ -732,6 +765,7 @@
       if(this.state.passo > 0){
         this.state.passo--;
         this.renderMission();
+        this._speakCurrentStep();   // SEMPRE rilegge anche indietro
         this.save();
       }
     },
@@ -740,8 +774,8 @@
       const overlay = document.getElementById("overlay-complete");
       overlay.style.display = "flex";
 
-      // AUDIO neutro, no maschile/femminile
-      this.speak("Missione completata. Complimenti!");
+      // Neutro + chiaro
+      this.audio.say("Missione completata. Complimenti!");
 
       setTimeout(() => {
         overlay.style.display = "none";
@@ -750,6 +784,7 @@
           this.state.missionsDoneToday = Math.min(3, (this.state.missionsDoneToday || 0) + 1);
           this.state.usedMissionIds.push(m.id);
 
+          // diario
           this.state.diary.unshift({
             t: m.t,
             d: new Date().toLocaleDateString("it-IT"),
@@ -785,6 +820,7 @@
           Nessun ricordo nel diario.<br><span style="opacity:.8">Completa una missione e torna qui ✨</span>
         </div>`;
       }else{
+        // UNA sola icona per tutte le voci: 📚
         list.innerHTML = this.state.diary.map(d => `
           <div class="diary-entry">
             <div class="diary-left">
@@ -825,7 +861,7 @@
           this.renderMission();
           this.showScreen("gioco");
           const ms = DB["spec"];
-          this.speak(ms.s + ". OBIETTIVO: " + ms.o + ". Passaggio 1: " + ms.p[0]);
+          this.audio.say(`${ms.s} Obiettivo. ${ms.o}. Passaggio 1. ${ms.p[0]}`);
         }else{
           this.state.missionsDoneToday = 0;
           this.state.usedMissionIds = [];
@@ -844,11 +880,13 @@
     },
 
     finishToday(){
-      window.speechSynthesis.cancel();
+      this.audio.stop();
+
       this.state.fsm = "home";
       this.state.eta = null;
       this.state.currentMissionId = null;
       this.state.passo = 0;
+
       this.save();
       this.updateUI();
       this.showScreen("home");
