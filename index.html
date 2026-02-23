@@ -1,894 +1,248 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#1b73b9" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="icona.png?v=2">
+<link rel="apple-touch-icon" href="icona.png?v=2">
+<title>SparkPlay -- Spazio</title>
 
-  <title>SparkPlay -- Spazio</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- PWA icons (in root) -->
-  <link rel="icon" href="icona.png?v=1" />
-  <link rel="apple-touch-icon" href="icona.png?v=1" />
+<style>
+:root{
+  --bg:#0a1128;
+  --card:#1f2b4d;
+  --accent:#ff5e6c;
+  --yellow:#ffe66d;
+  --cyan:#00d2ff;
+}
 
-  <!-- Fonts (NON cambio font) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+*{box-sizing:border-box;margin:0;padding:0;}
 
-  <style>
-    :root{
-      --bgTop:#2a8bd2;        /* più "kids", meno dark */
-      --bgMid:#1b73b9;
-      --bgBot:#0b2b4a;
+html,body{
+  height:100%;
+  background:var(--bg);
+  font-family:'Quicksand',sans-serif;
+  overflow:hidden;
+}
 
-      --glass: rgba(255,255,255,.16);
-      --glass2: rgba(255,255,255,.10);
-      --stroke: rgba(255,255,255,.20);
-      --shadow: 0 18px 50px rgba(0,0,0,.28);
+.app{
+  height:calc(var(--vh,1vh)*100);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
 
-      --coral:#ff5e6c;
-      --coral2:#ff7a86;
-      --cyan:#00d2ff;
-      --yellow:#ffe66d;
-      --white:#f7ffff;
+header{
+  padding:20px;
+  text-align:center;
+}
 
-      --safeTop: env(safe-area-inset-top);
-      --safeBot: env(safe-area-inset-bottom);
-    }
+header h1{
+  font-family:'Fredoka One',cursive;
+  color:var(--yellow);
+  font-size:28px;
+}
 
-    /* NIENTE BARRA BIANCA: background sempre pieno + no margin */
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      background: #0b2b4a;
-      overflow: hidden;
-      -webkit-text-size-adjust: 100%;
-      font-family: Quicksand, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      color: var(--white);
-    }
+header span{
+  color:var(--cyan);
+  letter-spacing:4px;
+  font-size:14px;
+}
 
-    /* viewport dinamico: risolve "mezza altezza" su iOS/Safari */
-    .app {
-      min-height: 100vh;
-      min-height: 100svh;
-      min-height: 100dvh;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding-top: calc(14px + var(--safeTop));
-      padding-bottom: calc(14px + var(--safeBot));
-      box-sizing: border-box;
+.screen{
+  flex:1;
+  display:none;
+  padding:20px;
+  overflow:hidden;
+}
 
-      background:
-        radial-gradient(900px 700px at 50% 18%, rgba(255,255,255,.16), transparent 60%),
-        linear-gradient(180deg, var(--bgTop) 0%, var(--bgMid) 45%, var(--bgBot) 100%);
-    }
+.screen.active{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
 
-    /* HEADER */
-    .topbar{
-      width: min(720px, 92vw);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-      padding: 10px 2px 8px;
-      box-sizing: border-box;
-    }
-    .iconBtn{
-      width: 58px;
-      height: 58px;
-      border-radius: 18px;
-      border: 1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.08));
-      box-shadow: 0 10px 24px rgba(0,0,0,.18);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      cursor: pointer;
-    }
-    .iconBtn:active{ transform: scale(.98); }
+.card{
+  width:100%;
+  max-width:480px;
+  background:var(--card);
+  border-radius:28px;
+  padding:28px;
+  text-align:center;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+}
 
-    .brand{
-      display:flex;
-      flex-direction: column;
-      align-items:center;
-      gap: 2px;
-      line-height: 1;
-      user-select:none;
-    }
-    .brand .title{
-      font-family: Fredoka, system-ui;
-      font-weight: 700;
-      letter-spacing: .06em;
-      font-size: clamp(26px, 4.8vw, 42px);
-      color: var(--yellow);
-      text-shadow: 0 8px 22px rgba(0,0,0,.25);
-    }
-    .brand .subtitle{
-      font-family: Quicksand, system-ui;
-      font-weight: 700;
-      letter-spacing: .55em;
-      font-size: clamp(12px, 2.2vw, 16px);
-      color: rgba(0,210,255,.95);
-      text-shadow: 0 6px 18px rgba(0,0,0,.18);
-      transform: translateX(4px);
-    }
+.card img{
+  width:100%;
+  border-radius:20px;
+  margin-bottom:20px;
+}
 
-    /* CARD BASE */
-    .glassCard{
-      width: min(720px, 92vw);
-      border-radius: 34px;
-      border: 1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.08));
-      box-shadow: var(--shadow);
-      padding: 22px;
-      box-sizing: border-box;
-      position: relative;
-      overflow: hidden;
-    }
-    .glassCard::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(520px 280px at 30% 10%, rgba(255,255,255,.18), transparent 55%);
-      pointer-events:none;
-    }
+h2{
+  font-family:'Fredoka One',cursive;
+  color:var(--yellow);
+  font-size:38px;
+  margin-bottom:20px;
+}
 
-    /* SCREENS */
-    .screen{
-      width: 100%;
-      display: none;
-      align-items: center;
-      justify-content: flex-start;
-      flex-direction: column;
-      gap: 16px;
-      flex: 1;
-      padding-top: 10px;
-      box-sizing: border-box;
-    }
-    .screen.active{ display:flex; }
+button{
+  background:var(--accent);
+  border:none;
+  padding:18px;
+  width:100%;
+  border-radius:40px;
+  font-size:20px;
+  font-weight:700;
+  color:white;
+  margin-top:20px;
+}
 
-    /* HOME */
-    .heroFrame{
-      width: 100%;
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.12);
-      padding: 14px;
-      box-sizing: border-box;
-    }
-    .heroImg{
-      width: 100%;
-      height: auto;
-      display:block;
-      border-radius: 18px;
-      background: transparent; /* IMPORTANT: niente "sfondo foto" extra */
-    }
+.step{
+  background:#2d3b66;
+  padding:16px;
+  border-radius:18px;
+  margin-bottom:14px;
+}
 
-    .bigTitle{
-      margin: 6px 0 0;
-      font-family: Fredoka, system-ui;
-      font-weight: 700;
-      font-size: clamp(44px, 7vw, 72px);
-      letter-spacing: .02em;
-      color: var(--yellow);
-      text-align:center;
-      text-shadow: 0 12px 30px rgba(0,0,0,.28);
-    }
+.step-number{
+  background:var(--accent);
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-right:10px;
+  font-weight:bold;
+}
 
-    .primaryBtn{
-      width: 100%;
-      border: none;
-      border-radius: 26px;
-      padding: 18px 18px;
-      font-family: Fredoka, system-ui;
-      font-weight: 700;
-      font-size: clamp(18px, 3.2vw, 26px);
-      letter-spacing: .06em;
-      color: var(--white);
-      background: linear-gradient(180deg, var(--coral2), var(--coral));
-      box-shadow: 0 18px 34px rgba(255,94,108,.22), 0 14px 34px rgba(0,0,0,.20);
-      cursor: pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .primaryBtn:active{ transform: translateY(1px); }
+.diaryItem{
+  display:flex;
+  align-items:center;
+  background:#2d3b66;
+  padding:14px;
+  border-radius:16px;
+  margin-bottom:10px;
+}
 
-    .pills{
-      width:100%;
-      display:flex;
-      gap: 12px;
-      margin-top: 6px;
-    }
-    .pill{
-      flex:1;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.18);
-      padding: 12px 12px;
-      text-align:center;
-      font-weight: 700;
-      letter-spacing: .06em;
-      color: rgba(255,255,255,.90);
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      cursor: pointer;
-    }
-
-    /* GAME */
-    .missionTitle{
-      font-family: Fredoka, system-ui;
-      font-weight: 700;
-      font-size: clamp(26px, 4.8vw, 44px);
-      color: var(--yellow);
-      margin: 0;
-      text-align:center;
-      text-shadow: 0 10px 28px rgba(0,0,0,.24);
-    }
-    .missionIntro{
-      margin: 6px 0 0;
-      font-size: 18px;
-      color: rgba(255,255,255,.92);
-      text-align:center;
-      line-height: 1.35;
-    }
-    .objectiveBox{
-      width: 100%;
-      border-radius: 22px;
-      border: 2px dashed rgba(0,210,255,.55);
-      background: rgba(0,0,0,.14);
-      padding: 14px;
-      text-align:center;
-      box-sizing: border-box;
-      margin-top: 10px;
-    }
-    .objectiveBox .label{
-      font-weight: 800;
-      letter-spacing: .35em;
-      color: rgba(0,210,255,.95);
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-    .objectiveBox .text{
-      font-family: Fredoka, system-ui;
-      font-weight: 700;
-      font-size: 26px;
-      color: var(--white);
-    }
-
-    .steps{
-      width:100%;
-      display:flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 6px;
-    }
-    .step{
-      width:100%;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.08);
-      padding: 14px 14px;
-      display:flex;
-      gap: 12px;
-      align-items: flex-start;
-      box-sizing: border-box;
-    }
-    .stepNum{
-      min-width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, var(--coral2), var(--coral));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight: 800;
-      font-family: Fredoka, system-ui;
-      box-shadow: 0 10px 22px rgba(0,0,0,.18);
-    }
-    .stepText{
-      font-size: 22px;
-      line-height: 1.22;
-      font-weight: 700;
-      color: rgba(255,255,255,.96);
-    }
-    .navRow{
-      width:100%;
-      display:flex;
-      gap: 12px;
-      margin-top: 6px;
-    }
-    .secBtn{
-      flex: 1;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.18);
-      color: rgba(255,255,255,.92);
-      border-radius: 22px;
-      padding: 14px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
-      user-select:none;
-    }
-    .secBtn:active{ transform: translateY(1px); }
-
-    /* DIARIO */
-    .diaryHeader{
-      width:min(720px, 92vw);
-      display:flex;
-      align-items:flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 2px 0;
-      box-sizing: border-box;
-    }
-    .diaryTitle{
-      font-family: Fredoka, system-ui;
-      font-weight: 800;
-      font-size: 48px;
-      margin:0;
-      line-height:1;
-      text-shadow: 0 10px 26px rgba(0,0,0,.24);
-    }
-    .diarySub{
-      margin: 6px 0 0;
-      font-weight: 800;
-      letter-spacing: .50em;
-      color: rgba(0,210,255,.95);
-    }
-    .closeBtn{
-      width: 68px;
-      height: 68px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: linear-gradient(180deg, var(--coral2), var(--coral));
-      color: white;
-      font-size: 34px;
-      font-weight: 900;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      box-shadow: 0 14px 32px rgba(255,94,108,.18), 0 12px 30px rgba(0,0,0,.18);
-    }
-    .closeBtn:active{ transform: scale(.98); }
-
-    .diaryList{
-      width:min(720px, 92vw);
-      display:flex;
-      flex-direction: column;
-      gap: 14px;
-      padding: 12px 0 0;
-      box-sizing: border-box;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      flex: 1;
-      padding-bottom: calc(14px + var(--safeBot));
-    }
-    .diaryItem{
-      border-radius: 26px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.16);
-      padding: 16px;
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 12px;
-      box-shadow: 0 18px 40px rgba(0,0,0,.16);
-    }
-    .diaryLeft{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 0;
-    }
-    .bookIconWrap{
-      width: 54px; height: 54px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.08);
-      display:flex; align-items:center; justify-content:center;
-      flex: 0 0 auto;
-    }
-    .diaryTextWrap{
-      min-width: 0;
-    }
-    .diaryName{
-      font-family: Fredoka, system-ui;
-      font-weight: 800;
-      font-size: 24px;
-      margin:0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .diaryDate{
-      margin: 4px 0 0;
-      color: rgba(255,255,255,.75);
-      font-weight: 700;
-    }
-    .ageBadge{
-      flex: 0 0 auto;
-      padding: 10px 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.16);
-      color: rgba(0,210,255,.95);
-      font-weight: 900;
-      letter-spacing: .08em;
-    }
-
-    /* MODAL (age) */
-    .modalBackdrop{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.38);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      box-sizing: border-box;
-      z-index: 50;
-    }
-    .modalBackdrop.active{ display:flex; }
-
-    .modal{
-      width: min(520px, 92vw);
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,.20);
-      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.10));
-      box-shadow: 0 24px 70px rgba(0,0,0,.35);
-      padding: 18px;
-    }
-    .modal h3{
-      margin: 0;
-      font-family: Fredoka, system-ui;
-      font-size: 28px;
-      color: var(--yellow);
-      text-shadow: 0 10px 22px rgba(0,0,0,.18);
-    }
-    .ageGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .ageBtn{
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.18);
-      color: rgba(255,255,255,.92);
-      border-radius: 18px;
-      padding: 14px;
-      font-weight: 900;
-      letter-spacing: .06em;
-      cursor:pointer;
-    }
-    .ageBtn:active{ transform: translateY(1px); }
-
-    /* SVG book color */
-    .bookSvg path { fill: rgba(0,210,255,.92); }
-    .bookSvg rect { stroke: rgba(0,210,255,.92); fill: transparent; }
-  </style>
+.bookSvg{
+  color:var(--cyan);
+  margin-right:10px;
+}
+</style>
 </head>
 
 <body>
-  <div class="app">
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="iconBtn" id="btnDiary" title="Diario" aria-label="Diario">📚</div>
+<div class="app">
 
-      <div class="brand">
-        <div class="title">SPARKPLAY</div>
-        <div class="subtitle">SPAZIO</div>
-      </div>
+<header>
+  <h1>SPARKPLAY</h1>
+  <span>SPAZIO</span>
+</header>
 
-      <div class="iconBtn" id="btnAudio" title="Audio ON/OFF" aria-label="Audio">
-        🔊
-      </div>
-    </div>
-
-    <!-- HOME -->
-    <div class="screen active" id="screenHome">
-      <div class="glassCard">
-        <div class="heroFrame">
-          <!-- SOLO scatolone: immagine con sfondo trasparente/soft, niente overlay aggiuntivi -->
-          <img class="heroImg" src="home-hero.png?v=1" alt="SparkPlay" />
-        </div>
-
-        <div class="bigTitle">PRONTI?</div>
-
-        <button class="primaryBtn" id="btnStart">AVVIA MISSIONE</button>
-
-        <div class="pills">
-          <div class="pill" id="pillToday">OGGI: 0/3</div>
-          <div class="pill" id="pillAge">ETÀ: --</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- GAME -->
-    <div class="screen" id="screenGame">
-      <div class="glassCard">
-        <h2 class="missionTitle" id="missionTitle">Missione</h2>
-        <div class="missionIntro" id="missionIntro">...</div>
-
-        <div class="objectiveBox">
-          <div class="label">OBIETTIVO</div>
-          <div class="text" id="missionObjective">...</div>
-        </div>
-
-        <div class="steps" id="stepsWrap"></div>
-
-        <div class="navRow">
-          <button class="secBtn" id="btnPrev">INDIETRO</button>
-          <button class="secBtn" id="btnNext">AVANTI</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- DIARY -->
-    <div class="screen" id="screenDiary">
-      <div class="diaryHeader">
-        <div>
-          <h1 class="diaryTitle">DIARIO <span style="font-size:.7em">📚</span></h1>
-          <div class="diarySub">I TUOI RICORDI</div>
-        </div>
-        <div class="closeBtn" id="btnCloseDiary">×</div>
-      </div>
-
-      <div class="diaryList" id="diaryList"></div>
-    </div>
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="card">
+    <img src="home-hero.png" alt="">
+    <h2>PRONTI?</h2>
+    <button onclick="startGame()">AVVIA MISSIONE</button>
   </div>
+</div>
 
-  <!-- AGE MODAL -->
-  <div class="modalBackdrop" id="ageModal">
-    <div class="modal">
-      <h3>Scegli l’età</h3>
-      <div class="ageGrid">
-        <button class="ageBtn" data-age="5-7">5–7</button>
-        <button class="ageBtn" data-age="8-10">8–10</button>
-      </div>
-    </div>
+<!-- GAME -->
+<div id="game" class="screen">
+  <div class="card">
+    <h2>Antenna Spaziale</h2>
+    <div class="step"><span class="step-number">1</span>Trova un cucchiaio o una matita lunga.</div>
+    <div class="step"><span class="step-number">2</span>Mettila in verticale in un bicchiere.</div>
+    <div class="step"><span class="step-number">3</span>Fai finta di inviare un messaggio: "Pronti al decollo?"</div>
+    <button onclick="finishGame()">AVANTI</button>
   </div>
+</div>
 
-  <script>
-    /* =========================
-       STATE
-    ========================== */
-    const screenHome  = document.getElementById('screenHome');
-    const screenGame  = document.getElementById('screenGame');
-    const screenDiary = document.getElementById('screenDiary');
+<!-- DIARIO -->
+<div id="diary" class="screen">
+  <div class="card">
+    <h2>DIARIO</h2>
+    <div id="diaryList"></div>
+    <button onclick="goHome()">CHIUDI</button>
+  </div>
+</div>
 
-    const btnStart = document.getElementById('btnStart');
-    const btnPrev  = document.getElementById('btnPrev');
-    const btnNext  = document.getElementById('btnNext');
+</div>
 
-    const btnDiary      = document.getElementById('btnDiary');
-    const btnCloseDiary = document.getElementById('btnCloseDiary');
+<script>
 
-    const pillToday = document.getElementById('pillToday');
-    const pillAge   = document.getElementById('pillAge');
+/* ---- FIX iOS HEIGHT ---- */
+function setVH(){
+  document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+}
+window.addEventListener('resize', setVH);
+window.addEventListener('orientationchange', setVH);
+setVH();
 
-    const btnAudio = document.getElementById('btnAudio');
+/* ---- AUDIO STABILE ---- */
+let synth = window.speechSynthesis;
+let currentUtterance = null;
 
-    const missionTitle     = document.getElementById('missionTitle');
-    const missionIntro     = document.getElementById('missionIntro');
-    const missionObjective = document.getElementById('missionObjective');
-    const stepsWrap        = document.getElementById('stepsWrap');
+function speak(text){
+  if(currentUtterance){
+    synth.cancel();
+  }
+  currentUtterance = new SpeechSynthesisUtterance(text);
+  currentUtterance.rate = 0.85;
+  currentUtterance.pitch = 1;
+  synth.speak(currentUtterance);
+}
 
-    const diaryList = document.getElementById('diaryList');
+/* ---- NAVIGATION ---- */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
-    const ageModal = document.getElementById('ageModal');
+function startGame(){
+  showScreen('game');
+  speak("Costruiamo un'antenna spaziale.");
+}
 
-    const STORAGE_KEY = 'sparkplay_space_v1';
-    const state = loadState();
+function finishGame(){
+  saveDiary("Antenna Spaziale");
+  speak("Missione completata!");
+  showScreen('home');
+}
 
-    // Missions (Spazio) -- puoi espandere in futuro
-    const MISSIONS = [
-      {
-        title: "Gravità Zero",
-        intro: "La navicella galleggia! Serve un trucco per muoverci senza cadere.",
-        objective: "Fai 3 movimenti "da astronauta".",
-        steps: [
-          "Cammina lentissimo come se fossi sulla Luna.",
-          "Fai 5 saltelli morbidi senza fare rumore.",
-          "Atterra e fai un saluto da comandante."
-        ]
-      },
-      {
-        title: "Polvere di Stelle",
-        intro: "Un’onda di polvere ha coperto i motori.",
-        objective: "Pulisci 3 superfici diverse.",
-        steps: [
-          "Prendi un calzino o un panno morbido.",
-          "Pulisci tre superfici diverse nella stanza.",
-          "Soffia forte su ogni punto pulito!"
-        ]
-      },
-      {
-        title: "Antenna Spaziale",
-        intro: "Dobbiamo inviare un messaggio alla base!",
-        objective: "Costruisci un’antenna.",
-        steps: [
-          "Trova un cucchiaio o una matita lunga.",
-          "Mettila in verticale in un bicchiere.",
-          "Fai finta di inviare un messaggio: "Pronti al decollo!""
-        ]
-      }
-    ];
+function goHome(){
+  showScreen('home');
+}
 
-    let currentMissionIndex = state.currentMissionIndex ?? 0;
+/* ---- DIARIO ---- */
+function bookSvg(){
+  return `
+  <svg class="bookSvg" width="24" height="24" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 4h11a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2V6a2 2 0 0 1 2-2z"/>
+    <path d="M8 8h7"/>
+    <path d="M8 11h7"/>
+    <path d="M8 14h5"/>
+  </svg>`;
+}
 
-    /* =========================
-       AUDIO (fix: lento + mai a metà)
-    ========================== */
-    let audioEnabled = state.audioEnabled ?? true;
+function saveDiary(title){
+  let list = document.getElementById("diaryList");
+  let div = document.createElement("div");
+  div.className="diaryItem";
+  div.innerHTML = bookSvg() + "<span>"+title+"</span>";
+  list.prepend(div);
+}
 
-    function stopSpeak(){
-      try { window.speechSynthesis.cancel(); } catch(e){}
-    }
-
-    function speak(text){
-      // Regola d’oro: prima cancella sempre, così non taglia / non parla a metà
-      stopSpeak();
-      if(!audioEnabled) return;
-      if(!('speechSynthesis' in window)) return;
-
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'it-IT';
-
-      // PIÙ LENTO per 5–7 (e comunque leggibile)
-      const age = state.age || '5-7';
-      u.rate = (age === '5-7') ? 0.85 : 0.95;  // << chirurgico
-      u.pitch = 1.0;
-      u.volume = 1.0;
-
-      window.speechSynthesis.speak(u);
-    }
-
-    // Se l’utente cambia schermata/tab, stop audio
-    document.addEventListener('visibilitychange', () => {
-      if(document.hidden) stopSpeak();
-    });
-
-    /* =========================
-       UI HELPERS
-    ========================== */
-    function showScreen(el){
-      // stop audio quando cambi schermata
-      stopSpeak();
-
-      [screenHome, screenGame, screenDiary].forEach(s => s.classList.remove('active'));
-      el.classList.add('active');
-    }
-
-    function formatDate(d){
-      const dd = String(d.getDate()).padStart(2,'0');
-      const mm = String(d.getMonth()+1).padStart(2,'0');
-      const yy = d.getFullYear();
-      return `${dd}/${mm}/${yy}`;
-    }
-
-    function saveState(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function loadState(){
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw) : {};
-      }catch(e){
-        return {};
-      }
-    }
-
-    function updatePills(){
-      const done = state.todayDone ?? 0;
-      pillToday.textContent = `OGGI: ${done}/3`;
-      pillAge.textContent   = `ETÀ: ${state.age ?? '--'}`;
-    }
-
-    function updateAudioIcon(){
-      btnAudio.textContent = audioEnabled ? '🔊' : '🔇';
-    }
-
-    function openAgeModal(){
-      ageModal.classList.add('active');
-    }
-    function closeAgeModal(){
-      ageModal.classList.remove('active');
-    }
-
-    /* =========================
-       MISSION RENDER
-    ========================== */
-    function renderMission(){
-      const m = MISSIONS[currentMissionIndex];
-
-      missionTitle.textContent = m.title;
-      missionIntro.textContent = m.intro;
-      missionObjective.textContent = m.objective;
-
-      stepsWrap.innerHTML = '';
-      m.steps.forEach((t, i) => {
-        const row = document.createElement('div');
-        row.className = 'step';
-        row.innerHTML = `
-          <div class="stepNum">${i+1}</div>
-          <div class="stepText">${escapeHtml(t)}</div>
-        `;
-        stepsWrap.appendChild(row);
-      });
-
-      // Legge sempre dall’inizio missione (mai a metà)
-      speak(`${m.title}. ${m.intro}. Obiettivo: ${m.objective}. Step 1: ${m.steps[0]}`);
-    }
-
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll('&','&amp;')
-        .replaceAll('<','&lt;')
-        .replaceAll('>','&gt;');
-    }
-
-    /* =========================
-       DIARY (icone NO emoji → SVG = niente quadratini)
-    ========================== */
-    function bookSvg(){
-      return `
-        <svg class="bookSvg" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="5" y="4" width="12" height="16" rx="2" ry="2" stroke-width="2"></rect>
-          <path d="M7 7h8" />
-          <path d="M7 10h8" />
-          <path d="M7 13h6" />
-        </svg>
-      `;
-    }
-
-    function renderDiary(){
-      diaryList.innerHTML = '';
-
-      const items = Array.isArray(state.diary) ? state.diary.slice().reverse() : [];
-      if(items.length === 0){
-        const empty = document.createElement('div');
-        empty.style.opacity = .85;
-        empty.style.fontWeight = 800;
-        empty.style.padding = '18px 4px';
-        empty.textContent = "Ancora nessuna missione salvata.";
-        diaryList.appendChild(empty);
-        return;
-      }
-
-      items.forEach(it => {
-        const row = document.createElement('div');
-        row.className = 'diaryItem';
-        row.innerHTML = `
-          <div class="diaryLeft">
-            <div class="bookIconWrap">${bookSvg()}</div>
-            <div class="diaryTextWrap">
-              <p class="diaryName">${escapeHtml(it.title)}</p>
-              <div class="diaryDate">${escapeHtml(it.date)}</div>
-            </div>
-          </div>
-          <div class="ageBadge">${escapeHtml(it.age || '5-7')}</div>
-        `;
-        diaryList.appendChild(row);
-      });
-    }
-
-    /* =========================
-       GAME FLOW
-    ========================== */
-    function startMission(){
-      // age required
-      if(!state.age){
-        openAgeModal();
-        speak("Scegli l'età per iniziare.");
-        return;
-      }
-      showScreen(screenGame);
-      renderMission();
-    }
-
-    function completeCurrentMission(){
-      const m = MISSIONS[currentMissionIndex];
-      const now = new Date();
-
-      state.diary = Array.isArray(state.diary) ? state.diary : [];
-      state.diary.push({
-        title: m.title,
-        date: formatDate(now),
-        age: state.age
-      });
-
-      // oggi
-      state.todayDone = Math.min(3, (state.todayDone ?? 0) + 1);
-
-      // prossima missione (loop)
-      currentMissionIndex = (currentMissionIndex + 1) % MISSIONS.length;
-      state.currentMissionIndex = currentMissionIndex;
-
-      saveState();
-      updatePills();
-
-      // Torna home
-      showScreen(screenHome);
-      speak("Missione completata! Vuoi fare un'altra missione?");
-    }
-
-    /* =========================
-       EVENTS
-    ========================== */
-    btnStart.addEventListener('click', startMission);
-
-    btnPrev.addEventListener('click', () => {
-      // rilegge sempre dal principio missione corrente
-      renderMission();
-      speak("Ok. Riascoltiamo dall'inizio.");
-    });
-
-    btnNext.addEventListener('click', () => {
-      // Completa missione (per ora: flow semplice e stabile)
-      completeCurrentMission();
-    });
-
-    btnDiary.addEventListener('click', () => {
-      renderDiary();
-      showScreen(screenDiary);
-      speak("Ecco il diario delle missioni.");
-    });
-
-    btnCloseDiary.addEventListener('click', () => {
-      showScreen(screenHome);
-      speak("Tornati alla home.");
-    });
-
-    pillAge.addEventListener('click', () => {
-      openAgeModal();
-      speak("Scegli l'età.");
-    });
-
-    btnAudio.addEventListener('click', () => {
-      audioEnabled = !audioEnabled;
-      state.audioEnabled = audioEnabled;
-      saveState();
-      updateAudioIcon();
-      speak(audioEnabled ? "Audio attivato." : "Audio disattivato.");
-    });
-
-    ageModal.addEventListener('click', (e) => {
-      if(e.target === ageModal) closeAgeModal();
-    });
-
-    ageModal.querySelectorAll('.ageBtn').forEach(b => {
-      b.addEventListener('click', () => {
-        state.age = b.getAttribute('data-age');
-        saveState();
-        updatePills();
-        closeAgeModal();
-        speak(`Perfetto. Età ${state.age}.`);
-      });
-    });
-
-    /* =========================
-       INIT
-    ========================== */
-    updatePills();
-    updateAudioIcon();
-
-    // evita "audio fantasma" all’avvio su alcuni browser
-    stopSpeak();
-  </script>
+</script>
 </body>
 </html>
