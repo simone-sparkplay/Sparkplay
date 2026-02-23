@@ -11,43 +11,53 @@
 <style>
 :root {
   --rossa: #ff5e6c; --blu: #00d2ff; --giallo: #ffe66d;
-  --sfondo: #3a47d5; --latte: #f7fff7;
+  /* COLORE INTERMEDIO: Blu Notte Profondo ma Saturo */
+  --sfondo: #101835; --latte: #f7fff7;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body { 
-  margin: 0; padding: 0; background-color: var(--sfondo); font-family: 'Quicksand', sans-serif; 
-  color: var(--latte); height: 100vh; width: 100vw; overflow: hidden;
-  background-image: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #764ba2 100%);
+  margin: 0; background-color: var(--sfondo); font-family: 'Quicksand', sans-serif; 
+  color: var(--latte); height: 100vh; overflow: hidden;
+  background-image: radial-gradient(circle at 50% 50%, #1a265a 0%, var(--sfondo) 100%);
 }
-.sp-root { max-width: 600px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom); position: relative; overflow-x: hidden; }
+
+/* Fix Barra Bianca */
+.sp-root { max-width: 600px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom); position: relative; overflow: hidden; }
+
 .multiverso-container { width: 100%; height: 180px; margin: 10px 0; position: relative; display: flex; align-items: center; justify-content: center; }
 .icona-mondo { position: absolute; font-size: 50px; animation: orbitaMondi 8s linear infinite; }
-.mondo-1 { animation-delay: 0s; }
-.mondo-2 { animation-delay: -2.66s; }
-.mondo-3 { animation-delay: -5.33s; }
 @keyframes orbitaMondi { from { transform: rotate(0deg) translateX(75px) rotate(0deg); } to { transform: rotate(360deg) translateX(75px) rotate(-360deg); } }
 .centro-spark { width: 70px; height: 70px; background: white; border-radius: 50%; box-shadow: 0 0 40px var(--giallo), 0 0 10px white; z-index: 5; display: flex; align-items: center; justify-content: center; font-size: 35px; }
+
 .sp-top { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
 .brand { font-family: 'Fredoka One', cursive; font-size: 36px; color: var(--giallo); text-shadow: 3px 3px var(--rossa); }
+
 .content-area { flex: 1; display: flex; flex-direction: column; gap: 15px; justify-content: center; align-items: center; width: 100%; }
-.testo-storia { font-size: 20px; line-height: 1.4; text-align: center; }
-.obiettivo-box { border: 3px dashed var(--blu); border-radius: 25px; padding: 15px; text-align: center; font-weight: 700; background: rgba(0,0,0,0.2); width: 100%; }
-.passo { padding: 18px; border-radius: 25px; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-weight: 700; width: 100%; transition: 0.3s; }
-.passo.attivo { background: var(--latte); color: var(--sfondo); transform: scale(1.03); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-.btn { border: none; font-family: 'Fredoka One', cursive; cursor: pointer; transition: 0.2s; border-radius: 25px; }
+.testo-storia { font-size: 20px; line-height: 1.4; text-align: center; font-weight: 500; }
+.obiettivo-box { border: 3px dashed var(--blu); border-radius: 25px; padding: 15px; text-align: center; font-weight: 700; color: var(--blu); background: rgba(255,255,255,0.05); width: 100%; }
+
+.passo { padding: 18px; border-radius: 25px; background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-weight: 700; width: 100%; }
+.passo.attivo { background: var(--latte); color: var(--sfondo); transform: scale(1.03); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+
+.btn { border: none; font-family: 'Fredoka One', cursive; cursor: pointer; border-radius: 25px; }
 .btn-avanti { background: var(--rossa); color: white; padding: 20px; width: 100%; font-size: 22px; box-shadow: 0 6px 0 #c43d4a; }
-#diario-modal { position: fixed; inset: 0; background: linear-gradient(180deg, #4facfe, #764ba2); z-index: 2000; display: none; flex-direction: column; padding: 40px 25px; overflow-y: auto; }
-.scheda-ricordo { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 24px; margin-bottom: 15px; border-left: 8px solid var(--giallo); display: flex; align-items: center; gap: 20px; }
-#overlay-success { position: fixed; inset: 0; pointer-events: none; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 3000; background: rgba(0, 0, 0, 0.8); }
+.btn-avanti:active { transform: translateY(4px); box-shadow: 0 2px 0 #c43d4a; }
+
+#overlay-success { position: fixed; inset: 0; pointer-events: none; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 3000; background: rgba(0, 0, 0, 0.85); }
 .messaggio-vittoria { font-family: 'Fredoka One'; font-size: 44px; color: var(--giallo); text-shadow: 4px 4px var(--rossa); text-align: center; }
+
+#diario-modal { position: fixed; inset: 0; background: var(--sfondo); z-index: 2000; display: none; flex-direction: column; padding: 40px 25px; overflow-y: auto; }
 </style>
 </head>
 <body>
+
 <div id="overlay-success"><div class="messaggio-vittoria">MISSIONE<br>COMPLETATA!</div></div>
+
 <div id="diario-modal">
-    <div class="sp-top"><div class="brand">RICORDI</div><button class="btn" style="background:var(--rossa); color:white; padding:10px 20px;" onclick="chiudiDiario()">CHIUDI</button></div>
-    <div id="lista-diario" style="margin-top:20px;"></div>
+    <div class="sp-top"><div class="brand">DIARIO</div><button class="btn" style="background:var(--rossa); color:white; padding:10px 20px;" onclick="chiudiDiario()">CHIUDI</button></div>
+    <div id="lista-diario"></div>
 </div>
+
 <div id="SPARKPLAY_APP" class="sp-root"></div>
 
 <script>
@@ -55,95 +65,79 @@ body {
 
 const DB = {
   "5-7": [
-    {i:"🧦", t:"SEGNALE PERDUTO", s:"La base ha perso il segnale! La galassia è al buio!", o:"RIACCENDI L'ANTENNA!", p:["Trova un calzino stellare.","Portalo sulla base, sopra il tappeto.","Dì tre volte a voce alta: Bip... Bip... Bip!"]},
-    {i:"🧸", t:"SATELLITE MORBIDO", s:"Un satellite è caduto tra le stelle!", o:"RECUPERALO!", p:["Trova un peluusc-satellite.","Fagli fare un giro intorno al tavolo.","Mettilo a riposare in un posto alto."]}
+    {t:"SEGNALE PERDUTO", s:"La base ha perso il segnale! La galassia è al buio!", o:"RIACCENDI L'ANTENNA!", p:["Trova un cal-zi-no stellare.","Portalo sulla base, sopra il tappeto.","Dì tre volte a voce alta: Bip! Bip! Bip!"]},
+    {t:"SATELLITE MORBIDO", s:"Un satellite è caduto tra le stelle!", o:"RECUPERALO!", p:["Trova un pelu-sh satellite.","Fagli fare un giro intorno al tavolo.","Mettilo a riposare in un posto alto."]}
   ],
   "8-10": [
-    {i:"📄", t:"MODULO VIBRANTE", s:"Il modulo quattro vibra forte. Serve silenzio assoluto!", o:"RIPARA IN SILENZIO", p:["Trova un foglio di carta.","Portalo alla base senza fare rumore.","Piegalo in quattro e mettilo sotto un cuscino."]}
-  ],
-  speciale: {i:"🤝", t:"MISSIONE SINCRONIA 🤝", s:"I motori hanno bisogno di due piloti insieme!", o:"SQUADRA SPAZIALE", p:["Prendetevi per mano.","Fate dieci passi sincronizzati insieme.","Dite: Pronti al lancio... nello stesso istante!"]}
+    {t:"MODULO VIBRANTE", s:"Il modulo quattro vibra forte. Serve silenzio assoluto!", o:"RIPARA IN SILENZIO", p:["Trova un foglio di carta.","Portalo alla base senza fare rumore.","Piegalo in quattro e mettilo sotto un cuscino."]}
+  ]
 };
 
-let s = { fsm:"INIZIO", eta:null, passo:0, missioniFatte:0, missioneAttuale:null, audio:true, diario: [], specialeFatta: false };
+let s = { fsm:"INIZIO", eta:null, passo:0, missioniFatte:0, missioneAttuale:null, audio:true, diario: [] };
 
-function parla(testo, alTermine){
-  if(!s.audio) { if(alTermine) alTermine(); return; }
+function parla(testo){
+  if(!s.audio) return;
   speechSynthesis.cancel();
   const m = new SpeechSynthesisUtterance(testo);
-  m.lang="it-IT"; m.rate=0.85; m.pitch=1.2; 
-  if(alTermine) m.onend = alTermine;
+  m.lang="it-IT"; m.rate=0.85; m.pitch=1.1;
   speechSynthesis.speak(m);
 }
 
 function disegna(){
   const root = document.getElementById("SPARKPLAY_APP");
+  
   if(s.fsm === "INIZIO"){
-    root.innerHTML = `<div class="sp-top"><button class="btn" style="background:none;font-size:32px;" onclick="apriDiario()">📚</button><div class="brand">SPARKPLAY</div><button class="btn" style="background:none;font-size:32px;" onclick="toggleAudio()">${s.audio?'🔊':'🔈'}</button></div>
-      <div class="content-area"><div class="multiverso-container"><div class="centro-spark">✨</div><div class="icona-mondo mondo-1">🚀</div><div class="icona-mondo mondo-2">🪄</div><div class="icona-mondo mondo-3">🔍</div></div><h1 style="color:var(--giallo);font-size:52px;margin:10px 0;">PRONTI?</h1><button class="btn btn-avanti" style="width:90%;" onclick="vaiEta()">INIZIA MISSIONE</button></div>`;
+    root.innerHTML = `
+      <div class="sp-top"><button class="btn" style="background:none;font-size:32px;" onclick="apriDiario()">📚</button><div class="brand">SPARKPLAY</div><button class="btn" style="background:none;font-size:32px;" onclick="s.audio=!s.audio;disegna();">${s.audio?'🔊':'🔈'}</button></div>
+      <div class="content-area">
+        <div class="multiverso-container"><div class="centro-spark">✨</div><div class="icona-mondo" style="animation-delay:0s">🚀</div><div class="icona-mondo" style="animation-delay:-2.6s">🪄</div><div class="icona-mondo" style="animation-delay:-5.3s">🔍</div></div>
+        <h1 style="color:var(--giallo);font-size:52px;margin:10px 0;">PRONTI?</h1>
+        <button class="btn btn-avanti" style="width:90%;" onclick="s.fsm='ETA';disegna();">INIZIA MISSIONE</button>
+      </div>`;
   } 
   else if(s.fsm === "ETA"){
     root.innerHTML = `<div class="sp-top"><div class="brand">CHI SEI?</div></div><div class="content-area">
-        <button class="btn" style="background:rgba(255,255,255,0.2); border:3px solid var(--blu); color:white; padding:25px; font-size:22px; width:100%; display:flex; align-items:center; justify-content:space-between;" onclick="scegliEta('5-7')"><span>🚀</span><div><b>ESPLORATORE</b><br><small>5-7 ANNI</small></div></button>
-        <button class="btn" style="background:rgba(255,255,255,0.2); border:3px solid var(--rossa); color:white; padding:25px; font-size:22px; width:100%; display:flex; align-items:center; justify-content:space-between;" onclick="scegliEta('8-10')"><span>🧠</span><div><b>COMANDANTE</b><br><small>8-10 ANNI</small></div></button></div>`;
+        <button class="btn" style="background:rgba(255,255,255,0.1); border:2px solid var(--blu); color:white; padding:25px; width:100%; display:flex; align-items:center; justify-content:space-between;" onclick="scegliEta('5-7')"><span>🚀</span><div><b>ESPLORATORE</b><br><small>5-7 ANNI</small></div></button>
+        <button class="btn" style="background:rgba(255,255,255,0.1); border:2px solid var(--rossa); color:white; padding:25px; width:100%; display:flex; align-items:center; justify-content:space-between;" onclick="scegliEta('8-10')"><span>🧠</span><div><b>COMANDANTE</b><br><small>8-10 ANNI</small></div></button></div>`;
   }
   else if(s.fsm === "GIOCO"){
     const m = s.missioneAttuale;
-    root.innerHTML = `<div class="sp-top"><button class="btn" style="background:none;font-size:32px;" onclick="toggleAudio()">${s.audio?'🔊':'🔈'}</button><div class="brand" style="font-size:20px">${m.t}</div><button class="btn" style="background:rgba(255,255,255,0.1);color:white;padding:8px 15px;border-radius:15px;" onclick="home()">ESCI</button></div>
-      <div class="content-area"><div class="testo-storia">${m.s}</div><div class="obiettivo-box">OBIETTIVO: ${m.o}</div><div style="width:100%">${m.p.map((t,i)=>`<div class="passo ${i===s.passo?'attivo':(i<s.passo?'':'sfumato')}"><div style="background:var(--rossa);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-right:10px;">${i+1}</div>${t}</div>`).join('')}</div>
-        <div style="display:flex;gap:15px;width:100%;"><button class="btn" style="background:rgba(255,255,255,0.1);color:white;flex:1;padding:15px;" onclick="precedente()" ${s.passo===0?'style="visibility:hidden"':''}>INDIETRO</button><button class="btn btn-avanti" style="flex:2;" onclick="successivo()">${s.passo < m.p.length-1 ? 'AVANTI' : 'COMPLETA ✅'}</button></div></div>`;
-  }
-  else if(s.fsm === "SCELTA_GENITORE"){
-    const b = s.specialeFatta ? '' : `<button class="btn" style="background:var(--blu);color:white;padding:22px;width:100%;margin-bottom:18px;font-size:20px;" onclick="sblocca('SPECIALE')">MISSIONE SPECIALE 🤝</button>`;
-    root.innerHTML = `<div class="sp-top"><div class="brand">GENITORE</div></div><div class="content-area"><h2 style="text-align:center;font-size:32px;color:var(--giallo);">CAPITOLO FINITO! 🏆</h2>${b}
-        <button class="btn" style="background:rgba(255,255,255,0.1);color:white;padding:22px;width:100%;margin-bottom:18px;font-size:20px;" onclick="sblocca('ALTRE')">FAI ALTRE MISSIONI 🚀</button><button class="btn" style="background:var(--rossa);color:white;padding:15px;width:100%;font-size:18px;" onclick="home()">FINISCI PER OGGI</button></div>`;
+    root.innerHTML = `
+      <div class="sp-top"><button class="btn" style="background:none;font-size:32px;" onclick="s.audio=!s.audio;disegna();">${s.audio?'🔊':'🔈'}</button><div class="brand" style="font-size:20px">${m.t}</div><button class="btn" style="background:var(--rossa);color:white;padding:8px 15px;font-size:12px;" onclick="s.fsm='INIZIO';disegna();">ESCI</button></div>
+      <div class="content-area">
+        <div class="testo-storia">${m.s}</div>
+        <div class="obiettivo-box">OBIETTIVO: ${m.o}</div>
+        <div style="width:100%">${m.p.map((t,i)=>`<div class="passo ${i===s.passo?'attivo':''}"><b>${i+1}</b> ${t}</div>`).join('')}</div>
+        <button class="btn btn-avanti" onclick="successivo()">${s.passo < m.p.length-1 ? 'AVANTI' : 'COMPLETA ✅'}</button>
+      </div>`;
   }
 }
 
-window.apriDiario = () => {
-    const l = document.getElementById("lista-diario");
-    l.innerHTML = s.diario.length ? s.diario.map(m => `<div class="scheda-ricordo"><div style="font-size:30px">${m.icona}</div><div><small>${m.data}</small><br><b>${m.titolo}</b></div></div>`).join('') : "<p style='text-align:center;'>Il diario è vuoto.</p>";
-    document.getElementById("diario-modal").style.display = "flex";
-}
-window.chiudiDiario = () => { document.getElementById("diario-modal").style.display = "none"; }
-window.toggleAudio = () => { s.audio = !s.audio; disegna(); };
-window.vaiEta = () => { s.fsm = "ETA"; disegna(); };
-window.scegliEta = (e) => { s.eta = e; s.missioniFatte = 0; s.fsm = "GIOCO"; proproxima(); };
-window.home = () => { s.fsm = "INIZIO"; s.passo=0; s.missioniFatte=0; s.missioneAttuale=null; s.specialeFatta=false; disegna(); };
-
-window.sblocca = (tipo) => {
-  const pin = prompt("GENITORE: Quanto fa cinque più cinque?");
-  if(pin === "10") {
-    if(tipo === 'SPECIALE') { s.missioneAttuale = DB.speciale; s.fsm = "GIOCO"; s.passo = 0; s.specialeFatta = true; disegna(); parla(s.missioneAttuale.s + ". L'obiettivo è: " + s.missioneAttuale.o + ". Primo passaggio: " + s.missioneAttuale.p[0]); }
-    else { s.missioniFatte = 0; s.fsm = "GIOCO"; proproxima(); }
-  }
-};
+window.scegliEta = (e) => { s.eta = e; s.missioniFatte = 0; proproxima(); };
 
 function proproxima(){
   if(s.missioniFatte < DB[s.eta].length){
     s.missioneAttuale = DB[s.eta][s.missioniFatte]; s.passo = 0; s.fsm = "GIOCO"; disegna();
-    parla(s.missioneAttuale.s + ". L'obiettivo è: " + s.missioneAttuale.o + ". Primo passaggio: " + s.missioneAttuale.p[0]);
-  } else { s.fsm = "SCELTA_GENITORE"; disegna(); }
+    parla(s.missioneAttuale.s + " Obiettivo: " + s.missioneAttuale.o + ". Primo passaggio: " + s.missioneAttuale.p[0]);
+  } else { s.fsm = "INIZIO"; disegna(); }
 }
 
 window.successivo = () => {
   if(s.passo < s.missioneAttuale.p.length - 1){ 
-    s.passo++; disegna(); 
-    parla("Ben fatto! Ora: " + s.missioneAttuale.p[s.passo]); 
+    s.passo++; disegna(); parla(s.missioneAttuale.p[s.passo]); 
   } else {
     document.getElementById("overlay-success").style.display = "flex";
-    parla("Missione completata! Bravissimo pilota!");
-    s.diario.unshift({ titolo: s.missioneAttuale.t, icona: s.missioneAttuale.i || "🚀", data: new Date().toLocaleDateString('it-IT') });
-    localStorage.setItem('sparkplay_diario', JSON.stringify(s.diario));
+    parla("Missione completata! Bravissimo!");
     setTimeout(() => { 
         document.getElementById("overlay-success").style.display = "none";
         s.missioniFatte++; proproxima(); 
     }, 3000);
   }
 };
-window.precedente = () => { if(s.passo > 0){ s.passo--; disegna(); parla(s.missioneAttuale.p[s.passo]); } };
 
-const salvato = localStorage.getItem('sparkplay_diario');
-if(salvato) s.diario = JSON.parse(salvato);
+window.apriDiario = () => { document.getElementById("diario-modal").style.display = "flex"; }
+window.chiudiDiario = () => { document.getElementById("diario-modal").style.display = "none"; }
+
 disegna();
 })();
 </script>
