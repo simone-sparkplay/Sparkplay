@@ -1,825 +1,823 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SparkPlay</title>
 
-  <title>SparkPlay</title>
+<!-- Icon hooks (assumendo che icona.png sia in root) -->
+<link rel="icon" href="icona.png?v=1">
+<link rel="apple-touch-icon" href="icona.png?v=1">
+<meta name="theme-color" content="#0a1128">
 
-  <!-- PWA / iOS icons (tu le hai già: icona.png in root) -->
-  <link rel="icon" href="icona.png?v=1">
-  <link rel="apple-touch-icon" href="icona.png?v=1">
-  <meta name="theme-color" content="#0b1b3a">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rossa: #ff5e6c;
+  --blu: #00d2ff;
+  --giallo: #ffe66d;
 
-  <style>
-    :root{
-      --rossa:#ff5e6c;
-      --blu:#00d2ff;
-      --giallo:#ffe66d;
+  /* Base */
+  --sfondo: #0a1128;
+  --latte: #f7fff7;
 
-      /* più "kids" ma premium: blu più saturo e meno cupo */
-      --sfondoTop:#1b5fb8;
-      --sfondoMid:#143a7a;
-      --sfondoBase:#0b1b3a;
+  /* Background più "giocoso" ma premium */
+  --bgTop: #2a7db9;
+  --bgMid: #12325f;
+  --bgBot: #0a1128;
 
-      --latte:#f7fff7;
+  --glass: rgba(255,255,255,.10);
+  --stroke: rgba(255,255,255,.14);
+  --depth: 0 18px 40px rgba(0,0,0,.30);
+  --btnDepth: 0 12px 28px rgba(0,0,0,.24);
+}
 
-      --glass: rgba(255,255,255,.12);
-      --stroke: rgba(255,255,255,.14);
-      --shadow: 0 18px 45px rgba(0,0,0,.35);
+/* iOS/PWA: elimina barra bianca e bounce */
+html, body {
+  height: 100%;
+  background: var(--sfondo);
+  overscroll-behavior: none;
+}
 
-      --safe-top: env(safe-area-inset-top);
-      --safe-bottom: env(safe-area-inset-bottom);
-    }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-    html, body{
-      height:100%;
-      margin:0;
-      background: var(--sfondoBase);
-      overflow-x:hidden;
-    }
+body {
+  margin: 0;
+  font-family: 'Quicksand', sans-serif;
+  color: var(--latte);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
-    body{
-      font-family:'Quicksand', sans-serif;
-      color:var(--latte);
-      /* Fix iOS/PWA white bar: usa svh + background anche su html */
-      min-height: 100svh;
-      overscroll-behavior: none;
-      background:
-        radial-gradient(circle at 20% 15%, rgba(0,210,255,.22) 0%, rgba(0,210,255,0) 38%),
-        radial-gradient(circle at 80% 70%, rgba(255,94,108,.18) 0%, rgba(255,94,108,0) 40%),
-        linear-gradient(180deg, var(--sfondoTop) 0%, var(--sfondoMid) 45%, var(--sfondoBase) 100%);
-    }
+/* Sfondo fissato: evita "fondo bianco" quando Safari fa cose strane */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(1200px 900px at 50% 20%, rgba(0,210,255,.20) 0%, transparent 55%),
+              radial-gradient(900px 700px at 25% 80%, rgba(255,94,108,.16) 0%, transparent 55%),
+              linear-gradient(180deg, var(--bgTop) 0%, var(--bgMid) 40%, var(--bgBot) 100%);
+}
 
-    /* APP ROOT */
-    .sp-root{
-      max-width: 650px;
-      margin: 0 auto;
-      min-height: 100svh;
-      display:flex;
-      flex-direction:column;
-      padding: calc(var(--safe-top) + 14px) 18px calc(var(--safe-bottom) + 18px);
-      position:relative;
-    }
+/* Altezza reale viewport (fix schermate a metà su iOS) */
+.sp-root {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  height: calc(var(--vh, 1vh) * 100);
+  display: flex;
+  flex-direction: column;
+  padding: calc(env(safe-area-inset-top) + 14px) 18px calc(env(safe-area-inset-bottom) + 18px);
+  position: relative;
+}
 
-    /* TOP BAR */
-    .sp-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 10px;
-    }
+/* Top bar */
+.sp-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 10px;
+}
 
-    .iconBtn{
-      width:56px;
-      height:56px;
-      border-radius:18px;
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.10);
-      box-shadow: 0 10px 22px rgba(0,0,0,.22);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:28px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .iconBtn:active{ transform: translateY(1px); }
+.brand {
+  font-family: 'Fredoka One', cursive;
+  font-size: 36px;
+  line-height: 1;
+  color: var(--giallo);
+  text-shadow: 3px 3px var(--rossa);
+}
 
-    .brandWrap{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      line-height:1;
-      flex:1;
-      min-width: 0;
-    }
-    .brand{
-      font-family:'Fredoka One', cursive;
-      font-size: 36px;
-      color: var(--giallo);
-      text-shadow: 3px 3px var(--rossa);
-      letter-spacing:.5px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .subBrand{
-      margin-top:6px;
-      font-weight:700;
-      color: var(--blu);
-      letter-spacing: 7px;
-      font-size: 14px;
-      opacity:.95;
-    }
+.subbrand {
+  margin-top: 6px;
+  text-align: center;
+  letter-spacing: 6px;
+  font-weight: 800;
+  color: rgba(0,210,255,.9);
+}
 
-    /* GLASS CARD */
-    .glassCard{
-      width:100%;
-      border-radius: 34px;
-      background: var(--glass);
-      border:1px solid var(--stroke);
-      box-shadow: var(--shadow);
-      padding: 20px 18px;
-    }
+/* Icon buttons */
+.icon-btn{
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 10px 20px rgba(0,0,0,.18);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  user-select: none;
+}
 
-    .content-area{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      gap:14px;
-      width:100%;
-    }
+.icon-btn:active{ transform: translateY(1px); }
 
-    /* HOME HERO IMAGE */
-    .heroFrame{
-      width:100%;
-      border-radius: 30px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
-      padding: 16px;
-    }
-    .heroImg{
-      width:100%;
-      display:block;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,.14);
-      box-shadow: 0 14px 35px rgba(0,0,0,.28);
-      background: rgba(0,0,0,.12);
-    }
+/* Content */
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 
-    /* BIG TEXT */
-    .bigTitle{
-      font-family:'Fredoka One', cursive;
-      font-size: 56px;
-      color: var(--giallo);
-      text-shadow: 4px 4px rgba(0,0,0,.25);
-      margin: 4px 0 0;
-      letter-spacing: 1px;
-    }
+/* Glass card wrapper */
+.glass-card{
+  width: 100%;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: 30px;
+  box-shadow: var(--depth);
+  padding: 18px;
+}
 
-    /* BUTTONS */
-    .btn{
-      border:none;
-      cursor:pointer;
-      user-select:none;
-      font-family:'Fredoka One', cursive;
-      border-radius: 26px;
-    }
-    .btn-main{
-      width: 100%;
-      max-width: 520px;
-      padding: 22px 18px;
-      font-size: 26px;
-      color: #fff;
-      background: var(--rossa);
-      box-shadow: 0 10px 0 rgba(196,61,74,.95), 0 18px 36px rgba(0,0,0,.25);
-    }
-    .btn-main:active{
-      transform: translateY(6px);
-      box-shadow: 0 4px 0 rgba(196,61,74,.95), 0 12px 28px rgba(0,0,0,.18);
-    }
+/* Home hero (scatolone) */
+.hero-wrap{
+  width: 100%;
+  border-radius: 26px;
+  overflow: hidden;
+  background: rgba(0,0,0,.10);
+  border: 1px solid rgba(255,255,255,.12);
+}
 
-    .pills{
-      width:100%;
-      display:flex;
-      gap:12px;
-      justify-content:center;
-    }
-    .pill{
-      flex:1;
-      max-width: 250px;
-      padding: 14px 14px;
-      border-radius: 20px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color: var(--latte);
-      text-align:center;
-      font-weight:800;
-      letter-spacing:.4px;
-    }
+.hero-img{
+  width: 100%;
+  display: block;
+  height: auto;
+}
 
-    /* GAME */
-    .missionTitle{
-      font-family:'Fredoka One', cursive;
-      font-size: 34px;
-      color: var(--giallo);
-      text-shadow: 3px 3px rgba(0,0,0,.22);
-      margin: 4px 0 6px;
-      text-align:center;
-      width:100%;
-    }
-    .story{
-      font-size: 18px;
-      text-align:center;
-      line-height:1.35;
-      opacity:.95;
-      padding: 0 6px;
-    }
-    .obiettivo{
-      width:100%;
-      border-radius: 26px;
-      padding: 14px 14px;
-      border: 3px dashed rgba(0,210,255,.75);
-      background: rgba(255,255,255,.08);
-      text-align:center;
-    }
-    .obiettivo .label{
-      letter-spacing: 8px;
-      font-weight:900;
-      color: var(--blu);
-      font-size: 12px;
-      opacity:.95;
-    }
-    .obiettivo .value{
-      margin-top: 8px;
-      font-weight:900;
-      font-size: 24px;
-      color: #fff;
-    }
+/* Titolo home */
+.h1-pronti{
+  font-family: 'Fredoka One', cursive;
+  font-size: 64px;
+  margin: 6px 0 0;
+  color: var(--giallo);
+  text-shadow: 4px 4px rgba(0,0,0,.18);
+}
 
-    .steps{
-      width:100%;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      margin-top: 6px;
-    }
-    .passo{
-      width:100%;
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      padding: 16px 16px;
-      border-radius: 26px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.10);
-      font-weight: 800;
-      font-size: 18px;
-    }
-    .badgeNum{
-      width:44px;
-      height:44px;
-      border-radius: 16px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.14);
-      font-family:'Fredoka One', cursive;
-      font-size: 20px;
-    }
-    .passo.attivo{
-      background: rgba(255,255,255,.92);
-      color: var(--sfondoBase);
-      transform: scale(1.01);
-      box-shadow: 0 14px 28px rgba(0,0,0,.28);
-      border:1px solid rgba(255,255,255,.25);
-    }
+/* Buttons */
+.btn { border: none; font-family: 'Fredoka One', cursive; cursor: pointer; transition: 0.18s; border-radius: 26px; }
 
-    /* SUCCESS OVERLAY */
-    #overlay-success{
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:3000;
-      background: rgba(0,0,0,.82);
-      padding: 22px;
-    }
-    .successBox{
-      width:min(520px, 92vw);
-      border-radius: 34px;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.18);
-      padding: 26px 18px;
-      text-align:center;
-      box-shadow: 0 30px 80px rgba(0,0,0,.45);
-    }
-    .successTitle{
-      font-family:'Fredoka One', cursive;
-      font-size: 44px;
-      color: var(--giallo);
-      text-shadow: 4px 4px var(--rossa);
-      line-height: 1.0;
-    }
+.btn-primary{
+  background: var(--rossa);
+  color: white;
+  padding: 20px 18px;
+  width: 100%;
+  font-size: 22px;
+  box-shadow: 0 8px 0 rgba(196,61,74,.95), var(--btnDepth);
+}
 
-    /* DIARIO MODAL */
-    #diario-modal{
-      position:fixed;
-      inset:0;
-      z-index:2000;
-      display:none;
-      flex-direction:column;
-      padding: calc(var(--safe-top) + 18px) 18px calc(var(--safe-bottom) + 18px);
-      background:
-        radial-gradient(circle at 20% 15%, rgba(0,210,255,.20) 0%, rgba(0,210,255,0) 40%),
-        linear-gradient(180deg, var(--sfondoTop) 0%, var(--sfondoMid) 45%, var(--sfondoBase) 100%);
-      overflow:auto;
-    }
-    .diarioHeader{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 14px;
-    }
-    .diarioTitle{
-      font-family:'Fredoka One', cursive;
-      font-size: 44px;
-      color: #fff;
-      text-shadow: 3px 3px rgba(0,0,0,.22);
-      display:flex;
-      align-items:center;
-      gap: 10px;
-    }
-    .diarioSub{
-      color: var(--blu);
-      letter-spacing: 10px;
-      font-weight:900;
-      margin-top: 6px;
-      font-size: 12px;
-      opacity:.95;
-    }
-    .closeBtn{
-      width:70px;
-      height:70px;
-      border-radius: 22px;
-      border:none;
-      background: var(--rossa);
-      color: #fff;
-      font-family:'Fredoka One', cursive;
-      font-size: 30px;
-      box-shadow: 0 12px 0 rgba(196,61,74,.9);
-      cursor:pointer;
-    }
-    .closeBtn:active{
-      transform: translateY(6px);
-      box-shadow: 0 6px 0 rgba(196,61,74,.9);
-    }
+.btn-primary:active{ transform: translateY(4px); box-shadow: 0 3px 0 rgba(196,61,74,.95), var(--btnDepth); }
 
-    .diarioList{
-      display:flex;
-      flex-direction:column;
-      gap: 14px;
-      padding-top: 8px;
-    }
-    .diarioItem{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-      padding: 16px 16px;
-      border-radius: 26px;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.14);
-      box-shadow: 0 14px 30px rgba(0,0,0,.22);
-    }
-    .diarioLeft{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 0;
-    }
-    .diarioIcon{
-      width:54px;
-      height:54px;
-      border-radius: 20px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.12);
-      font-size: 26px;
-      flex: 0 0 auto;
-    }
-    .diarioText{
-      min-width:0;
-    }
-    .diarioName{
-      font-family:'Fredoka One', cursive;
-      font-size: 22px;
-      color:#fff;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width: 44vw;
-    }
-    .diarioDate{
-      margin-top: 4px;
-      opacity:.8;
-      font-weight:800;
-    }
-    .diarioAge{
-      padding: 10px 14px;
-      border-radius: 18px;
-      background: rgba(0,0,0,.20);
-      border: 1px solid rgba(255,255,255,.12);
-      font-weight: 900;
-      color: var(--blu);
-      min-width: 62px;
-      text-align:center;
-    }
+.pills{
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
 
-    .hintSmall{
-      font-size: 13px;
-      opacity: .85;
-      text-align:center;
-      margin-top: 4px;
-    }
-  </style>
+.pill{
+  flex: 1;
+  padding: 14px 12px;
+  border-radius: 22px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.12);
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+/* Game typography */
+.testo-storia { font-size: 20px; line-height: 1.45; text-align: center; opacity: .95; }
+
+.obiettivo-box {
+  border: 3px dashed var(--blu);
+  border-radius: 22px;
+  padding: 14px;
+  text-align: center;
+  font-weight: 900;
+  color: var(--blu);
+  background: rgba(0,210,255,0.06);
+}
+
+.passaggi { width: 100%; }
+
+.passo {
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255,255,255,.10);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-weight: 900;
+  transition: 0.18s;
+}
+
+.passo.attivo {
+  background: var(--latte);
+  color: var(--sfondo);
+  transform: scale(1.01);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.26);
+  border-color: rgba(255,255,255,.0);
+}
+
+.passo.sfumato{
+  opacity: .35;
+}
+
+.bollino {
+  background: var(--rossa);
+  color: white;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 16px;
+  flex: 0 0 auto;
+}
+
+/* Secondary buttons */
+.btn-ghost{
+  background: rgba(255,255,255,0.10);
+  color: white;
+  padding: 16px;
+  border-radius: 22px;
+  font-family: 'Fredoka One', cursive;
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.btn-ghost:active{ transform: translateY(1px); }
+
+/* Modal diario */
+#diario-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  flex-direction: column;
+  padding: calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 18px);
+  overflow-y: auto;
+  background: linear-gradient(180deg, rgba(42,125,185,.22), rgba(10,17,40,.96));
+  backdrop-filter: blur(8px);
+}
+
+.diario-title{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.diario-h{
+  font-family: 'Fredoka One';
+  font-size: 44px;
+  line-height: 1;
+}
+
+.diario-sub{
+  margin-top: 8px;
+  letter-spacing: 6px;
+  font-weight: 900;
+  color: rgba(0,210,255,.9);
+}
+
+/* Card diario */
+.scheda-ricordo {
+  background: rgba(255,255,255,0.10);
+  padding: 18px;
+  border-radius: 24px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.diario-ico {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  display:grid;
+  place-items:center;
+  background: rgba(0,0,0,.20);
+  border: 1px solid rgba(255,255,255,.12);
+  flex: 0 0 auto;
+}
+
+.testo-diario b { display: block; font-size: 20px; color: var(--latte); }
+.testo-diario small { color: rgba(247,255,247,.65); font-size: 12px; }
+
+/* Overlay success */
+#overlay-success {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  display: none;
+  z-index: 3000;
+  background: rgba(10, 17, 40, 0.88);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.messaggio-vittoria {
+  font-family: 'Fredoka One';
+  font-size: 52px;
+  color: var(--giallo);
+  text-shadow: 4px 4px var(--rossa);
+  text-align: center;
+}
+
+/* Small helpers */
+.center-col{
+  width: 100%;
+  display:flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.kicker{
+  font-weight: 900;
+  opacity: .9;
+}
+
+.age-pill{
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.12);
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  user-select: none;
+}
+
+.age-pill:active{ transform: translateY(1px); }
+
+/* Riduci movimento se preferito */
+@media (prefers-reduced-motion: reduce){
+  * { animation: none !important; transition: none !important; }
+}
+</style>
 </head>
 
 <body>
-  <div id="overlay-success">
-    <div class="successBox">
-      <div class="successTitle">MISSIONE<br>COMPLETATA!</div>
-      <div class="hintSmall" style="margin-top:10px">Tra poco parte la prossima ✨</div>
+<div id="overlay-success">
+  <div class="messaggio-vittoria">MISSIONE<br>COMPLETATA!</div>
+</div>
+
+<div id="diario-modal">
+  <div class="diario-title">
+    <div>
+      <div class="diario-h">DIARIO</div>
+      <div class="diario-sub">I TUOI RICORDI</div>
     </div>
+    <button class="icon-btn" onclick="chiudiDiario()" aria-label="Chiudi diario">
+      <span style="font-family:'Fredoka One';font-size:28px;">✕</span>
+    </button>
   </div>
 
-  <div id="diario-modal">
-    <div class="diarioHeader">
-      <div>
-        <div class="diarioTitle">DIARIO <span aria-hidden="true">📚</span></div>
-        <div class="diarioSub">I TUOI RICORDI</div>
+  <div id="lista-diario" style="margin-top:18px; padding-bottom:40px;"></div>
+</div>
+
+<div id="SPARKPLAY_APP" class="sp-root"></div>
+
+<script>
+(()=>{"use strict";
+
+/* ====== FIX viewport iOS (schermate a metà + barra bianca) ====== */
+function setVH(){
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+setVH();
+window.addEventListener('resize', setVH);
+
+/* ====== ICONA DIARIO (SVG, zero quadratini su device vecchi) ====== */
+const BOOK_SVG = `
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <path d="M6 4h10a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2V6a2 2 0 0 1 2-2Z" stroke="rgba(0,210,255,.95)" stroke-width="2" />
+  <path d="M6 4v14" stroke="rgba(0,210,255,.55)" stroke-width="2"/>
+</svg>`;
+
+/* ====== DB (il tuo) ====== */
+const DB = {
+  "5-7": [
+    {t:"SEGNALE PERDUTO", s:"La base ha perso il segnale! La galassia è al buio!", o:"RIACCENDI L'ANTENNA!", p:["Trova un calzino stellare.","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."]},
+    {t:"SATELLITE MORBIDO", s:"Un satellite è caduto tra le stelle!", o:"RECUPERALO!", p:["Trova un peluche-satellite.","Fagli fare un giro intorno al tavolo.","Mettilo a riposare in un posto alto."]},
+    {t:"POLVERE DI STELLE", s:"C'è troppa polvere spaziale sui motori!", o:"PULISCI TUTTO!", p:["Usa le mani come spazzole spaziali.","Pulisci 3 superfici diverse.","Soffia via la polvere."]}
+  ],
+  "8-10": [
+    {t:"MODULO VIBRANTE", s:"Il modulo 4 vibra forte. Serve silenzio assoluto!", o:"RIPARA IN SILENZIO", p:["Trova un foglio di carta.","Portalo alla base senza fare rumore.","Piegalo in 4 e mettilo sotto un cuscino."]},
+    {t:"CODICE STELLARE", s:"Dobbiamo inviare un codice segreto alla Terra!", o:"COMPONI IL CODICE", p:["Trova 3 oggetti dello stesso colore.","Mettili in fila dal più piccolo al più grande.","Salta sopra ogni oggetto."]},
+    {t:"ANTIGRAVITÀ", s:"La gravità si è rotta! Tutto fluttua!", o:"MUOVITI LENTO", p:["Attraversa la stanza al rallentatore.","Tocca terra solo con le punte dei piedi.","Siediti senza usare le mani."]}
+  ],
+  speciale: {
+    t:"MISSIONE SINCRONIA",
+    s:"I motori hanno bisogno di due piloti insieme!",
+    o:"SQUADRA SPAZIALE",
+    p:["Prendetevi per mano (Genitore + Bambino).","Fate 10 passi sincronizzati insieme.","Dite 'Pronti al lancio' nello stesso istante!"],
+    f:"Siete una squadra imbattibile!"
+  }
+};
+
+let s = {
+  fsm:"INIZIO",
+  eta:null,
+  passo:0,
+  missioniFatte:0,
+  missioneAttuale:null,
+  audio:false,
+  diario: [],
+  specialeFatta: false
+};
+
+/* ====== AUDIO (fix velocità + frasi spezzate) ====== */
+function stopAudio(){
+  try { speechSynthesis.cancel(); } catch(e){}
+}
+
+function getRate(){
+  // più lento per 5–7
+  if(s.eta === "5-7") return 0.82;
+  if(s.eta === "8-10") return 0.92;
+  return 0.88;
+}
+
+function parla(testo, onEnd){
+  if(!s.audio){ if(onEnd) onEnd(); return; }
+  stopAudio();
+
+  // Micro-pause per evitare "mitragliata"
+  const t = String(testo || "").replace(/\.\s+/g, ".  ").replace(/!\s+/g, "!  ").replace(/\?\s+/g, "?  ");
+
+  const u = new SpeechSynthesisUtterance(t);
+  u.lang = "it-IT";
+  u.rate = getRate();
+  u.pitch = 1.02;
+  u.volume = 1;
+
+  if(onEnd) u.onend = onEnd;
+  speechSynthesis.speak(u);
+}
+
+/* ====== HELPERS ====== */
+function todayIT(){
+  return new Date().toLocaleDateString('it-IT');
+}
+
+function loadDiary(){
+  const salvato = localStorage.getItem('sparkplay_diario');
+  if(salvato){
+    try{ s.diario = JSON.parse(salvato) || []; } catch(e){ s.diario = []; }
+  }
+}
+function saveDiary(){
+  localStorage.setItem('sparkplay_diario', JSON.stringify(s.diario));
+}
+
+/* ====== UI ====== */
+function disegna(){
+  const root = document.getElementById("SPARKPLAY_APP");
+
+  if(s.fsm === "INIZIO"){
+    root.innerHTML = `
+      <div class="sp-top">
+        <button class="icon-btn" onclick="apriDiario()" aria-label="Apri diario">${BOOK_SVG}</button>
+
+        <div style="text-align:center; flex:1;">
+          <div class="brand">SPARKPLAY</div>
+          <div class="subbrand">SPAZIO</div>
+        </div>
+
+        <button class="icon-btn" onclick="toggleAudio()" aria-label="Audio">
+          <span style="font-size:24px;">${s.audio ? "🔊" : "🔈"}</span>
+        </button>
       </div>
-      <button class="closeBtn" onclick="chiudiDiario()">×</button>
-    </div>
-    <div id="lista-diario" class="diarioList"></div>
-  </div>
 
-  <div id="SPARKPLAY_APP" class="sp-root"></div>
-
-  <script>
-  (() => {
-    "use strict";
-
-    /* ===== DB (metti qui tutte le missioni che vuoi, io non te le ho tagliate) ===== */
-    const DB = {
-      "5-7": [
-        { t:"SEGNALE PERDUTO", s:"La base ha perso il segnale! La galassia è al buio!", o:"RIACCENDI L'ANTENNA!", p:[
-          "Trova un calzino stellare.",
-          "Portalo sulla base, sopra il tappeto.",
-          "Dì tre volte a voce alta: Bip! Bip! Bip!"
-        ]},
-        { t:"SATELLITE MORBIDO", s:"Un satellite è caduto tra le stelle!", o:"RECUPERALO!", p:[
-          "Trova un peluche (il tuo satellite).",
-          "Fagli fare un giro intorno al tavolo.",
-          "Mettilo a riposare in un posto alto."
-        ]},
-        { t:"POLVERE DI STELLE", s:"Un’onda di polvere ha coperto i motori.", o:"PULISCI I PANNELLI SOLARI.", p:[
-          "Prendi un calzino o un panno morbido.",
-          "Pulisci tre superfici diverse nella stanza.",
-          "Soffia forte su ogni punto pulito!"
-        ]},
-        { t:"ANTENNA SPAZIALE", s:"Dobbiamo inviare un messaggio alla base!", o:"COSTRUISCI UN’ANTENNA.", p:[
-          "Trova un cucchiaio o una matita lunga.",
-          "Mettila in verticale in un bicchiere.",
-          "Fai finta di inviare un messaggio: "Pronti al decollo!""
-        ]}
-      ],
-      "8-10": [
-        { t:"MODULO VIBRANTE", s:"Il modulo quattro vibra forte. Serve silenzio assoluto!", o:"RIPARA IN SILENZIO", p:[
-          "Trova un foglio di carta.",
-          "Portalo alla base senza fare rumore.",
-          "Piegalo in quattro e mettilo sotto un cuscino."
-        ]},
-        { t:"ROUTER ORBITALE", s:"La rete orbitale è instabile.", o:"RISTABILISCI IL SEGNALE", p:[
-          "Trova 3 oggetti piccoli (vite, tappo, lego).",
-          "Allineali in fila come una "antenna".",
-          "Conta da 10 a 1 come se riavviassi il sistema."
-        ]}
-      ]
-    };
-
-    /* ===== STATE ===== */
-    const S = {
-      screen: "HOME",     // HOME | AGE | GAME
-      eta: null,          // "5-7" | "8-10"
-      missionIndex: 0,
-      stepIndex: 0,
-      mission: null,
-      audioOn: true,
-      diary: []           // {title, date, age}
-    };
-
-    const $app = document.getElementById("SPARKPLAY_APP");
-    const $overlay = document.getElementById("overlay-success");
-    const $diaryModal = document.getElementById("diario-modal");
-    const $diaryList = document.getElementById("lista-diario");
-
-    /* ===== AUDIO ===== */
-    let currentUtter = null;
-
-    function speak(text){
-      if(!S.audioOn) return;
-      if(!("speechSynthesis" in window)) return;
-
-      // stop precedente
-      try { window.speechSynthesis.cancel(); } catch(e){}
-
-      currentUtter = new SpeechSynthesisUtterance(text);
-      currentUtter.lang = "it-IT";
-      currentUtter.rate = 0.78;   // più lento per 5-7
-      currentUtter.pitch = 1.06;
-
-      // sicurezza: se cambia schermo, non deve "tagliare"
-      try { window.speechSynthesis.speak(currentUtter); } catch(e){}
-    }
-
-    document.addEventListener("visibilitychange", () => {
-      // evita "audio random" quando cambi app/tab
-      try { window.speechSynthesis.cancel(); } catch(e){}
-    });
-
-    /* ===== HELPERS ===== */
-    function todayDDMMYYYY(){
-      const d = new Date();
-      const dd = String(d.getDate()).padStart(2,"0");
-      const mm = String(d.getMonth()+1).padStart(2,"0");
-      const yy = d.getFullYear();
-      return `${dd}/${mm}/${yy}`;
-    }
-
-    function render(){
-      if(S.screen === "HOME") renderHome();
-      else if(S.screen === "AGE") renderAge();
-      else if(S.screen === "GAME") renderGame();
-    }
-
-    function topBar({left, centerTitle, centerSub, right}){
-      return `
-        <div class="sp-top">
-          <button class="iconBtn" onclick="${left.onclick}" aria-label="${left.label}">${left.icon}</button>
-          <div class="brandWrap">
-            <div class="brand">${centerTitle}</div>
-            ${centerSub ? `<div class="subBrand">${centerSub}</div>` : ``}
+      <div class="content-area">
+        <div class="glass-card">
+          <div class="hero-wrap" style="margin-bottom:12px;">
+            <!-- Usa il tuo scatolone. Deve essere in root: home-hero.png -->
+            <img class="hero-img" src="home-hero.png?v=1" alt="SparkPlay" onerror="this.style.display='none'">
           </div>
-          <button class="iconBtn" onclick="${right.onclick}" aria-label="${right.label}">${right.icon}</button>
-        </div>
-      `;
-    }
 
-    /* ===== SCREENS ===== */
-    function renderHome(){
-      $app.innerHTML = `
-        ${topBar({
-          left:{icon:"📚", label:"Apri diario", onclick:"apriDiario()"},
-          centerTitle:"SPARKPLAY",
-          centerSub:"SPAZIO",
-          right:{icon:(S.audioOn?"🔊":"🔈"), label:"Audio", onclick:"toggleAudio()"}
-        })}
+          <div class="h1-pronti">PRONTI?</div>
 
-        <div class="content-area">
-          <div class="glassCard">
-            <div class="heroFrame">
-              <img class="heroImg" src="home-hero.png" alt="SparkPlay Home Hero" loading="eager" />
-            </div>
+          <div style="margin-top:14px;">
+            <button class="btn btn-primary" onclick="vaiEta()">AVVIA MISSIONE</button>
 
-            <div style="display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:14px;">
-              <div class="bigTitle">PRONTI?</div>
-
-              <button class="btn btn-main" onclick="goAge()">INIZIA MISSIONE</button>
-
-              <div class="pills">
-                <div class="pill">OGGI: <span style="color:var(--giallo)">0/3</span></div>
-                <div class="pill">ETÀ: <span style="color:var(--giallo)">${S.eta ? S.eta : "--"}</span></div>
-              </div>
-
-              <div class="hintSmall">Consiglio: scegli l’età una volta, poi giochi senza pensieri.</div>
+            <div class="pills">
+              <div class="pill">OGGI: ${s.missioniFatte || 0}/3</div>
+              <div class="pill" style="cursor:pointer;" onclick="vaiEta()">ETÀ: ${s.eta ? s.eta : "--"}</div>
             </div>
           </div>
         </div>
-      `;
-    }
+      </div>
+    `;
+    return;
+  }
 
-    function renderAge(){
-      $app.innerHTML = `
-        ${topBar({
-          left:{icon:"←", label:"Indietro", onclick:"goHome()"},
-          centerTitle:"CHI SEI?",
-          centerSub:"",
-          right:{icon:(S.audioOn?"🔊":"🔈"), label:"Audio", onclick:"toggleAudio()"}
-        })}
+  if(s.fsm === "ETA"){
+    root.innerHTML = `
+      <div class="sp-top">
+        <button class="icon-btn" onclick="home()" aria-label="Indietro">
+          <span style="font-size:26px;">←</span>
+        </button>
 
-        <div class="content-area">
-          <div class="glassCard" style="max-width:520px;">
-            <div style="display:flex; flex-direction:column; gap:14px;">
-              <button class="btn" style="background:rgba(255,255,255,0.10); border:2px solid rgba(0,210,255,.85); color:white; padding:20px; width:100%; display:flex; align-items:center; justify-content:space-between; gap:14px;"
-                onclick="chooseAge('5-7')">
-                <span style="font-size:28px;">🚀</span>
-                <div style="text-align:left; flex:1;">
-                  <div style="font-family:'Fredoka One'; font-size:18px;">ESPLORATORE</div>
-                  <div style="opacity:.85; font-weight:800;">5–7 ANNI</div>
-                </div>
-                <span style="opacity:.85;">→</span>
-              </button>
+        <div style="text-align:center; flex:1;">
+          <div class="brand" style="font-size:30px;">SCEGLI ETÀ</div>
+          <div class="kicker" style="opacity:.8;">Così l’audio è perfetto</div>
+        </div>
 
-              <button class="btn" style="background:rgba(255,255,255,0.10); border:2px solid rgba(255,94,108,.90); color:white; padding:20px; width:100%; display:flex; align-items:center; justify-content:space-between; gap:14px;"
-                onclick="chooseAge('8-10')">
-                <span style="font-size:28px;">🧠</span>
-                <div style="text-align:left; flex:1;">
-                  <div style="font-family:'Fredoka One'; font-size:18px;">COMANDANTE</div>
-                  <div style="opacity:.85; font-weight:800;">8–10 ANNI</div>
-                </div>
-                <span style="opacity:.85;">→</span>
-              </button>
+        <div style="width:54px;"></div>
+      </div>
 
-              <div class="hintSmall">Puoi cambiare età quando vuoi (da Home).</div>
-            </div>
+      <div class="content-area">
+        <div class="glass-card">
+          <div class="center-col">
+            <button class="btn-ghost" style="width:100%; padding:18px; font-size:20px; border:2px solid rgba(0,210,255,.55);" onclick="scegliEta('5-7')">
+              🚀  ESPLORATORE <span style="opacity:.75;">(5–7)</span>
+            </button>
+
+            <button class="btn-ghost" style="width:100%; padding:18px; font-size:20px; border:2px solid rgba(255,94,108,.55);" onclick="scegliEta('8-10')">
+              🧠  COMANDANTE <span style="opacity:.75;">(8–10)</span>
+            </button>
           </div>
         </div>
-      `;
-      speak("Scegli la tua età. Esploratore cinque sette anni. Comandante otto dieci anni.");
-    }
+      </div>
+    `;
+    return;
+  }
 
-    function renderGame(){
-      const m = S.mission;
-      const stepsHtml = m.p.map((txt, i) => `
-        <div class="passo ${i===S.stepIndex ? 'attivo' : ''}">
-          <div class="badgeNum">${i+1}</div>
-          <div style="flex:1;">${txt}</div>
+  if(s.fsm === "GIOCO"){
+    const m = s.missioneAttuale;
+    const passaggiHTML = m.p.map((t,i)=>`
+      <div class="passo ${i===s.passo?'attivo':(i<s.passo?'':'sfumato')}">
+        <div class="bollino">${i+1}</div>
+        <div style="text-align:left;">${t}</div>
+      </div>
+    `).join('');
+
+    root.innerHTML = `
+      <div class="sp-top">
+        <button class="icon-btn" onclick="toggleAudio()" aria-label="Audio">
+          <span style="font-size:24px;">${s.audio ? "🔊" : "🔈"}</span>
+        </button>
+
+        <div style="text-align:center; flex:1;">
+          <div class="brand" style="font-size:24px; text-shadow: 2px 2px rgba(0,0,0,.15);">${m.t}</div>
+          <div class="age-pill" onclick="vaiEta()">ETÀ: ${s.eta || "--"} · Cambia</div>
         </div>
-      `).join("");
 
-      $app.innerHTML = `
-        ${topBar({
-          left:{icon:(S.audioOn?"🔊":"🔈"), label:"Audio", onclick:"toggleAudio()"},
-          centerTitle:"SPARKPLAY",
-          centerSub:"SPAZIO",
-          right:{icon:"✕", label:"Esci", onclick:"goHome()"}
-        })}
+        <button class="icon-btn" onclick="home()" aria-label="Esci">
+          <span style="font-size:22px;">⤫</span>
+        </button>
+      </div>
 
-        <div class="content-area">
-          <div class="glassCard">
-            <div class="missionTitle">${m.t}</div>
-            <div class="story">${m.s}</div>
+      <div class="content-area" style="justify-content:flex-start;">
+        <div class="glass-card">
+          <div class="testo-storia">${m.s}</div>
 
-            <div class="obiettivo" style="margin-top:14px;">
-              <div class="label">OBIETTIVO</div>
-              <div class="value">${m.o}</div>
-            </div>
+          <div style="height:10px;"></div>
 
-            <div class="steps">${stepsHtml}</div>
-
-            <div style="margin-top:14px;">
-              <button class="btn btn-main" onclick="nextStep()">
-                ${S.stepIndex < m.p.length-1 ? "AVANTI" : "COMPLETA ✅"}
-              </button>
-            </div>
-
-            <div class="hintSmall" style="margin-top:10px;">
-              Tip: se vuoi riascoltare, premi AVANTI e la frase viene letta completa.
+          <div class="obiettivo-box">
+            <div style="letter-spacing:6px;">OBIETTIVO</div>
+            <div style="margin-top:6px; font-size:22px; color: var(--latte); letter-spacing:0;">
+              ${m.o}
             </div>
           </div>
-        </div>
-      `;
-    }
 
-    /* ===== GAME FLOW ===== */
-    function startMission(){
-      if(!S.eta){
-        S.screen = "AGE";
-        render();
-        return;
-      }
-      S.missionIndex = 0;
-      loadMission();
-    }
+          <div style="height:12px;"></div>
 
-    function loadMission(){
-      const arr = DB[S.eta] || [];
-      if(S.missionIndex >= arr.length){
-        // finito: torna home
-        S.screen = "HOME";
-        render();
-        speak("Perfetto. A domani!");
-        return;
-      }
+          <div class="passaggi">${passaggiHTML}</div>
 
-      S.mission = arr[S.missionIndex];
-      S.stepIndex = 0;
-      S.screen = "GAME";
-      render();
-
-      // lettura introduttiva + primo step
-      speak(`${S.mission.s} Obiettivo: ${S.mission.o}. Primo passaggio: ${S.mission.p[0]}`);
-    }
-
-    function completeMission(){
-      // salva su diario: SOLO icona diario in lista (come vuoi tu)
-      S.diary.unshift({
-        title: S.mission.t,
-        date: todayDDMMYYYY(),
-        age: S.eta
-      });
-
-      // overlay + audio
-      $overlay.style.display = "flex";
-      speak("Missione completata! Bravissimo!");
-
-      setTimeout(() => {
-        $overlay.style.display = "none";
-        S.missionIndex++;
-        loadMission();
-      }, 2200);
-    }
-
-    /* ===== DIARY ===== */
-    function renderDiary(){
-      if(S.diary.length === 0){
-        $diaryList.innerHTML = `
-          <div class="glassCard" style="text-align:center;">
-            <div style="font-family:'Fredoka One'; font-size:22px; color:var(--giallo);">Ancora vuoto</div>
-            <div class="hintSmall" style="margin-top:10px;">Completa una missione e comparirà qui 📓</div>
+          <div style="display:flex; gap:12px; margin-top:10px;">
+            <button class="btn-ghost" style="flex:1; ${s.passo===0?'visibility:hidden;':''}" onclick="precedente()">INDIETRO</button>
+            <button class="btn btn-primary" style="flex:2;" onclick="successivo()">
+              ${s.passo < m.p.length-1 ? 'AVANTI' : 'COMPLETA ✅'}
+            </button>
           </div>
-        `;
-        return;
-      }
-
-      $diaryList.innerHTML = S.diary.map(item => `
-        <div class="diarioItem">
-          <div class="diarioLeft">
-            <div class="diarioIcon" aria-hidden="true">📓</div>
-            <div class="diarioText">
-              <div class="diarioName">${item.title}</div>
-              <div class="diarioDate">${item.date}</div>
-            </div>
-          </div>
-          <div class="diarioAge">${item.age}</div>
         </div>
-      `).join("");
+      </div>
+    `;
+    return;
+  }
+
+  if(s.fsm === "SCELTA_GENITORE"){
+    const specialeBtn = s.specialeFatta ? "" : `
+      <button class="btn-ghost" style="width:100%; padding:18px; font-size:20px; border:2px solid rgba(0,210,255,.65);" onclick="sblocca('SPECIALE')">
+        MISSIONE SPECIALE 🤝
+      </button>
+    `;
+
+    root.innerHTML = `
+      <div class="sp-top">
+        <button class="icon-btn" onclick="home()" aria-label="Home">
+          <span style="font-size:24px;">⌂</span>
+        </button>
+
+        <div style="text-align:center; flex:1;">
+          <div class="brand" style="font-size:30px;">GENITORE</div>
+          <div class="kicker">Capitolo finito</div>
+        </div>
+
+        <div style="width:54px;"></div>
+      </div>
+
+      <div class="content-area">
+        <div class="glass-card">
+          <div class="h1-pronti" style="font-size:44px;">BRAVISSIMI!</div>
+          <div style="opacity:.85; font-weight:800; margin-top:8px;">Scegli cosa fare ora</div>
+
+          <div style="height:14px;"></div>
+          <div class="center-col">
+            ${specialeBtn}
+
+            <button class="btn-ghost" style="width:100%; padding:18px; font-size:20px;" onclick="sblocca('ALTRE')">
+              FAI ALTRE 3 MISSIONI 🚀
+            </button>
+
+            <button class="btn btn-primary" style="width:100%;" onclick="home()">
+              FINISCI PER OGGI
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+}
+
+/* ====== DIARIO ====== */
+window.apriDiario = () => {
+  stopAudio();
+  const l = document.getElementById("lista-diario");
+
+  if(!s.diario.length){
+    l.innerHTML = "<p style='text-align:center;opacity:0.7;font-weight:800;'>Il diario è vuoto.</p>";
+  } else {
+    l.innerHTML = s.diario.map(m => `
+      <div class="scheda-ricordo">
+        <div class="diario-ico">${BOOK_SVG}</div>
+        <div class="testo-diario">
+          <b>${m.titolo}</b>
+          <small>${m.data} · Età ${m.eta}</small>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById("diario-modal").style.display = "flex";
+};
+
+window.chiudiDiario = () => {
+  document.getElementById("diario-modal").style.display = "none";
+};
+
+/* ====== NAV ====== */
+window.toggleAudio = () => {
+  s.audio = !s.audio;
+  if(!s.audio) stopAudio();
+  else parla("Audio attivato.");
+  disegna();
+};
+
+window.vaiEta = () => {
+  stopAudio();
+  s.fsm = "ETA";
+  disegna();
+};
+
+window.scegliEta = (e) => {
+  stopAudio();
+  s.eta = e;
+  s.missioniFatte = 0;
+  s.specialeFatta = false;
+  s.passo = 0;
+  s.fsm = "GIOCO";
+  nextMission();
+};
+
+window.home = () => {
+  stopAudio();
+  s.fsm = "INIZIO";
+  s.passo = 0;
+  s.missioniFatte = 0;
+  s.missioneAttuale = null;
+  s.specialeFatta = false;
+  disegna();
+};
+
+/* ====== PARENT GATE ====== */
+window.sblocca = (tipo) => {
+  stopAudio();
+  const pin = prompt("GENITORE: Quanto fa 5 + 5?");
+  if(pin !== "10") return;
+
+  if(tipo === "SPECIALE"){
+    s.missioneAttuale = DB.speciale;
+    s.passo = 0;
+    s.specialeFatta = true;
+    s.fsm = "GIOCO";
+    disegna();
+    parla(`${s.missioneAttuale.s}  Obiettivo: ${s.missioneAttuale.o}.  Passaggio 1: ${s.missioneAttuale.p[0]}`);
+    return;
+  }
+
+  // ALTRE
+  s.missioniFatte = 0;
+  s.fsm = "GIOCO";
+  nextMission();
+};
+
+/* ====== GAME FLOW ====== */
+function nextMission(){
+  if(!s.eta){
+    s.fsm = "ETA";
+    disegna();
+    return;
+  }
+
+  if(s.missioniFatte < 3){
+    s.missioneAttuale = DB[s.eta][s.missioniFatte];
+    s.passo = 0;
+    s.fsm = "GIOCO";
+    disegna();
+    parla(`${s.missioneAttuale.s}  Obiettivo: ${s.missioneAttuale.o}.  Passaggio 1: ${s.missioneAttuale.p[0]}`);
+  } else {
+    s.fsm = "SCELTA_GENITORE";
+    disegna();
+    parla("Capitolo finito. Genitore, scegli cosa fare adesso.");
+  }
+}
+
+window.successivo = () => {
+  if(!s.missioneAttuale) return;
+  stopAudio();
+
+  if(s.passo < s.missioneAttuale.p.length - 1){
+    s.passo++;
+    disegna();
+    parla(`Passaggio ${s.passo+1}.  ${s.missioneAttuale.p[s.passo]}`);
+    return;
+  }
+
+  // Completa
+  document.getElementById("overlay-success").style.display = "flex";
+
+  // salva in diario (stessa icona per tutti: noi usiamo BOOK_SVG in UI)
+  s.diario.unshift({
+    titolo: s.missioneAttuale.t,
+    data: todayIT(),
+    eta: s.eta || "--"
+  });
+  saveDiary();
+
+  setTimeout(() => {
+    document.getElementById("overlay-success").style.display = "none";
+
+    // Se speciale, torna a scelta genitore
+    if(s.missioneAttuale === DB.speciale){
+      s.fsm = "SCELTA_GENITORE";
+      disegna();
+      return;
     }
 
-    /* ===== PUBLIC (onclick) ===== */
-    window.toggleAudio = () => {
-      S.audioOn = !S.audioOn;
-      try { window.speechSynthesis.cancel(); } catch(e){}
-      render();
-    };
+    s.missioniFatte++;
+    nextMission();
+  }, 1400);
+};
 
-    window.goHome = () => {
-      try { window.speechSynthesis.cancel(); } catch(e){}
-      S.screen = "HOME";
-      render();
-    };
+window.precedente = () => {
+  if(!s.missioneAttuale) return;
+  if(s.passo <= 0) return;
 
-    window.goAge = () => {
-      try { window.speechSynthesis.cancel(); } catch(e){}
-      S.screen = "AGE";
-      render();
-    };
+  stopAudio();
+  s.passo--;
+  disegna();
+  parla(`Passaggio ${s.passo+1}.  ${s.missioneAttuale.p[s.passo]}`);
+};
 
-    window.chooseAge = (age) => {
-      S.eta = age;
-      try { window.speechSynthesis.cancel(); } catch(e){}
-      // vai subito in gioco
-      startMission();
-    };
+/* Stop audio quando cambia tab/app: evita letture random */
+document.addEventListener("visibilitychange", () => {
+  if(document.hidden) stopAudio();
+});
 
-    window.nextStep = () => {
-      if(!S.mission) return;
+/* Init */
+loadDiary();
+disegna();
 
-      // se non ultimo step
-      if(S.stepIndex < S.mission.p.length - 1){
-        S.stepIndex++;
-        render();
-        // rilegge SEMPRE la frase per intero
-        speak(S.mission.p[S.stepIndex]);
-        return;
-      }
-
-      // ultimo step => completa
-      completeMission();
-    };
-
-    window.apriDiario = () => {
-      renderDiary();
-      $diaryModal.style.display = "flex";
-      speak("Ecco il tuo diario.");
-    };
-
-    window.chiudiDiario = () => {
-      $diaryModal.style.display = "none";
-      try { window.speechSynthesis.cancel(); } catch(e){}
-    };
-
-    window.goStart = () => startMission();
-
-    /* ===== INIT ===== */
-    render();
-
-  })();
-  </script>
+})();
+</script>
 </body>
 </html>
