@@ -196,9 +196,9 @@ const DB = {
     o: "FARE 10 PASSI SINCRONIZZATI",
     p: [
       "Setup: Chiama un genitore. Mettetevi in uno spazio libero.",
-      "Passo 1: Prendetevi per mano e respirate insieme 3 volte.",
-      "Passo 2: Fate 10 passi sincronizzati (lenti, uguali).",
-      "Passo 3: Dite insieme: 'PRONTI AL LANCIO!'",
+      "Azione: Prendetevi per mano e respirate insieme 3 volte.",
+      "Sfida: Fate 10 passi sincronizzati (lenti, uguali).",
+      "Finale: Dite insieme: 'PRONTI AL LANCIO!'",
       "Successo: Squadra perfetta. Energia alle stelle!"
     ]
   },
@@ -211,13 +211,13 @@ const DB = {
       o: "PREPARARE LA BASE DI LANCIO",
       setup: "Trova 3 cuscini + 1 coperta + 1 oggetto-navetta (macchinina/peluche).",
       steps: [
-        "Costruisci la base: metti 2 cuscini come pareti e 1 come 'console' davanti.",
-        "Crea la rampa: appoggia la coperta dalla console al pavimento (scivolo).",
-        "Test di lancio: fai 3 controlli (tocca 3 oggetti) e conta: 3…2…1… VIA!"
+        "Costruisci la base: 2 cuscini come pareti + 1 come console davanti.",
+        "Crea la rampa: coperta dalla console al pavimento (scivolo).",
+        "Test di lancio: 3 controlli (tocca 3 oggetti) e conta 3…2…1… VIA!"
       ],
       challenge: {
         "5-7": "Fai decollare la navetta dalla rampa 2 volte senza fermarti a metà.",
-        "8-10": "Costruisci una rampa più lunga (aggiungi un oggetto sotto la coperta) e scegli la migliore: perché?"
+        "8-10": "Rendi la rampa più lunga (metti un oggetto sotto la coperta) e scegli la migliore: perché?"
       },
       success: "Base pronta. Il comandante ti affida la prossima missione."
     },
@@ -265,13 +265,13 @@ const DB = {
       o: "ATTRAVERSARE SENZA URTARE",
       setup: "Metti 8 oggetti morbidi sul pavimento (calzini/peluche piccoli).",
       steps: [
-        "Crea la rotta: scegli un punto PARTENZA e un punto ARRIVO (2 oggetti grandi).",
+        "Crea la rotta: scegli PARTENZA e ARRIVO (2 oggetti grandi).",
         "Attraversa: cammina tra gli asteroidi senza toccarli.",
         "Ritorno: rifai la rotta ma cambiando percorso (seconda via)."
       ],
       challenge: {
-        "5-7": "Cammina al rallentatore spaziale. Se tocchi un asteroide, fai 'reset' e riparti.",
-        "8-10": "Attraversa tenendo in mano la navetta. Non farla cadere e non toccare asteroidi."
+        "5-7": "Vai al rallentatore spaziale. Se tocchi un asteroide, fai reset e riparti.",
+        "8-10": "Attraversa tenendo la navetta in mano: non farla cadere e non toccare asteroidi."
       },
       success: "Campo superato. Pilotaggio da vero comandante."
     },
@@ -306,7 +306,7 @@ const DB = {
         "Docking: fai entrare la navetta nella stazione senza far crollare nulla."
       ],
       challenge: {
-        "5-7": "La stazione deve avere 1 ingresso dove passa la navetta (spazio sotto o di lato).",
+        "5-7": "La stazione deve avere 1 ingresso dove passa la navetta.",
         "8-10": "Aggiungi un modulo extra: una seconda 'stanza' attaccata alla stazione."
       },
       success: "Stazione pronta. L’equipaggio è al sicuro."
@@ -324,7 +324,7 @@ const DB = {
         "Orbita: fai un giro completo intorno al Sole senza toccare i pianeti."
       ],
       challenge: {
-        "5-7": "Fai 1 giro lento e nomina 2 pianeti inventando i nomi.",
+        "5-7": "Fai 1 giro lento e inventa 2 nomi di pianeti.",
         "8-10": "Fai 3 giri senza toccare nulla. Poi cambia 1 pianeta e spiega cosa cambia."
       },
       success: "Sistema solare riallineato. Ordine ristabilito."
@@ -342,8 +342,8 @@ const DB = {
         "Salvataggio: salta solo sui cuscini, prendi l’astronauta e torna indietro."
       ],
       challenge: {
-        "5-7": "Salta lentamente e fermati 1 secondo su ogni isola.",
-        "8-10": "Porta anche una 'scorta' (1 oggetto) senza farla cadere durante il percorso."
+        "5-7": "Fermati 1 secondo su ogni isola prima di saltare alla prossima.",
+        "8-10": "Porta anche una 'scorta' (1 oggetto) senza farla cadere."
       },
       success: "Astronauta salvato. Equipaggio completo."
     },
@@ -361,7 +361,7 @@ const DB = {
       ],
       challenge: {
         "5-7": "Usa 2 simboli invece di 3 e ripeti il codice 2 volte uguale.",
-        "8-10": "Crea 4 simboli e fai una sequenza (es: ★ ● ▲ ★). Poi ricostruiscila al contrario."
+        "8-10": "Crea una sequenza (es: ★ ● ▲ ★). Poi ricostruiscila al contrario."
       },
       success: "Messaggio inviato. La Terra risponde: ‘Ricevuto!’"
     },
@@ -379,7 +379,7 @@ const DB = {
       ],
       challenge: {
         "5-7": "Hai 3 tentativi. Dopo ogni tentativo dici: 'troppo forte' o 'troppo piano'.",
-        "8-10": "Fai 5 tentativi e trova il 'colpo perfetto' regolando la forza."
+        "8-10": "Hai 5 tentativi: trova il 'colpo perfetto' regolando la forza."
       },
       success: "Atterraggio riuscito. CAMPAGNA SPAZIO COMPLETATA! 🎉"
     }
@@ -399,13 +399,25 @@ const SPACE_ORDER = [
   "atterraggio_precisione"
 ];
 
+/* =========================
+   Mission builder (meno card + niente età nel testo)
+   ========================= */
+
+function compactSteps(steps){
+  // Trasforma 3 step in una sola card leggibile (bullet)
+  const bullets = steps.map(x => `• ${x}`).join("\n");
+  return `Azione:\n${bullets}`;
+}
+
 function buildMissionByAge(m, eta){
-  const ch = m.challenge?.[eta] ? `Sfida (${eta}): ${m.challenge[eta]}` : "";
   const cap = m.chapter ? `${m.chapter}` : "";
+  const ch = m.challenge?.[eta] ? `Sfida: ${m.challenge[eta]}` : "";
+
+  // 4–5 card massimo
   const passi = [
     cap,
     `Setup: ${m.setup}`,
-    ...m.steps.map((x,i)=>`Passo ${i+1}: ${x}`),
+    compactSteps(m.steps),
     ch,
     `Successo: ${m.success || "Missione completata!"}`
   ].filter(Boolean);
@@ -435,14 +447,15 @@ let s = {
   audio: false,
   diario: [],
 
-  // giornaliero (Montessori)
+  // giornaliero
   oggiKey: "",
   oggiFatte: 0,
-  oggiLimite: 3,
-  extraSbloccate: 0,
+  oggiLimite: 6,          // ✅ limite base (come il tuo screen 6/6)
+  extraSbloccate: 0,       // ✅ bonus: 0 o 3
+  bonusUsatoOggi: false,   // ✅ blocca sblocco infinito
   specialeFattaOggi: false,
 
-  // campagna (progressione, non si resetta ogni giorno)
+  // campagna
   storyIndex: 0,
 
   // gate
@@ -456,28 +469,40 @@ function oggiKey(){
 }
 function limiteOggi(){ return s.oggiLimite + s.extraSbloccate; }
 
+function caricaPreferenze(){
+  const a = localStorage.getItem("sparkplay_audio");
+  s.audio = (a === "1");
+  const d = localStorage.getItem("sparkplay_diario");
+  s.diario = d ? JSON.parse(d) : [];
+}
+
 function caricaStatoGiorno(){
   s.oggiKey = oggiKey();
   const saved = JSON.parse(localStorage.getItem("sparkplay_day") || "{}");
   if(saved.key === s.oggiKey){
     s.oggiFatte = Number(saved.oggiFatte || 0);
     s.extraSbloccate = Number(saved.extraSbloccate || 0);
+    s.bonusUsatoOggi = !!saved.bonusUsatoOggi;
     s.specialeFattaOggi = !!saved.specialeFattaOggi;
   } else {
     s.oggiFatte = 0;
     s.extraSbloccate = 0;
+    s.bonusUsatoOggi = false;
     s.specialeFattaOggi = false;
     salvaStatoGiorno();
   }
 }
+
 function salvaStatoGiorno(){
   localStorage.setItem("sparkplay_day", JSON.stringify({
     key: s.oggiKey,
     oggiFatte: s.oggiFatte,
     extraSbloccate: s.extraSbloccate,
+    bonusUsatoOggi: s.bonusUsatoOggi,
     specialeFattaOggi: s.specialeFattaOggi
   }));
 }
+
 function caricaCampagna(){
   const key = "sparkplay_campaign";
   const saved = JSON.parse(localStorage.getItem(key) || "{}");
@@ -489,12 +514,6 @@ function salvaCampagna(){
   const saved = JSON.parse(localStorage.getItem(key) || "{}");
   saved[s.world] = { storyIndex: s.storyIndex };
   localStorage.setItem(key, JSON.stringify(saved));
-}
-function caricaPreferenze(){
-  const a = localStorage.getItem("sparkplay_audio");
-  s.audio = (a === "1");
-  const d = localStorage.getItem("sparkplay_diario");
-  s.diario = d ? JSON.parse(d) : [];
 }
 
 /* =========================
@@ -530,6 +549,17 @@ function parla(testo, onEnd){
 
 function progressPercent(){
   return Math.min(100, (s.oggiFatte / Math.max(1, limiteOggi())) * 100);
+}
+
+function homeHint(){
+  if(s.oggiFatte < limiteOggi()){
+    return "Missioni con oggetti di casa. Sicure. Creative. Veloci da iniziare.";
+  }
+  // Limite raggiunto
+  if(!s.bonusUsatoOggi){
+    return "Hai finito le missioni di oggi. Chiedi al genitore per sbloccare +3 (una volta al giorno).";
+  }
+  return "Hai finito le missioni di oggi. Torna domani per nuove missioni.";
 }
 
 function disegna(){
@@ -570,9 +600,7 @@ function disegna(){
         </button>
 
         <div class="center" style="opacity:0.55; font-size:12px;">
-          ${s.oggiFatte >= limiteOggi()
-            ? "Hai finito le missioni di oggi. Chiedi al genitore per sbloccare."
-            : "Missioni con oggetti di casa. Sicure. Creative. Veloci da iniziare."}
+          ${homeHint()}
         </div>
       </div>
     `;
@@ -650,7 +678,7 @@ function disegna(){
         </button>
 
         <div class="center" style="opacity:0.6; font-size:12px;">
-          Le missioni sono le stesse, ma la difficoltà cambia con l’età.
+          Le missioni restano coerenti, ma la sfida si adatta all’età.
         </div>
       </div>
     `;
@@ -674,7 +702,7 @@ function disegna(){
           ${m.p.map((t,i)=>`
             <div class="passo ${i===s.passo?'attivo':''}">
               <div class="num">${i+1}</div>
-              <div>${t}</div>
+              <div style="white-space:pre-line;">${t}</div>
             </div>`).join("")}
         </div>
 
@@ -691,6 +719,7 @@ function disegna(){
 
   if(s.fsm === "SCELTA_GENITORE"){
     const sbloccabileSpeciale = (s.oggiFatte >= 3) && !s.specialeFattaOggi;
+    const puoBonus = !s.bonusUsatoOggi; // ✅ una volta al giorno
     root.innerHTML = `
       <div class="sp-top">
         <div class="brand" style="font-size:26px">GENITORE</div>
@@ -699,12 +728,12 @@ function disegna(){
 
       <div class="content-area">
         <div class="card center">
-          <h2 style="margin:0; font-family:'Fredoka One'; color:var(--giallo); font-size:30px;">CAPITOLO FINITO! 🏆</h2>
+          <h2 style="margin:0; font-family:'Fredoka One'; color:var(--giallo); font-size:30px;">STOP DEL GIORNO 🧡</h2>
           <div style="margin-top:8px; opacity:0.85; font-weight:800;">
             Oggi: <b>${s.oggiFatte}</b>/${limiteOggi()} missioni
           </div>
           <div style="margin-top:10px; opacity:0.65; font-weight:700; font-size:12px;">
-            Serve un genitore per mantenere un ritmo sano (limite giornaliero).
+            Il limite giornaliero mantiene un ritmo sano. Bonus disponibile 1 sola volta al giorno.
           </div>
         </div>
 
@@ -717,8 +746,9 @@ function disegna(){
           </div>
         `}
 
-        <button class="btn btn-ghost" style="padding:18px; width:100%; font-size:16px;" onclick="apriGate('ALTRE')">
-          SBLOCCA ALTRE 3 🚀
+        <button class="btn btn-ghost" style="padding:18px; width:100%; font-size:16px; ${puoBonus?'':'opacity:0.45; cursor:not-allowed;'}"
+          onclick="${puoBonus ? "apriGate('ALTRE')" : "void(0)"}">
+          ${puoBonus ? "SBLOCCA +3 🚀 (1 VOLTA OGGI)" : "BONUS GIÀ USATO OGGI ✅"}
         </button>
 
         <button class="btn btn-danger" style="padding:16px; width:100%; font-size:16px;" onclick="home()">FINISCI PER OGGI</button>
@@ -728,7 +758,7 @@ function disegna(){
   }
 
   if(s.fsm === "GATE"){
-    const titolo = (s.gateTipo==="SPECIALE") ? "SBLOCCA MISSIONE SPECIALE" : "SBLOCCA ALTRE 3";
+    const titolo = (s.gateTipo==="SPECIALE") ? "SBLOCCA MISSIONE SPECIALE" : "SBLOCCA +3 (SOLO 1 VOLTA OGGI)";
     root.innerHTML = `
       <div class="sp-top">
         <div class="brand" style="font-size:26px">GENITORE</div>
@@ -763,6 +793,7 @@ function disegna(){
    ========================= */
 
 window.home = ()=>{ s.fsm="INIZIO"; s.passo=0; s.missioneAttuale=null; disegna(); };
+
 window.vaiMondi = ()=>{
   if(s.oggiFatte >= limiteOggi()){
     s.fsm="SCELTA_GENITORE";
@@ -827,7 +858,14 @@ window.verificaGate = ()=>{
   }
 
   if(s.gateTipo === "ALTRE"){
-    s.extraSbloccate += 3;
+    // ✅ BONUS SOLO 1 VOLTA AL GIORNO
+    if(s.bonusUsatoOggi){
+      s.gateErrore = "Bonus già usato oggi. Torna domani 🙂";
+      disegna();
+      return;
+    }
+    s.bonusUsatoOggi = true;
+    s.extraSbloccate = 3; // non +=
     salvaStatoGiorno();
     proproxima();
     return;
@@ -857,6 +895,7 @@ function proproxima(){
 
   const key = SPACE_ORDER[s.storyIndex % SPACE_ORDER.length];
   const m = DB.spazio[key];
+
   s.missioneIsSpeciale = false;
   s.missioneAttuale = buildMissionByAge(m, s.eta);
   s.passo = 0;
@@ -908,7 +947,7 @@ window.successivo = ()=>{
     if(s.oggiFatte >= limiteOggi()){
       s.fsm = "SCELTA_GENITORE";
       disegna();
-      parla("Missione completata. Ora serve un genitore per continuare.");
+      parla("Missione completata. Per continuare serve un genitore.");
       return;
     }
 
@@ -919,47 +958,6 @@ window.successivo = ()=>{
 /* =========================
    Bootstrap
    ========================= */
-
-function caricaPreferenze(){
-  const a = localStorage.getItem("sparkplay_audio");
-  s.audio = (a === "1");
-  const d = localStorage.getItem("sparkplay_diario");
-  s.diario = d ? JSON.parse(d) : [];
-}
-function caricaStatoGiorno(){
-  s.oggiKey = oggiKey();
-  const saved = JSON.parse(localStorage.getItem("sparkplay_day") || "{}");
-  if(saved.key === s.oggiKey){
-    s.oggiFatte = Number(saved.oggiFatte || 0);
-    s.extraSbloccate = Number(saved.extraSbloccate || 0);
-    s.specialeFattaOggi = !!saved.specialeFattaOggi;
-  } else {
-    s.oggiFatte = 0;
-    s.extraSbloccate = 0;
-    s.specialeFattaOggi = false;
-    salvaStatoGiorno();
-  }
-}
-function salvaStatoGiorno(){
-  localStorage.setItem("sparkplay_day", JSON.stringify({
-    key: s.oggiKey,
-    oggiFatte: s.oggiFatte,
-    extraSbloccate: s.extraSbloccate,
-    specialeFattaOggi: s.specialeFattaOggi
-  }));
-}
-function caricaCampagna(){
-  const key = "sparkplay_campaign";
-  const saved = JSON.parse(localStorage.getItem(key) || "{}");
-  const w = saved[s.world];
-  s.storyIndex = Number.isFinite(w?.storyIndex) ? w.storyIndex : 0;
-}
-function salvaCampagna(){
-  const key = "sparkplay_campaign";
-  const saved = JSON.parse(localStorage.getItem(key) || "{}");
-  saved[s.world] = { storyIndex: s.storyIndex };
-  localStorage.setItem(key, JSON.stringify(saved));
-}
 
 caricaPreferenze();
 caricaStatoGiorno();
