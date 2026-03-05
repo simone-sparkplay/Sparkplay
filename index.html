@@ -6,317 +6,120 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>SparkPlay</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --rossa:#ff5e6c;
-  --blu:#00d2ff;
-  --giallo:#ffe66d;
-  --sfondo:#101835;
-  --latte:#f7fff7;
-  --glass: rgba(255,255,255,.10);
-  --stroke: rgba(255,255,255,.14);
-  --shadow: 0 18px 40px rgba(0,0,0,.35);
+:root {
+  --rossa: #ff5e6c; --blu: #00d2ff; --giallo: #ffe66d;
+  --sfondo: #0a1128; --latte: #f7fff7;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  margin: 0; background-color: var(--sfondo); font-family: 'Quicksand', sans-serif;
+  color: var(--latte); height: 100vh; overflow: hidden;
+  background-image: radial-gradient(circle at 50% 50%, #16224f 0%, var(--sfondo) 100%);
 }
 
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%; background:var(--sfondo);}
-body{
-  margin:0;
-  font-family:'Quicksand',sans-serif;
-  color:var(--latte);
-  overflow:hidden;
-  background-image: radial-gradient(circle at 50% 35%, #1a265a 0%, var(--sfondo) 65%, #0b1024 100%);
+.multiverso-container {
+  width: 200px; height: 200px; margin: 0 auto 20px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.icona-mondo { position: absolute; font-size: 50px; animation: orbitaMondi 8s linear infinite; }
+.mondo-1 { animation-delay: 0s; }
+.mondo-2 { animation-delay: -2.66s; }
+.mondo-3 { animation-delay: -5.33s; }
+@keyframes orbitaMondi {
+  from { transform: rotate(0deg) translateX(70px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(70px) rotate(-360deg); }
+}
+.centro-spark {
+  width: 60px; height: 60px; background: white; border-radius: 50%;
+  box-shadow: 0 0 30px var(--giallo); z-index: 5;
+  display: flex; align-items: center; justify-content: center; font-size: 30px;
 }
 
-/* FIX barra bianca iPhone/PWA */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:inherit;
-  z-index:-1;
+.sp-root {
+  max-width: 600px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column;
+  padding: env(safe-area-inset-top) 25px env(safe-area-inset-bottom); position: relative;
+}
+.sp-top { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
+.brand { font-family: 'Fredoka One', cursive; font-size: 36px; color: var(--giallo); text-shadow: 3px 3px var(--rossa); }
+.content-area { flex: 1; display: flex; flex-direction: column; gap: 20px; justify-content: center; position: relative; }
+.testo-storia { font-size: 20px; line-height: 1.4; text-align: center; }
+.obiettivo-box {
+  border: 3px dashed var(--blu); border-radius: 25px; padding: 15px; text-align: center;
+  font-weight: 700; color: var(--blu); background: rgba(0,210,255,0.05);
+}
+.passo {
+  padding: 18px; border-radius: 25px; background: rgba(255, 255, 255, 0.08);
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-weight: 700; transition: 0.3s;
+}
+.passo.attivo {
+  background: var(--latte); color: var(--sfondo); transform: scale(1.03);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
-.sp-root{
-  max-width:600px;
-  margin:0 auto;
-  min-height:100svh;            /* meglio di 100vh su iOS */
-  display:flex;
-  flex-direction:column;
-  padding: calc(env(safe-area-inset-top) + 14px) 18px calc(env(safe-area-inset-bottom) + 14px);
-  overflow:hidden;
-}
+.btn { border: none; font-family: 'Fredoka One', cursive; cursor: pointer; transition: 0.2s; border-radius: 25px; }
+.btn-avanti { background: var(--rossa); color: white; padding: 20px; width: 100%; font-size: 20px; box-shadow: 0 6px 0 #c43d4a; }
+.btn-avanti:active { transform: translateY(4px); box-shadow: 0 2px 0 #c43d4a; }
 
-.sp-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  padding: 6px 0 12px;
+#diario-modal {
+  position: fixed; inset: 0; background: linear-gradient(180deg, #101a3b, var(--sfondo));
+  z-index: 2000; display: none; flex-direction: column; padding: 40px 25px; overflow-y: auto;
 }
+.scheda-ricordo {
+  background: rgba(255,255,255,0.08); padding: 20px; border-radius: 24px; margin-bottom: 15px;
+  border-left: 8px solid var(--blu); display: flex; align-items: center; gap: 20px;
+}
+.emoji-diario { font-size: 30px; opacity: 0.8; }
+.testo-diario b { display: block; font-size: 19px; color: var(--giallo); }
+.testo-diario small { color: var(--latte); opacity: 0.6; font-size: 12px; }
 
-.brand{
-  font-family:'Fredoka One',cursive;
-  font-size:36px;
-  color:var(--giallo);
-  text-shadow:3px 3px var(--rossa);
-  letter-spacing:.5px;
-  line-height:1;
-  text-align:center;
-  flex:1;
+#overlay-success {
+  position: fixed; inset: 0; pointer-events: none; display: none; flex-direction: column;
+  align-items: center; justify-content: center; z-index: 3000; background: rgba(10, 17, 40, 0.9);
 }
+.messaggio-vittoria {
+  font-family: 'Fredoka One'; font-size: 48px; color: var(--giallo);
+  text-shadow: 4px 4px var(--rossa); text-align: center;
+}
+.cascata { position: absolute; pointer-events: none; top: -20px; animation: caduta 2s linear forwards; font-size: 28px; }
+@keyframes caduta { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
 
-.icon-btn{
-  width:56px;
-  height:56px;
-  border-radius:18px;
-  border:1px solid var(--stroke);
-  background: var(--glass);
-  box-shadow: 0 10px 24px rgba(0,0,0,.18);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  padding:0;
-}
+/* --- PREMIUM PATCH (SparkPlay) --- */
+@keyframes pulseSpark { 0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)} }
+.btn-avanti.pulse { animation: pulseSpark 2s infinite; }
 
-.icon-btn svg{ width:28px; height:28px; display:block; }
-.icon-btn:active{ transform: translateY(1px); }
-
-.content-area{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  justify-content:center;
-  align-items:center;
-  width:100%;
+#splash-screen{
+  position:fixed; inset:0; z-index:5000;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background: radial-gradient(circle at 50% 35%, #1b2a66 0%, var(--sfondo) 70%);
+  color: var(--latte);
 }
-
-.hero{
-  width:min(420px, 92%);
-  border-radius:26px;
-  border:1px solid var(--stroke);
-  background: rgba(255,255,255,.06);
-  box-shadow: var(--shadow);
-  padding:16px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:14px;
-}
-
-.hero .hero-image{
-  width:100%;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.08);
-  overflow:hidden;
-}
-
-.hero .hero-image img{
-  width:100%;
-  height:auto;
-  display:block;
-}
-
-.h-title{
-  margin: 0;
-  color: var(--giallo);
-  font-family:'Fredoka One',cursive;
-  font-size: 56px;
-  letter-spacing: 1px;
-  text-shadow: 4px 4px rgba(0,0,0,.22);
-}
-
-.btn{
-  border:none;
-  cursor:pointer;
-  border-radius:26px;
-  font-family:'Fredoka One',cursive;
-}
-
-.btn-main{
-  width:100%;
-  background: var(--rossa);
-  color:#fff;
-  padding: 20px 18px;
-  font-size: 22px;
-  box-shadow: 0 10px 0 #c43d4a, 0 18px 40px rgba(0,0,0,.25);
-}
-.btn-main:active{ transform: translateY(4px); box-shadow: 0 6px 0 #c43d4a, 0 12px 26px rgba(0,0,0,.2); }
-
-.pills{
-  width:100%;
-  display:flex;
-  gap:12px;
-  justify-content:space-between;
-}
-.pill{
-  flex:1;
-  padding: 12px 14px;
-  border-radius:18px;
-  background: rgba(0,0,0,.22);
-  border: 1px solid rgba(255,255,255,.10);
-  text-align:center;
-  font-weight:700;
-  color: rgba(255,255,255,.92);
-}
-
-.testo-storia{ font-size:20px; line-height:1.45; text-align:center; font-weight:600; opacity:.95; }
-.obiettivo-box{
-  border:3px dashed var(--blu);
-  border-radius:22px;
-  padding:14px 14px;
-  text-align:center;
-  font-weight:800;
-  color:var(--blu);
-  background: rgba(255,255,255,.06);
-  width:100%;
-}
-
-.passo{
-  padding:16px;
-  border-radius:22px;
-  background: rgba(255,255,255,.10);
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:10px;
-  font-weight:800;
-  width:100%;
-  border:1px solid rgba(255,255,255,.10);
-}
-.passo .num{
-  width:44px; height:44px;
-  border-radius:999px;
-  display:flex; align-items:center; justify-content:center;
-  background: rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.16);
-}
-.passo.attivo{
-  background: var(--latte);
-  color: #0f1837;
-  transform: scale(1.02);
-  box-shadow: 0 14px 28px rgba(0,0,0,.30);
-}
-.passo.attivo .num{
-  background: var(--rossa);
-  border: none;
-  color:#fff;
-}
-
-#overlay-success{
-  position:fixed; inset:0;
-  pointer-events:none;
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  z-index:3000;
-  background: rgba(0,0,0,.80);
-}
-.messaggio-vittoria{
-  font-family:'Fredoka One',cursive;
-  font-size:46px;
-  color:var(--giallo);
-  text-shadow:4px 4px var(--rossa);
-  text-align:center;
-}
-
-#diario-modal{
-  position:fixed; inset:0;
-  background: radial-gradient(circle at 50% 20%, #1a265a 0%, var(--sfondo) 70%, #0b1024 100%);
-  z-index:2000;
-  display:none;
-  flex-direction:column;
-  padding: calc(env(safe-area-inset-top) + 18px) 18px calc(env(safe-area-inset-bottom) + 18px);
-  overflow:auto;
-}
-.diario-head{
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
-  padding-bottom:14px;
-}
-.diario-title{
-  font-family:'Fredoka One',cursive;
-  font-size:44px;
-  color:var(--latte);
-  text-shadow: 3px 3px rgba(0,0,0,.25);
-}
-.diario-sub{
-  margin-top:4px;
-  color: rgba(0,210,255,.95);
-  font-weight:800;
-  letter-spacing:.24em;
-  font-size:13px;
-}
-.diario-list{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  padding-top:10px;
-}
-.diario-item{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:16px 16px;
-  border-radius:22px;
-  background: rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow: 0 14px 28px rgba(0,0,0,.22);
-}
-.diario-left{
-  display:flex; align-items:center; gap:12px;
-  min-width:0;
-}
-.diario-icon{
-  width:44px; height:44px;
-  border-radius:16px;
-  background: rgba(0,0,0,.20);
-  border:1px solid rgba(255,255,255,.12);
-  display:flex; align-items:center; justify-content:center;
-}
-.diario-icon svg{ width:22px; height:22px; }
-.diario-text{ min-width:0; }
-.diario-name{
-  font-weight:900;
-  font-size:22px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.diario-date{ opacity:.75; font-weight:700; margin-top:2px; }
-.diario-age{
-  padding:10px 12px;
-  border-radius:16px;
-  background: rgba(0,0,0,.22);
-  border:1px solid rgba(255,255,255,.12);
-  font-weight:900;
-  color: var(--blu);
-  min-width:64px;
-  text-align:center;
-}
-
+#splash-screen .logo{ font-family:'Fredoka One', cursive; font-size:44px; color:var(--giallo); text-shadow:3px 3px var(--rossa); margin-top:8px; }
+#splash-screen .sub{ opacity:0.7; margin-top:6px; font-weight:700; }
+.progress-wrap{ width:100%; max-width:420px; margin:10px auto 0; }
+.progress-outer{ background:rgba(255,255,255,0.12); border-radius:12px; height:10px; overflow:hidden; }
+.progress-inner{ background:var(--giallo); height:100%; width:0%; transition:0.25s; }
+/* --------------------------------- */
 </style>
 </head>
+
 <body>
+<div id="splash-screen" aria-hidden="true">
+  <div style="font-size:54px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.35));">✨</div>
+  <div class="logo">SparkPlay</div>
+  <div class="sub">Preparando la missione…</div>
+</div>
 
 <div id="overlay-success"><div class="messaggio-vittoria">MISSIONE<br>COMPLETATA!</div></div>
 
 <div id="diario-modal">
-  <div class="diario-head">
-    <div>
-      <div class="diario-title">DIARIO</div>
-      <div class="diario-sub">I TUOI RICORDI</div>
-    </div>
-    <button class="btn btn-main" style="width:auto;padding:14px 18px;border-radius:18px;font-size:16px;box-shadow:none" onclick="chiudiDiario()">CHIUDI</button>
+  <div class="sp-top">
+    <div class="brand">I TUOI RICORDI</div>
+    <button class="btn" style="background:var(--rossa); color:white; padding:10px 20px;" onclick="chiudiDiario()">CHIUDI</button>
   </div>
-  <div id="lista-diario" class="diario-list"></div>
+  <div id="lista-diario" style="margin-top:20px; padding-bottom:40px;"></div>
 </div>
 
 <div id="SPARKPLAY_APP" class="sp-root"></div>
@@ -324,385 +127,388 @@ body::before{
 <script>
 (()=>{"use strict";
 
-/* -----------------------------
-   ICONS (SVG inline = zero quadratini)
--------------------------------- */
-const ICONS = {
-  book: `
-  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M6 3.5h9.2c1.7 0 3 1.3 3 3V20c-1-.8-2.1-1.2-3.4-1.2H6c-1.7 0-3-1.3-3-3V6.5c0-1.7 1.3-3 3-3Z"
-      stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M7 7h8" stroke="rgba(0,210,255,.95)" stroke-width="2" stroke-linecap="round"/>
-    <path d="M7 11h7" stroke="rgba(255,230,109,.95)" stroke-width="2" stroke-linecap="round"/>
-  </svg>`,
-  speakerOn: `
-  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M4 10v4h3l4 3V7L7 10H4Z" stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M16 9c1 1 1 5 0 6" stroke="rgba(0,210,255,.95)" stroke-width="2" stroke-linecap="round"/>
-    <path d="M19 7c2 2 2 8 0 10" stroke="rgba(255,230,109,.95)" stroke-width="2" stroke-linecap="round"/>
-  </svg>`,
-  speakerOff: `
-  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M4 10v4h3l4 3V7L7 10H4Z" stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M16 9l5 6" stroke="rgba(255,94,108,.95)" stroke-width="2" stroke-linecap="round"/>
-    <path d="M21 9l-5 6" stroke="rgba(255,94,108,.95)" stroke-width="2" stroke-linecap="round"/>
-  </svg>`,
-  rocket: `
-  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M14 3c3 1 5 4 5 7-2 1-4 1-6 0l-2 2-1 4-3-3 4-1 2-2c-1-2-1-4 0-7Z"
-      stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M8.5 13.5l2 2" stroke="rgba(0,210,255,.95)" stroke-width="2" stroke-linecap="round"/>
-  </svg>`
-};
-
-/* -----------------------------
-   DB (tolgo sillabazioni che rovinano la voce)
--------------------------------- */
 const DB = {
   "5-7": [
-    {t:"SEGNALE PERDUTO", s:"La base ha perso il segnale. La galassia è al buio!", o:"RIACCENDI L'ANTENNA!", p:[
-      "Trova un calzino morbido.",
-      "Portalo sulla base, sopra il tappeto.",
-      "Di' tre volte a voce alta: bip, bip, bip!"
-    ]},
-    {t:"SATELLITE MORBIDO", s:"Un satellite è caduto tra le stelle!", o:"RECUPERALO!", p:[
-      "Trova un peluche.",
-      "Fagli fare un giro intorno al tavolo.",
-      "Mettilo a riposare in un posto alto."
-    ]}
+    {t:"SEGNALE PERDUTO", s:"La base ha perso il segnale! La galassia è al buio!", o:"RIACCENDI L'ANTENNA!", p:["Trova un calzino stellare.","Portalo sulla base (tappeto).","Dì 3 Bip! lentamente."]},
+    {t:"SATELLITE MORBIDO", s:"Un satellite è caduto tra le stelle!", o:"RECUPERALO!", p:["Trova un peluche-satellite.","Fagli fare un giro intorno al tavolo.","Mettilo a riposare in un posto alto."]},
+    {t:"POLVERE DI STELLE", s:"C'è troppa polvere spaziale sui motori!", o:"PULISCI TUTTO!", p:["Usa le mani come spazzole spaziali.","Pulisci 3 superfici diverse.","Soffia via la polvere."]},
+    {t:"PORTALE MAGNETICO", s:"Il portale si è chiuso e non passa più nulla!", o:"RIAPRILO!", p:["Trova una coperta.","Falla diventare un tunnel.","Passaci dentro piano."]},
+    {t:"LUCE DI EMERGENZA", s:"La cabina è al buio!", o:"ACCENDI UNA LUCE!", p:["Trova una torcia o una luce.","Illumina 3 oggetti.","Fai il suono della sirena 2 volte."]},
+    {t:"NAVETTA SMARRITA", s:"Una navetta non trova più la pista!", o:"GUIDALA A CASA!", p:["Prendi una macchinina/navetta.","Fai una pista con 3 oggetti.","Portala alla base."]}
   ],
   "8-10": [
-    {t:"MODULO VIBRANTE", s:"Il modulo quattro vibra forte. Serve silenzio assoluto!", o:"RIPARA IN SILENZIO", p:[
-      "Trova un foglio di carta.",
-      "Portalo alla base senza fare rumore.",
-      "Piegalo in quattro e mettilo sotto un cuscino."
-    ]}
-  ]
+    {t:"TRACCIA ORBITALE", s:"Un pianeta ha perso la sua rotta!", o:"RIMETTILO IN ORBITA!", p:["Scegli 1 oggetto (pianeta).","Disegna un'orbita con 4 oggetti.","Fallo girare 3 volte senza toccare i bordi."]},
+    {t:"CODICE SILENZIOSO", s:"I nemici ascoltano tutto!", o:"RIPARA IN SILENZIO", p:["Trova un foglio di carta.","Portalo alla base senza fare rumore.","Piegalo in 4 e mettilo sotto un cuscino."]},
+    {t:"CODICE STELLARE", s:"Dobbiamo inviare un codice segreto alla Terra!", o:"COMPONI IL CODICE", p:["Trova 3 oggetti dello stesso colore.","Mettili in fila dal più piccolo al più grande.","Salta sopra ogni oggetto."]},
+    {t:"ANTIGRAVITÀ", s:"La gravità si è rotta! Tutto fluttua!", o:"MUOVITI LENTO", p:["Attraversa la stanza al rallentatore.","Tocca terra solo con le punte dei piedi.","Siediti senza usare le mani."]},
+    {t:"SCUDO ATTIVO", s:"Lo scudo è debole!", o:"RINFORZA LO SCUDO!", p:["Prendi 3 cuscini.","Crea un muro intorno a te.","Rimani dentro 10 secondi senza uscire."]},
+    {t:"RADAR DI CASA", s:"Il radar deve mappare la stanza!", o:"SCANSIONA!", p:["Scegli 5 oggetti.","Mettili in cerchio.","Fai un giro intorno senza toccarli."]}
+  ],
+  speciale: {t:"MISSIONE SINCRONIA 🤝", s:"I motori hanno bisogno di due piloti insieme!", o:"SQUADRA SPAZIALE", p:["Prendetevi per mano (Genitore + Bambino).","Fate 10 passi sincronizzati insieme.","Dite 'Pronti al lancio' nello stesso istante!"], f:"Siete una squadra imbattibile!"}
 };
 
-/* -----------------------------
-   STATE
--------------------------------- */
+const FRASI = [
+  "L'immaginazione è l'unica astronave che arriva ovunque.",
+  "Il gioco è il lavoro più serio del mondo.",
+  "Piccoli passi. Grandi avventure.",
+  "Oggi una missione. Domani un mondo."
+];
+
 let s = {
   fsm:"INIZIO",
   eta:null,
   passo:0,
-  missioniFatte:0,
   missioneAttuale:null,
-  audio:true,
-  diario:[]
+  audio:false,
+  diario: [],
+  specialeFatta:false,
+
+  // Daily / Montessori limits
+  oggiKey:null,
+  oggiFatte:0,
+  oggiLimite:3,
+  extraSbloccate:0,
+  specialeFattaOggi:false,
+  sequenzaOggi:[],
+
+  // Gate
+  gateTipo:null,
+  gateErrore:""
 };
 
-/* -----------------------------
-   AUDIO: robusto e "premium"
-   - stop immediato ad ogni cambio schermata
-   - auto parla quando parte missione
--------------------------------- */
-let currentUtterance = null;
-
-function normalizeSpeechText(txt){
-  if(!txt) return "";
-  let t = String(txt);
-
-  // micro-fix pronuncia (aggiungi qui parole che senti "storte")
-  const rep = [
-    [/calzino/gi, "cal-zì-no"],     // aiuta TTS italiano
-    [/peluche/gi, "pelùche"],
-    [/bip/gi, "bìp"],
-    [/galassia/gi, "ga-làssia"],
-  ];
-  rep.forEach(([a,b])=> t = t.replace(a,b));
-
-  // pulizia spazi
-  t = t.replace(/\s+/g," ").trim();
-  return t;
-}
-
-function stopSpeech(){
-  try{ speechSynthesis.cancel(); }catch(e){}
-  currentUtterance = null;
-}
-
-function pickItalianVoice(){
-  const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
-  // preferisco voci it-IT reali se esistono
-  let v = voices.find(v=> (v.lang||"").toLowerCase().startsWith("it"));
-  // fallback: prima disponibile
-  return v || null;
-}
-
-function speak(text){
-  if(!s.audio) return;
-  const t = normalizeSpeechText(text);
-  if(!t) return;
-
-  stopSpeech();
-
-  const u = new SpeechSynthesisUtterance(t);
-  u.lang = "it-IT";
-
-  // **velocità per 5-7**: più lenta
-  u.rate = (s.eta === "5-7") ? 0.78 : 0.90;
-  u.pitch = 1.05;
-
-  const v = pickItalianVoice();
-  if(v) u.voice = v;
-
-  currentUtterance = u;
-  speechSynthesis.speak(u);
-}
-
-/* Safari iOS: caricare voices richiede evento/tempo */
-if("speechSynthesis" in window){
-  window.speechSynthesis.onvoiceschanged = ()=>{};
-}
-
-/* -----------------------------
-   UI RENDER
--------------------------------- */
-function renderDiario(){
-  const box = document.getElementById("lista-diario");
-  if(!box) return;
-
-  if(!s.diario.length){
-    box.innerHTML = `<div style="opacity:.8;font-weight:800;padding:10px 2px;">Ancora vuoto. Completa una missione e la troverai qui 🙂</div>`;
-    return;
-  }
-
-  box.innerHTML = s.diario.slice().reverse().map(item => `
-    <div class="diario-item">
-      <div class="diario-left">
-        <div class="diario-icon">${ICONS.rocket}</div>
-        <div class="diario-text">
-          <div class="diario-name">${item.t}</div>
-          <div class="diario-date">${item.date}</div>
-        </div>
-      </div>
-      <div class="diario-age">${item.eta}</div>
-    </div>
-  `).join("");
-}
-
-function todayIT(){
+/* --- Helpers: daily state + effects --- */
+function oggiKey(){
   const d = new Date();
-  const dd = String(d.getDate()).padStart(2,"0");
-  const mm = String(d.getMonth()+1).padStart(2,"0");
-  const yy = d.getFullYear();
-  return `${dd}/${mm}/${yy}`;
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const da = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${da}`;
+}
+function caricaStatoGiorno(){
+  const key = oggiKey();
+  s.oggiKey = key;
+
+  const saved = JSON.parse(localStorage.getItem("sparkplay_day") || "{}");
+  if(saved.key === key){
+    s.oggiFatte = Number(saved.oggiFatte || 0);
+    s.extraSbloccate = Number(saved.extraSbloccate || 0);
+    s.specialeFattaOggi = !!saved.specialeFattaOggi;
+    s.sequenzaOggi = Array.isArray(saved.sequenzaOggi) ? saved.sequenzaOggi : [];
+  } else {
+    s.oggiFatte = 0;
+    s.extraSbloccate = 0;
+    s.specialeFattaOggi = false;
+    s.sequenzaOggi = [];
+    salvaStatoGiorno();
+  }
+}
+function salvaStatoGiorno(){
+  localStorage.setItem("sparkplay_day", JSON.stringify({
+    key: s.oggiKey,
+    oggiFatte: s.oggiFatte,
+    extraSbloccate: s.extraSbloccate,
+    specialeFattaOggi: s.specialeFattaOggi,
+    sequenzaOggi: s.sequenzaOggi
+  }));
+}
+function limiteOggi(){
+  return s.oggiLimite + s.extraSbloccate;
+}
+function creaStelle(n=18){
+  for(let i=0;i<n;i++){
+    const el = document.createElement("div");
+    el.className = "cascata";
+    el.textContent = "✨";
+    el.style.left = (Math.random()*100) + "vw";
+    el.style.animationDuration = (1.2 + Math.random()*1.4) + "s";
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 2200);
+  }
+}
+function vibra(){
+  try{ if(navigator.vibrate) navigator.vibrate([180,80,180]); }catch(e){}
+}
+/* ------------------------------------- */
+
+function parla(testo, alTermine){
+  if(!s.audio) { if(alTermine) alTermine(); return; }
+  try { speechSynthesis.cancel(); } catch(e){}
+  const m = new SpeechSynthesisUtterance(testo);
+  m.lang="it-IT"; m.rate=0.9;
+  if(alTermine) m.onend = alTermine;
+  try { speechSynthesis.speak(m); } catch(e){}
 }
 
 function disegna(){
   const root = document.getElementById("SPARKPLAY_APP");
-  if(!root) return;
-
-  // IMPORTANT: ogni cambio schermata, stop voce (così non continua a parlare "sotto")
-  stopSpeech();
 
   if(s.fsm === "INIZIO"){
-    root.innerHTML = `
-      <div class="sp-top">
-        <button class="icon-btn" onclick="apriDiario()" aria-label="Diario">${ICONS.book}</button>
+    const frase = FRASI[Math.floor(Math.random()*FRASI.length)];
+    root.innerHTML = `<div class="sp-top">
+        <button class="btn" style="background:none;font-size:32px;" onclick="apriDiario()">📚</button>
         <div class="brand">SPARKPLAY</div>
-        <button class="icon-btn" onclick="toggleAudio()" aria-label="Audio">
-          ${s.audio ? ICONS.speakerOn : ICONS.speakerOff}
-        </button>
+        <button class="btn" style="background:none;font-size:32px;" onclick="toggleAudio()">${s.audio?'🔊':'🔈'}</button>
       </div>
-
       <div class="content-area">
-        <div class="hero">
-          <div class="hero-image">
-            <!-- usa il tuo asset: home-hero.png in root -->
-            <img src="home-hero.png" alt="SparkPlay">
+        <div class="multiverso-container">
+          <div class="centro-spark">✨</div>
+          <div class="icona-mondo mondo-1">🚀</div>
+          <div class="icona-mondo mondo-2">🪄</div>
+          <div class="icona-mondo mondo-3">🔍</div>
+        </div>
+
+        <h1 style="text-align:center;color:var(--giallo);font-size:52px;margin:0;">PRONTI?</h1>
+        <div style="text-align:center;opacity:0.75;font-weight:700;">${frase}</div>
+
+        <div class="progress-wrap">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;opacity:0.85;font-weight:700;">
+            <span>OGGI: <span id="count-oggi">${s.oggiFatte}</span>/${limiteOggi()}</span>
+            <span style="font-size:12px;opacity:0.75;">Limite genitore</span>
           </div>
-          <h1 class="h-title">PRONTI?</h1>
-
-          <button class="btn btn-main" onclick="vaiEta()">INIZIA MISSIONE</button>
-
-          <div class="pills">
-            <div class="pill">OGGI: ${s.missioniFatte}/3</div>
-            <div class="pill">ETÀ: ${s.eta ? s.eta : "--"}</div>
+          <div class="progress-outer" aria-label="Progresso missioni di oggi">
+            <div id="barraMissioni" class="progress-inner" style="width:${Math.min(100,(s.oggiFatte/Math.max(1,limiteOggi()))*100)}%"></div>
           </div>
         </div>
-      </div>
-    `;
+
+        <button class="btn btn-avanti pulse" style="width:85%; margin:18px auto 0;" onclick="vaiEta()">INIZIA AVVENTURA 🚀</button>
+
+        <div style="text-align:center;opacity:0.55;font-size:12px; margin-top:6px;">
+          ${s.oggiFatte >= limiteOggi() ? 'Hai finito le missioni di oggi. Chiedi al genitore per sbloccare.' : '3 minuti, oggetti di casa, zero stress.'}
+        </div>
+      </div>`;
   }
   else if(s.fsm === "ETA"){
-    root.innerHTML = `
-      <div class="sp-top">
-        <button class="icon-btn" onclick="tornaHome()" aria-label="Indietro"> 
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M15 6l-6 6 6 6" stroke="rgba(255,255,255,.92)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <div class="brand" style="font-size:26px">CHI SEI?</div>
-        <button class="icon-btn" onclick="toggleAudio()" aria-label="Audio">
-          ${s.audio ? ICONS.speakerOn : ICONS.speakerOff}
-        </button>
-      </div>
-
-      <div class="content-area" style="justify-content:flex-start; padding-top:8px;">
-        <div style="width:100%; display:flex; flex-direction:column; gap:12px;">
-          <button class="btn" style="background:rgba(255,255,255,0.10); border:2px solid var(--blu); color:white; padding:18px; width:100%; display:flex; align-items:center; justify-content:space-between; border-radius:22px;"
-            onclick="scegliEta('5-7')">
-            <div style="display:flex; align-items:center; gap:12px;">
-              <div style="width:46px;height:46px;border-radius:16px;background:rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.10)">${ICONS.rocket}</div>
-              <div style="text-align:left">
-                <div style="font-weight:900; font-size:18px">ESPLORATORE</div>
-                <div style="opacity:.8; font-weight:800">5–7 anni</div>
-              </div>
-            </div>
-            <div style="opacity:.8;font-weight:900">→</div>
-          </button>
-
-          <button class="btn" style="background:rgba(255,255,255,0.10); border:2px solid var(--rossa); color:white; padding:18px; width:100%; display:flex; align-items:center; justify-content:space-between; border-radius:22px;"
-            onclick="scegliEta('8-10')">
-            <div style="display:flex; align-items:center; gap:12px;">
-              <div style="width:46px;height:46px;border-radius:16px;background:rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.10)">
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M9 18h6" stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M10 21h4" stroke="rgba(0,210,255,.95)" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M12 2c3.3 0 6 2.7 6 6 0 1.4-.5 2.6-1.3 3.6-.6.7-1.2 1.6-1.2 2.6V15H8.5v-.8c0-1-.6-1.9-1.2-2.6C6.5 10.6 6 9.4 6 8c0-3.3 2.7-6 6-6Z"
-                    stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linejoin="round"/>
-                </svg>
-              </div>
-              <div style="text-align:left">
-                <div style="font-weight:900; font-size:18px">COMANDANTE</div>
-                <div style="opacity:.8; font-weight:800">8–10 anni</div>
-              </div>
-            </div>
-            <div style="opacity:.8;font-weight:900">→</div>
-          </button>
-        </div>
-      </div>
-    `;
-
-    // auto-guida vocale per bambini
-    setTimeout(()=> speak("Scegli la tua età per iniziare la missione."), 120);
+    root.innerHTML = `<div class="sp-top"><div class="brand">CHI SEI?</div></div><div class="content-area">
+        <button class="btn" style="background:rgba(0,210,255,0.15); border:3px solid var(--blu); color:white; padding:25px; font-size:24px; margin-bottom:15px; border-radius:30px; display:flex; align-items:center; justify-content:space-between;" onclick="scegliEta('5-7')"><span style="font-size:40px;">🚀</span><div style="text-align:right;"><b>ESPLORATORE</b><br><small>5-7 ANNI</small></div></button>
+        <button class="btn" style="background:rgba(255,94,108,0.15); border:3px solid var(--rossa); color:white; padding:25px; font-size:24px; border-radius:30px; display:flex; align-items:center; justify-content:space-between;" onclick="scegliEta('8-10')"><span style="font-size:40px;">🧠</span><div style="text-align:right;"><b>COMANDANTE</b><br><small>8-10 ANNI</small></div></button></div>`;
   }
   else if(s.fsm === "GIOCO"){
     const m = s.missioneAttuale;
-    root.innerHTML = `
-      <div class="sp-top">
-        <button class="icon-btn" onclick="toggleAudio()" aria-label="Audio">
-          ${s.audio ? ICONS.speakerOn : ICONS.speakerOff}
-        </button>
+    root.innerHTML = `<div class="sp-top">
+        <button class="btn" style="background:none;font-size:32px;" onclick="toggleAudio()">${s.audio?'🔊':'🔈'}</button>
         <div class="brand" style="font-size:20px">${m.t}</div>
-        <button class="btn" style="background:var(--rossa);color:white;padding:12px 14px;border-radius:18px;font-family:'Fredoka One';box-shadow:none"
-          onclick="esciGioco()">ESCI</button>
+        <button class="btn" style="background:rgba(255,255,255,0.1);color:white;padding:8px 15px;border-radius:15px;" onclick="home()">ESCI</button>
       </div>
-
       <div class="content-area">
         <div class="testo-storia">${m.s}</div>
         <div class="obiettivo-box">OBIETTIVO: ${m.o}</div>
-
-        <div style="width:100%">
-          ${m.p.map((t,i)=>`
-            <div class="passo ${i===s.passo?'attivo':''}">
-              <div class="num">${i+1}</div>
-              <div style="flex:1">${t}</div>
-            </div>
-          `).join("")}
+        <div class="passaggi">
+          ${m.p.map((t,i)=>`<div class="passo ${i===s.passo?'attivo':''}">
+            <div style="background:var(--rossa);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-right:10px;font-size:16px;">${i+1}</div>
+            ${t}
+          </div>`).join('')}
+        </div>
+        <div style="display:flex;gap:15px;margin-top:10px;">
+          <button class="btn" style="background:rgba(255,255,255,0.1);color:white;flex:1;padding:15px;" onclick="precedente()" ${s.passo===0?'style="visibility:hidden"':''}>INDIETRO</button>
+          <button class="btn btn-avanti" style="flex:2;" onclick="successivo()">${s.passo < m.p.length-1 ? 'AVANTI' : 'COMPLETA ✅'}</button>
+        </div>
+      </div>`;
+  }
+  else if(s.fsm === "SCELTA_GENITORE"){
+    const finito = (s.oggiFatte >= limiteOggi());
+    const sbloccabile = (s.oggiFatte >= 3) && !s.specialeFattaOggi;
+    const btnSpeciale = sbloccabile
+      ? `<button class="btn" style="background:var(--blu);color:white;padding:22px;width:100%;margin-bottom:18px;font-size:20px;" onclick="apriGate('SPECIALE')">MISSIONE SPECIALE 🤝</button>`
+      : `<div style="opacity:0.65;text-align:center;margin-bottom:14px;">
+           ${s.specialeFattaOggi ? '🌟 Missione speciale: già fatta oggi.' : '🌟 Missione speciale: si sblocca dopo 3 missioni.'}
+         </div>`;
+    root.innerHTML = `<div class="sp-top"><div class="brand">GENITORE</div></div>
+      <div class="content-area">
+        <h2 style="text-align:center;font-size:32px;color:var(--giallo); margin:0;">CAPITOLO FINITO! 🏆</h2>
+        <div style="text-align:center;opacity:0.8;font-weight:700;">
+          Oggi: <b>${s.oggiFatte}</b>/${limiteOggi()} missioni
         </div>
 
-        <button class="btn btn-main" onclick="successivo()">
-          ${s.passo < m.p.length-1 ? 'AVANTI' : 'COMPLETA ✅'}
-        </button>
-      </div>
-    `;
+        ${btnSpeciale}
 
-    // auto-voce quando entra in missione:
-    // storia + obiettivo + step corrente (di solito 1)
-    setTimeout(()=>{
-      speak(`${m.s} Obiettivo: ${m.o}. Primo passaggio: ${m.p[s.passo]}`);
-    }, 150);
+        <button class="btn" style="background:rgba(255,255,255,0.12);color:white;padding:22px;width:100%;margin-bottom:18px;font-size:20px;" onclick="apriGate('ALTRE')">SBLOCCA ALTRE 3 🚀</button>
+
+        <button class="btn" style="background:var(--rossa);color:white;padding:15px;width:100%;font-size:18px;" onclick="home()">FINISCI PER OGGI</button>
+
+        <div style="text-align:center;opacity:0.6;font-size:12px;margin-top:10px;">
+          (Serve un genitore per sbloccare. Così SparkPlay resta sano e “Montessori”.)
+        </div>
+      </div>`;
+  }
+  else if(s.fsm === "GATE"){
+    const titolo = (s.gateTipo === "SPECIALE") ? "SBLOCCA MISSIONE SPECIALE" : "SBLOCCA ALTRE 3";
+    root.innerHTML = `<div class="sp-top"><div class="brand">GENITORE</div></div>
+      <div class="content-area">
+        <h2 style="text-align:center;font-size:28px;color:var(--giallo);margin:0;">${titolo}</h2>
+        <p style="text-align:center;opacity:0.8;margin:0;">Solo un genitore può continuare.</p>
+
+        <div style="margin-top:18px;background:rgba(255,255,255,0.08);border-radius:24px;padding:18px;">
+          <div style="font-weight:800; text-align:center; margin-bottom:10px;">Quanto fa <span style="color:var(--giallo);">5 + 5</span>?</div>
+          <input id="gate-input" inputmode="numeric" pattern="[0-9]*" placeholder="Risposta" style="width:100%;padding:16px;border-radius:18px;border:2px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.2);color:white;font-size:18px;text-align:center;outline:none;" />
+          ${s.gateErrore ? `<div style="margin-top:10px;text-align:center;color:var(--rossa);font-weight:800;">${s.gateErrore}</div>` : ``}
+        </div>
+
+        <button class="btn btn-avanti" style="margin-top:18px;" onclick="verificaGate()">CONFERMA ✅</button>
+        <button class="btn" style="background:rgba(255,255,255,0.12);color:white;padding:16px;width:100%;margin-top:12px;font-size:16px;" onclick="annullaGate()">ANNULLA</button>
+
+        <div style="text-align:center;opacity:0.55;font-size:12px;margin-top:10px;">
+          (È un gate semplice per evitare che i bambini sblocchino da soli.)
+        </div>
+      </div>`;
   }
 }
 
-/* -----------------------------
-   ACTIONS
--------------------------------- */
+window.apriDiario = () => {
+  const l = document.getElementById("lista-diario");
+  l.innerHTML = s.diario.length
+    ? s.diario.map(m => `<div class="scheda-ricordo"><div class="emoji-diario">📖</div><div class="testo-diario"><small>${m.data}</small><b>${m.titolo}</b></div></div>`).join('')
+    : "<p style='text-align:center;opacity:0.6;'>Il diario è vuoto.</p>";
+  document.getElementById("diario-modal").style.display = "flex";
+}
+window.chiudiDiario = () => { document.getElementById("diario-modal").style.display = "none"; }
+
 window.toggleAudio = () => {
   s.audio = !s.audio;
-  stopSpeech();
+  localStorage.setItem("sparkplay_audio", s.audio ? "1":"0");
+  if(s.audio) parla("Audio attivato");
+  else { try{ speechSynthesis.cancel(); } catch(e){} }
   disegna();
 };
 
-window.vaiEta = () => { s.fsm = "ETA"; disegna(); };
-
-window.tornaHome = () => {
-  s.fsm = "INIZIO";
+window.vaiEta = () => {
+  if(s.oggiFatte >= limiteOggi()){
+    s.fsm = "SCELTA_GENITORE";
+    disegna();
+    return;
+  }
+  s.fsm = "ETA";
   disegna();
 };
 
 window.scegliEta = (e) => {
   s.eta = e;
-  s.missioniFatte = 0;
-  s.diario = []; // reset diario su nuova sessione
-  proproxima();
+  s.passo = 0;
+  if(s.oggiFatte >= limiteOggi()){
+    s.fsm = "SCELTA_GENITORE";
+    disegna();
+  } else {
+    s.fsm = "GIOCO";
+    proproxima();
+  }
 };
 
-function proproxima(){
-  if(s.missioniFatte < (DB[s.eta]?.length || 0)){
-    s.missioneAttuale = DB[s.eta][s.missioniFatte];
-    s.passo = 0;
-    s.fsm = "GIOCO";
+window.home = () => { s.fsm = "INIZIO"; s.passo=0; s.missioneAttuale=null; disegna(); };
+
+window.apriGate = (tipo) => { s.gateTipo = tipo; s.gateErrore = ""; s.fsm = "GATE"; disegna(); };
+
+window.verificaGate = () => {
+  const v = (document.getElementById("gate-input")?.value || "").trim();
+  if(v !== "10"){
+    s.gateErrore = "Risposta errata. Riprova 🙂";
     disegna();
-  }else{
-    s.fsm = "INIZIO";
-    disegna();
-    setTimeout(()=> speak("Perfetto. Per oggi le missioni sono finite. A domani!"), 120);
+    return;
   }
+  if(s.gateTipo === "SPECIALE"){
+    if(s.specialeFattaOggi){ s.gateErrore = "Missione speciale già fatta oggi."; disegna(); return; }
+    s.missioneAttuale = DB.speciale;
+    s.specialeFattaOggi = true;
+    salvaStatoGiorno();
+    s.fsm = "GIOCO";
+    s.passo = 0;
+    disegna();
+    parla(s.missioneAttuale.s + ". Obiettivo: " + s.missioneAttuale.o + ". Passaggio 1: " + s.missioneAttuale.p[0]);
+  } else {
+    s.extraSbloccate += 3;
+    salvaStatoGiorno();
+    s.fsm = "GIOCO";
+    proproxima();
+  }
+};
+
+window.annullaGate = () => { s.fsm = "SCELTA_GENITORE"; disegna(); };
+
+function proproxima(){
+  if(!s.eta){ s.fsm="ETA"; disegna(); return; }
+
+  if(s.oggiFatte >= limiteOggi()){
+    s.fsm = "SCELTA_GENITORE";
+    disegna();
+    return;
+  }
+
+  const lista = DB[s.eta] || [];
+  const idx = (s.oggiFatte % Math.max(1, lista.length));
+  s.missioneAttuale = lista[idx];
+  s.passo = 0;
+  s.fsm = "GIOCO";
+  disegna();
+  parla(s.missioneAttuale.s + ". Obiettivo: " + s.missioneAttuale.o + ". Passaggio 1: " + s.missioneAttuale.p[0]);
 }
 
 window.successivo = () => {
-  const m = s.missioneAttuale;
-  if(!m) return;
-
-  if(s.passo < m.p.length - 1){
+  if(s.passo < s.missioneAttuale.p.length - 1){
     s.passo++;
     disegna();
-    setTimeout(()=> speak(m.p[s.passo]), 120);
-  }else{
-    // missione completata: overlay + voce + salva in diario
-    document.getElementById("overlay-success").style.display = "flex";
-    setTimeout(()=> speak("Missione completata! Bravissimo!"), 80);
+    parla("Passaggio " + (s.passo+1) + ": " + s.missioneAttuale.p[s.passo]);
+    return;
+  }
 
-    // salva diario
-    s.diario.push({ t: m.t, date: todayIT(), eta: s.eta });
+  // completata
+  document.getElementById("overlay-success").style.display = "flex";
+  creaStelle(22);
+  vibra();
 
-    setTimeout(()=>{
-      document.getElementById("overlay-success").style.display = "none";
-      s.missioniFatte++;
-      proproxima();
-    }, 2800);
+  // salva diario
+  s.diario.unshift({ titolo: s.missioneAttuale.t, data: new Date().toLocaleDateString('it-IT') });
+  localStorage.setItem('sparkplay_diario', JSON.stringify(s.diario));
+
+  setTimeout(() => {
+    document.getElementById("overlay-success").style.display = "none";
+
+    // Se era la speciale, torni al genitore
+    if (s.missioneAttuale === DB.speciale) {
+      s.fsm = "SCELTA_GENITORE";
+      disegna();
+      return;
+    }
+
+    // conta missione di oggi
+    s.oggiFatte++;
+    salvaStatoGiorno();
+
+    // se raggiunto limite, vai al genitore
+    if (s.oggiFatte >= limiteOggi()) {
+      s.fsm = "SCELTA_GENITORE";
+      disegna();
+      return;
+    }
+
+    proproxima();
+  }, 1800);
+};
+
+window.precedente = () => {
+  if(s.passo > 0){
+    s.passo--;
+    disegna();
+    parla("Passaggio " + (s.passo+1) + ": " + s.missioneAttuale.p[s.passo]);
   }
 };
 
-window.esciGioco = () => {
-  s.fsm = "INIZIO";
-  disegna();
-};
+const salvato = localStorage.getItem('sparkplay_diario');
+if(salvato) s.diario = JSON.parse(salvato);
 
-window.apriDiario = () => {
-  stopSpeech();
-  document.getElementById("diario-modal").style.display = "flex";
-  renderDiario();
-  setTimeout(()=> speak("Ecco il diario. Qui trovi le missioni che hai completato."), 120);
-};
+caricaStatoGiorno();
+const a = localStorage.getItem("sparkplay_audio");
+if(a==="1") s.audio = true;
 
-window.chiudiDiario = () => {
-  stopSpeech();
-  document.getElementById("diario-modal").style.display = "none";
-};
-
-/* Safety: se cambi tab/app, stop voce */
-document.addEventListener("visibilitychange", ()=>{
-  if(document.hidden) stopSpeech();
+// Splash: nascondi dopo un attimo (effetto app)
+window.addEventListener("load", () => {
+  const splash = document.getElementById("splash-screen");
+  if(splash){
+    setTimeout(()=>{ splash.style.display="none"; }, 900);
+  }
 });
+// evita stuck audio su iOS: carica voci quando disponibili
+try{ window.speechSynthesis?.getVoices?.(); }catch(e){}
 
-/* Start */
 disegna();
-
-})();</script>
+})();
+</script>
 </body>
 </html>
