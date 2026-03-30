@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>SparkPlay</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0b1228;
@@ -17,8 +17,10 @@
   --pink-dark:#cf4450;
   --yellow:#ffe66d;
   --cyan:#4be7ff;
+  --green:#6ee7b7;
   --white:#f7fff7;
-  --muted:rgba(255,255,255,.72);
+  --muted:rgba(255,255,255,.74);
+  --muted2:rgba(255,255,255,.56);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
@@ -28,22 +30,23 @@ body{
   color:var(--white);
   overflow:hidden;
   background:
-    radial-gradient(circle at 50% 20%, rgba(75,231,255,.12), transparent 30%),
-    radial-gradient(circle at 20% 80%, rgba(255,230,109,.08), transparent 25%),
+    radial-gradient(circle at 50% 18%, rgba(75,231,255,.13), transparent 28%),
+    radial-gradient(circle at 20% 85%, rgba(255,230,109,.10), transparent 24%),
     linear-gradient(180deg, #0c1531 0%, var(--bg) 100%);
 }
 body::before{
   content:"";
   position:fixed; inset:0; pointer-events:none;
   background-image:
-    radial-gradient(circle at 15% 20%, rgba(255,255,255,.16) 0 1px, transparent 1px),
-    radial-gradient(circle at 70% 25%, rgba(255,255,255,.12) 0 1px, transparent 1px),
-    radial-gradient(circle at 40% 80%, rgba(255,255,255,.10) 0 1px, transparent 1px);
-  background-size:180px 180px, 220px 220px, 260px 260px;
+    radial-gradient(circle at 12% 24%, rgba(255,255,255,.16) 0 1px, transparent 1px),
+    radial-gradient(circle at 74% 21%, rgba(255,255,255,.10) 0 1px, transparent 1px),
+    radial-gradient(circle at 41% 80%, rgba(255,255,255,.09) 0 1px, transparent 1px),
+    radial-gradient(circle at 83% 71%, rgba(255,255,255,.10) 0 1px, transparent 1px);
+  background-size:180px 180px, 220px 220px, 260px 260px, 240px 240px;
   opacity:.6;
 }
 .app{
-  max-width:540px;
+  max-width:560px;
   margin:0 auto;
   height:100vh;
   display:flex;
@@ -61,18 +64,19 @@ body::before{
   font-size:32px;
   color:var(--yellow);
   text-shadow:3px 3px 0 var(--pink);
+  letter-spacing:.5px;
 }
-.icon-btn,.ghost-btn,.danger-btn,.primary-btn,.secondary-btn{
+.ghost-btn,.danger-btn,.primary-btn,.secondary-btn,.icon-btn{
   border:none;
   border-radius:22px;
   font-family:'Fredoka One',cursive;
   cursor:pointer;
   transition:.18s ease;
 }
-.icon-btn:active,.ghost-btn:active,.danger-btn:active,.primary-btn:active,.secondary-btn:active{
+.ghost-btn:active,.danger-btn:active,.primary-btn:active,.secondary-btn:active,.icon-btn:active{
   transform:translateY(2px) scale(.99);
 }
-.icon-btn,.ghost-btn{
+.ghost-btn,.icon-btn{
   background:rgba(255,255,255,.08);
   color:white;
   padding:12px 14px;
@@ -148,7 +152,7 @@ body::before{
 .hero-title{
   font-family:'Fredoka One',cursive;
   color:var(--yellow);
-  font-size:52px;
+  font-size:50px;
   line-height:1;
   text-align:center;
   margin:4px 0 0;
@@ -175,6 +179,16 @@ body::before{
 .progress-inner{
   background:linear-gradient(90deg,#ffd94a 0%, var(--yellow) 100%);
   height:100%;width:0%;transition:.25s;border-radius:999px;
+}
+.tiny-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:11px;
+  background:rgba(255,255,255,.10);
 }
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .world-card{
@@ -294,6 +308,8 @@ body::before{
   border-radius:24px;
   padding:18px;
   background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+}
+.step-head{
   display:flex;
   gap:14px;
   align-items:center;
@@ -316,6 +332,56 @@ body::before{
   line-height:1.3;
   font-weight:800;
 }
+.visual-panel{
+  margin-top:14px;
+  border-radius:22px;
+  padding:16px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)),
+    linear-gradient(180deg, rgba(24,37,72,.90), rgba(12,19,42,.90));
+  border:1px solid rgba(255,255,255,.07);
+  min-height:150px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:14px;
+}
+.visual-row{
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.visual-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  min-width:58px;
+}
+.visual-emoji{
+  font-size:38px;
+  line-height:1;
+  filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));
+}
+.visual-label{
+  font-size:11px;
+  font-weight:900;
+  color:var(--muted);
+  text-align:center;
+}
+.visual-arrow{
+  font-size:28px;
+  color:var(--cyan);
+  font-weight:900;
+}
+.visual-note{
+  text-align:center;
+  font-size:12px;
+  color:var(--muted2);
+  font-weight:800;
+}
 .controls-row{
   display:flex;
   gap:12px;
@@ -329,16 +395,6 @@ body::before{
   font-weight:800;
   font-size:12px;
   text-align:center;
-}
-.tiny-pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:6px 10px;
-  border-radius:999px;
-  font-weight:900;
-  font-size:11px;
-  background:rgba(255,255,255,.10);
 }
 #splash-screen{
   position:fixed; inset:0; z-index:5000;
@@ -401,6 +457,7 @@ body::before{
   .hero-title{font-size:46px}
   .brand{font-size:28px}
   .mission-title{font-size:24px}
+  .visual-emoji{font-size:34px}
 }
 </style>
 </head>
@@ -435,6 +492,7 @@ function playTone(freq=520, duration=0.08, type="sine", volume=0.02){
     if(!AudioCtx) return;
     if(!window.__sparkCtx) window.__sparkCtx = new AudioCtx();
     const ctx = window.__sparkCtx;
+    if (ctx.state === "suspended") ctx.resume();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = type;
@@ -454,289 +512,434 @@ function sfxSuccess(){
   setTimeout(()=>playTone(990, 0.12, "triangle", 0.02), 190);
 }
 
-/* ========= DB ========= */
-const DB = {
-  speciale: {
-    t: "MISSIONE SPECIALE",
-    chapter: "SQUADRA INSIEME",
-    s: "Questa missione si fa in due.",
-    o: "FARE UNA PICCOLA MISSIONE INSIEME",
-    parent: "Leggi la missione una volta e mostra i movimenti al bambino. Poi lasciagli fare il resto.",
-    cards: {
-      "5-7": [
-        { icon:"🤝", label:"Con chi?", text:"Chiama mamma o babbo" },
-        { icon:"🌬️", label:"Respira", text:"Fate 3 respiri lenti" },
-        { icon:"👣", label:"Cammina", text:"Fate 10 passi uguali" },
-        { icon:"🚀", label:"Finale", text:"Dite: PRONTI AL LANCIO!" }
-      ],
-      "8-10": [
-        { icon:"🤝", label:"Squadra", text:"Chiama un genitore" },
-        { icon:"🌬️", label:"Allinea", text:"Fate 3 respiri nello stesso ritmo" },
-        { icon:"👣", label:"Sincronia", text:"Fate 10 passi perfettamente uguali" },
-        { icon:"🚀", label:"Finale", text:"Dite: PRONTI AL LANCIO!" }
-      ]
-    },
-    success: "Missione speciale completata. Squadra perfetta."
+/* ========= DATI ========= */
+const MISSIONS = [
+  {
+    id:"allarme_base",
+    title:"ALLARME ALLA BASE",
+    chapter:"CAPITOLO 1",
+    story:"La base sta crollando. Le rocce lunari si stanno muovendo.",
+    goal:"SALVARE LA BASE",
+    parent:"Prepara 3 cuscini, 1 coperta e 1 navetta. Spiega che i cuscini sono rocce lunari e la coperta è un ponte di emergenza.",
+    age_5_7:[
+      {
+        icon:"🪨", label:"Rocce", text:"Metti 3 rocce lunari",
+        visual:{items:[["🛏️","Roccia"],["🛏️","Roccia"],["🛏️","Roccia"]], note:"Tre cuscini = rocce lunari"}
+      },
+      {
+        icon:"🌉", label:"Ponte", text:"Fai un ponte con la coperta",
+        visual:{items:[["🛏️","Roccia"],["🟦","Ponte"],["🛏️","Roccia"]], note:"La coperta collega le rocce"}
+      },
+      {
+        icon:"🚀", label:"Salva", text:"Fai passare la navetta",
+        visual:{items:[["🚀","Navetta"],["➡️",""],["🟦","Ponte"]], note:"Se cade, allarme e si riparte"}
+      }
+    ],
+    age_8_10:[
+      {
+        icon:"🪨", label:"Base", text:"Costruisci base e ponte",
+        visual:{items:[["🛏️","Rocce"],["🟦","Ponte"],["🚀","Navetta"]], note:"Crea una base più stabile"}
+      },
+      {
+        icon:"🧠", label:"Migliora", text:"Prova 2 versioni",
+        visual:{items:[["🏗️","Versione 1"],["↔️",""],["🏗️","Versione 2"]], note:"Quale funziona meglio?"}
+      },
+      {
+        icon:"🚀", label:"Test", text:"Passa senza cadere",
+        visual:{items:[["🚀","Navetta"],["🟦","Rampa"],["✅","Successo"]], note:"Non basta farlo: deve funzionare bene"}
+      }
+    ],
+    fail_rule:"Se la navetta cade, riparti.",
+    success:"Base salvata. Sei entrato in missione."
   },
-
-  spazio: {
-    allarme_base: {
-      chapter: "CAPITOLO 1",
-      t: "ALLARME ALLA BASE",
-      s: "La base SparkPlay ha bisogno di te. Bisogna preparare il lancio.",
-      o: "COSTRUIRE UNA BASE E FAR PARTIRE LA NAVETTA",
-      parent: "Aiuta il bambino solo all’inizio: raccogliete gli oggetti e fagli vedere come fare base e rampa.",
-      cards: {
-        "5-7": [
-          { icon:"🧸", label:"Trova", text:"3 cuscini + 1 coperta + 1 navetta" },
-          { icon:"🏠", label:"Base", text:"Fai una piccola base" },
-          { icon:"🛝", label:"Rampa", text:"Metti la coperta come scivolo" },
-          { icon:"🚀", label:"Vai!", text:"Fai scendere la navetta 2 volte" }
-        ],
-        "8-10": [
-          { icon:"🧩", label:"Setup", text:"Trova 3 cuscini, 1 coperta e 1 navetta" },
-          { icon:"🏗️", label:"Costruisci", text:"Crea una base con 2 pareti e 1 console" },
-          { icon:"🛝", label:"Rampa", text:"Appoggia la coperta dalla console al pavimento" },
-          { icon:"🎯", label:"Sfida", text:"Rendi la rampa più lunga e prova quale funziona meglio" }
-        ]
+  {
+    id:"segnale_perso",
+    title:"SEGNALE PERSO",
+    chapter:"CAPITOLO 2",
+    story:"La Terra non riesce più a sentirti.",
+    goal:"RIATTIVARE IL SEGNALE",
+    parent:"Prepara 6 oggetti piccoli e 1 oggetto alto. Spiega che l’oggetto alto è l’antenna.",
+    age_5_7:[
+      {
+        icon:"⭕", label:"Cerchio", text:"Fai un cerchio di segnali",
+        visual:{items:[["🔹","Segnale"],["🔹","Segnale"],["🔹","Segnale"],["🔹","Segnale"]], note:"Metti i segnali in cerchio"}
       },
-      success: "Base pronta. Il lancio può iniziare."
-    },
-
-    ripara_antenna: {
-      chapter: "CAPITOLO 2",
-      t: "RIPARA L’ANTENNA",
-      s: "Il segnale con la Terra è sparito.",
-      o: "RIACCENDERE IL SEGNALE",
-      parent: "Preparate insieme il cerchio con gli oggetti, poi il bambino prova a sistemare il segnale.",
-      cards: {
-        "5-7": [
-          { icon:"🔹", label:"Trova", text:"6 oggetti piccoli + 1 alto" },
-          { icon:"⭕", label:"Cerchio", text:"Fai un cerchio a terra" },
-          { icon:"📡", label:"Centro", text:"Metti l’antenna al centro" },
-          { icon:"✨", label:"Segnale", text:"Sposta 2 oggetti e fai BIP" }
-        ],
-        "8-10": [
-          { icon:"🔧", label:"Setup", text:"Trova 6 oggetti piccoli e 1 oggetto alto" },
-          { icon:"⭕", label:"Interferenza", text:"Crea un cerchio ordinato sul pavimento" },
-          { icon:"📡", label:"Centro", text:"Posiziona l’antenna al centro del cerchio" },
-          { icon:"🧠", label:"Sfida", text:"Sposta solo alcuni oggetti e prova a ristabilire il segnale" }
-        ]
+      {
+        icon:"📡", label:"Antenna", text:"Mettila al centro",
+        visual:{items:[["⭕","Cerchio"],["⬇️",""],["📡","Centro"]], note:"Antenna al centro del cerchio"}
       },
-      success: "Segnale ristabilito. La Terra ti sente di nuovo."
-    },
-
-    rifornimento_energia: {
-      chapter: "CAPITOLO 3",
-      t: "ENERGIA CRITICA",
-      s: "I motori sono quasi scarichi.",
-      o: "PORTARE ENERGIA ALLA NAVETTA",
-      parent: "Mostra al bambino il punto A e il punto B. Poi lo lasci fare da solo.",
-      cards: {
-        "5-7": [
-          { icon:"🔋", label:"Trova", text:"6 oggetti piccoli + 2 contenitori" },
-          { icon:"📦", label:"A", text:"Metti tutto nel contenitore A" },
-          { icon:"🚶", label:"Porta", text:"Porta tutto nel contenitore B" },
-          { icon:"⭐", label:"Bonus", text:"Ogni viaggio = un passo gigante" }
-        ],
-        "8-10": [
-          { icon:"🔋", label:"Setup", text:"Prepara 6 batterie e 2 contenitori" },
-          { icon:"📦", label:"Depositi", text:"Metti tutte le batterie nel deposito A" },
-          { icon:"🚶", label:"Rifornisci", text:"Portale nel deposito B, con calma e precisione" },
-          { icon:"🧠", label:"Sfida", text:"Alterna le mani mentre fai tutti i viaggi" }
-        ]
+      {
+        icon:"✨", label:"BIP", text:"Sposta 2 segnali",
+        visual:{items:[["🔹","Sposta"],["🔹","Sposta"],["📡","Antenna"]], note:"Quando funziona fai BIP"}
+      }
+    ],
+    age_8_10:[
+      {
+        icon:"⭕", label:"Ordina", text:"Sistema i segnali in cerchio",
+        visual:{items:[["🔹","1"],["🔹","2"],["🔹","3"],["🔹","4"]], note:"Ordine prima, caos no"}
       },
-      success: "Energia caricata. I motori tornano attivi."
-    },
-
-    campo_asteroidi: {
-      chapter: "CAPITOLO 4",
-      t: "CAMPO DI ASTEROIDI",
-      s: "Davanti a te c’è una zona piena di ostacoli.",
-      o: "ATTRAVERSARE SENZA TOCCARE GLI ASTEROIDI",
-      parent: "Disponi gli ostacoli con il bambino e fagli capire partenza e arrivo.",
-      cards: {
-        "5-7": [
-          { icon:"🪨", label:"Prepara", text:"Metti 8 ostacoli morbidi" },
-          { icon:"➡️", label:"Parti", text:"Scegli inizio e fine" },
-          { icon:"👣", label:"Passa", text:"Cammina in mezzo senza toccare" },
-          { icon:"🚀", label:"Piano", text:"Vai lento come nello spazio" }
-        ],
-        "8-10": [
-          { icon:"🪨", label:"Setup", text:"Prepara 8 asteroidi e segna partenza e arrivo" },
-          { icon:"🧭", label:"Rotta", text:"Scegli un percorso tra gli ostacoli" },
-          { icon:"👣", label:"Attraversa", text:"Passa senza toccare gli asteroidi" },
-          { icon:"🎯", label:"Sfida", text:"Tieni la navetta in mano mentre attraversi" }
-        ]
+      {
+        icon:"📡", label:"Centro", text:"Posiziona l’antenna",
+        visual:{items:[["⭕","Segnali"],["⬇️",""],["📡","Centro"]], note:"L’antenna sta nel punto giusto"}
       },
-      success: "Campo superato. Pilotaggio preciso."
-    },
-
-    gravita_zero: {
-      chapter: "CAPITOLO 5",
-      t: "GRAVITÀ ZERO",
-      s: "La gravità nella stazione è impazzita.",
-      o: "TRASPORTARE LE STELLE SENZA FARLE CADERE",
-      parent: "Mostra al bambino come mettere una pallina sul cucchiaio. Poi prova lui.",
-      cards: {
-        "5-7": [
-          { icon:"📄", label:"Trova", text:"3 fogli + 1 cucchiaio" },
-          { icon:"⭐", label:"Stelle", text:"Fai 3 palline di carta" },
-          { icon:"🥄", label:"Porta", text:"Portane una sul cucchiaio" },
-          { icon:"✨", label:"Fila", text:"Metti le stelle in fila" }
-        ],
-        "8-10": [
-          { icon:"📄", label:"Setup", text:"Prepara 3 stelle di carta e 1 cucchiaio" },
-          { icon:"🥄", label:"Equilibrio", text:"Trasporta una stella da un punto all’altro" },
-          { icon:"📍", label:"Posiziona", text:"Metti le stelle in fila, ben distanziate" },
-          { icon:"🧠", label:"Sfida", text:"Prova a trasportarne 2 in un solo viaggio" }
-        ]
+      {
+        icon:"🧠", label:"Riattiva", text:"Tocca solo alcuni punti",
+        visual:{items:[["🔹","Solo 2"],["🚫",""],["🔹","Non tutto"]], note:"Se sposti tutto, il segnale salta"}
+      }
+    ],
+    fail_rule:"Se sposti tutto a caso, il segnale salta.",
+    success:"Segnale tornato. La Terra ti ascolta."
+  },
+  {
+    id:"energia_critica",
+    title:"ENERGIA CRITICA",
+    chapter:"CAPITOLO 3",
+    story:"I motori stanno per spegnersi.",
+    goal:"PORTARE ENERGIA ALLA NAVETTA",
+    parent:"Prepara 2 contenitori e 6 oggetti. Spiega A e B.",
+    age_5_7:[
+      {
+        icon:"🔋", label:"Batterie", text:"Metti tutto nel punto A",
+        visual:{items:[["🔋","x6"],["📦","Punto A"]], note:"Tutte le batterie partono da A"}
       },
-      success: "Gravità stabilizzata. Tutto torna sotto controllo."
-    },
-
-    stazione_spaziale: {
-      chapter: "CAPITOLO 6",
-      t: "COSTRUISCI LA STAZIONE",
-      s: "Serve una base dove l’equipaggio possa fermarsi.",
-      o: "CREARE UNA STAZIONE STABILE",
-      parent: "Aiuta il bambino a scegliere i pezzi. Poi lascia a lui la costruzione.",
-      cards: {
-        "5-7": [
-          { icon:"🧱", label:"Trova", text:"Pezzi + coperta + navetta" },
-          { icon:"🏗️", label:"Costruisci", text:"Fai una base che resta in piedi" },
-          { icon:"🛡️", label:"Proteggi", text:"Metti la coperta come scudo" },
-          { icon:"🚀", label:"Docking", text:"Fai entrare la navetta" }
-        ],
-        "8-10": [
-          { icon:"🧱", label:"Setup", text:"Prepara costruzioni, coperta e navetta" },
-          { icon:"🏗️", label:"Struttura", text:"Costruisci una base stabile con ingresso" },
-          { icon:"🛡️", label:"Scudo", text:"Proteggi una parte della struttura con la coperta" },
-          { icon:"🧠", label:"Sfida", text:"Aggiungi un secondo modulo o una piccola stanza" }
-        ]
+      {
+        icon:"🚶", label:"Porta", text:"Vai da A a B",
+        visual:{items:[["📦","A"],["➡️",""],["📦","B"]], note:"Porta una batteria alla volta"}
       },
-      success: "Stazione pronta. Equipaggio al sicuro."
-    },
-
-    sistema_solare: {
-      chapter: "CAPITOLO 7",
-      t: "SISTEMA SOLARE",
-      s: "I pianeti sono usciti dall’orbita.",
-      o: "RIMETTERE IL SISTEMA IN ORDINE",
-      parent: "Mostra il centro e aiuta il bambino a capire che i pianeti stanno intorno.",
-      cards: {
-        "5-7": [
-          { icon:"🟡", label:"Trova", text:"1 sole + 4 pianeti" },
-          { icon:"☀️", label:"Centro", text:"Metti il sole al centro" },
-          { icon:"🪐", label:"Intorno", text:"Metti i pianeti attorno" },
-          { icon:"✨", label:"Gira", text:"Fai un giro e inventa 2 nomi" }
-        ],
-        "8-10": [
-          { icon:"☀️", label:"Setup", text:"Prepara il Sole e 4 pianeti" },
-          { icon:"🪐", label:"Ordina", text:"Mettili intorno al Sole a distanze diverse" },
-          { icon:"👣", label:"Orbita", text:"Fai giri completi intorno senza toccarli" },
-          { icon:"🧠", label:"Sfida", text:"Cambia 1 pianeta di posto e spiega cosa succede" }
-        ]
+      {
+        icon:"⭐", label:"Bonus", text:"Ogni viaggio = un passo gigante",
+        visual:{items:[["👣","Passo"],["⭐","Gigante"],["🔋","Energia"]], note:"Se corri troppo, si scarica"}
+      }
+    ],
+    age_8_10:[
+      {
+        icon:"🔋", label:"Energia", text:"Prepara batterie e punti",
+        visual:{items:[["🔋","Batterie"],["📦","A"],["📦","B"]], note:"Sistema il percorso"}
       },
-      success: "Sistema solare riallineato."
-    },
-
-    sos_pianeta_ghiaccio: {
-      chapter: "CAPITOLO 8",
-      t: "SOS PIANETA GHIACCIO",
-      s: "Un astronauta è rimasto bloccato.",
-      o: "SALVARE L’ASTRONAUTA",
-      parent: "Prepara il percorso e fagli vedere che non si tocca il ghiaccio.",
-      cards: {
-        "5-7": [
-          { icon:"🧊", label:"Prepara", text:"Coperta a terra + 3 cuscini" },
-          { icon:"🧸", label:"Astronauta", text:"Metti il peluche in fondo" },
-          { icon:"👣", label:"Salva", text:"Salta solo sui cuscini" },
-          { icon:"⭐", label:"Fermo", text:"Stai 1 secondo su ogni isola" }
-        ],
-        "8-10": [
-          { icon:"🧊", label:"Setup", text:"Prepara ghiaccio, isole e astronauta" },
-          { icon:"👣", label:"Percorso", text:"Raggiungi il peluche saltando solo sulle isole" },
-          { icon:"↩️", label:"Ritorno", text:"Torna indietro senza toccare il ghiaccio" },
-          { icon:"🧠", label:"Sfida", text:"Porta con te anche una piccola scorta" }
-        ]
+      {
+        icon:"↔️", label:"Trasporta", text:"Portale con precisione",
+        visual:{items:[["📦","A"],["➡️",""],["📦","B"]], note:"Niente fretta"}
       },
-      success: "Astronauta salvato. Missione riuscita."
-    },
-
-    codice_segreto: {
-      chapter: "CAPITOLO 9",
-      t: "CODICE SEGRETO",
-      s: "La Terra aspetta un messaggio speciale.",
-      o: "CREARE E INVIARE UN CODICE",
-      parent: "Nei più piccoli scegliete insieme 2 simboli facili. Poi il bambino ripete.",
-      cards: {
-        "5-7": [
-          { icon:"✏️", label:"Prepara", text:"Carta + matita + piccoli oggetti" },
-          { icon:"⭐", label:"Segni", text:"Disegna 2 simboli" },
-          { icon:"📦", label:"Associa", text:"Scegli gli oggetti giusti" },
-          { icon:"📡", label:"Ripeti", text:"Fai il codice 2 volte" }
-        ],
-        "8-10": [
-          { icon:"✏️", label:"Setup", text:"Prepara carta, matita e piccoli oggetti" },
-          { icon:"🔣", label:"Crea", text:"Disegna 3 o 4 simboli segreti" },
-          { icon:"📦", label:"Associa", text:"Dai a ogni simbolo alcuni oggetti" },
-          { icon:"🧠", label:"Sfida", text:"Crea una sequenza e poi rifalla al contrario" }
-        ]
+      {
+        icon:"🧠", label:"Sfida", text:"Alterna mano e percorso",
+        visual:{items:[["✋","Mano 1"],["🔁",""],["🤚","Mano 2"]], note:"Controllo, non velocità"}
+      }
+    ],
+    fail_rule:"Se corri troppo, la batteria si scarica.",
+    success:"Energia ripristinata. Motori attivi."
+  },
+  {
+    id:"campo_asteroidi",
+    title:"CAMPO DI ASTEROIDI",
+    chapter:"CAPITOLO 4",
+    story:"Lo spazio davanti a te è pieno di rocce pericolose.",
+    goal:"PASSARE SENZA TOCCARE",
+    parent:"Disponi 8 ostacoli morbidi e scegli partenza e arrivo.",
+    age_5_7:[
+      {
+        icon:"🪨", label:"Asteroidi", text:"Prepara il campo",
+        visual:{items:[["🪨",""],["🪨",""],["🪨",""],["🪨",""]], note:"Gli asteroidi sono sul pavimento"}
       },
-      success: "Messaggio inviato. La Terra ha ricevuto."
-    },
-
-    atterraggio_finale: {
-      chapter: "CAPITOLO 10",
-      t: "ATTERRAGGIO FINALE",
-      s: "Ultima prova: atterrare bene sulla piattaforma.",
-      o: "FERMARE LA NAVETTA SUL BERSAGLIO",
-      parent: "Mostra il foglio-bersaglio e fai capire da dove parte la navetta.",
-      cards: {
-        "5-7": [
-          { icon:"📄", label:"Prepara", text:"Metti un foglio a terra" },
-          { icon:"👣", label:"Parti", text:"Fai 6 passi indietro" },
-          { icon:"🚀", label:"Lancia", text:"Spingi la navetta verso il foglio" },
-          { icon:"🎯", label:"Prova", text:"Hai 3 tentativi" }
-        ],
-        "8-10": [
-          { icon:"📄", label:"Setup", text:"Prepara piattaforma, navetta e linea di partenza" },
-          { icon:"🚀", label:"Atterra", text:"Spingi la navetta con precisione verso il bersaglio" },
-          { icon:"🎯", label:"Controlla", text:"Guarda se vai troppo forte o troppo piano" },
-          { icon:"🧠", label:"Sfida", text:"Hai 5 tentativi per trovare il colpo perfetto" }
-        ]
+      {
+        icon:"➡️", label:"Parti", text:"Scegli inizio e fine",
+        visual:{items:[["🟢","Inizio"],["➡️",""],["🔴","Fine"]], note:"Adesso sai dove andare"}
       },
-      success: "Atterraggio riuscito. Campagna Spazio completata."
-    }
+      {
+        icon:"👣", label:"Passa", text:"Cammina in mezzo senza toccare",
+        visual:{items:[["👣","Passi"],["🪨",""],["✅",""]], note:"Se tocchi, reset"}
+      }
+    ],
+    age_8_10:[
+      {
+        icon:"🧭", label:"Rotta", text:"Trova il percorso",
+        visual:{items:[["🟢","Start"],["🪨",""],["🔴","Goal"]], note:"Pensa prima di partire"}
+      },
+      {
+        icon:"👣", label:"Pilota", text:"Attraversa il campo",
+        visual:{items:[["👣","Passa"],["🪨","Asteroidi"]], note:"Movimento controllato"}
+      },
+      {
+        icon:"🎯", label:"Sfida", text:"Tieni la navetta in mano",
+        visual:{items:[["🚀","In mano"],["👣","Passa"]], note:"Doppia difficoltà"}
+      }
+    ],
+    fail_rule:"Se tocchi un asteroide, allarme e reset.",
+    success:"Passaggio riuscito. Sei un vero pilota."
+  },
+  {
+    id:"gravita_impazzita",
+    title:"GRAVITÀ IMPAZZITA",
+    chapter:"CAPITOLO 5",
+    story:"Nella stazione tutto fluttua.",
+    goal:"RIPORTARE ORDINE",
+    parent:"Prepara 3 palline di carta e un cucchiaio.",
+    age_5_7:[
+      {
+        icon:"⭐", label:"Stelle", text:"Prepara 3 stelle",
+        visual:{items:[["⚪","Stella"],["⚪","Stella"],["⚪","Stella"]], note:"Le palline sono stelle"}
+      },
+      {
+        icon:"🥄", label:"Porta", text:"Usa il cucchiaio",
+        visual:{items:[["⚪","Stella"],["⬇️",""],["🥄","Cucchiaio"]], note:"Una stella per volta"}
+      },
+      {
+        icon:"✨", label:"Fila", text:"Metti tutto in ordine",
+        visual:{items:[["⚪","1"],["⚪","2"],["⚪","3"]], note:"Se cade, riprova"}
+      }
+    ],
+    age_8_10:[
+      {
+        icon:"🥄", label:"Equilibrio", text:"Porta le stelle con calma",
+        visual:{items:[["🥄","Trasporto"],["⚪","Stella"]], note:"Controlla il movimento"}
+      },
+      {
+        icon:"📍", label:"Ordina", text:"Allineale bene",
+        visual:{items:[["⚪","1"],["⚪","2"],["⚪","3"]], note:"Devono restare ben messe"}
+      },
+      {
+        icon:"🧠", label:"Sfida", text:"Portane 2 in un viaggio",
+        visual:{items:[["⚪","2 stelle"],["🥄","Cucchiaio"]], note:"Serve più equilibrio"}
+      }
+    ],
+    fail_rule:"Se cade una stella, devi riprovare.",
+    success:"Gravità stabilizzata."
+  },
+  {
+    id:"costruisci_stazione",
+    title:"COSTRUISCI LA STAZIONE",
+    chapter:"CAPITOLO 6",
+    story:"Serve un rifugio per l’equipaggio.",
+    goal:"COSTRUIRE UNA STAZIONE SICURA",
+    parent:"Scegliete pezzi, coperta e navetta.",
+    age_5_7:[
+      {
+        icon:"🧱", label:"Pezzi", text:"Prepara i pezzi",
+        visual:{items:[["🧱","Pezzi"],["🟦","Coperta"],["🚀","Navetta"]], note:"Prendi tutto prima di iniziare"}
+      },
+      {
+        icon:"🏗️", label:"Stazione", text:"Costruiscila",
+        visual:{items:[["🧱","Base"],["🧱","Base"],["🏠","Stazione"]], note:"Deve restare in piedi"}
+      },
+      {
+        icon:"🚀", label:"Docking", text:"Fai entrare la navetta",
+        visual:{items:[["🚀","Navetta"],["➡️",""],["🏠","Stazione"]], note:"Se crolla, rinforza"}
+      }
+    ],
+    age_8_10:[
+      {
+        icon:"🏗️", label:"Base", text:"Costruisci una struttura stabile",
+        visual:{items:[["🧱","Pezzi"],["🏠","Base"]], note:"Non deve muoversi troppo"}
+      },
+      {
+        icon:"🛡️", label:"Proteggi", text:"Aggiungi uno scudo",
+        visual:{items:[["🟦","Scudo"],["🏠","Base"]], note:"La coperta protegge la stazione"}
+      },
+      {
+        icon:"🧠", label:"Sfida", text:"Crea anche un secondo modulo",
+        visual:{items:[["🏠","Modulo 1"],["➕",""],["🏠","Modulo 2"]], note:"Più complessa, ma stabile"}
+      }
+    ],
+    fail_rule:"Se crolla, va rinforzata.",
+    success:"Stazione completata. Equipaggio al sicuro."
+  },
+  {
+    id:"sistema_solare",
+    title:"SISTEMA SOLARE",
+    chapter:"CAPITOLO 7",
+    story:"I pianeti hanno perso l’orbita.",
+    goal:"RIMETTERE I PIANETI AL POSTO GIUSTO",
+    parent:"Mostra il centro e aiuta il bambino a capire il Sole.",
+    age_5_7:[
+      {
+        icon:"☀️", label:"Sole", text:"Mettilo al centro",
+        visual:{items:[["☀️","Sole"]], note:"Il centro è il Sole"}
+      },
+      {
+        icon:"🪐", label:"Pianeti", text:"Mettili attorno",
+        visual:{items:[["🪐","Pianeta"],["🪐","Pianeta"],["🪐","Pianeta"]], note:"Intorno al Sole"}
+      },
+      {
+        icon:"✨", label:"Gira", text:"Fai un giro e dai 2 nomi",
+        visual:{items:[["👣","Gira"],["☀️","Centro"],["🪐","Intorno"]], note:"Inventa nomi spaziali"}
+      }
+    ],
+    age_8_10:[
+      {
+        icon:"☀️", label:"Centro", text:"Sistema il Sole",
+        visual:{items:[["☀️","Centro"],["🪐","Orbita"]], note:"Prima il centro giusto"}
+      },
+      {
+        icon:"🪐", label:"Ordina", text:"Ricrea le orbite",
+        visual:{items:[["🪐","Vicino"],["🪐","Lontano"]], note:"Non tutti alla stessa distanza"}
+      },
+      {
+        icon:"🧠", label:"Sfida", text:"Cambia 1 pianeta e spiega cosa cambia",
+        visual:{items:[["🪐","Cambio"],["❓",""]], note:"Osservazione e logica"}
+      }
+    ],
+    fail_rule:"Se tocchi tutto, l’orbita si rompe.",
+    success:"Sistema solare ristabilito."
+  },
+  {
+    id:"pianeta_ghiaccio",
+    title:"PIANETA GHIACCIO",
+    chapter:"CAPITOLO 8",
+    story:"Un astronauta è rimasto bloccato su un pianeta gelato.",
+    goal:"SALVARLO SENZA TOCCARE IL GHIACCIO",
+    parent:"Prepara coperta, isole e astronauta.",
+    age_5_7:[
+      {
+        icon:"🧊", label:"Ghiaccio", text:"Prepara il campo",
+        visual:{items:[["🟦","Ghiaccio"],["🛏️","Isola"],["🛏️","Isola"]], note:"La coperta è ghiaccio"}
+      },
+      {
+        icon:"👣", label:"Isole", text:"Salta solo sui cuscini",
+        visual:{items:[["👣","Salta"],["🛏️","Isola"],["🛏️","Isola"]], note:"Non toccare il ghiaccio"}
+      },
+      {
+        icon:"🧸", label:"Salva", text:"Prendi l’astronauta",
+        visual:{items:[["🧸","Astronauta"],["✅","Salvo"]], note:"Se tocchi il ghiaccio, riparti"}
+      }
+    ],
+    age_8_10:[
+      {
+        icon:"🧊", label:"Percorso", text:"Raggiungi l’astronauta",
+        visual:{items:[["🟦","Ghiaccio"],["🛏️","Isola"],["🧸","Astronauta"]], note:"Pensa al percorso prima"}
+      },
+      {
+        icon:"↩️", label:"Ritorna", text:"Torna senza errore",
+        visual:{items:[["🧸","Recupera"],["↩️",""],["✅","Base"]], note:"Andata e ritorno"}
+      },
+      {
+        icon:"🧠", label:"Sfida", text:"Porta anche una scorta",
+        visual:{items:[["📦","Scorta"],["🧸","Astronauta"]], note:"Doppio trasporto"}
+      }
+    ],
+    fail_rule:"Se tocchi il ghiaccio, riparti.",
+    success:"Salvataggio riuscito."
+  },
+  {
+    id:"codice_segreto",
+    title:"CODICE SEGRETO",
+    chapter:"CAPITOLO 9",
+    story:"La Terra aspetta il tuo messaggio.",
+    goal:"CREARE E INVIARE UN CODICE",
+    parent:"Nei più piccoli scegliete insieme 2 simboli facili.",
+    age_5_7:[
+      {
+        icon:"✏️", label:"Segni", text:"Disegna 2 simboli",
+        visual:{items:[["⭐","Simbolo"],["●","Simbolo"]], note:"Bastano due simboli"}
+      },
+      {
+        icon:"📦", label:"Oggetti", text:"Scegli gli oggetti giusti",
+        visual:{items:[["⭐","↔"],["🧱","Oggetto"],["●","↔"]], note:"Ogni simbolo ha i suoi oggetti"}
+      },
+      {
+        icon:"📡", label:"Invia", text:"Ripeti il codice 2 volte",
+        visual:{items:[["⭐",""],["●",""],["📡","Invia"]], note:"Se sbagli ordine, non parte"}
+      }
+    ],
+    age_8_10:[
+      {
+        icon:"🔣", label:"Crea", text:"Disegna più simboli",
+        visual:{items:[["⭐",""],["▲",""],["●",""]], note:"Puoi fare un codice più lungo"}
+      },
+      {
+        icon:"📦", label:"Associa", text:"Dai un oggetto a ogni simbolo",
+        visual:{items:[["📦","Oggetto"],["↔",""],["🔣","Simbolo"]], note:"Ordine importante"}
+      },
+      {
+        icon:"🧠", label:"Sfida", text:"Fai anche la sequenza inversa",
+        visual:{items:[["1-2-3",""],["↔",""],["3-2-1",""]], note:"Più difficile, più bello"}
+      }
+    ],
+    fail_rule:"Se sbagli ordine, il messaggio non parte.",
+    success:"Messaggio inviato alla Terra."
+  },
+  {
+    id:"atterraggio_finale",
+    title:"ATTERRAGGIO FINALE",
+    chapter:"CAPITOLO 10",
+    story:"Ultima prova. Serve un atterraggio perfetto.",
+    goal:"FERMARE LA NAVETTA SUL BERSAGLIO",
+    parent:"Mostra il foglio-bersaglio e la partenza.",
+    age_5_7:[
+      {
+        icon:"📄", label:"Bersaglio", text:"Metti un foglio a terra",
+        visual:{items:[["📄","Bersaglio"]], note:"Questo è il punto di arrivo"}
+      },
+      {
+        icon:"👣", label:"Parti", text:"Vai indietro di 6 passi",
+        visual:{items:[["👣","1"],["👣","2"],["👣","3"]], note:"Parti da più lontano"}
+      },
+      {
+        icon:"🚀", label:"Atterra", text:"Lancia la navetta",
+        visual:{items:[["🚀","Navetta"],["➡️",""],["📄","Bersaglio"]], note:"Hai 3 tentativi"}
+      }
+    ],
+    age_8_10:[
+      {
+        icon:"📄", label:"Setup", text:"Prepara bersaglio e partenza",
+        visual:{items:[["📄","Bersaglio"],["👣","Partenza"]], note:"Sistema bene la distanza"}
+      },
+      {
+        icon:"🚀", label:"Precisione", text:"Lancia con controllo",
+        visual:{items:[["🚀","Lancio"],["🎯","Precisione"]], note:"Troppo forte o troppo piano?"}
+      },
+      {
+        icon:"🧠", label:"Sfida", text:"Trova il colpo perfetto in 5 tentativi",
+        visual:{items:[["1",""],["2",""],["3",""],["4",""],["5",""]], note:"Ultima prova da comandante"}
+      }
+    ],
+    fail_rule:"Se vai troppo forte o piano, devi correggere.",
+    success:"Atterraggio riuscito. Missione compiuta."
   }
-};
-
-const SPACE_ORDER = [
-  "allarme_base",
-  "ripara_antenna",
-  "rifornimento_energia",
-  "campo_asteroidi",
-  "gravita_zero",
-  "stazione_spaziale",
-  "sistema_solare",
-  "sos_pianeta_ghiaccio",
-  "codice_segreto",
-  "atterraggio_finale"
 ];
 
-/* ========= MISSION BUILDER ========= */
-function buildMissionByAge(m, eta){
-  return {
-    t: m.t,
-    s: m.s,
-    o: m.o,
-    chapter: m.chapter || "",
-    parent: eta === "5-7" ? (m.parent || "") : "",
-    steps: (m.cards[eta] || []).map(c => ({...c})),
-    success: m.success || "Missione completata!"
-  };
-}
+const SPECIAL_MISSION = {
+  title:"MISSIONE SPECIALE",
+  chapter:"SQUADRA INSIEME",
+  story:"Questa missione si fa in due.",
+  goal:"FARE UNA PICCOLA MISSIONE INSIEME",
+  parent:"Leggi la missione una volta e mostra i movimenti al bambino. Poi lasciagli fare il resto.",
+  age_5_7:[
+    {
+      icon:"🤝", label:"Con chi?", text:"Chiama mamma o babbo",
+      visual:{items:[["🧒","Bimbo"],["🤝",""],["🧑","Genitore"]], note:"Questa missione si fa in due"}
+    },
+    {
+      icon:"🌬️", label:"Respira", text:"Fate 3 respiri lenti",
+      visual:{items:[["🌬️","1"],["🌬️","2"],["🌬️","3"]], note:"Stesso ritmo"}
+    },
+    {
+      icon:"👣", label:"Cammina", text:"Fate 10 passi uguali",
+      visual:{items:[["👣","Passi"],["👣","Passi"]], note:"Uno accanto all’altro"}
+    },
+    {
+      icon:"🚀", label:"Finale", text:"Dite: PRONTI AL LANCIO!",
+      visual:{items:[["🚀","Insieme"]], note:"Missione speciale completata"}
+    }
+  ],
+  age_8_10:[
+    {
+      icon:"🤝", label:"Squadra", text:"Chiama un genitore",
+      visual:{items:[["🧒",""],["🤝",""],["🧑",""]], note:"Squadra pronta"}
+    },
+    {
+      icon:"🌬️", label:"Allinea", text:"Fate 3 respiri nello stesso ritmo",
+      visual:{items:[["🌬️",""],["🌬️",""],["🌬️",""]], note:"Sincronia"}
+    },
+    {
+      icon:"👣", label:"Sincronia", text:"Fate 10 passi perfettamente uguali",
+      visual:{items:[["👣",""],["👣",""]], note:"Serve precisione"}
+    },
+    {
+      icon:"🚀", label:"Finale", text:"Dite: PRONTI AL LANCIO!",
+      visual:{items:[["🚀",""]], note:"Squadra perfetta"}
+    }
+  ],
+  success:"Missione speciale completata. Squadra perfetta."
+};
 
 /* ========= STATO ========= */
 const FRASI = [
@@ -750,7 +953,7 @@ const state = {
   fsm: "INIZIO",
   world: "spazio",
   eta: null,
-  passo: 0,
+  stepIndex: 0,
   missioneAttuale: null,
   missioneIsSpeciale: false,
   vistoGenitore: false,
@@ -758,7 +961,7 @@ const state = {
   diario: [],
   oggiKey: "",
   oggiFatte: 0,
-  oggiLimite: 6,
+  oggiLimite: 3,
   extraSbloccate: 0,
   bonusUsatoOggi: false,
   specialeFattaOggi: false,
@@ -820,6 +1023,17 @@ function salvaCampagna(){
 function salvaDiario(){
   localStorage.setItem("sparkplay_diario", JSON.stringify(state.diario));
 }
+function buildMission(raw, eta){
+  return {
+    title: raw.title,
+    chapter: raw.chapter,
+    story: raw.story,
+    goal: raw.goal,
+    parent: eta === "5-7" ? raw.parent : "",
+    steps: raw[eta === "5-7" ? "age_5_7" : "age_8_10"],
+    success: raw.success
+  };
+}
 
 /* ========= FX ========= */
 function creaStelle(n=18){
@@ -837,6 +1051,27 @@ function vibra(){
   try{ if(navigator.vibrate) navigator.vibrate([150,70,150]); }catch(e){}
 }
 
+/* ========= VISUAL ========= */
+function renderVisual(v){
+  if(!v) return "";
+  const rows = [];
+  const items = v.items || [];
+  rows.push(`
+    <div class="visual-row">
+      ${items.map(([emoji,label]) => emoji === "➡️" || emoji === "⬇️" || emoji === "↔️" || emoji==="➕"
+        ? `<div class="visual-arrow">${emoji}</div>`
+        : `<div class="visual-item"><div class="visual-emoji">${emoji}</div>${label ? `<div class="visual-label">${label}</div>` : ""}</div>`
+      ).join("")}
+    </div>
+  `);
+  return `
+    <div class="visual-panel">
+      ${rows.join("")}
+      ${v.note ? `<div class="visual-note">${v.note}</div>` : ""}
+    </div>
+  `;
+}
+
 /* ========= HELPERS ========= */
 function progressPercent(){
   return Math.min(100, (state.oggiFatte / Math.max(1, limiteOggi())) * 100);
@@ -849,17 +1084,6 @@ function homeHint(){
     return "Hai finito le missioni di oggi. Il genitore può sbloccare +3 una sola volta.";
   }
   return "Hai finito le missioni di oggi. Torna domani per continuare.";
-}
-function renderStepCard(step){
-  return `
-    <div class="step-card">
-      <div class="step-icon">${step.icon}</div>
-      <div>
-        <div class="step-title">${step.label}</div>
-        <div class="step-text">${step.text}</div>
-      </div>
-    </div>
-  `;
 }
 
 /* ========= RENDER ========= */
@@ -883,6 +1107,7 @@ function render(){
         </div>
         <div class="hero-title">PRONTI?</div>
         <div class="hero-sub">${frase}</div>
+
         <div class="progress-wrap">
           <div class="progress-row">
             <span>OGGI: ${state.oggiFatte}/${limiteOggi()}</span>
@@ -892,6 +1117,7 @@ function render(){
             <div class="progress-inner" style="width:${progressPercent()}%"></div>
           </div>
         </div>
+
         <button class="primary-btn" onclick="vaiMondi()">SCEGLI MONDO 🌍</button>
         <div class="helper-text">${homeHint()}</div>
       </div>
@@ -967,21 +1193,22 @@ function render(){
   if(state.fsm === "GIOCO"){
     const m = state.missioneAttuale;
     const parentMode = state.eta === "5-7" && !!m.parent && !state.vistoGenitore;
+    const step = m.steps[state.stepIndex];
 
     app.innerHTML = `
       <div class="top">
         <button class="ghost-btn" onclick="home()">ESCI</button>
-        <div class="brand" style="font-size:18px">${m.t}</div>
+        <div class="brand" style="font-size:18px">${m.title}</div>
         <div style="width:58px"></div>
       </div>
       <div class="content">
         <div class="mission-shell">
           <div class="center">
             <div class="chapter-badge">${m.chapter}</div>
-            <h1 class="mission-title">${m.t}</h1>
+            <h1 class="mission-title">${m.title}</h1>
           </div>
-          <div class="mission-story">${m.s}</div>
-          <div class="objective-box">OBIETTIVO: ${m.o}</div>
+          <div class="mission-story">${m.story}</div>
+          <div class="objective-box">OBIETTIVO: ${m.goal}</div>
 
           ${parentMode ? `
             <div class="parent-box">
@@ -989,7 +1216,16 @@ function render(){
               <div class="parent-box-text">${m.parent}</div>
             </div>
           ` : `
-            ${renderStepCard(m.steps[state.passo])}
+            <div class="step-card">
+              <div class="step-head">
+                <div class="step-icon">${step.icon}</div>
+                <div>
+                  <div class="step-title">${step.label}</div>
+                  <div class="step-text">${step.text}</div>
+                </div>
+              </div>
+              ${renderVisual(step.visual)}
+            </div>
           `}
         </div>
 
@@ -997,8 +1233,8 @@ function render(){
           ${parentMode ? `
             <button class="primary-btn" onclick="continuaDopoGenitore()">HO CAPITO ✅</button>
           ` : `
-            ${state.passo > 0 ? `<button class="ghost-btn" onclick="precedente()">INDIETRO</button>` : `<button class="ghost-btn disabled">INDIETRO</button>`}
-            <button class="primary-btn" onclick="successivo()">${state.passo < m.steps.length-1 ? "FATTO" : "COMPLETA ✅"}</button>
+            ${state.stepIndex > 0 ? `<button class="ghost-btn" onclick="precedente()">INDIETRO</button>` : `<button class="ghost-btn disabled">INDIETRO</button>`}
+            <button class="primary-btn" onclick="successivo()">${state.stepIndex < m.steps.length-1 ? "FATTO" : "COMPLETA ✅"}</button>
           `}
         </div>
       </div>
@@ -1070,7 +1306,7 @@ function render(){
 function home(){
   sfxClick();
   state.fsm = "INIZIO";
-  state.passo = 0;
+  state.stepIndex = 0;
   state.missioneAttuale = null;
   state.vistoGenitore = false;
   render();
@@ -1160,8 +1396,8 @@ function verificaGate(){
     state.specialeFattaOggi = true;
     salvaStatoGiorno();
     state.missioneIsSpeciale = true;
-    state.missioneAttuale = buildMissionByAge(DB.speciale, state.eta);
-    state.passo = 0;
+    state.missioneAttuale = buildMission(SPECIAL_MISSION, state.eta);
+    state.stepIndex = 0;
     state.vistoGenitore = state.eta !== "5-7";
     state.fsm = "GIOCO";
     render();
@@ -1183,25 +1419,25 @@ function proproxima(){
     render();
     return;
   }
-  const key = SPACE_ORDER[state.storyIndex % SPACE_ORDER.length];
+  const raw = MISSIONS[state.storyIndex % MISSIONS.length];
   state.missioneIsSpeciale = false;
-  state.missioneAttuale = buildMissionByAge(DB.spazio[key], state.eta);
-  state.passo = 0;
+  state.missioneAttuale = buildMission(raw, state.eta);
+  state.stepIndex = 0;
   state.vistoGenitore = state.eta !== "5-7";
   state.fsm = "GIOCO";
   render();
 }
 function precedente(){
-  if(state.passo <= 0) return;
+  if(state.stepIndex <= 0) return;
   sfxClick();
-  state.passo--;
+  state.stepIndex--;
   render();
 }
 function successivo(){
   const m = state.missioneAttuale;
-  if(state.passo < m.steps.length - 1){
+  if(state.stepIndex < m.steps.length - 1){
     sfxClick();
-    state.passo++;
+    state.stepIndex++;
     render();
     return;
   }
@@ -1212,7 +1448,7 @@ function successivo(){
   sfxSuccess();
 
   state.diario.unshift({
-    titolo: m.t,
+    titolo: m.title,
     data: new Date().toLocaleDateString("it-IT")
   });
   salvaDiario();
