@@ -12,113 +12,55 @@
             --text-color: #ffffff;
             --button-grad: linear-gradient(180deg, #9d50bb 0%, #6e48aa 100%);
             --secondary-grad: linear-gradient(180deg, #444 0%, #222 100%);
-            --transition-speed: 0.3s; /* Leggermente più veloce per reattività */
+            --transition-speed: 0.3s;
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color); color: var(--text-color);
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden;
-            overscroll-behavior: none;
+            overflow: hidden; overscroll-behavior: none;
         }
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        body { display: flex; justify-content: center; align-items: center; }
 
-        /* --- Navigazione Robusta --- */
         .screen {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-around;
-            width: 100%;
-            height: 100%;
-            padding: 40px 20px;
-            text-align: center;
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
-            pointer-events: none;
-            z-index: 1;
+            display: none; flex-direction: column; align-items: center; justify-content: space-around;
+            width: 100%; height: 100%; padding: 40px 20px; text-align: center;
+            position: absolute; top: 0; left: 0; opacity: 0;
+            transform: translateY(10px); transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+            pointer-events: none; z-index: 1;
         }
 
-        .screen.active {
-            display: flex;
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-            z-index: 10;
-        }
+        .screen.active { display: flex; opacity: 1; transform: translateY(0); pointer-events: auto; z-index: 10; }
 
-        /* --- UI Elements --- */
         h1 { font-size: 3.5rem; margin: 0; text-shadow: 0 0 20px rgba(157, 80, 187, 0.4); }
         h2 { font-size: 2.2rem; margin: 10px 0; }
-        p { font-size: 1.4rem; line-height: 1.4; margin: 20px 0; max-width: 80%; }
+        p { font-size: 1.6rem; line-height: 1.4; margin: 20px 0; max-width: 85%; font-weight: 500; }
 
-        /* --- Bottoni --- */
         .btn {
-            position: relative;
-            background: var(--button-grad);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            padding: 28px 20px;
-            font-size: 1.8rem;
-            font-weight: 900;
-            cursor: pointer;
+            position: relative; background: var(--button-grad); color: white;
+            border: none; border-radius: 30px; padding: 28px 20px;
+            font-size: 1.8rem; font-weight: 900; cursor: pointer;
             box-shadow: 0 8px 0 #4a2d7a, 0 15px 25px rgba(0,0,0,0.4);
-            transition: transform 0.1s ease;
-            width: 90%;
-            max-width: 400px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            transition: transform 0.1s ease; width: 90%; max-width: 400px;
+            text-transform: uppercase; letter-spacing: 2px;
         }
 
-        .btn:active {
-            transform: scale(0.95) translateY(4px);
-            box-shadow: 0 2px 0 #4a2d7a;
-        }
+        .btn:active { transform: scale(0.95) translateY(4px); box-shadow: 0 2px 0 #4a2d7a; }
 
-        .btn-back {
-            background: var(--secondary-grad);
-            font-size: 1.2rem;
-            padding: 15px;
-            box-shadow: 0 5px 0 #111;
-            margin-top: 20px;
-        }
+        .btn-back { background: var(--secondary-grad); font-size: 1.2rem; padding: 15px; box-shadow: 0 5px 0 #111; margin-top: 20px; }
 
-        /* --- World Card --- */
         .world-card {
-            background: var(--card-color);
-            border-radius: 40px;
-            padding: 40px 20px;
-            border: 4px solid var(--accent-color);
-            width: 85%;
-            max-width: 350px;
+            background: var(--card-color); border-radius: 40px; padding: 40px 20px;
+            border: 4px solid var(--accent-color); width: 85%; max-width: 350px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .icon-huge {
-            font-size: 5.5rem;
-            display: block;
-            margin-bottom: 10px;
-        }
+        .icon-huge { font-size: 6rem; display: block; margin-bottom: 10px; }
+        b { color: var(--accent-color); }
     </style>
 </head>
 <body>
@@ -130,7 +72,7 @@
 
     <section id="world-select" class="screen">
         <h2>Scegli il Mondo</h2>
-        <div class="world-card" onclick="startMission()">
+        <div class="world-card" onclick="startNewSession()">
             <span class="icon-huge">🚀</span>
             <h2>SPAZIO</h2>
         </div>
@@ -139,7 +81,7 @@
 
     <section id="mission" class="screen">
         <div>
-            <span id="mission-icon" class="icon-huge">👨‍🚀</span>
+            <span id="mission-icon" class="icon-huge">🚀</span>
             <h2 id="mission-title">Missione</h2>
         </div>
         <p id="mission-text">Caricamento...</p>
@@ -148,83 +90,107 @@
 
     <section id="end-screen" class="screen">
         <div>
-            <span class="icon-huge">🏆</span>
-            <h2>Bravissimo!</h2>
-            <p>Missione Compiuta!</p>
+            <span id="end-icon" class="icon-huge">🏆</span>
+            <h2 id="end-title">Bravissimo!</h2>
+            <p id="end-text">Missione Compiuta!</p>
         </div>
         <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px;">
             <button class="btn" onclick="resetAndHome()">TORNA ALL'INIZIO</button>
-            <button class="btn btn-back" onclick="nav('world-select')">Mondi</button>
         </div>
     </section>
 
     <script>
-        // STATO GLOBALE
+        // --- LOGICA DELLE MISSIONI ---
+        const missionPool = [
+            { text: "Trova un oggetto <b>rosso</b> come Marte! 🔴", icon: "☄️" },
+            { text: "Fai 5 salti spaziali verso l'alto! ⬆️", icon: "👨‍🚀" },
+            { text: "Trova qualcosa di <b>tondo</b> come la Luna! 🌕", icon: "🛰️" },
+            { text: "Nasconditi dagli alieni per 10 secondi! 🛸", icon: "👽" },
+            { text: "Disegna una stella magica nell'aria! ✨", icon: "⭐" },
+            { text: "Cammina al rallentatore come sulla Luna! 👣", icon: "👨‍🚀" }
+        ];
+
+        const specialMission = { text: "Missione Speciale: Costruisci una <b>base spaziale</b> con i cuscini! 🏠", icon: "🌠" };
+
         let gameState = {
-            currentMission: 0,
+            currentMissionIndex: 0,
             missionsCompleted: 0,
-            maxDailyMissions: 3
+            sessionMissions: []
         };
 
-        const missions = []; 
-        let isTransitioning = false;
+        // --- FUNZIONI DI GIOCO ---
 
-        /**
-         * Navigazione Infallibile
-         */
-        function nav(screenId) {
-            const targetScreen = document.getElementById(screenId);
-            if (!targetScreen) return;
-
-            // Se stiamo già navigando, forziamo il reset per sicurezza
-            isTransitioning = true;
-
-            // 1. Rimuovi stato 'active' da TUTTI gli schermi (Pulizia totale)
-            const allScreens = document.querySelectorAll('.screen');
-            allScreens.forEach(s => {
-                s.classList.remove('active');
-                s.style.opacity = "0";
-            });
-
-            // 2. Attiva immediatamente il target (Fallback istantaneo)
-            targetScreen.classList.add('active');
-            
-            // 3. Applica l'effetto visivo dopo un frame (per permettere al CSS di vedere il cambio)
-            requestAnimationFrame(() => {
-                targetScreen.style.opacity = "1";
-                if (navigator.vibrate) navigator.vibrate(10);
-                
-                // Sblocca la navigazione dopo la transizione CSS
-                setTimeout(() => {
-                    isTransitioning = false;
-                }, 350);
-            });
-        }
-
-        /**
-         * Reset Totale e Ritorno Home
-         */
-        function resetAndHome() {
-            // Reset esplicito dello stato
-            gameState.currentMission = 0;
+        function startNewSession() {
+            // Sceglie 3 missioni casuali non ripetute
+            const shuffled = [...missionPool].sort(() => 0.5 - Math.random());
+            gameState.sessionMissions = shuffled.slice(0, 3);
             gameState.missionsCompleted = 0;
             
-            // Forza navigazione alla home
-            nav('home');
-            console.log("Stato resettato, ritorno alla Home.");
+            showNextMission();
         }
 
-        function startMission() {
-            document.getElementById('mission-text').innerHTML = "Trova qualcosa di <b>spaziale</b> nella stanza! 🚀";
+        function showNextMission() {
+            let currentData;
+            
+            if (gameState.missionsCompleted < 3) {
+                // Missioni Normali
+                currentData = gameState.sessionMissions[gameState.missionsCompleted];
+                document.getElementById('mission-title').innerText = "Missione " + (gameState.missionsCompleted + 1);
+            } else {
+                // Missione Speciale
+                currentData = specialMission;
+                document.getElementById('mission-title').innerText = "SUPER MISSIONE";
+            }
+
+            document.getElementById('mission-text').innerHTML = currentData.text;
+            document.getElementById('mission-icon').innerText = currentData.icon;
+            
             nav('mission');
         }
 
         function completeMission() {
             gameState.missionsCompleted++;
+
+            if (gameState.missionsCompleted <= 3) {
+                // Vai alla prossima (o alla speciale se siamo a 3)
+                showNextMission();
+            } else {
+                // Fine del gioco dopo la speciale
+                showFinalEnd();
+            }
+        }
+
+        function showFinalEnd() {
+            document.getElementById('end-icon').innerText = "✨";
+            document.getElementById('end-title').innerText = "Incredibile!";
+            document.getElementById('end-text').innerHTML = "Hai completato tutto!<br><b>Torna domani per nuove missioni ✨</b>";
             nav('end-screen');
         }
 
-        // Prevenzione zoom e comportamenti Safari indesiderati
+        function resetAndHome() {
+            gameState.missionsCompleted = 0;
+            gameState.sessionMissions = [];
+            nav('home');
+        }
+
+        // --- SISTEMA DI NAVIGAZIONE (STABILE) ---
+        function nav(screenId) {
+            const target = document.getElementById(screenId);
+            if (!target) return;
+
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.remove('active');
+                s.style.opacity = "0";
+            });
+
+            target.classList.add('active');
+            requestAnimationFrame(() => {
+                target.style.opacity = "1";
+                if (navigator.vibrate) navigator.vibrate(10);
+            });
+        }
+
+        // Blocco Zoom Safari
         document.addEventListener('touchstart', (e) => {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
