@@ -12,7 +12,7 @@
             --text-color: #ffffff;
             --button-grad: linear-gradient(180deg, #9d50bb 0%, #6e48aa 100%);
             --secondary-grad: linear-gradient(180deg, #444 0%, #222 100%);
-            --transition-speed: 0.4s;
+            --transition-speed: 0.3s; /* Leggermente più veloce per reattività */
         }
 
         * {
@@ -38,7 +38,7 @@
             align-items: center;
         }
 
-        /* --- Navigazione --- */
+        /* --- Navigazione Robusta --- */
         .screen {
             display: none;
             flex-direction: column;
@@ -52,9 +52,10 @@
             top: 0;
             left: 0;
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: translateY(10px);
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
             pointer-events: none;
+            z-index: 1;
         }
 
         .screen.active {
@@ -82,17 +83,16 @@
             font-weight: 900;
             cursor: pointer;
             box-shadow: 0 8px 0 #4a2d7a, 0 15px 25px rgba(0,0,0,0.4);
-            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.15s ease;
+            transition: transform 0.1s ease;
             width: 90%;
             max-width: 400px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            outline: none;
         }
 
         .btn:active {
-            transform: scale(0.92) translateY(4px);
-            box-shadow: 0 2px 0 #4a2d7a, 0 0 30px var(--accent-color);
+            transform: scale(0.95) translateY(4px);
+            box-shadow: 0 2px 0 #4a2d7a;
         }
 
         .btn-back {
@@ -112,17 +112,13 @@
             width: 85%;
             max-width: 350px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.2s ease;
         }
 
         .icon-huge {
             font-size: 5.5rem;
             display: block;
             margin-bottom: 10px;
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
         }
-
-        .nav-lock { pointer-events: none !important; }
     </style>
 </head>
 <body>
@@ -146,7 +142,7 @@
             <span id="mission-icon" class="icon-huge">👨‍🚀</span>
             <h2 id="mission-title">Missione</h2>
         </div>
-        <p id="mission-text">Caricamento missione...</p>
+        <p id="mission-text">Caricamento...</p>
         <button class="btn" onclick="completeMission()">FATTO!</button>
     </section>
 
@@ -163,87 +159,72 @@
     </section>
 
     <script>
-        // --- 1. STATO GLOBALE ---
+        // STATO GLOBALE
         let gameState = {
             currentMission: 0,
             missionsCompleted: 0,
             maxDailyMissions: 3
         };
 
-        // --- 2. STRUTTURA MISSIONI ---
-        const missions = []; // Verrà popolata nel prossimo step
-
-        let isNavigating = false;
-
-        // --- FUNZIONI DI LOGICA ---
+        const missions = []; 
+        let isTransitioning = false;
 
         /**
-         * Resetta lo stato del gioco
+         * Navigazione Infallibile
          */
-        function resetGame() {
-            gameState.currentMission = 0;
-            gameState.missionsCompleted = 0;
-            console.log("Gioco resettato.");
+        function nav(screenId) {
+            const targetScreen = document.getElementById(screenId);
+            if (!targetScreen) return;
+
+            // Se stiamo già navigando, forziamo il reset per sicurezza
+            isTransitioning = true;
+
+            // 1. Rimuovi stato 'active' da TUTTI gli schermi (Pulizia totale)
+            const allScreens = document.querySelectorAll('.screen');
+            allScreens.forEach(s => {
+                s.classList.remove('active');
+                s.style.opacity = "0";
+            });
+
+            // 2. Attiva immediatamente il target (Fallback istantaneo)
+            targetScreen.classList.add('active');
+            
+            // 3. Applica l'effetto visivo dopo un frame (per permettere al CSS di vedere il cambio)
+            requestAnimationFrame(() => {
+                targetScreen.style.opacity = "1";
+                if (navigator.vibrate) navigator.vibrate(10);
+                
+                // Sblocca la navigazione dopo la transizione CSS
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 350);
+            });
         }
 
         /**
-         * Funzione specifica per tornare alla home resettando
+         * Reset Totale e Ritorno Home
          */
         function resetAndHome() {
-            resetGame();
+            // Reset esplicito dello stato
+            gameState.currentMission = 0;
+            gameState.missionsCompleted = 0;
+            
+            // Forza navigazione alla home
             nav('home');
+            console.log("Stato resettato, ritorno alla Home.");
         }
 
-        /**
-         * Prepara e avvia la missione
-         */
         function startMission() {
-            // Qui in futuro pescheremo dalla lista missions[]
-            // Per ora impostiamo un testo di fallback dinamico
             document.getElementById('mission-text').innerHTML = "Trova qualcosa di <b>spaziale</b> nella stanza! 🚀";
             nav('mission');
         }
 
-        /**
-         * Gestisce il completamento della missione
-         */
         function completeMission() {
             gameState.missionsCompleted++;
             nav('end-screen');
         }
 
-        // --- NAVIGAZIONE (Mantenuta stabile) ---
-        function nav(screenId) {
-            if (isNavigating) return;
-            isNavigating = true;
-            document.body.classList.add('nav-lock');
-
-            const currentScreen = document.querySelector('.screen.active');
-            const nextScreen = document.getElementById(screenId);
-
-            if (!nextScreen || currentScreen === nextScreen) {
-                isNavigating = false;
-                return;
-            }
-
-            currentScreen.style.opacity = '0';
-            currentScreen.style.transform = 'translateY(-20px)';
-
-            setTimeout(() => {
-                currentScreen.classList.remove('active');
-                currentScreen.style.transform = ''; 
-                nextScreen.classList.add('active');
-                
-                if (navigator.vibrate) navigator.vibrate(15);
-
-                setTimeout(() => {
-                    isNavigating = false;
-                    document.body.classList.remove('nav-lock');
-                }, 400); 
-            }, 300);
-        }
-
-        // Prevenzione zoom iOS
+        // Prevenzione zoom e comportamenti Safari indesiderati
         document.addEventListener('touchstart', (e) => {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
