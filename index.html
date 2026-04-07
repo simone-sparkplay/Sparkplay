@@ -12,6 +12,7 @@
             --text-color: #ffffff;
             --button-grad: linear-gradient(180deg, #9d50bb 0%, #6e48aa 100%);
             --secondary-grad: linear-gradient(180deg, #444 0%, #222 100%);
+            --transition-speed: 0.4s;
         }
 
         * {
@@ -27,65 +28,72 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden; /* Blocca lo scroll della pagina intera */
+            overflow: hidden;
+            overscroll-behavior: none;
         }
 
-        /* Gestione Overscroll sicura per iOS */
         body {
-            overscroll-behavior: none; 
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Schermi */
+        /* --- Navigazione Premium & Animazioni --- */
         .screen {
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: space-around; /* Più spazio tra gli elementi */
+            justify-content: space-around;
             width: 100%;
             height: 100%;
             padding: 40px 20px;
             text-align: center;
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) cubic-bezier(0.2, 0.8, 0.2, 1);
+            pointer-events: none;
         }
 
         .screen.active {
             display: flex;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            z-index: 10;
         }
 
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        /* --- UI Elements --- */
+        h1 { font-size: 3.5rem; margin: 0; text-shadow: 0 0 20px rgba(157, 80, 187, 0.4); }
+        h2 { font-size: 2.2rem; margin: 10px 0; }
+        p { font-size: 1.4rem; line-height: 1.4; margin: 20px 0; max-width: 80%; }
 
-        /* Testi */
-        h1 { font-size: 4rem; margin: 0; text-shadow: 0 4px 10px rgba(157, 80, 187, 0.5); }
-        h2 { font-size: 2.5rem; margin: 10px 0; }
-        p { font-size: 1.5rem; line-height: 1.4; margin: 20px 0; }
-
-        /* Bottoni Giganti */
+        /* --- Bottoni con Feedback Evoluto --- */
         .btn {
+            position: relative;
             background: var(--button-grad);
             color: white;
             border: none;
             border-radius: 30px;
-            padding: 30px 20px; /* Padding aumentato */
-            font-size: 2rem;
+            padding: 28px 20px;
+            font-size: 1.8rem;
             font-weight: 900;
             cursor: pointer;
-            box-shadow: 0 8px 0 #4a2d7a, 0 15px 25px rgba(0,0,0,0.5);
-            transition: all 0.1s;
+            box-shadow: 0 8px 0 #4a2d7a, 0 15px 25px rgba(0,0,0,0.4);
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.15s ease;
             width: 90%;
             max-width: 400px;
             text-transform: uppercase;
             letter-spacing: 2px;
+            outline: none;
         }
 
+        /* Effetto Pressione (Scale + Glow) */
         .btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 4px 0 #4a2d7a, 0 10px 15px rgba(0,0,0,0.5);
+            transform: scale(0.92) translateY(4px);
+            box-shadow: 0 2px 0 #4a2d7a, 0 0 30px var(--accent-color);
         }
 
         .btn-back {
@@ -95,23 +103,37 @@
             box-shadow: 0 5px 0 #111;
             margin-top: 20px;
         }
+        
+        .btn-back:active {
+            box-shadow: 0 1px 0 #111;
+        }
 
-        /* Card Selezione Mondo */
+        /* World Card */
         .world-card {
             background: var(--card-color);
             border-radius: 40px;
-            padding: 50px 20px;
+            padding: 40px 20px;
             border: 4px solid var(--accent-color);
             width: 85%;
             max-width: 350px;
-            box-shadow: 0 0 30px rgba(162, 124, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.2s ease;
+        }
+
+        .world-card:active {
+            transform: scale(0.95);
         }
 
         .icon-huge {
-            font-size: 6rem;
+            font-size: 5.5rem;
             display: block;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 10px white);
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
+        }
+
+        /* Blocco Interazione durante transizione */
+        .nav-lock {
+            pointer-events: none !important;
         }
     </style>
 </head>
@@ -153,27 +175,53 @@
     </section>
 
     <script>
+        let isNavigating = false;
+
         /**
-         * Navigazione tra schermi
+         * Navigazione Fluida con Protezione Doppi Click
          */
         function nav(screenId) {
-            // Rimuove la classe active da tutti
-            const screens = document.querySelectorAll('.screen');
-            screens.forEach(s => s.classList.remove('active'));
+            if (isNavigating) return; // Blocca se una transizione è in corso
+            
+            isNavigating = true;
+            document.body.classList.add('nav-lock');
 
-            // Attiva il nuovo schermo
-            const target = document.getElementById(screenId);
-            if (target) {
-                target.classList.add('active');
-                // Feedback tattile (vibrazione) se supportato
-                if (navigator.vibrate) navigator.vibrate(10);
+            const currentScreen = document.querySelector('.screen.active');
+            const nextScreen = document.getElementById(screenId);
+
+            if (!nextScreen || currentScreen === nextScreen) {
+                isNavigating = false;
+                return;
             }
+
+            // 1. Inizia dissolvenza in uscita
+            currentScreen.style.opacity = '0';
+            currentScreen.style.transform = 'translateY(-20px)';
+
+            setTimeout(() => {
+                // 2. Cambia stato classi
+                currentScreen.classList.remove('active');
+                
+                // Reset posizionale per il prossimo ingresso
+                currentScreen.style.transform = ''; 
+                
+                nextScreen.classList.add('active');
+                
+                // 3. Feedback tattile
+                if (navigator.vibrate) navigator.vibrate(15);
+
+                // 4. Sblocca navigazione dopo la fine dell'animazione CSS
+                setTimeout(() => {
+                    isNavigating = false;
+                    document.body.classList.remove('nav-lock');
+                }, 400); 
+
+            }, 300); // Leggero delay per permettere l'uscita fluida
         }
 
-        // Blocca solo il rimbalzo elastico tipico di iOS Safari 
-        // senza rompere l'interattività dei bottoni
-        document.addEventListener('touchmove', function (e) {
-            if (e.scale !== 1) { e.preventDefault(); }
+        // Ottimizzazione iOS Safari Zoom
+        document.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
     </script>
 </body>
