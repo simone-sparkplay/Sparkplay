@@ -6,13 +6,21 @@
     <title>SparkPlay</title>
     <style>
         :root {
-            --bg-color: #0f1218;
-            --card-bg: #1a1f26;
-            --accent-soft: #9daaf2; /* Blu polvere calmo */
-            --gold-soft: #e5d392;   /* Oro tenue, non neon */
+            /* Rich Magical Color Palette */
+            --bg-base: #0a0e1c; /* Deep space */
+            --bg-layered: rgba(20, 26, 50, 0.85); /* Semi-translucent base */
+            --accent-purple: #9d50bb; /* Large sphere primary */
+            --accent-gold: #e5d392; /* Charm and reward accents */
+            --accent-cyan: #9daaf2; /* Soft navigation accents */
             --text-main: #f0f2f5;
             --text-dim: #94a3b8;
+            --text-gold: #ffeb3b; /* Reward/High priority text */
+            
+            --glow-purple: rgba(157, 80, 187, 0.5);
+            --glow-gold: rgba(255, 235, 59, 0.4);
+            
             --transition-smooth: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 20px;
         }
 
         * { 
@@ -22,7 +30,10 @@
 
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: var(--bg-color); 
+            background-color: var(--bg-base); 
+            /* Subtle layered cosmic background details */
+            background-image: radial-gradient(circle at 50% 120%, #2a1b4a 0%, #0a0e1c 100%), 
+                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="0.5" fill="rgba(255,255,255,0.2)"/></svg>');
             color: var(--text-main);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             overflow: hidden;
@@ -30,7 +41,7 @@
 
         body { display: flex; justify-content: center; align-items: center; }
 
-        /* --- Schermi Minimali --- */
+        /* --- Screens --- */
         .screen {
             display: none; flex-direction: column; align-items: center; justify-content: center;
             width: 100%; height: 100%; padding: 60px 30px; text-align: center;
@@ -43,10 +54,11 @@
             display: flex; opacity: 1; pointer-events: auto; z-index: 10; 
         }
 
-        /* --- Tipografia Montessori --- */
+        /* --- Charming Typography --- */
         h1 { 
             font-size: 2.8rem; font-weight: 300; letter-spacing: 4px; 
-            margin: 0; color: var(--text-main); 
+            margin: 0 0 10px 0; color: var(--text-main);
+            text-shadow: 0 0 20px var(--glow-purple); /* Whimsical glow */
         }
 
         h2 { 
@@ -59,16 +71,42 @@
             margin: 20px 0; color: var(--text-main); 
         }
 
-        /* --- UI Status (Memory) --- */
-        .badge-status {
-            font-size: 0.9rem; font-weight: 400; letter-spacing: 2px;
-            margin-top: 20px; color: var(--accent-soft);
-            text-transform: uppercase;
+        /* --- Diario Box --- */
+        .diary-box {
+            background: var(--bg-layered);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            width: 100%;
+            max-width: 320px;
+            margin: 20px 0 40px 0;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.05);
+            transition: transform 0.3s ease;
         }
 
-        .no-badge { opacity: 0.4; color: var(--text-dim); }
+        .diary-title {
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            display: block;
+            border-bottom: 1px solid rgba(157, 170, 242, 0.2);
+            padding-bottom: 8px;
+        }
 
-        /* --- Bottoni Moderni --- */
+        .diary-item {
+            font-size: 0.9rem;
+            margin: 10px 0;
+            color: var(--text-dim);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .diary-value { color: var(--text-main); font-weight: 400; }
+
+        /* --- Buttons --- */
         .btn {
             background: transparent;
             color: var(--text-main);
@@ -79,56 +117,114 @@
             cursor: pointer; transition: all 0.3s ease;
             width: 85%; max-width: 320px;
             text-transform: uppercase;
-            margin-top: 40px;
+            margin-top: 20px;
         }
 
         .btn:active { 
             background: rgba(255,255,255,0.05);
-            transform: translateY(2px);
-            border-color: var(--accent-soft);
+            transform: translateY(2px) scale(0.98);
         }
 
+        /* Primary sphere primary button (Magical Purple) */
         .btn-primary {
-            background: var(--text-main);
-            color: var(--bg-color);
+            background: var(--accent-purple);
+            color: white;
             border: none;
+            font-weight: 600;
+            border-radius: 30px; /* More soft */
+            padding: 25px 30px;
+            box-shadow: 0 10px 0 #4a2d7a, 0 15px 30px rgba(0,0,0,0.4);
+            transition: all 0.1s ease;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95) translateY(4px);
+            box-shadow: 0 2px 0 #4a2d7a;
+            filter: brightness(1.2);
         }
 
         .btn-back {
-            border: none; font-size: 0.9rem; color: var(--text-dim);
-            margin-top: 20px; padding: 10px;
+            background: transparent;
+            color: var(--text-dim);
+            border: none;
+            font-size: 1.1rem;
+            padding: 10px;
+            font-weight: 300;
+            margin-top: 30px;
         }
 
-        /* --- Card Mondo --- */
+        /* --- World Card --- */
         .world-card {
-            background: var(--card-bg);
-            border-radius: 24px; padding: 60px 40px;
-            width: 100%; max-width: 320px;
-            transition: transform 0.3s ease;
+            background: var(--bg-layered);
+            border-radius: 24px;
+            padding: 60px 40px;
+            width: 100%;
+            max-width: 320px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.05);
+            position: relative;
+        }
+        
+        /* Decorative tiny stars around portal */
+        .world-card::before, .world-card::after {
+            content: '✨';
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0.3;
+        }
+        .world-card::before { top: 20px; left: 20px; }
+        .world-card::after { bottom: 20px; right: 20px; }
+
+        .world-card:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         .icon-large { 
             font-size: 4rem; display: block; margin-bottom: 25px; 
-            opacity: 0.9; filter: grayscale(0.2);
+            opacity: 0.9; filter: grayscale(0.1);
         }
 
-        /* --- Reward Box --- */
-        .reward-box {
-            padding: 30px; margin: 30px 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .badge-display {
-            color: var(--gold-soft); font-size: 1.5rem;
-            font-weight: 300; letter-spacing: 1px;
-        }
-
-        /* --- Progress --- */
+        /* --- Progress Indicator --- */
         .progress-indicator {
             font-size: 0.8rem; letter-spacing: 2px;
             color: var(--text-dim); text-transform: uppercase;
             margin-bottom: 40px;
+        }
+        
+        /* Pulse decoration for special mission alert */
+        .pulse { 
+            animation: pulse 1s infinite alternate; 
+            color: var(--accent-gold);
+            text-shadow: 0 0 15px var(--glow-gold);
+        }
+        @keyframes pulse { from { transform: scale(1); opacity: 1; } to { transform: scale(1.1); opacity: 0.7; } }
+
+        /* --- Final Screen (Celebration) --- */
+        .reward-box {
+            padding: 30px; margin: 30px 0;
+            border-radius: var(--border-radius);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .badge-display {
+            color: var(--text-gold);
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+        
+        /* Celebrate animation for trophy badge */
+        .celebrate { animation: celebrate 0.8s ease-out both; }
+        @keyframes celebrate {
+            0% { transform: scale(0); rotate: -10deg; }
+            70% { transform: scale(1.1); rotate: 5deg; }
+            100% { transform: scale(1); rotate: 0deg; }
         }
     </style>
 </head>
@@ -137,60 +233,69 @@
     <section id="home" class="screen active">
         <div>
             <h1>SPARKPLAY</h1>
-            <div id="home-badge-display" class="badge-status no-badge">Esplorazione non iniziata</div>
+            
+            <div class="diary-box">
+                <span class="diary-title">Diario di Bordo</span>
+                <div class="diary-item">Mondo: <span id="last-world" class="diary-value">--</span></div>
+                <div class="diary-item">Titolo: <span id="last-badge" class="diary-value">--</span></div>
+                <div class="diary-item">Super Missione: <span id="last-super" class="diary-value">--</span></div>
+            </div>
         </div>
-        <button class="btn btn-primary" onclick="nav('world-select')">Inizia</button>
+
+        <button class="btn btn-primary btn-primary" onclick="nav('world-select')">GIOCA</button>
     </section>
 
     <section id="world-select" class="screen">
         <h2>Seleziona Ambiente</h2>
-        <div class="world-card" onclick="startNewSession()">
+        <div class="world-card" onclick="startNewSession('Spazio')">
             <span class="icon-large">🚀</span>
-            <div style="letter-spacing: 3px; font-weight: 300;">SPAZIO</div>
+            <div style="letter-spacing: 4px; font-weight: 300;">SPAZIO</div>
         </div>
-        <button class="btn btn-back" onclick="nav('home')">Chiudi</button>
+        <button class="btn-back" onclick="nav('home')">Indietro</button>
     </section>
 
     <section id="mission" class="screen">
         <div id="progress" class="progress-indicator">Missione 1 / 3</div>
         <div id="mission-ui">
             <span id="mission-icon" class="icon-large">🚀</span>
-            <p id="mission-text">...</p>
+            <p id="mission-text" style="padding: 0 20px;">...</p>
         </div>
-        <button class="btn btn-primary" onclick="handleComplete()">Completata</button>
+        <button class="btn btn-primary btn-primary" id="done-btn" onclick="handleComplete()">COMPLETATA</button>
     </section>
 
     <section id="alert-screen" class="screen">
-        <span class="icon-large">🌠</span>
-        <h1 style="font-size: 1.8rem; letter-spacing: 5px;">MISSIONE SPECIALE</h1>
+        <span class="icon-large pulse">🌠</span>
+        <h1 class="pulse" style="font-size: 1.8rem; letter-spacing: 5px;">MISSIONE SPECIALE</h1>
     </section>
 
     <section id="end-screen" class="screen">
         <div class="reward-box">
-            <h2 style="margin-bottom: 10px;">Obiettivo Raggiunto</h2>
+            <span class="icon-large celebrate">🏆</span>
+            <h2 style="margin-bottom: 10px;">MISSIONE CONCLUSA</h2>
             <div id="badge-name-end" class="badge-display">Comandante</div>
         </div>
-        <p style="font-size: 1rem; color: var(--text-dim);">L'esplorazione prosegue domani.</p>
-        <button class="btn btn-primary" onclick="resetAndHome()">Menu Principale</button>
+        <p style="font-size: 1.1rem; color: var(--text-dim); margin: 0 0 20px 0;">Il comando spaziale ti aspetta domani!</p>
+        <button class="btn btn-primary btn-primary" onclick="resetAndHome()">TORNA ALLA BASE</button>
     </section>
 
     <script>
-        let lastBadge = "";
+        // --- MEMORY DIARIO (Runtime Only) ---
+        let diary = { world: "--", badge: "--", superMission: "--" };
 
         const missionPool = [
             { text: "Cerca un oggetto <b>rosso</b> simile a Marte.", icon: "☄️" },
             { text: "Esegui 5 movimenti lenti verso l'alto.", icon: "👨‍🚀" },
             { text: "Trova una forma <b>rotonda</b> come la Luna.", icon: "🌕" },
-            { text: "Rimani in silenzio per 10 secondi spaziali.", icon: "🛸" },
-            { text: "Traccia una stella nell'aria con la mano.", icon: "✨" },
-            { text: "Cammina con cura, come se non ci fosse gravità.", icon: "👨‍🚀" }
+            { text: "Traccia una stella nell'aria con la mano.", icon: "✨" }
         ];
 
-        const badges = ["Esploratore Spaziale", "Comandante", "Eroe Galattico", "Pilota Stellare"];
-        const specialMission = { text: "Crea una <b>base sicura</b> usando elementi della stanza.", icon: "🌠" };
-        let gameState = { missionsCompleted: 0, sessionMissions: [] };
+        const badges = ["Esploratore Spaziale", "Comandante", "Ereo Galattico", "Pilota Stellare"];
+        const specialMission = { name: "Base di Cuscini", text: "Crea una <b>base sicura</b> con i cuscini della stanza.", icon: "🌠" };
+        
+        let gameState = { missionsCompleted: 0, sessionMissions: [], currentWorld: "" };
 
-        function startNewSession() {
+        function startNewSession(worldName) {
+            gameState.currentWorld = worldName;
             const shuffled = [...missionPool].sort(() => 0.5 - Math.random());
             gameState.sessionMissions = shuffled.slice(0, 3);
             gameState.missionsCompleted = 0;
@@ -199,38 +304,59 @@
         }
 
         function updateMissionUI() {
-            let data;
-            if (gameState.missionsCompleted < 3) {
-                data = gameState.sessionMissions[gameState.missionsCompleted];
-                document.getElementById('progress').innerText = `Missione ${gameState.missionsCompleted + 1} / 3`;
-            } else {
-                data = specialMission;
-                document.getElementById('progress').innerText = `Fase Finale`;
-            }
-            document.getElementById('mission-text').innerHTML = data.text;
-            document.getElementById('mission-icon').innerText = data.icon;
+            const ui = document.getElementById('mission-ui');
+            ui.style.opacity = "0"; // Mini transition for text
+            
+            setTimeout(() => {
+                let data;
+                if (gameState.missionsCompleted < 3) {
+                    data = gameState.sessionMissions[gameState.missionsCompleted];
+                    document.getElementById('progress').innerText = `Missione ${gameState.missionsCompleted + 1} / 3`;
+                } else {
+                    data = specialMission;
+                    document.getElementById('progress').innerText = `Fase Finale`;
+                }
+                document.getElementById('mission-text').innerHTML = data.text;
+                document.getElementById('mission-icon').innerText = data.icon;
+                ui.style.opacity = "1";
+            }, 200);
         }
 
         function handleComplete() {
+            // Tactile feedback
+            if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+            
             gameState.missionsCompleted++;
+
             if (gameState.missionsCompleted === 3) {
+                // Build-up transition for Special Mission
                 nav('alert-screen');
-                setTimeout(() => { updateMissionUI(); nav('mission'); }, 1500);
+                setTimeout(() => {
+                    updateMissionUI();
+                    nav('mission');
+                }, 2000);
             } else if (gameState.missionsCompleted > 3) {
-                lastBadge = badges[Math.floor(Math.random() * badges.length)];
-                document.getElementById('badge-name-end').innerText = lastBadge;
+                // SALVATAGGIO NEL DIARIO
+                diary.world = gameState.currentWorld;
+                diary.badge = badges[Math.floor(Math.random() * badges.length)];
+                diary.superMission = specialMission.name;
+
+                document.getElementById('badge-name-end').innerText = diary.badge;
                 nav('end-screen');
             } else {
-                updateMissionUI();
+                // Mini delay before next normal mission
+                setTimeout(() => {
+                    updateMissionUI();
+                }, 300);
             }
         }
 
         function resetAndHome() {
-            const homeDisplay = document.getElementById('home-badge-display');
-            if (lastBadge !== "") {
-                homeDisplay.innerText = lastBadge;
-                homeDisplay.classList.remove('no-badge');
-            }
+            // AGGIORNAMENTO DIARIO NELLA HOME
+            document.getElementById('last-world').innerText = diary.world;
+            document.getElementById('last-badge').innerText = diary.badge;
+            document.getElementById('last-super').innerText = diary.superMission;
+
             gameState.missionsCompleted = 0;
             nav('home');
         }
@@ -240,7 +366,10 @@
             document.getElementById(screenId).classList.add('active');
         }
 
-        document.addEventListener('touchstart', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+        // Blocco Zoom Safari
+        document.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) e.preventDefault();
+        }, { passive: false });
     </script>
 </body>
 </html>
