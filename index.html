@@ -1,350 +1,330 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SparkPlay - Avventura Spaziale</title>
-    <style>
-        :root {
-            --bg-deep: #060814;
-            --p-magic: #a27cff;
-            --p-magic-deep: #7c4dff;
-            --s-gold: #ffdb58;
-            --s-cyan: #4deeea;
-            --text-white: #ffffff;
-            --card-glass: rgba(255, 255, 255, 0.1);
-            --shadow-game: 0 10px 0 rgba(0, 0, 0, 0.4);
-            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#0B1220"/>
+<title>SparkPlay — Cosmo Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #050810;
+  --panel: rgba(13, 20, 38, 0.7);
+  --accent: #4F46E5;
+  --accent-glow: rgba(79, 70, 229, 0.4);
+  --gold: #F59E0B;
+  --text: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border: rgba(255, 255, 255, 0.08);
+}
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: var(--bg-deep);
-            background-image: radial-gradient(circle at 50% 20%, #1a1c4d 0%, #0b0e28 100%);
-            color: var(--text-white);
-            font-family: var(--font-main);
-            overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-            user-select: none;
-        }
+body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex; justify-content: center;
+}
 
-        /* --- BACKGROUND STARS --- */
-        .star-bg {
-            position: absolute; width: 2px; height: 2px; background: white;
-            border-radius: 50%; opacity: 0.3; animation: blink 3s infinite;
-        }
-        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+/* --- EFFETTO WOW: SFONDO DINAMICO --- */
+.space-bg {
+  position: fixed; inset: 0; z-index: -1;
+  background: radial-gradient(circle at 50% 50%, #111827 0%, #050810 100%);
+}
+.stars {
+  position: absolute; width: 200%; height: 200%;
+  background-image: radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)), 
+                    radial-gradient(1.5px 1.5px at 100px 150px, #fff, rgba(0,0,0,0));
+  background-size: 200px 200px;
+  animation: rotateSpace 180s linear infinite;
+  opacity: 0.4;
+}
+@keyframes rotateSpace { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
 
-        /* --- SCREEN MANAGEMENT --- */
-        .screen {
-            position: absolute; width: 100%; height: 100%;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            padding: 30px; text-align: center;
-            opacity: 0; transform: scale(0.9);
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .screen.active { display: flex; opacity: 1; transform: scale(1); z-index: 10; }
+.nebula {
+  position: absolute; width: 100%; height: 100%;
+  background: radial-gradient(circle at 80% 20%, rgba(79, 70, 229, 0.15), transparent 40%),
+              radial-gradient(circle at 20% 80%, rgba(245, 158, 11, 0.08), transparent 40%);
+  filter: blur(80px);
+}
 
-        /* --- UI ELEMENTS --- */
-        h1 {
-            font-size: 4rem; margin: 0; font-weight: 900;
-            background: linear-gradient(to bottom, #fff 40%, var(--p-magic) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(162, 124, 255, 0.5));
-        }
+/* --- LAYOUT --- */
+.app-container {
+  width: 100%; max-width: 480px;
+  padding: 20px 16px env(safe-area-inset-bottom);
+  position: relative;
+}
 
-        .btn-game {
-            background: linear-gradient(180deg, var(--p-magic) 0%, var(--p-magic-deep) 100%);
-            color: white; border: 4px solid rgba(255, 255, 255, 0.2); border-radius: 50px;
-            padding: 20px 50px; font-size: 1.6rem; font-weight: 800; cursor: pointer;
-            box-shadow: var(--shadow-game);
-            transition: all 0.1s ease; text-transform: uppercase;
-            margin-top: 25px;
-        }
-        .btn-game:active { transform: translateY(6px); box-shadow: 0 4px 0 rgba(0,0,0,0.4); }
+.glass-card {
+  background: var(--panel);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  padding: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
 
-        .btn-sec {
-            background: rgba(255, 255, 255, 0.1); border: none;
-            color: var(--text-white); padding: 12px 25px; border-radius: 20px;
-            font-weight: 700; cursor: pointer; margin-top: 20px;
-        }
+/* --- HEADER & STATS --- */
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.logo { font-weight: 800; letter-spacing: 2px; font-size: 14px; color: var(--text-muted); }
 
-        /* --- QUEST CARD --- */
-        .quest-card {
-            background: var(--card-glass); border-radius: 40px; padding: 40px 30px;
-            width: 100%; max-width: 400px; border: 2px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            position: relative;
-        }
+.stats-bar {
+  display: flex; gap: 10px; margin-bottom: 15px;
+}
+.stat-pill {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  padding: 6px 14px; border-radius: 99px;
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; gap: 6px;
+}
 
-        .progress-bar { display: flex; gap: 8px; margin-bottom: 25px; justify-content: center; }
-        .step-dot { width: 40px; height: 10px; border-radius: 5px; background: rgba(255,255,255,0.2); transition: 0.4s; }
-        .step-dot.completed { background: var(--s-cyan); box-shadow: 0 0 10px var(--s-cyan); }
-        .step-dot.active { background: var(--s-gold); box-shadow: 0 0 10px var(--s-gold); transform: scaleX(1.2); }
+/* --- PROGRESS --- */
+.prog-track { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; margin: 15px 0; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #818CF8); transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
 
-        .quest-text { font-size: 1.6rem; font-weight: 700; line-height: 1.4; margin: 20px 0; min-height: 80px; }
-        .quest-text b { color: var(--s-gold); }
+/* --- BOTTONI PRO --- */
+.btn {
+  width: 100%; border: none; border-radius: 20px;
+  padding: 18px; font-weight: 800; font-size: 16px;
+  cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-family: inherit;
+}
+.btn-primary {
+  background: var(--accent); color: white;
+  box-shadow: 0 10px 20px -5px var(--accent-glow);
+}
+.btn-primary:active { transform: scale(0.96); box-shadow: 0 5px 10px -5px var(--accent-glow); }
 
-        /* --- ICONS & ANIMATIONS --- */
-        .icon-box { height: 130px; display: flex; align-items: center; justify-content: center; animation: float 4s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.btn-outline {
+  background: rgba(255,255,255,0.03); color: var(--text);
+  border: 1px solid var(--border);
+}
 
-        .sparkle-group { animation: floatSparkle 5s ease-in-out infinite; transform-origin: center; }
-        .main-sparkle { animation: pulseSparkle 2s ease-in-out infinite; transform-origin: center; }
-        .side-sparkle { animation: sparkleBlink 3s ease-in-out infinite; transform-origin: center; }
+/* --- ANIMAZIONI STATI --- */
+.screen { display: none; animation: screenIn 0.4s ease forwards; }
+.screen.active { display: block; }
+@keyframes screenIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        @keyframes floatSparkle { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-10px) rotate(5deg); } }
-        @keyframes pulseSparkle { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,219,88,0.7)); } 50% { transform: scale(1.05); filter: drop-shadow(0 0 18px rgba(255,219,88,0.9)); } }
-        @keyframes sparkleBlink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+/* --- QUEST UI --- */
+.step-item {
+  background: rgba(255,255,255,0.03);
+  margin-bottom: 8px; border-radius: 16px;
+  padding: 14px; border: 1px solid transparent;
+  transition: all 0.3s;
+}
+.step-item.active {
+  background: rgba(79, 70, 229, 0.1);
+  border-color: rgba(79, 70, 229, 0.3);
+}
+.step-num {
+  width: 24px; height: 24px; background: var(--accent);
+  border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; margin-right: 10px;
+}
 
-        /* --- DIARY BUTTON --- */
-        .diary-btn {
-            position: absolute; top: 25px; right: 25px; width: 55px; height: 55px;
-            background: #1a1c3d; border: 3px solid var(--s-gold); border-radius: 15px;
-            display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100;
-        }
+.orb {
+  width: 64px; height: 64px; border-radius: 20px;
+  background: linear-gradient(135deg, var(--accent), #818CF8);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; margin-bottom: 16px;
+  box-shadow: 0 15px 30px -10px var(--accent-glow);
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float { 0%,100% {transform: translateY(0);} 50% {transform: translateY(-8px);} }
 
-        /* --- CONFETTI --- */
-        #canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; }
-    </style>
+.diary-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 12px; margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+}
+
+</style>
 </head>
 <body>
 
-    <canvas id="canvas"></canvas>
+<div class="space-bg"><div class="stars"></div><div class="nebula"></div></div>
 
-    <div id="diary-trigger" class="diary-btn" onclick="openDiary()">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#ffdb58"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-1-1 1V4z"/></svg>
-    </div>
+<div id="APP" class="app-container"></div>
 
-    <section id="home" class="screen active">
-        <div class="icon-box">
-            <svg width="150" height="150" viewBox="0 0 120 120">
-                <defs><linearGradient id="g1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#a27cff"/></linearGradient></defs>
-                <circle cx="60" cy="60" r="50" fill="rgba(162,124,255,0.1)"/>
-                <path d="M60 15 L85 85 L60 70 L35 85 Z" fill="url(#g1)" stroke="#fff" stroke-width="2"/>
-            </svg>
+<script>
+const DB = {
+    small: [
+        {id:"s1", emoji:"📡", title:"Antenna Stellare", goal:"Riaccendi il segnale", story:"La base è al buio. Serve la tua antenna calzino!", prop:"Un calzino", steps:["Trova l'antenna","Portala in base","Fai 3 bip"], finale:"Segnale OK", q:"A chi scrivi?"},
+        {id:"s2", emoji:"🛰️", title:"Satellite Amico", goal:"Salva il satellite", story:"Un peluche fluttua lontano. Riportalo a casa.", prop:"Un peluche", steps:["Prendilo piano","Fai un giro d'orbita","Mettilo a nanna"], finale:"Orbita sicura", q:"Che nome ha?"}
+    ],
+    big: [
+        {id:"b1", emoji:"⚙️", title:"Riparazione Motore", goal:"Sistema i motori", story:"Comandante, usa logica e silenzio per riparare tutto.", prop:"Calzino + Foglio", steps:["Muoviti in silenzio","Crea uno scudo","Sigilla il modulo"], finale:"Motore fluido", q:"Era difficile?"}
+    ]
+};
+
+let state = {
+    fsm: 'HOME',
+    count: 0,
+    age: null,
+    xp: 0,
+    lvl: 1,
+    quest: null,
+    step: 0,
+    audio: true
+};
+
+// Funzioni logica
+const save = () => localStorage.setItem('spark_v2', JSON.stringify(state));
+const load = () => {
+    const data = localStorage.getItem('spark_v2');
+    if(data) state = JSON.parse(data);
+};
+
+const render = () => {
+    const root = document.getElementById('APP');
+    
+    // Header standard
+    const header = `
+        <div class="header">
+            <div class="logo">SPARKPLAY</div>
+            <div class="stat-pill" onclick="toggleAudio()">${state.audio ? '🔊' : '🔇'}</div>
         </div>
-        <h1>SparkPlay</h1>
-        <button class="btn-game" onclick="startAdventure()">Inizia l'Avventura</button>
-    </section>
+        <div class="stats-bar">
+            <div class="stat-pill" style="color:var(--gold)">⭐ LV ${state.lvl}</div>
+            <div class="stat-pill">🚀 ${state.count}/3 Oggi</div>
+        </div>
+        <div class="prog-track"><div class="prog-fill" style="width:${(state.xp/3)*100}%"></div></div>
+    `;
 
-    <section id="mission-screen" class="screen">
-        <div class="quest-card">
-            <div id="progress-bar" class="progress-bar"></div>
-            <div id="m-icon" class="icon-box">
+    if(state.fsm === 'HOME') {
+        root.innerHTML = `
+            ${header}
+            <div class="screen active">
+                <div class="glass-card">
+                    <div class="orb">🌌</div>
+                    <h2 style="margin:0 0 10px">Pronto, Comandante?</h2>
+                    <p style="color:var(--text-muted); font-size:14px; margin-bottom:24px">Completa 3 missioni per finire il capitolo di oggi.</p>
+                    <button class="btn btn-primary" onclick="startMission()">INIZIA MISSIONE</button>
+                    <div style="height:12px"></div>
+                    <button class="btn btn-outline" onclick="setScreen('AGE')">CAMBIA ETÀ</button>
+                    <div style="height:12px"></div>
+                    <button class="btn btn-outline" onclick="showDiary()">DIARIO DI BORDO</button>
                 </div>
-            <p id="m-text" class="quest-text">Caricamento missione...</p>
-        </div>
-        <button class="btn-game" onclick="completeStep()">Completato!</button>
-    </section>
+            </div>
+        `;
+    }
 
-    <section id="super-alert" class="screen" style="background: rgba(11,14,40,0.95);">
-        <div class="icon-box">
-            <svg width="150" height="150" viewBox="0 0 100 100">
-                <path d="M50 5 L63 38 L95 38 L68 58 L78 90 L50 72 L22 90 L32 58 L5 38 L37 38 Z" fill="#ffdb58" stroke="#fff" stroke-width="3"/>
-            </svg>
-        </div>
-        <h2 style="font-size: 3rem; color: var(--s-gold); margin: 0;">SFIDA FINALE!</h2>
-        <p style="font-size: 1.4rem;">Preparati per l'ultima grande prova...</p>
-    </section>
+    if(state.fsm === 'AGE') {
+        root.innerHTML = `
+            <div class="screen active">
+                <div class="glass-card" style="text-align:center">
+                    <h2>Chi esplora oggi?</h2>
+                    <p style="color:var(--text-muted); margin-bottom:24px">Scegli la difficoltà del viaggio</p>
+                    <button class="btn btn-outline" onclick="selectAge('small')">👦 5-7 ANNI (Esploratore)</button>
+                    <div style="height:12px"></div>
+                    <button class="btn btn-outline" onclick="selectAge('big')">🧠 8-10 ANNI (Comandante)</button>
+                </div>
+            </div>
+        `;
+    }
 
-    <section id="end-screen" class="screen">
-        <div class="icon-box" style="animation: none;">
-            <svg width="180" height="180" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="rgba(255,219,88,0.2)"/>
-                <path d="M30 30 L70 30 L70 50 Q70 70 50 70 Q30 70 30 50 Z" fill="#ffdb58" stroke="#fff" stroke-width="2"/>
-                <path d="M50 70 L50 85 M40 85 L60 85" stroke="#ffdb58" stroke-width="5" stroke-linecap="round"/>
-            </svg>
-        </div>
-        <h2 style="font-size: 2.5rem; color: var(--s-gold); margin-bottom: 0;">BRAVISSIMO!</h2>
-        <p id="reward-title" style="font-size: 1.8rem; font-weight: 800; margin: 10px 0;">TITOLO OTTENUTO</p>
-        <p style="opacity: 0.8;">Missioni completate con successo!</p>
-        <button class="btn-main" onclick="location.reload()">Torna Domani</button>
-    </section>
+    if(state.fsm === 'QUEST') {
+        const q = state.quest;
+        root.innerHTML = `
+            <div class="screen active">
+                <div class="glass-card">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start">
+                        <div>
+                            <span style="font-size:12px; font-weight:800; color:var(--accent)">MISSIONE ATTIVA</span>
+                            <h2 style="margin:4px 0 20px">${q.emoji} ${q.title}</h2>
+                        </div>
+                        <div class="orb" style="width:44px; height:44px; font-size:20px; margin:0">${q.emoji}</div>
+                    </div>
+                    
+                    <div style="background:rgba(255,255,255,0.03); padding:16px; border-radius:16px; margin-bottom:20px">
+                        <p style="margin:0; font-size:14px; line-height:1.6">${q.story}</p>
+                    </div>
 
-    <section id="diary-screen" class="screen">
-        <div class="quest-card">
-            <h2 style="color: var(--s-gold); margin-top: 0;">Il tuo Diario</h2>
-            <div id="diary-content" style="text-align: left; max-height: 250px; overflow-y: auto; padding-right: 10px;"></div>
-            <button class="btn-game" style="width: 100%;" onclick="nav('home')">Chiudi</button>
-        </div>
-    </section>
+                    <div style="border-left:3px solid var(--accent); padding-left:15px; margin-bottom:20px">
+                        <span style="font-size:12px; font-weight:800; color:var(--text-muted)">COSA SERVE</span>
+                        <div style="font-weight:700">🎒 ${q.prop}</div>
+                    </div>
 
-    <script>
-        const state = {
-            step: 0,
-            missions: [],
-            isFinished: false
-        };
+                    <div style="margin-bottom:24px">
+                        ${q.steps.map((s, i) => `
+                            <div class="step-item ${state.step === i ? 'active' : ''}">
+                                <span class="step-num">${i+1}</span>
+                                <span style="font-size:14px; font-weight:${state.step === i ? '700' : '400'}">${s}</span>
+                            </div>
+                        `).join('')}
+                    </div>
 
-        // --- ASSET REPOSITORY CON NUOVA ICONA SPARKLE ANIMATA ---
-        const icons = {
-            // L'icona principale ispirata allo screenshot, con animazioni complesse
-            sparkle: `
-            <svg width="120" height="120" viewBox="0 0 120 120">
-              <defs>
-                <linearGradient id="gSparkle" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#fff"/>
-                  <stop offset="100%" stop-color="#ffdb58"/>
-                </linearGradient>
-              </defs>
-              <g class="sparkle-group">
-                <path class="main-sparkle" d="M60 10 Q65 50 105 55 Q65 60 60 100 Q55 60 15 55 Q55 50 60 10 Z" fill="url(#gSparkle)" stroke="#fff" stroke-width="1.5"/>
-                
-                <path class="side-sparkle" d="M90 30 Q91 40 100 41 Q91 42 90 52 Q89 42 80 41 Q89 40 90 30 Z" fill="#ffdb58" style="animation-delay: 0.5s"/>
-                <path class="side-sparkle" d="M100 65 Q101 72 107 73 Q101 74 100 81 Q99 74 93 73 Q99 72 100 65 Z" fill="#ffdb58" style="animation-delay: 1s"/>
-                <path class="side-sparkle" d="M30 25 Q31 30 36 31 Q31 32 30 37 Q29 32 24 31 Q29 30 30 25 Z" fill="#ffdb58" style="animation-delay: 1.5s"/>
-              </g>
-            </svg>`,
-            star: `<svg width="100" height="100" viewBox="0 0 100 100"><path d="M50 10 L60 40 L90 40 L65 60 L75 90 L50 70 L25 90 L35 60 L10 40 L40 40 Z" fill="#ffdb58" stroke="#fff" stroke-width="2"/></svg>`
-        };
+                    <div class="stats-bar">
+                        ${state.step > 0 ? `<button class="btn btn-outline" style="flex:1" onclick="prevStep()">Indietro</button>` : ''}
+                        <button class="btn btn-primary" style="flex:2" onclick="${state.step < q.steps.length-1 ? 'nextStep()' : 'completeQuest()'}">
+                            ${state.step < q.steps.length-1 ? 'Avanti' : 'Finito!'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+};
 
-        // Sostituiamo l'icona robot con la nuova icona sparkle nelle missioni
-        const missionPool = [
-            { t: "Trova un oggetto <b>Rosso</b> come Marte!", i: icons.sparkle },
-            { t: "Fai 5 <b>Salti Spaziali</b> velocissimi!", i: icons.sparkle },
-            { t: "Trova una cosa <b>Tonda</b> come un pianeta!", i: icons.sparkle }
-        ];
+// Actions
+window.setScreen = (s) => { state.fsm = s; render(); };
+window.selectAge = (a) => { state.age = a; state.fsm = 'HOME'; save(); render(); };
+window.toggleAudio = () => { state.audio = !state.audio; save(); render(); };
 
-        const superMission = { t: "Costruisci una <b>Base Spaziale</b> con i cuscini!", i: icons.star };
+window.startMission = () => {
+    if(!state.age) return window.setScreen('AGE');
+    const pool = DB[state.age];
+    state.quest = pool[Math.floor(Math.random()*pool.length)];
+    state.step = 0;
+    state.fsm = 'QUEST';
+    if(state.audio) speak(`Missione: ${state.quest.title}. Prendi ${state.quest.prop}`);
+    render();
+};
 
-        function initStars() {
-            for (let i = 0; i < 50; i++) {
-                const star = document.createElement('div');
-                star.className = 'star-bg';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                document.body.appendChild(star);
-            }
-        }
+window.nextStep = () => {
+    state.step++;
+    if(state.audio) speak(state.quest.steps[state.step]);
+    render();
+};
 
-        function nav(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById(id);
-            target.style.display = 'flex';
-            setTimeout(() => target.classList.add('active'), 50);
-        }
+window.prevStep = () => {
+    state.step--;
+    render();
+};
 
-        function startAdventure() {
-            const lastDate = localStorage.getItem('spark_play_date');
-            if (lastDate === new Date().toDateString()) {
-                alert("Hai già completato le missioni di oggi! Torna domani per nuove sfide.");
-                return;
-            }
-            state.step = 0;
-            state.missions = [...missionPool].sort(() => 0.5 - Math.random());
-            buildProgressBar();
-            updateUI();
-            nav('mission-screen');
-        }
+window.completeQuest = () => {
+    state.count++;
+    state.xp++;
+    if(state.xp >= 3) { state.lvl++; state.xp = 0; }
+    state.fsm = 'HOME';
+    if(state.audio) speak("Ottimo lavoro! Missione compiuta.");
+    save();
+    render();
+};
 
-        function buildProgressBar() {
-            const bar = document.getElementById('progress-bar');
-            bar.innerHTML = '';
-            for (let i = 0; i < 4; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'step-dot';
-                bar.appendChild(dot);
-            }
-        }
+const speak = (txt) => {
+    if(!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(txt);
+    u.lang = 'it-IT';
+    u.rate = 0.9;
+    window.speechSynthesis.speak(u);
+};
 
-        function updateUI() {
-            const dots = document.querySelectorAll('.step-dot');
-            dots.forEach((dot, i) => {
-                dot.className = 'step-dot';
-                if (i < state.step) dot.classList.add('completed');
-                if (i === state.step) dot.classList.add('active');
-            });
+// Init
+load();
+render();
 
-            const current = state.step < 3 ? state.missions[state.step] : superMission;
-            document.getElementById('m-text').innerHTML = current.t;
-            document.getElementById('m-icon').innerHTML = current.i;
-        }
-
-        function completeStep() {
-            state.step++;
-            if (state.step === 3) {
-                nav('super-alert');
-                setTimeout(() => {
-                    updateUI();
-                    nav('mission-screen');
-                }, 2500);
-            } else if (state.step > 3) {
-                showFinalReward();
-            } else {
-                updateUI();
-            }
-        }
-
-        function showFinalReward() {
-            state.isFinished = true;
-            const titles = ["Esploratore Galattico", "Comandante Stellare", "Eroe del Cosmo"];
-            const finalTitle = titles[Math.floor(Math.random() * titles.length)];
-            
-            document.getElementById('reward-title').innerText = finalTitle;
-            
-            // Salva data e diario
-            localStorage.setItem('spark_play_date', new Date().toDateString());
-            const history = JSON.parse(localStorage.getItem('spark_history') || '[]');
-            history.unshift({ date: new Date().toLocaleDateString(), title: finalTitle });
-            localStorage.setItem('spark_history', JSON.stringify(history.slice(0, 10)));
-
-            nav('end-screen');
-            startConfetti();
-        }
-
-        function openDiary() {
-            const history = JSON.parse(localStorage.getItem('spark_history') || '[]');
-            const container = document.getElementById('diary-content');
-            container.innerHTML = history.length ? '' : '<p>Nessuna missione completata ancora. Inizia subito!</p>';
-            
-            history.forEach(h => {
-                const entry = document.createElement('div');
-                entry.style.marginBottom = "15px";
-                entry.style.padding = "10px";
-                entry.style.background = "rgba(255,255,255,0.05)";
-                entry.style.borderRadius = "10px";
-                entry.innerHTML = `<small>${h.date}</small><br><strong>${h.title}</strong>`;
-                container.appendChild(entry);
-            });
-            nav('diary-screen');
-        }
-
-        function startConfetti() {
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            let particles = [];
-            for (let i = 0; i < 100; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    r: Math.random() * 6 + 2,
-                    d: Math.random() * 100,
-                    color: `hsl(${Math.random() * 360}, 70%, 60%)`
-                });
-            }
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => {
-                    ctx.beginPath();
-                    ctx.fillStyle = p.color;
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fill();
-                    p.y += 3;
-                    if (p.y > canvas.height) p.y = -10;
-                });
-                if (state.isFinished) requestAnimationFrame(draw);
-            }
-            draw();
-        }
-
-        initStars();
-    </script>
+</script>
 </body>
 </html>
