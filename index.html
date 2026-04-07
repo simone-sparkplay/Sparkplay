@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SparkPlay</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-deep: #060814;
@@ -12,7 +11,7 @@
             --accent-gold: #ffdb58;
             --text-main: #ffffff;
             --text-soft: #94a3b8;
-            --panel-glass: rgba(255, 255, 255, 0.06);
+            --panel-glass: rgba(255, 255, 255, 0.08);
             --inner-glow: inset 0 0 15px rgba(162, 124, 255, 0.2);
         }
 
@@ -23,9 +22,10 @@
             background: var(--bg-deep);
             background-image: 
                 radial-gradient(circle at 50% 50%, #161b3d 0%, #060814 100%),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="2" cy="2" r="1" fill="white" opacity="0.2"/></svg>');
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="2" cy="2" r="1" fill="white" opacity="0.15"/></svg>');
             color: var(--text-main);
-            font-family: 'Quicksand', sans-serif;
+            /* 1. Rimosso Google Fonts: Utilizzo font di sistema moderni e leggibili */
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
             overflow: hidden;
         }
 
@@ -40,63 +40,42 @@
 
         .screen.active { display: flex; opacity: 1; pointer-events: auto; z-index: 10; transform: scale(1); }
 
-        /* --- 1. HOME SCREEN: ICONIC & MAGICAL --- */
+        /* --- HOME SCREEN --- */
         .home-hero { position: relative; margin-bottom: 20px; }
         
-        .spark-glow {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 250px; height: 100px; background: var(--accent-magic);
-            filter: blur(60px); opacity: 0.3; z-index: -1;
-        }
-
         h1 { 
-            font-size: 4.2rem; margin: 0; font-weight: 700; letter-spacing: -2px;
-            background: linear-gradient(to bottom, #ffffff 30%, #c0a4ff 100%);
+            font-size: 4rem; margin: 0; font-weight: 800; letter-spacing: -1.5px;
+            background: linear-gradient(to bottom, #ffffff 40%, #c0a4ff 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 15px rgba(162, 124, 255, 0.6));
-            animation: titleFloat 4s ease-in-out infinite;
         }
-
-        @keyframes titleFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
         .btn-main {
             background: linear-gradient(180deg, #b37cff 0%, #7c4dff 100%);
             color: white; border: none; border-radius: 60px; 
-            padding: 24px 70px; font-size: 1.9rem; font-weight: 700; cursor: pointer;
+            padding: 22px 65px; font-size: 1.8rem; font-weight: 700; cursor: pointer;
             box-shadow: 0 10px 0 #4a2d7a, 0 20px 40px rgba(0,0,0,0.5);
-            transition: all 0.15s ease; text-transform: uppercase; letter-spacing: 2px;
+            transition: all 0.15s ease; text-transform: uppercase; letter-spacing: 1.5px;
             margin-top: 40px; border: 2px solid rgba(255,255,255,0.2);
         }
         .btn-main:active { transform: translateY(8px); box-shadow: 0 2px 0 #4a2d7a; filter: brightness(1.1); }
 
-        /* --- 2. DIARY BUTTON & MODAL: HIDDEN TREASURE --- */
+        /* --- DIARY --- */
         .diary-trigger {
             position: absolute; top: 30px; right: 25px;
-            width: 54px; height: 54px; border-radius: 50%;
+            width: 52px; height: 52px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #3d457a, #1a1c3d);
             border: 2px solid var(--accent-gold);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; cursor: pointer; z-index: 100;
+            font-size: 1.6rem; cursor: pointer; z-index: 100;
             box-shadow: 0 0 20px rgba(255, 219, 88, 0.3);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .diary-trigger:active { transform: scale(0.8) rotate(-15deg); }
 
         .diary-modal {
             background: linear-gradient(135deg, #1a1c3d 0%, #0a0b1e 100%);
             border: 2px solid var(--accent-gold); border-radius: 35px;
             padding: 35px; width: 90%; max-width: 350px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 30px rgba(255, 219, 88, 0.1);
-            position: relative; overflow: hidden;
-        }
-
-        .diary-modal::before {
-            content: "✨"; position: absolute; top: 10px; right: 20px; opacity: 0.3; font-size: 1.5rem;
-        }
-
-        .diary-title { 
-            color: var(--accent-gold); font-size: 1.1rem; text-transform: uppercase; 
-            letter-spacing: 4px; margin-bottom: 25px; display: block; font-weight: 700;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
         }
 
         .diary-item {
@@ -105,35 +84,65 @@
             display: flex; flex-direction: column; align-items: flex-start;
         }
 
-        .diary-label { color: var(--text-soft); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px; }
         .diary-val { color: #fff; font-size: 1rem; font-weight: 700; }
 
-        /* --- 3. MISSION SCREEN: ACTIVE QUEST --- */
+        /* --- 3. MISSION SCREEN: MIGLIORATA LEGGIBILITÀ --- */
         .quest-card {
-            background: var(--panel-glass); border-radius: 40px; padding: 45px 30px;
-            width: 100%; max-width: 380px; border: 1px solid rgba(255,255,255,0.08);
+            background: var(--panel-glass); border-radius: 40px; padding: 50px 35px;
+            width: 100%; max-width: 380px; border: 1px solid rgba(255,255,255,0.12);
             box-shadow: 0 20px 50px rgba(0,0,0,0.3), var(--inner-glow);
-            backdrop-filter: blur(10px); position: relative;
+            backdrop-filter: blur(12px); position: relative;
         }
 
         .quest-badge {
-            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-            background: var(--accent-magic); color: white; padding: 6px 20px;
-            border-radius: 20px; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px;
+            position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+            background: var(--accent-magic); color: white; padding: 8px 22px;
+            border-radius: 20px; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;
             box-shadow: 0 4px 15px rgba(162, 124, 255, 0.4);
+            text-transform: uppercase;
         }
 
-        .icon-container { font-size: 6rem; margin-bottom: 25px; filter: drop-shadow(0 0 20px var(--accent-magic)); }
+        .icon-container { font-size: 6rem; margin-bottom: 30px; filter: drop-shadow(0 0 20px var(--accent-magic)); }
         
-        #m-text { font-size: 1.7rem; line-height: 1.4; color: #fff; font-weight: 500; }
-        #m-text b { color: var(--accent-gold); text-shadow: 0 0 10px rgba(255, 219, 88, 0.3); }
+        #m-text { 
+            font-size: 1.75rem; line-height: 1.5; color: #fff; font-weight: 500; 
+            margin: 0; text-wrap: balance;
+        }
+        #m-text b { color: var(--accent-gold); text-shadow: 0 0 10px rgba(255, 219, 88, 0.4); font-weight: 700; }
 
+        /* --- 2. END SCREEN: REWARD PRESENTATION --- */
+        .reward-card {
+            background: radial-gradient(circle at center, rgba(255, 219, 88, 0.15) 0%, transparent 75%);
+            padding: 40px 20px; border-radius: 40px;
+            border: 1px solid rgba(255, 219, 88, 0.1);
+            width: 100%; max-width: 360px;
+            margin-bottom: 20px;
+            position: relative;
+            animation: rewardGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes rewardGlow {
+            from { box-shadow: 0 0 20px rgba(255, 219, 88, 0); }
+            to { box-shadow: 0 0 40px rgba(255, 219, 88, 0.15); }
+        }
+
+        .reward-icon {
+            font-size: 6.5rem; display: block; margin-bottom: 20px;
+            filter: drop-shadow(0 0 25px var(--accent-gold));
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        .final-badge-text { 
+            font-size: 2.3rem; color: var(--accent-gold); font-weight: 800; 
+            margin: 10px 0; text-shadow: 0 0 20px rgba(255, 219, 88, 0.5);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* --- UI UTILS --- */
         .btn-sec { background: transparent; border: 2px solid rgba(255,255,255,0.1); color: var(--text-soft); padding: 15px 30px; border-radius: 20px; margin-top: 30px; cursor: pointer; font-weight: 700; }
-
-        /* --- OTHER SCREENS (MINIMAL UPDATES FOR CONSISTENCY) --- */
         .world-portal { background: var(--panel-glass); border-radius: 40px; padding: 50px; border: 1px solid rgba(162, 124, 255, 0.2); width: 280px; cursor: pointer; box-shadow: var(--inner-glow); }
-        .final-badge-text { font-size: 2.2rem; color: var(--accent-gold); font-weight: 700; margin: 20px 0; text-shadow: 0 0 20px rgba(255, 219, 88, 0.4); }
-
     </style>
 </head>
 <body>
@@ -142,7 +151,6 @@
 
     <section id="home" class="screen active">
         <div class="home-hero">
-            <div class="spark-glow"></div>
             <h1>SparkPlay</h1>
         </div>
         <button class="btn-main" onclick="nav('world-select')">Gioca</button>
@@ -150,17 +158,17 @@
 
     <section id="diary-screen" class="screen">
         <div class="diary-modal">
-            <span class="diary-title">Diario di Bordo</span>
-            <div class="diary-item">
-                <span class="diary-label">Ultimo Mondo</span>
+            <span style="color:var(--accent-gold); font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;">Diario di Bordo</span>
+            <div class="diary-item" style="margin-top:25px">
+                <span style="color:var(--text-soft); font-size: 0.75rem; text-transform: uppercase;">Ultimo Mondo</span>
                 <span id="d-world" class="diary-val">--</span>
             </div>
             <div class="diary-item">
-                <span class="diary-label">Ultimo Titolo</span>
+                <span style="color:var(--text-soft); font-size: 0.75rem; text-transform: uppercase;">Ultimo Titolo</span>
                 <span id="d-badge" class="diary-val">--</span>
             </div>
             <div class="diary-item">
-                <span class="diary-label">Super Missione</span>
+                <span style="color:var(--text-soft); font-size: 0.75rem; text-transform: uppercase;">Super Missione</span>
                 <span id="d-super" class="diary-val">--</span>
             </div>
             <button class="btn-sec" onclick="nav('home')" style="width:100%; border-color: var(--accent-gold); color: #fff;">Chiudi</button>
@@ -186,19 +194,22 @@
     </section>
 
     <section id="alert-s" class="screen">
-        <span style="font-size: 6rem; filter: drop-shadow(0 0 20px var(--accent-gold));">🌠</span>
+        <span style="font-size: 7rem; filter: drop-shadow(0 0 30px var(--accent-gold));">🌠</span>
         <h1 style="font-size: 2.5rem; margin-top: 20px;">SUPER MISSIONE!</h1>
     </section>
 
     <section id="end-screen" class="screen">
-        <span style="font-size: 5rem;">🏆</span>
-        <h2 style="margin:10px 0; letter-spacing: 2px;">MISSIONE CONCLUSA</h2>
-        <div id="final-badge" class="final-badge-text">--</div>
+        <div class="reward-card">
+            <span class="reward-icon">🏆</span>
+            <p style="text-transform: uppercase; letter-spacing: 3px; color: var(--accent-magic); font-weight: 800; margin: 0; font-size: 0.9rem;">Hai Ottenuto</p>
+            <div id="final-badge" class="final-badge-text">--</div>
+        </div>
+        <p style="color: var(--text-soft); font-weight: 500;">Incredibile lavoro, astronauta!</p>
         <button class="btn-main" onclick="saveAndHome()">Torna alla Base</button>
     </section>
 
     <script>
-        /* LOGICA JAVASCRIPT: TOTALMENTE INALTERATA */
+        /* LOGICA JAVASCRIPT: INALTERATA */
         let diaryData = { world: "--", badge: "--", super: "--" };
         let currentSessionBadge = "";
 
