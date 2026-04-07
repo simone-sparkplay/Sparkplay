@@ -38,7 +38,7 @@
             align-items: center;
         }
 
-        /* --- Navigazione Premium & Animazioni --- */
+        /* --- Navigazione --- */
         .screen {
             display: none;
             flex-direction: column;
@@ -70,7 +70,7 @@
         h2 { font-size: 2.2rem; margin: 10px 0; }
         p { font-size: 1.4rem; line-height: 1.4; margin: 20px 0; max-width: 80%; }
 
-        /* --- Bottoni con Feedback Evoluto --- */
+        /* --- Bottoni --- */
         .btn {
             position: relative;
             background: var(--button-grad);
@@ -90,7 +90,6 @@
             outline: none;
         }
 
-        /* Effetto Pressione (Scale + Glow) */
         .btn:active {
             transform: scale(0.92) translateY(4px);
             box-shadow: 0 2px 0 #4a2d7a, 0 0 30px var(--accent-color);
@@ -103,12 +102,8 @@
             box-shadow: 0 5px 0 #111;
             margin-top: 20px;
         }
-        
-        .btn-back:active {
-            box-shadow: 0 1px 0 #111;
-        }
 
-        /* World Card */
+        /* --- World Card --- */
         .world-card {
             background: var(--card-color);
             border-radius: 40px;
@@ -120,10 +115,6 @@
             transition: transform 0.2s ease;
         }
 
-        .world-card:active {
-            transform: scale(0.95);
-        }
-
         .icon-huge {
             font-size: 5.5rem;
             display: block;
@@ -131,10 +122,7 @@
             filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
         }
 
-        /* Blocco Interazione durante transizione */
-        .nav-lock {
-            pointer-events: none !important;
-        }
+        .nav-lock { pointer-events: none !important; }
     </style>
 </head>
 <body>
@@ -146,20 +134,20 @@
 
     <section id="world-select" class="screen">
         <h2>Scegli il Mondo</h2>
-        <div class="world-card" onclick="nav('mission')">
+        <div class="world-card" onclick="startMission()">
             <span class="icon-huge">🚀</span>
             <h2>SPAZIO</h2>
         </div>
-        <button class="btn btn-back" onclick="nav('home')">Indietro</button>
+        <button class="btn btn-back" onclick="resetAndHome()">Indietro</button>
     </section>
 
     <section id="mission" class="screen">
         <div>
-            <span class="icon-huge">👨‍🚀</span>
-            <h2>Missione</h2>
+            <span id="mission-icon" class="icon-huge">👨‍🚀</span>
+            <h2 id="mission-title">Missione</h2>
         </div>
-        <p>Trova qualcosa di <b>spaziale</b> nella stanza! 🚀</p>
-        <button class="btn" onclick="nav('end-screen')">FATTO!</button>
+        <p id="mission-text">Caricamento missione...</p>
+        <button class="btn" onclick="completeMission()">FATTO!</button>
     </section>
 
     <section id="end-screen" class="screen">
@@ -169,20 +157,64 @@
             <p>Missione Compiuta!</p>
         </div>
         <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px;">
-            <button class="btn" onclick="nav('home')">TORNA ALL'INIZIO</button>
-            <button class="btn btn-back" onclick="nav('world-select')">Gioca ancora</button>
+            <button class="btn" onclick="resetAndHome()">TORNA ALL'INIZIO</button>
+            <button class="btn btn-back" onclick="nav('world-select')">Mondi</button>
         </div>
     </section>
 
     <script>
+        // --- 1. STATO GLOBALE ---
+        let gameState = {
+            currentMission: 0,
+            missionsCompleted: 0,
+            maxDailyMissions: 3
+        };
+
+        // --- 2. STRUTTURA MISSIONI ---
+        const missions = []; // Verrà popolata nel prossimo step
+
         let isNavigating = false;
 
+        // --- FUNZIONI DI LOGICA ---
+
         /**
-         * Navigazione Fluida con Protezione Doppi Click
+         * Resetta lo stato del gioco
          */
+        function resetGame() {
+            gameState.currentMission = 0;
+            gameState.missionsCompleted = 0;
+            console.log("Gioco resettato.");
+        }
+
+        /**
+         * Funzione specifica per tornare alla home resettando
+         */
+        function resetAndHome() {
+            resetGame();
+            nav('home');
+        }
+
+        /**
+         * Prepara e avvia la missione
+         */
+        function startMission() {
+            // Qui in futuro pescheremo dalla lista missions[]
+            // Per ora impostiamo un testo di fallback dinamico
+            document.getElementById('mission-text').innerHTML = "Trova qualcosa di <b>spaziale</b> nella stanza! 🚀";
+            nav('mission');
+        }
+
+        /**
+         * Gestisce il completamento della missione
+         */
+        function completeMission() {
+            gameState.missionsCompleted++;
+            nav('end-screen');
+        }
+
+        // --- NAVIGAZIONE (Mantenuta stabile) ---
         function nav(screenId) {
-            if (isNavigating) return; // Blocca se una transizione è in corso
-            
+            if (isNavigating) return;
             isNavigating = true;
             document.body.classList.add('nav-lock');
 
@@ -194,32 +226,24 @@
                 return;
             }
 
-            // 1. Inizia dissolvenza in uscita
             currentScreen.style.opacity = '0';
             currentScreen.style.transform = 'translateY(-20px)';
 
             setTimeout(() => {
-                // 2. Cambia stato classi
                 currentScreen.classList.remove('active');
-                
-                // Reset posizionale per il prossimo ingresso
                 currentScreen.style.transform = ''; 
-                
                 nextScreen.classList.add('active');
                 
-                // 3. Feedback tattile
                 if (navigator.vibrate) navigator.vibrate(15);
 
-                // 4. Sblocca navigazione dopo la fine dell'animazione CSS
                 setTimeout(() => {
                     isNavigating = false;
                     document.body.classList.remove('nav-lock');
                 }, 400); 
-
-            }, 300); // Leggero delay per permettere l'uscita fluida
+            }, 300);
         }
 
-        // Ottimizzazione iOS Safari Zoom
+        // Prevenzione zoom iOS
         document.addEventListener('touchstart', (e) => {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
