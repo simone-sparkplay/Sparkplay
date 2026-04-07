@@ -1,219 +1,257 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SparkPlay</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SparkPlay</title>
+    <style>
+        :root {
+            --bg-deep: #060814;
+            --accent-magic: #a27cff;
+            --accent-gold: #ffdb58;
+            --text-main: #ffffff;
+            --text-soft: #94a3b8;
+            --panel-glass: rgba(255, 255, 255, 0.08);
+            --inner-glow: inset 0 0 15px rgba(162, 124, 255, 0.2);
+            --svg-glow: drop-shadow(0 0 12px rgba(162, 124, 255, 0.7));
+            --gold-glow: drop-shadow(0 0 15px rgba(255, 219, 88, 0.6));
+        }
 
-<style>
-:root{
---bg:#060814;
---violet:#7c4dff;
---gold:#ffdb58;
---text:#fff;
-}
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-body{
-margin:0;
-font-family:system-ui;
-background:radial-gradient(circle,#161b3d,#060814);
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-overflow:hidden;
-}
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: var(--bg-deep);
+            background-image: radial-gradient(circle at 50% 50%, #161b3d 0%, #060814 100%);
+            color: var(--text-main);
+            font-family: system-ui, -apple-system, sans-serif;
+            overflow: hidden;
+        }
 
-.screen{
-display:none;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-position:absolute;
-width:100%;
-height:100%;
-}
+        body { display: flex; justify-content: center; align-items: center; }
 
-.screen.active{display:flex;}
+        .screen {
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            width: 100%; height: 100%; padding: 40px; text-align: center;
+            position: absolute; opacity: 0; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none; transform: scale(0.92);
+        }
 
-h1{
-font-size:42px;
-margin:0;
-background:linear-gradient(#fff,#c0a4ff);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-}
+        .screen.active { display: flex; opacity: 1; pointer-events: auto; z-index: 10; transform: scale(1); }
 
-.btn{
-background:linear-gradient(#b37cff,#7c4dff);
-border:none;
-padding:18px 40px;
-border-radius:40px;
-font-size:18px;
-color:white;
-margin-top:30px;
-box-shadow:0 8px 0 #4a2d7a;
-}
+        /* --- ANIMATIONS --- */
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        @keyframes sparkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+        @keyframes pulse-bg { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
 
-.btn:active{
-transform:translateY(6px);
-box-shadow:0 2px 0 #4a2d7a;
-}
+        /* --- UI COMPONENTS --- */
+        h1 { 
+            font-size: 4rem; margin: 0; font-weight: 800; letter-spacing: -1.5px;
+            background: linear-gradient(to bottom, #ffffff 40%, #c0a4ff 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(162, 124, 255, 0.4));
+        }
 
-.portal{
-background:rgba(255,255,255,0.08);
-padding:40px;
-border-radius:30px;
-cursor:pointer;
-}
+        .btn-main {
+            background: linear-gradient(180deg, #b37cff 0%, #7c4dff 100%);
+            color: white; border: none; border-radius: 60px; 
+            padding: 22px 65px; font-size: 1.8rem; font-weight: 700; cursor: pointer;
+            box-shadow: 0 10px 0 #4a2d7a, 0 20px 40px rgba(0,0,0,0.5);
+            transition: all 0.15s ease; text-transform: uppercase; margin-top: 40px;
+        }
+        .btn-main:active { transform: translateY(8px); box-shadow: 0 2px 0 #4a2d7a; }
 
-.card{
-background:rgba(255,255,255,0.08);
-padding:30px;
-border-radius:30px;
-}
+        .diary-trigger {
+            position: absolute; top: 30px; right: 25px;
+            width: 56px; height: 56px; border-radius: 16px;
+            background: #1a1c3d; border: 2px solid var(--accent-gold);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 100; box-shadow: 0 0 20px rgba(255, 219, 88, 0.3);
+        }
 
-.badge{
-background:var(--violet);
-padding:6px 20px;
-border-radius:20px;
-font-size:12px;
-position:absolute;
-top:-15px;
-left:50%;
-transform:translateX(-50%);
-}
+        .quest-card {
+            background: var(--panel-glass); border-radius: 40px; padding: 50px 35px;
+            width: 100%; max-width: 380px; border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3), var(--inner-glow);
+            backdrop-filter: blur(12px); position: relative;
+        }
 
-.icon{
-width:110px;
-height:110px;
-margin-bottom:20px;
-}
+        .quest-badge {
+            position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+            background: var(--accent-magic); color: white; padding: 8px 22px;
+            border-radius: 20px; font-size: 0.85rem; font-weight: 700;
+        }
 
-@keyframes float{
-0%,100%{transform:translateY(0)}
-50%{transform:translateY(-10px)}
-}
+        .icon-container-large { height: 140px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+        
+        .btn-sec { background: transparent; border: 2px solid rgba(255,255,255,0.1); color: var(--text-soft); padding: 15px 30px; border-radius: 20px; margin-top: 30px; cursor: pointer; }
+        
+        .diary-modal {
+            background: #0a0b1e; border: 2px solid var(--accent-gold); border-radius: 35px;
+            padding: 35px; width: 90%; max-width: 350px;
+        }
 
-@keyframes spin{
-from{transform:rotate(0)}
-to{transform:rotate(360deg)}
-}
-
-@keyframes blink{
-0%,95%,100%{opacity:1}
-97%{opacity:0}
-}
-
-.float{animation:float 3s infinite}
-.spin{animation:spin 6s linear infinite}
-.blink{animation:blink 3s infinite}
-</style>
+        .world-portal { background: var(--panel-glass); border-radius: 40px; padding: 50px; border: 1px solid rgba(162, 124, 255, 0.2); width: 280px; cursor: pointer; }
+    </style>
 </head>
-
 <body>
 
-<div id="home" class="screen active">
-<h1>SparkPlay</h1>
-<button class="btn" onclick="nav('world')">Gioca</button>
-</div>
+    <div id="diary-trigger" class="diary-trigger" onclick="nav('diary-screen')">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffdb58" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <path d="M12 7l1 2 2 1-2 1-1 2-1-2-2-1 2-1z" fill="#ffdb58" stroke="none"></path>
+        </svg>
+    </div>
 
-<div id="world" class="screen">
-<div class="portal" onclick="start()">
-<svg class="icon float" viewBox="0 0 120 120">
-<path d="M60 10C60 10 80 30 80 60C80 80 70 95 70 95L80 110L60 100L40 110L50 95C50 95 40 80 40 60C40 30 60 10 60 10Z" fill="#7c4dff"/>
-<circle cx="60" cy="55" r="6" fill="#060814"/>
-</svg>
-<div>SPAZIO</div>
-</div>
-<button class="btn" onclick="nav('home')">Indietro</button>
-</div>
+    <section id="home" class="screen active">
+        <h1>SparkPlay</h1>
+        <button class="btn-main" onclick="nav('world-select')">Gioca</button>
+    </section>
 
-<div id="mission" class="screen">
-<div class="card">
-<div id="progress" class="badge">Missione 1</div>
+    <section id="diary-screen" class="screen">
+        <div class="diary-modal">
+            <span style="color:var(--accent-gold); font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;">Diario di Bordo</span>
+            <div id="diary-content" style="margin-top:25px; text-align: left;">
+                <p style="color:var(--text-soft); font-size: 0.8rem; margin: 10px 0;">MONDO: <span id="d-world" style="color:#fff; font-weight:700">--</span></p>
+                <p style="color:var(--text-soft); font-size: 0.8rem; margin: 10px 0;">TITOLO: <span id="d-badge" style="color:#fff; font-weight:700">--</span></p>
+                <p style="color:var(--text-soft); font-size: 0.8rem; margin: 10px 0;">SUPER MISSIONE: <span id="d-super" style="color:#fff; font-weight:700">--</span></p>
+            </div>
+            <button class="btn-sec" onclick="nav('home')" style="width:100%; color:#fff;">Chiudi</button>
+        </div>
+    </section>
 
-<div id="icon"></div>
+    <section id="world-select" class="screen">
+        <div class="world-portal" style="animation: float 3s ease-in-out infinite" onclick="startSession('Spazio')">
+            <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2c5 0 8 5 8 10 0 4-3 6-3 6l1 4-6-2-6 2 1-4s-3-2-3-6c0-5 3-10 8-10z"></path>
+                <circle cx="12" cy="9" r="2" fill="white" stroke="none"></circle>
+            </svg>
+            <div style="letter-spacing:4px; font-weight:700; color: #fff; margin-top:15px;">SPAZIO</div>
+        </div>
+        <button class="btn-sec" onclick="nav('home')">Indietro</button>
+    </section>
 
-<p id="text"></p>
-</div>
+    <section id="mission" class="screen">
+        <div class="quest-card">
+            <div id="m-progress" class="quest-badge">Missione 1 di 3</div>
+            <div id="m-icon-box" class="icon-container-large">
+                </div>
+            <p id="m-text" style="font-size: 1.7rem; line-height: 1.5; margin: 0;">...</p>
+        </div>
+        <button class="btn-main" onclick="handleComplete()">Completato!</button>
+    </section>
 
-<button class="btn" onclick="done()">Fatto</button>
-</div>
+    <section id="alert-s" class="screen">
+        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#ffdb58" stroke-width="1.5">
+            <path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-5-6.5 5 2-7.5L2 9h7z" fill="rgba(255,219,88,0.2)" style="animation: sparkle 1.5s infinite"></path>
+        </svg>
+        <h1 style="font-size: 2.5rem; margin-top: 20px;">SUPER MISSIONE!</h1>
+    </section>
 
-<div id="alert" class="screen">
-<svg class="icon float" viewBox="0 0 120 120">
-<polygon points="60,10 75,45 110,45 82,65 92,100 60,80 28,100 38,65 10,45 45,45" fill="#ffdb58"/>
-</svg>
-<h1>SUPER MISSIONE</h1>
-</div>
+    <section id="end-screen" class="screen">
+        <div style="padding: 40px; background: radial-gradient(circle, rgba(255,219,88,0.1) 0%, transparent 70%); border-radius: 50%; animation: pulse-bg 2s infinite">
+            <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#ffdb58" stroke-width="1.5">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M12 2a6 6 0 0 1 6 6v1c0 3.31-2.69 6-6 6s-6-2.69-6-6V8a6 6 0 0 1 6-6z"></path>
+                <path d="M12 15v3M8 22h8"></path>
+            </svg>
+            <div id="final-badge" style="font-size: 2rem; color: var(--accent-gold); font-weight: 800; margin-top: 15px; text-transform: uppercase;">--</div>
+        </div>
+        <button class="btn-main" onclick="saveAndHome()">Torna alla Base</button>
+    </section>
 
-<div id="end" class="screen">
-<h1 id="badge"></h1>
-<button class="btn" onclick="home()">Home</button>
-</div>
+    <script>
+        // --- ASSET REPOSITORY (Scanner Robot Nintendo-style) ---
+        const svgs = {
+            mission: `
+            <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="bodyGrad" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#ffffff" /><stop offset="100%" stop-color="#a27cff" /></radialGradient>
+                <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" /><stop offset="100%" stop-color="#4deeea" /></radialGradient>
+              </defs>
+              <style>
+                @keyframes floatBot { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+                @keyframes blinkBot { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+                .bot-main { animation: floatBot 3s ease-in-out infinite; transform-origin: center; }
+                .bot-eye { animation: blinkBot 4s infinite; transform-origin: center 66px; }
+              </style>
+              <ellipse cx="60" cy="108" rx="28" ry="7" fill="#000" opacity="0.15" />
+              <g class="bot-main">
+                <path d="M60 40 L60 30" stroke="#ffdb58" stroke-width="6" stroke-linecap="round" />
+                <circle cx="60" cy="30" r="5" fill="#ffdb58" />
+                <rect x="32" y="42" width="56" height="48" rx="20" fill="url(#bodyGrad)" />
+                <rect x="40" y="54" width="40" height="24" rx="10" fill="#1a1c3d" />
+                <g class="bot-eye"><circle cx="50" cy="66" r="4.5" fill="url(#eyeGlow)" /><circle cx="70" cy="66" r="4.5" fill="url(#eyeGlow)" /></g>
+                <rect x="52" y="80" width="16" height="4" rx="2" fill="#ffdb58"><animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" /></rect>
+                <path d="M32 58 Q20 58 24 75 Q32 82 32 75 Z" fill="#7c4dff" /><path d="M88 58 Q100 58 96 75 Q88 82 88 75 Z" fill="#7c4dff" />
+              </g>
+            </svg>`,
+            super: `
+            <svg width="120" height="120" viewBox="0 0 120 120">
+                <path d="M60 20l12 25h28l-22 18 8 27-26-20-26 20 8-27-22-18h28z" fill="#ffdb58" style="animation: floatBot 3s ease-in-out infinite">
+                    <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite" />
+                </path>
+            </svg>`
+        };
 
-<script>
+        let diaryData = { world: "--", badge: "--", super: "--" };
+        let currentSessionBadge = "";
 
-const missions=[
-"Trova qualcosa di rosso",
-"Fai 5 salti",
-"Cerca qualcosa di tondo"
-];
+        const missionsList = [
+            { t: "Trova un oggetto <b>rosso</b> come Marte! 🔴", i: 'mission' },
+            { t: "Fai 5 salti spaziali verso l'alto! ⬆️", i: 'mission' },
+            { t: "Cerca qualcosa di <b>tondo</b> come la Luna! 🌕", i: 'mission' }
+        ];
+        const badges = ["Esploratore Spaziale", "Comandante", "Eroe Galattico"];
+        const superM = { name: "Base di Cuscini", t: "Costruisci una <b>base spaziale</b> con i cuscini!", i: 'super' };
+        
+        let state = { count: 0, pool: [], world: "" };
 
-let i=0;
+        function startSession(w) {
+            state.world = w;
+            state.pool = [...missionsList].sort(() => 0.5 - Math.random());
+            state.count = 0;
+            updateUI();
+            nav('mission');
+        }
 
-function nav(x){
-document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-document.getElementById(x).classList.add('active');
-}
+        function updateUI() {
+            let d = (state.count < 3) ? state.pool[state.count] : superM;
+            document.getElementById('m-progress').innerText = (state.count < 3) ? `Missione ${state.count+1} di 3` : "SFIDA FINALE";
+            document.getElementById('m-text').innerHTML = d.t;
+            document.getElementById('m-icon-box').innerHTML = svgs[d.i];
+        }
 
-function start(){
-i=0;
-update();
-nav('mission');
-}
+        function handleComplete() {
+            state.count++;
+            if (state.count === 3) {
+                nav('alert-s');
+                setTimeout(() => { updateUI(); nav('mission'); }, 2200);
+            } else if (state.count > 3) {
+                currentSessionBadge = badges[Math.floor(Math.random() * badges.length)];
+                document.getElementById('final-badge').innerText = currentSessionBadge;
+                nav('end-screen');
+            } else {
+                updateUI();
+            }
+        }
 
-function update(){
-document.getElementById('progress').innerText="Missione "+(i+1);
-document.getElementById('text').innerText=missions[i]||"Super missione: costruisci base!";
-document.getElementById('icon').innerHTML=getIcon();
-}
+        function saveAndHome() {
+            diaryData.world = state.world;
+            diaryData.badge = currentSessionBadge;
+            diaryData.super = superM.name;
+            document.getElementById('d-world').innerText = diaryData.world;
+            document.getElementById('d-badge').innerText = diaryData.badge;
+            document.getElementById('d-super').innerText = diaryData.super;
+            nav('home');
+        }
 
-function getIcon(){
-return `
-<svg class="icon float" viewBox="0 0 120 120">
-<circle cx="60" cy="60" r="30" fill="#7c4dff"/>
-<circle cx="60" cy="60" r="8" fill="#fff"/>
-<circle class="blink" cx="60" cy="60" r="3" fill="#060814"/>
-<circle class="spin" cx="60" cy="60" r="40" stroke="#c0a4ff" stroke-width="4" fill="none" stroke-dasharray="15 10"/>
-</svg>
-`;
-}
-
-function done(){
-i++;
-if(i==3){
-nav('alert');
-setTimeout(()=>{
-update();
-nav('mission');
-},2000);
-}else if(i>3){
-document.getElementById('badge').innerText="EROE GALATTICO";
-nav('end');
-}else{
-update();
-}
-}
-
-function home(){
-nav('home');
-}
-
-</script>
-
+        function nav(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('diary-trigger').style.display = (id === 'home') ? 'flex' : 'none';
+        }
+    </script>
 </body>
 </html>
