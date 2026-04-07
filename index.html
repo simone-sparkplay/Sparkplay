@@ -1,1495 +1,180 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>SparkPlay</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0b1228;
-  --bg2:#141d3d;
-  --card:#1c2548;
-  --card2:#24305d;
-  --pink:#ff5e6c;
-  --pink-dark:#cf4450;
-  --yellow:#ffe66d;
-  --cyan:#4be7ff;
-  --green:#6ee7b7;
-  --white:#f7fff7;
-  --muted:rgba(255,255,255,.74);
-  --muted2:rgba(255,255,255,.56);
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family:'Quicksand',sans-serif;
-  color:var(--white);
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 18%, rgba(75,231,255,.13), transparent 28%),
-    radial-gradient(circle at 20% 85%, rgba(255,230,109,.10), transparent 24%),
-    linear-gradient(180deg, #0c1531 0%, var(--bg) 100%);
-}
-body::before{
-  content:"";
-  position:fixed; inset:0; pointer-events:none;
-  background-image:
-    radial-gradient(circle at 12% 24%, rgba(255,255,255,.16) 0 1px, transparent 1px),
-    radial-gradient(circle at 74% 21%, rgba(255,255,255,.10) 0 1px, transparent 1px),
-    radial-gradient(circle at 41% 80%, rgba(255,255,255,.09) 0 1px, transparent 1px),
-    radial-gradient(circle at 83% 71%, rgba(255,255,255,.10) 0 1px, transparent 1px);
-  background-size:180px 180px, 220px 220px, 260px 260px, 240px 240px;
-  opacity:.6;
-}
-.app{
-  max-width:560px;
-  margin:0 auto;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  padding:env(safe-area-inset-top) 18px env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-}
-.top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:12px 16px 8px;
-}
-.brand{
-  font-family:'Fredoka One',cursive;
-  font-size:32px;
-  color:var(--yellow);
-  text-shadow:3px 3px 0 var(--pink);
-  letter-spacing:.5px;
-}
-.ghost-btn,.danger-btn,.primary-btn,.secondary-btn,.icon-btn{
-  border:none;
-  border-radius:22px;
-  font-family:'Fredoka One',cursive;
-  cursor:pointer;
-  transition:.18s ease;
-}
-.ghost-btn:active,.danger-btn:active,.primary-btn:active,.secondary-btn:active,.icon-btn:active{
-  transform:translateY(2px) scale(.99);
-}
-.ghost-btn,.icon-btn{
-  background:rgba(255,255,255,.08);
-  color:white;
-  padding:12px 14px;
-}
-.danger-btn{
-  background:var(--pink);
-  color:white;
-  padding:14px 16px;
-}
-.primary-btn{
-  background:linear-gradient(180deg,#ff6f7c 0%, var(--pink) 100%);
-  color:white;
-  padding:18px;
-  width:100%;
-  font-size:18px;
-  box-shadow:0 8px 0 var(--pink-dark);
-}
-.primary-btn:active{
-  transform:translateY(4px);
-  box-shadow:0 3px 0 var(--pink-dark);
-}
-.secondary-btn{
-  background:linear-gradient(180deg, rgba(75,231,255,.22), rgba(75,231,255,.10));
-  color:white;
-  border:2px solid rgba(75,231,255,.24);
-  padding:18px;
-  width:100%;
-  font-size:16px;
-}
-.disabled{
-  opacity:.45;
-  cursor:not-allowed;
-}
-.content{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:16px;
-  padding:0 16px 18px;
-}
-.card{
-  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:28px;
-  padding:18px;
-  box-shadow:0 14px 34px rgba(0,0,0,.30);
-  backdrop-filter:blur(10px);
-}
-.center{text-align:center}
-.hero-orbit{
-  width:210px;height:210px;margin:0 auto 6px;position:relative;
-  display:flex;align-items:center;justify-content:center;
-}
-.hero-core{
-  width:66px;height:66px;border-radius:50%;
-  background:radial-gradient(circle at 50% 50%, #fff 0%, #f8f0be 40%, #fff 100%);
-  box-shadow:0 0 34px rgba(255,230,109,.55);
-  display:flex;align-items:center;justify-content:center;font-size:28px;
-}
-.orbit-item{
-  position:absolute;
-  font-size:44px;
-  animation:orbit 9s linear infinite;
-}
-.orbit-1{animation-delay:0s}
-.orbit-2{animation-delay:-3s}
-.orbit-3{animation-delay:-6s}
-@keyframes orbit{
-  from{transform:rotate(0deg) translateX(72px) rotate(0deg)}
-  to{transform:rotate(360deg) translateX(72px) rotate(-360deg)}
-}
-.hero-title{
-  font-family:'Fredoka One',cursive;
-  color:var(--yellow);
-  font-size:50px;
-  line-height:1;
-  text-align:center;
-  margin:4px 0 0;
-}
-.hero-sub{
-  text-align:center;
-  color:var(--muted);
-  font-weight:800;
-  font-size:17px;
-  line-height:1.35;
-}
-.progress-wrap{width:100%;max-width:500px;margin:0 auto}
-.progress-row{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-top:8px;margin-bottom:8px;font-weight:800;
-}
-.progress-outer{
-  background:rgba(255,255,255,.10);
-  border-radius:999px;
-  height:14px;
-  overflow:hidden;
-  box-shadow:inset 0 2px 10px rgba(0,0,0,.2);
-}
-.progress-inner{
-  background:linear-gradient(90deg,#ffd94a 0%, var(--yellow) 100%);
-  height:100%;width:0%;transition:.25s;border-radius:999px;
-}
-.tiny-pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:6px 10px;
-  border-radius:999px;
-  font-weight:900;
-  font-size:11px;
-  background:rgba(255,255,255,.10);
-}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.world-card{
-  border-radius:28px;
-  padding:18px;
-  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 34px rgba(0,0,0,.30);
-  cursor:pointer;
-}
-.world-card .emoji{font-size:44px}
-.world-card .name{
-  font-family:'Fredoka One';
-  font-size:22px;
-  margin-top:8px;
-}
-.world-card .desc{
-  opacity:.78;
-  margin-top:6px;
-  font-weight:800;
-  font-size:13px;
-  line-height:1.3;
-}
-.world-card.disabled{
-  opacity:.42;
-  filter:saturate(.55);
-  cursor:not-allowed;
-}
-.badge{
-  display:inline-block;
-  margin-top:10px;
-  padding:6px 10px;
-  border-radius:999px;
-  font-weight:900;
-  font-size:12px;
-  background:rgba(255,255,255,.12);
-}
-.select-age{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  border-radius:28px;
-  padding:22px;
-  color:white;
-}
-.age-1{
-  background:linear-gradient(180deg, rgba(75,231,255,.16), rgba(75,231,255,.08));
-  border:2px solid rgba(75,231,255,.28);
-}
-.age-2{
-  background:linear-gradient(180deg, rgba(255,94,108,.18), rgba(255,94,108,.08));
-  border:2px solid rgba(255,94,108,.28);
-}
-.mission-shell{
-  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
-  border-radius:32px;
-  padding:18px;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 34px rgba(0,0,0,.30);
-}
-.chapter-badge{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  margin:0 auto 8px;
-  padding:8px 14px;
-  border-radius:999px;
-  background:rgba(75,231,255,.12);
-  color:var(--cyan);
-  font-weight:900;
-  font-size:12px;
-  text-transform:uppercase;
-}
-.mission-title{
-  font-family:'Fredoka One';
-  font-size:28px;
-  color:var(--yellow);
-  line-height:1.05;
-  text-align:center;
-  margin:0;
-}
-.mission-story{
-  font-size:18px;
-  line-height:1.35;
-  text-align:center;
-  margin-top:12px;
-}
-.objective-box{
-  border:2px dashed rgba(75,231,255,.45);
-  border-radius:22px;
-  padding:14px;
-  text-align:center;
-  font-weight:900;
-  color:var(--cyan);
-  background:rgba(75,231,255,.05);
-  margin-top:14px;
-}
-.parent-box{
-  margin-top:14px;
-  padding:16px;
-  border-radius:22px;
-  background:rgba(255,230,109,.10);
-  border:1px solid rgba(255,230,109,.18);
-}
-.parent-box-title{
-  font-weight:900;
-  color:var(--yellow);
-  margin-bottom:8px;
-}
-.parent-box-text{
-  font-weight:800;
-  line-height:1.35;
-  color:rgba(255,255,255,.88);
-}
-.step-card{
-  border-radius:24px;
-  padding:18px;
-  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
-}
-.step-head{
-  display:flex;
-  gap:14px;
-  align-items:center;
-}
-.step-icon{
-  width:48px;height:48px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--pink);
-  color:white;
-  font-size:22px;
-  flex:0 0 auto;
-  box-shadow:0 6px 14px rgba(255,94,108,.25);
-}
-.step-title{
-  font-weight:900;
-  font-size:18px;
-  margin-bottom:4px;
-}
-.step-text{
-  line-height:1.3;
-  font-weight:800;
-}
-.visual-panel{
-  margin-top:14px;
-  border-radius:22px;
-  padding:16px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)),
-    linear-gradient(180deg, rgba(24,37,72,.90), rgba(12,19,42,.90));
-  border:1px solid rgba(255,255,255,.07);
-  min-height:150px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:14px;
-}
-.visual-row{
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  gap:14px;
-  flex-wrap:wrap;
-}
-.visual-item{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  min-width:58px;
-}
-.visual-emoji{
-  font-size:38px;
-  line-height:1;
-  filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));
-}
-.visual-label{
-  font-size:11px;
-  font-weight:900;
-  color:var(--muted);
-  text-align:center;
-}
-.visual-arrow{
-  font-size:28px;
-  color:var(--cyan);
-  font-weight:900;
-}
-.visual-note{
-  text-align:center;
-  font-size:12px;
-  color:var(--muted2);
-  font-weight:800;
-}
-.controls-row{
-  display:flex;
-  gap:12px;
-}
-.controls-row .ghost-btn,
-.controls-row .primary-btn{
-  width:100%;
-}
-.helper-text{
-  opacity:.62;
-  font-weight:800;
-  font-size:12px;
-  text-align:center;
-}
-#splash-screen{
-  position:fixed; inset:0; z-index:5000;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  background:
-    radial-gradient(circle at 50% 35%, rgba(75,231,255,.16) 0%, transparent 34%),
-    linear-gradient(180deg,#10183a 0%, var(--bg) 100%);
-}
-#splash-screen .logo{
-  font-family:'Fredoka One',cursive;
-  font-size:46px;
-  color:var(--yellow);
-  text-shadow:3px 3px var(--pink);
-  margin-top:10px;
-}
-#splash-screen .sub{
-  opacity:.72;
-  margin-top:6px;
-  font-weight:800;
-}
-#diario-modal{
-  position:fixed; inset:0; z-index:4000;
-  display:none; flex-direction:column; padding:28px 18px;
-  background:linear-gradient(180deg, #101a3b, #091127);
-  overflow-y:auto;
-}
-.scheda-ricordo{
-  background:rgba(255,255,255,.08);
-  padding:18px;
-  border-radius:24px;
-  margin-bottom:12px;
-  border-left:8px solid var(--cyan);
-  display:flex;
-  gap:14px;
-  align-items:center;
-}
-.emoji-diario{font-size:28px;opacity:.95}
-.testo-diario b{display:block;font-size:18px;color:var(--yellow)}
-.testo-diario small{opacity:.62;font-size:12px}
-#overlay-success{
-  position:fixed; inset:0; z-index:4500;
-  display:none; align-items:center; justify-content:center;
-  background:rgba(10,17,40,.92);
-}
-.messaggio-vittoria{
-  font-family:'Fredoka One';
-  font-size:48px;
-  color:var(--yellow);
-  text-shadow:4px 4px var(--pink);
-  text-align:center;
-}
-.cascata{
-  position:absolute; top:-20px; pointer-events:none;
-  animation:caduta 2s linear forwards; font-size:28px;
-}
-@keyframes caduta{
-  to{transform:translateY(110vh) rotate(360deg);opacity:0}
-}
-@media (max-width:440px){
-  .hero-title{font-size:46px}
-  .brand{font-size:28px}
-  .mission-title{font-size:24px}
-  .visual-emoji{font-size:34px}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SparkPlay</title>
+    <style>
+        :root {
+            --bg-color: #0b0e14;
+            --card-color: #1e2530;
+            --accent-color: #a27cff;
+            --text-color: #ffffff;
+            --button-grad: linear-gradient(180deg, #9d50bb 0%, #6e48aa 100%);
+            --secondary-grad: linear-gradient(180deg, #444 0%, #222 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden; /* Blocca lo scroll della pagina intera */
+        }
+
+        /* Gestione Overscroll sicura per iOS */
+        body {
+            overscroll-behavior: none; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Schermi */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around; /* Più spazio tra gli elementi */
+            width: 100%;
+            height: 100%;
+            padding: 40px 20px;
+            text-align: center;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Testi */
+        h1 { font-size: 4rem; margin: 0; text-shadow: 0 4px 10px rgba(157, 80, 187, 0.5); }
+        h2 { font-size: 2.5rem; margin: 10px 0; }
+        p { font-size: 1.5rem; line-height: 1.4; margin: 20px 0; }
+
+        /* Bottoni Giganti */
+        .btn {
+            background: var(--button-grad);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 30px 20px; /* Padding aumentato */
+            font-size: 2rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #4a2d7a, 0 15px 25px rgba(0,0,0,0.5);
+            transition: all 0.1s;
+            width: 90%;
+            max-width: 400px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #4a2d7a, 0 10px 15px rgba(0,0,0,0.5);
+        }
+
+        .btn-back {
+            background: var(--secondary-grad);
+            font-size: 1.2rem;
+            padding: 15px;
+            box-shadow: 0 5px 0 #111;
+            margin-top: 20px;
+        }
+
+        /* Card Selezione Mondo */
+        .world-card {
+            background: var(--card-color);
+            border-radius: 40px;
+            padding: 50px 20px;
+            border: 4px solid var(--accent-color);
+            width: 85%;
+            max-width: 350px;
+            box-shadow: 0 0 30px rgba(162, 124, 255, 0.3);
+        }
+
+        .icon-huge {
+            font-size: 6rem;
+            display: block;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px white);
+        }
+    </style>
 </head>
 <body>
 
-<div id="splash-screen" aria-hidden="true">
-  <div style="font-size:54px;">✨</div>
-  <div class="logo">SparkPlay</div>
-  <div class="sub">Preparando la missione…</div>
-</div>
+    <section id="home" class="screen active">
+        <h1>✨ SparkPlay</h1>
+        <button class="btn" onclick="nav('world-select')">GIOCA</button>
+    </section>
 
-<div id="overlay-success">
-  <div class="messaggio-vittoria">MISSIONE<br>COMPLETATA!</div>
-</div>
-
-<div id="diario-modal">
-  <div class="top">
-    <div class="brand" style="font-size:26px">I TUOI RICORDI</div>
-    <button class="danger-btn" onclick="chiudiDiario()">CHIUDI</button>
-  </div>
-  <div id="lista-diario" style="margin-top:16px; padding-bottom:30px;"></div>
-</div>
-
-<div id="app" class="app"></div>
-
-<script>
-/* ========= SUONI ========= */
-function playTone(freq=520, duration=0.08, type="sine", volume=0.02){
-  if(!state.audio) return;
-  try{
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if(!AudioCtx) return;
-    if(!window.__sparkCtx) window.__sparkCtx = new AudioCtx();
-    const ctx = window.__sparkCtx;
-    if (ctx.state === "suspended") ctx.resume();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = type;
-    osc.frequency.value = freq;
-    gain.gain.value = volume;
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
-    osc.stop(ctx.currentTime + duration);
-  }catch(e){}
-}
-function sfxClick(){ playTone(560, 0.05, "triangle", 0.015); }
-function sfxSuccess(){
-  playTone(660, 0.08, "triangle", 0.02);
-  setTimeout(()=>playTone(830, 0.10, "triangle", 0.02), 90);
-  setTimeout(()=>playTone(990, 0.12, "triangle", 0.02), 190);
-}
-
-/* ========= DATI ========= */
-const MISSIONS = [
-  {
-    id:"allarme_base",
-    title:"ALLARME ALLA BASE",
-    chapter:"CAPITOLO 1",
-    story:"La base sta crollando. Le rocce lunari si stanno muovendo.",
-    goal:"SALVARE LA BASE",
-    parent:"Prepara 3 cuscini, 1 coperta e 1 navetta. Spiega che i cuscini sono rocce lunari e la coperta è un ponte di emergenza.",
-    age_5_7:[
-      {
-        icon:"🪨", label:"Rocce", text:"Metti 3 rocce lunari",
-        visual:{items:[["🛏️","Roccia"],["🛏️","Roccia"],["🛏️","Roccia"]], note:"Tre cuscini = rocce lunari"}
-      },
-      {
-        icon:"🌉", label:"Ponte", text:"Fai un ponte con la coperta",
-        visual:{items:[["🛏️","Roccia"],["🟦","Ponte"],["🛏️","Roccia"]], note:"La coperta collega le rocce"}
-      },
-      {
-        icon:"🚀", label:"Salva", text:"Fai passare la navetta",
-        visual:{items:[["🚀","Navetta"],["➡️",""],["🟦","Ponte"]], note:"Se cade, allarme e si riparte"}
-      }
-    ],
-    age_8_10:[
-      {
-        icon:"🪨", label:"Base", text:"Costruisci base e ponte",
-        visual:{items:[["🛏️","Rocce"],["🟦","Ponte"],["🚀","Navetta"]], note:"Crea una base più stabile"}
-      },
-      {
-        icon:"🧠", label:"Migliora", text:"Prova 2 versioni",
-        visual:{items:[["🏗️","Versione 1"],["↔️",""],["🏗️","Versione 2"]], note:"Quale funziona meglio?"}
-      },
-      {
-        icon:"🚀", label:"Test", text:"Passa senza cadere",
-        visual:{items:[["🚀","Navetta"],["🟦","Rampa"],["✅","Successo"]], note:"Non basta farlo: deve funzionare bene"}
-      }
-    ],
-    fail_rule:"Se la navetta cade, riparti.",
-    success:"Base salvata. Sei entrato in missione."
-  },
-  {
-    id:"segnale_perso",
-    title:"SEGNALE PERSO",
-    chapter:"CAPITOLO 2",
-    story:"La Terra non riesce più a sentirti.",
-    goal:"RIATTIVARE IL SEGNALE",
-    parent:"Prepara 6 oggetti piccoli e 1 oggetto alto. Spiega che l’oggetto alto è l’antenna.",
-    age_5_7:[
-      {
-        icon:"⭕", label:"Cerchio", text:"Fai un cerchio di segnali",
-        visual:{items:[["🔹","Segnale"],["🔹","Segnale"],["🔹","Segnale"],["🔹","Segnale"]], note:"Metti i segnali in cerchio"}
-      },
-      {
-        icon:"📡", label:"Antenna", text:"Mettila al centro",
-        visual:{items:[["⭕","Cerchio"],["⬇️",""],["📡","Centro"]], note:"Antenna al centro del cerchio"}
-      },
-      {
-        icon:"✨", label:"BIP", text:"Sposta 2 segnali",
-        visual:{items:[["🔹","Sposta"],["🔹","Sposta"],["📡","Antenna"]], note:"Quando funziona fai BIP"}
-      }
-    ],
-    age_8_10:[
-      {
-        icon:"⭕", label:"Ordina", text:"Sistema i segnali in cerchio",
-        visual:{items:[["🔹","1"],["🔹","2"],["🔹","3"],["🔹","4"]], note:"Ordine prima, caos no"}
-      },
-      {
-        icon:"📡", label:"Centro", text:"Posiziona l’antenna",
-        visual:{items:[["⭕","Segnali"],["⬇️",""],["📡","Centro"]], note:"L’antenna sta nel punto giusto"}
-      },
-      {
-        icon:"🧠", label:"Riattiva", text:"Tocca solo alcuni punti",
-        visual:{items:[["🔹","Solo 2"],["🚫",""],["🔹","Non tutto"]], note:"Se sposti tutto, il segnale salta"}
-      }
-    ],
-    fail_rule:"Se sposti tutto a caso, il segnale salta.",
-    success:"Segnale tornato. La Terra ti ascolta."
-  },
-  {
-    id:"energia_critica",
-    title:"ENERGIA CRITICA",
-    chapter:"CAPITOLO 3",
-    story:"I motori stanno per spegnersi.",
-    goal:"PORTARE ENERGIA ALLA NAVETTA",
-    parent:"Prepara 2 contenitori e 6 oggetti. Spiega A e B.",
-    age_5_7:[
-      {
-        icon:"🔋", label:"Batterie", text:"Metti tutto nel punto A",
-        visual:{items:[["🔋","x6"],["📦","Punto A"]], note:"Tutte le batterie partono da A"}
-      },
-      {
-        icon:"🚶", label:"Porta", text:"Vai da A a B",
-        visual:{items:[["📦","A"],["➡️",""],["📦","B"]], note:"Porta una batteria alla volta"}
-      },
-      {
-        icon:"⭐", label:"Bonus", text:"Ogni viaggio = un passo gigante",
-        visual:{items:[["👣","Passo"],["⭐","Gigante"],["🔋","Energia"]], note:"Se corri troppo, si scarica"}
-      }
-    ],
-    age_8_10:[
-      {
-        icon:"🔋", label:"Energia", text:"Prepara batterie e punti",
-        visual:{items:[["🔋","Batterie"],["📦","A"],["📦","B"]], note:"Sistema il percorso"}
-      },
-      {
-        icon:"↔️", label:"Trasporta", text:"Portale con precisione",
-        visual:{items:[["📦","A"],["➡️",""],["📦","B"]], note:"Niente fretta"}
-      },
-      {
-        icon:"🧠", label:"Sfida", text:"Alterna mano e percorso",
-        visual:{items:[["✋","Mano 1"],["🔁",""],["🤚","Mano 2"]], note:"Controllo, non velocità"}
-      }
-    ],
-    fail_rule:"Se corri troppo, la batteria si scarica.",
-    success:"Energia ripristinata. Motori attivi."
-  },
-  {
-    id:"campo_asteroidi",
-    title:"CAMPO DI ASTEROIDI",
-    chapter:"CAPITOLO 4",
-    story:"Lo spazio davanti a te è pieno di rocce pericolose.",
-    goal:"PASSARE SENZA TOCCARE",
-    parent:"Disponi 8 ostacoli morbidi e scegli partenza e arrivo.",
-    age_5_7:[
-      {
-        icon:"🪨", label:"Asteroidi", text:"Prepara il campo",
-        visual:{items:[["🪨",""],["🪨",""],["🪨",""],["🪨",""]], note:"Gli asteroidi sono sul pavimento"}
-      },
-      {
-        icon:"➡️", label:"Parti", text:"Scegli inizio e fine",
-        visual:{items:[["🟢","Inizio"],["➡️",""],["🔴","Fine"]], note:"Adesso sai dove andare"}
-      },
-      {
-        icon:"👣", label:"Passa", text:"Cammina in mezzo senza toccare",
-        visual:{items:[["👣","Passi"],["🪨",""],["✅",""]], note:"Se tocchi, reset"}
-      }
-    ],
-    age_8_10:[
-      {
-        icon:"🧭", label:"Rotta", text:"Trova il percorso",
-        visual:{items:[["🟢","Start"],["🪨",""],["🔴","Goal"]], note:"Pensa prima di partire"}
-      },
-      {
-        icon:"👣", label:"Pilota", text:"Attraversa il campo",
-        visual:{items:[["👣","Passa"],["🪨","Asteroidi"]], note:"Movimento controllato"}
-      },
-      {
-        icon:"🎯", label:"Sfida", text:"Tieni la navetta in mano",
-        visual:{items:[["🚀","In mano"],["👣","Passa"]], note:"Doppia difficoltà"}
-      }
-    ],
-    fail_rule:"Se tocchi un asteroide, allarme e reset.",
-    success:"Passaggio riuscito. Sei un vero pilota."
-  },
-  {
-    id:"gravita_impazzita",
-    title:"GRAVITÀ IMPAZZITA",
-    chapter:"CAPITOLO 5",
-    story:"Nella stazione tutto fluttua.",
-    goal:"RIPORTARE ORDINE",
-    parent:"Prepara 3 palline di carta e un cucchiaio.",
-    age_5_7:[
-      {
-        icon:"⭐", label:"Stelle", text:"Prepara 3 stelle",
-        visual:{items:[["⚪","Stella"],["⚪","Stella"],["⚪","Stella"]], note:"Le palline sono stelle"}
-      },
-      {
-        icon:"🥄", label:"Porta", text:"Usa il cucchiaio",
-        visual:{items:[["⚪","Stella"],["⬇️",""],["🥄","Cucchiaio"]], note:"Una stella per volta"}
-      },
-      {
-        icon:"✨", label:"Fila", text:"Metti tutto in ordine",
-        visual:{items:[["⚪","1"],["⚪","2"],["⚪","3"]], note:"Se cade, riprova"}
-      }
-    ],
-    age_8_10:[
-      {
-        icon:"🥄", label:"Equilibrio", text:"Porta le stelle con calma",
-        visual:{items:[["🥄","Trasporto"],["⚪","Stella"]], note:"Controlla il movimento"}
-      },
-      {
-        icon:"📍", label:"Ordina", text:"Allineale bene",
-        visual:{items:[["⚪","1"],["⚪","2"],["⚪","3"]], note:"Devono restare ben messe"}
-      },
-      {
-        icon:"🧠", label:"Sfida", text:"Portane 2 in un viaggio",
-        visual:{items:[["⚪","2 stelle"],["🥄","Cucchiaio"]], note:"Serve più equilibrio"}
-      }
-    ],
-    fail_rule:"Se cade una stella, devi riprovare.",
-    success:"Gravità stabilizzata."
-  },
-  {
-    id:"costruisci_stazione",
-    title:"COSTRUISCI LA STAZIONE",
-    chapter:"CAPITOLO 6",
-    story:"Serve un rifugio per l’equipaggio.",
-    goal:"COSTRUIRE UNA STAZIONE SICURA",
-    parent:"Scegliete pezzi, coperta e navetta.",
-    age_5_7:[
-      {
-        icon:"🧱", label:"Pezzi", text:"Prepara i pezzi",
-        visual:{items:[["🧱","Pezzi"],["🟦","Coperta"],["🚀","Navetta"]], note:"Prendi tutto prima di iniziare"}
-      },
-      {
-        icon:"🏗️", label:"Stazione", text:"Costruiscila",
-        visual:{items:[["🧱","Base"],["🧱","Base"],["🏠","Stazione"]], note:"Deve restare in piedi"}
-      },
-      {
-        icon:"🚀", label:"Docking", text:"Fai entrare la navetta",
-        visual:{items:[["🚀","Navetta"],["➡️",""],["🏠","Stazione"]], note:"Se crolla, rinforza"}
-      }
-    ],
-    age_8_10:[
-      {
-        icon:"🏗️", label:"Base", text:"Costruisci una struttura stabile",
-        visual:{items:[["🧱","Pezzi"],["🏠","Base"]], note:"Non deve muoversi troppo"}
-      },
-      {
-        icon:"🛡️", label:"Proteggi", text:"Aggiungi uno scudo",
-        visual:{items:[["🟦","Scudo"],["🏠","Base"]], note:"La coperta protegge la stazione"}
-      },
-      {
-        icon:"🧠", label:"Sfida", text:"Crea anche un secondo modulo",
-        visual:{items:[["🏠","Modulo 1"],["➕",""],["🏠","Modulo 2"]], note:"Più complessa, ma stabile"}
-      }
-    ],
-    fail_rule:"Se crolla, va rinforzata.",
-    success:"Stazione completata. Equipaggio al sicuro."
-  },
-  {
-    id:"sistema_solare",
-    title:"SISTEMA SOLARE",
-    chapter:"CAPITOLO 7",
-    story:"I pianeti hanno perso l’orbita.",
-    goal:"RIMETTERE I PIANETI AL POSTO GIUSTO",
-    parent:"Mostra il centro e aiuta il bambino a capire il Sole.",
-    age_5_7:[
-      {
-        icon:"☀️", label:"Sole", text:"Mettilo al centro",
-        visual:{items:[["☀️","Sole"]], note:"Il centro è il Sole"}
-      },
-      {
-        icon:"🪐", label:"Pianeti", text:"Mettili attorno",
-        visual:{items:[["🪐","Pianeta"],["🪐","Pianeta"],["🪐","Pianeta"]], note:"Intorno al Sole"}
-      },
-      {
-        icon:"✨", label:"Gira", text:"Fai un giro e dai 2 nomi",
-        visual:{items:[["👣","Gira"],["☀️","Centro"],["🪐","Intorno"]], note:"Inventa nomi spaziali"}
-      }
-    ],
-    age_8_10:[
-      {
-        icon:"☀️", label:"Centro", text:"Sistema il Sole",
-        visual:{items:[["☀️","Centro"],["🪐","Orbita"]], note:"Prima il centro giusto"}
-      },
-      {
-        icon:"🪐", label:"Ordina", text:"Ricrea le orbite",
-        visual:{items:[["🪐","Vicino"],["🪐","Lontano"]], note:"Non tutti alla stessa distanza"}
-      },
-      {
-        icon:"🧠", label:"Sfida", text:"Cambia 1 pianeta e spiega cosa cambia",
-        visual:{items:[["🪐","Cambio"],["❓",""]], note:"Osservazione e logica"}
-      }
-    ],
-    fail_rule:"Se tocchi tutto, l’orbita si rompe.",
-    success:"Sistema solare ristabilito."
-  },
-  {
-    id:"pianeta_ghiaccio",
-    title:"PIANETA GHIACCIO",
-    chapter:"CAPITOLO 8",
-    story:"Un astronauta è rimasto bloccato su un pianeta gelato.",
-    goal:"SALVARLO SENZA TOCCARE IL GHIACCIO",
-    parent:"Prepara coperta, isole e astronauta.",
-    age_5_7:[
-      {
-        icon:"🧊", label:"Ghiaccio", text:"Prepara il campo",
-        visual:{items:[["🟦","Ghiaccio"],["🛏️","Isola"],["🛏️","Isola"]], note:"La coperta è ghiaccio"}
-      },
-      {
-        icon:"👣", label:"Isole", text:"Salta solo sui cuscini",
-        visual:{items:[["👣","Salta"],["🛏️","Isola"],["🛏️","Isola"]], note:"Non toccare il ghiaccio"}
-      },
-      {
-        icon:"🧸", label:"Salva", text:"Prendi l’astronauta",
-        visual:{items:[["🧸","Astronauta"],["✅","Salvo"]], note:"Se tocchi il ghiaccio, riparti"}
-      }
-    ],
-    age_8_10:[
-      {
-        icon:"🧊", label:"Percorso", text:"Raggiungi l’astronauta",
-        visual:{items:[["🟦","Ghiaccio"],["🛏️","Isola"],["🧸","Astronauta"]], note:"Pensa al percorso prima"}
-      },
-      {
-        icon:"↩️", label:"Ritorna", text:"Torna senza errore",
-        visual:{items:[["🧸","Recupera"],["↩️",""],["✅","Base"]], note:"Andata e ritorno"}
-      },
-      {
-        icon:"🧠", label:"Sfida", text:"Porta anche una scorta",
-        visual:{items:[["📦","Scorta"],["🧸","Astronauta"]], note:"Doppio trasporto"}
-      }
-    ],
-    fail_rule:"Se tocchi il ghiaccio, riparti.",
-    success:"Salvataggio riuscito."
-  },
-  {
-    id:"codice_segreto",
-    title:"CODICE SEGRETO",
-    chapter:"CAPITOLO 9",
-    story:"La Terra aspetta il tuo messaggio.",
-    goal:"CREARE E INVIARE UN CODICE",
-    parent:"Nei più piccoli scegliete insieme 2 simboli facili.",
-    age_5_7:[
-      {
-        icon:"✏️", label:"Segni", text:"Disegna 2 simboli",
-        visual:{items:[["⭐","Simbolo"],["●","Simbolo"]], note:"Bastano due simboli"}
-      },
-      {
-        icon:"📦", label:"Oggetti", text:"Scegli gli oggetti giusti",
-        visual:{items:[["⭐","↔"],["🧱","Oggetto"],["●","↔"]], note:"Ogni simbolo ha i suoi oggetti"}
-      },
-      {
-        icon:"📡", label:"Invia", text:"Ripeti il codice 2 volte",
-        visual:{items:[["⭐",""],["●",""],["📡","Invia"]], note:"Se sbagli ordine, non parte"}
-      }
-    ],
-    age_8_10:[
-      {
-        icon:"🔣", label:"Crea", text:"Disegna più simboli",
-        visual:{items:[["⭐",""],["▲",""],["●",""]], note:"Puoi fare un codice più lungo"}
-      },
-      {
-        icon:"📦", label:"Associa", text:"Dai un oggetto a ogni simbolo",
-        visual:{items:[["📦","Oggetto"],["↔",""],["🔣","Simbolo"]], note:"Ordine importante"}
-      },
-      {
-        icon:"🧠", label:"Sfida", text:"Fai anche la sequenza inversa",
-        visual:{items:[["1-2-3",""],["↔",""],["3-2-1",""]], note:"Più difficile, più bello"}
-      }
-    ],
-    fail_rule:"Se sbagli ordine, il messaggio non parte.",
-    success:"Messaggio inviato alla Terra."
-  },
-  {
-    id:"atterraggio_finale",
-    title:"ATTERRAGGIO FINALE",
-    chapter:"CAPITOLO 10",
-    story:"Ultima prova. Serve un atterraggio perfetto.",
-    goal:"FERMARE LA NAVETTA SUL BERSAGLIO",
-    parent:"Mostra il foglio-bersaglio e la partenza.",
-    age_5_7:[
-      {
-        icon:"📄", label:"Bersaglio", text:"Metti un foglio a terra",
-        visual:{items:[["📄","Bersaglio"]], note:"Questo è il punto di arrivo"}
-      },
-      {
-        icon:"👣", label:"Parti", text:"Vai indietro di 6 passi",
-        visual:{items:[["👣","1"],["👣","2"],["👣","3"]], note:"Parti da più lontano"}
-      },
-      {
-        icon:"🚀", label:"Atterra", text:"Lancia la navetta",
-        visual:{items:[["🚀","Navetta"],["➡️",""],["📄","Bersaglio"]], note:"Hai 3 tentativi"}
-      }
-    ],
-    age_8_10:[
-      {
-        icon:"📄", label:"Setup", text:"Prepara bersaglio e partenza",
-        visual:{items:[["📄","Bersaglio"],["👣","Partenza"]], note:"Sistema bene la distanza"}
-      },
-      {
-        icon:"🚀", label:"Precisione", text:"Lancia con controllo",
-        visual:{items:[["🚀","Lancio"],["🎯","Precisione"]], note:"Troppo forte o troppo piano?"}
-      },
-      {
-        icon:"🧠", label:"Sfida", text:"Trova il colpo perfetto in 5 tentativi",
-        visual:{items:[["1",""],["2",""],["3",""],["4",""],["5",""]], note:"Ultima prova da comandante"}
-      }
-    ],
-    fail_rule:"Se vai troppo forte o piano, devi correggere.",
-    success:"Atterraggio riuscito. Missione compiuta."
-  }
-];
-
-const SPECIAL_MISSION = {
-  title:"MISSIONE SPECIALE",
-  chapter:"SQUADRA INSIEME",
-  story:"Questa missione si fa in due.",
-  goal:"FARE UNA PICCOLA MISSIONE INSIEME",
-  parent:"Leggi la missione una volta e mostra i movimenti al bambino. Poi lasciagli fare il resto.",
-  age_5_7:[
-    {
-      icon:"🤝", label:"Con chi?", text:"Chiama mamma o babbo",
-      visual:{items:[["🧒","Bimbo"],["🤝",""],["🧑","Genitore"]], note:"Questa missione si fa in due"}
-    },
-    {
-      icon:"🌬️", label:"Respira", text:"Fate 3 respiri lenti",
-      visual:{items:[["🌬️","1"],["🌬️","2"],["🌬️","3"]], note:"Stesso ritmo"}
-    },
-    {
-      icon:"👣", label:"Cammina", text:"Fate 10 passi uguali",
-      visual:{items:[["👣","Passi"],["👣","Passi"]], note:"Uno accanto all’altro"}
-    },
-    {
-      icon:"🚀", label:"Finale", text:"Dite: PRONTI AL LANCIO!",
-      visual:{items:[["🚀","Insieme"]], note:"Missione speciale completata"}
-    }
-  ],
-  age_8_10:[
-    {
-      icon:"🤝", label:"Squadra", text:"Chiama un genitore",
-      visual:{items:[["🧒",""],["🤝",""],["🧑",""]], note:"Squadra pronta"}
-    },
-    {
-      icon:"🌬️", label:"Allinea", text:"Fate 3 respiri nello stesso ritmo",
-      visual:{items:[["🌬️",""],["🌬️",""],["🌬️",""]], note:"Sincronia"}
-    },
-    {
-      icon:"👣", label:"Sincronia", text:"Fate 10 passi perfettamente uguali",
-      visual:{items:[["👣",""],["👣",""]], note:"Serve precisione"}
-    },
-    {
-      icon:"🚀", label:"Finale", text:"Dite: PRONTI AL LANCIO!",
-      visual:{items:[["🚀",""]], note:"Squadra perfetta"}
-    }
-  ],
-  success:"Missione speciale completata. Squadra perfetta."
-};
-
-/* ========= STATO ========= */
-const FRASI = [
-  "L'immaginazione è l'unica astronave che arriva ovunque.",
-  "Piccoli passi. Grandi avventure.",
-  "Oggi una missione. Domani un mondo.",
-  "Gioca con ciò che hai: è più potente di ciò che compri."
-];
-
-const state = {
-  fsm: "INIZIO",
-  world: "spazio",
-  eta: null,
-  stepIndex: 0,
-  missioneAttuale: null,
-  missioneIsSpeciale: false,
-  vistoGenitore: false,
-  audio: true,
-  diario: [],
-  oggiKey: "",
-  oggiFatte: 0,
-  oggiLimite: 3,
-  extraSbloccate: 0,
-  bonusUsatoOggi: false,
-  specialeFattaOggi: false,
-  storyIndex: 0,
-  gateTipo: null,
-  gateErrore: ""
-};
-
-function getTodayKey(){
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-}
-function limiteOggi(){ return state.oggiLimite + state.extraSbloccate; }
-
-function caricaPreferenze(){
-  const a = localStorage.getItem("sparkplay_audio");
-  state.audio = a === null ? true : a === "1";
-  const d = localStorage.getItem("sparkplay_diario");
-  state.diario = d ? JSON.parse(d) : [];
-}
-function salvaPreferenze(){
-  localStorage.setItem("sparkplay_audio", state.audio ? "1" : "0");
-}
-function caricaStatoGiorno(){
-  state.oggiKey = getTodayKey();
-  const saved = JSON.parse(localStorage.getItem("sparkplay_day") || "{}");
-  if(saved.key === state.oggiKey){
-    state.oggiFatte = Number(saved.oggiFatte || 0);
-    state.extraSbloccate = Number(saved.extraSbloccate || 0);
-    state.bonusUsatoOggi = !!saved.bonusUsatoOggi;
-    state.specialeFattaOggi = !!saved.specialeFattaOggi;
-  } else {
-    state.oggiFatte = 0;
-    state.extraSbloccate = 0;
-    state.bonusUsatoOggi = false;
-    state.specialeFattaOggi = false;
-    salvaStatoGiorno();
-  }
-}
-function salvaStatoGiorno(){
-  localStorage.setItem("sparkplay_day", JSON.stringify({
-    key: state.oggiKey,
-    oggiFatte: state.oggiFatte,
-    extraSbloccate: state.extraSbloccate,
-    bonusUsatoOggi: state.bonusUsatoOggi,
-    specialeFattaOggi: state.specialeFattaOggi
-  }));
-}
-function caricaCampagna(){
-  const saved = JSON.parse(localStorage.getItem("sparkplay_campaign") || "{}");
-  const w = saved[state.world];
-  state.storyIndex = Number.isFinite(w?.storyIndex) ? w.storyIndex : 0;
-}
-function salvaCampagna(){
-  const saved = JSON.parse(localStorage.getItem("sparkplay_campaign") || "{}");
-  saved[state.world] = { storyIndex: state.storyIndex };
-  localStorage.setItem("sparkplay_campaign", JSON.stringify(saved));
-}
-function salvaDiario(){
-  localStorage.setItem("sparkplay_diario", JSON.stringify(state.diario));
-}
-function buildMission(raw, eta){
-  return {
-    title: raw.title,
-    chapter: raw.chapter,
-    story: raw.story,
-    goal: raw.goal,
-    parent: eta === "5-7" ? raw.parent : "",
-    steps: raw[eta === "5-7" ? "age_5_7" : "age_8_10"],
-    success: raw.success
-  };
-}
-
-/* ========= FX ========= */
-function creaStelle(n=18){
-  for(let i=0;i<n;i++){
-    const el = document.createElement("div");
-    el.className = "cascata";
-    el.textContent = "✨";
-    el.style.left = (Math.random()*100) + "vw";
-    el.style.animationDuration = (1.2 + Math.random()*1.4) + "s";
-    document.body.appendChild(el);
-    setTimeout(()=>el.remove(), 2200);
-  }
-}
-function vibra(){
-  try{ if(navigator.vibrate) navigator.vibrate([150,70,150]); }catch(e){}
-}
-
-/* ========= VISUAL ========= */
-function renderVisual(v){
-  if(!v) return "";
-  const rows = [];
-  const items = v.items || [];
-  rows.push(`
-    <div class="visual-row">
-      ${items.map(([emoji,label]) => emoji === "➡️" || emoji === "⬇️" || emoji === "↔️" || emoji==="➕"
-        ? `<div class="visual-arrow">${emoji}</div>`
-        : `<div class="visual-item"><div class="visual-emoji">${emoji}</div>${label ? `<div class="visual-label">${label}</div>` : ""}</div>`
-      ).join("")}
-    </div>
-  `);
-  return `
-    <div class="visual-panel">
-      ${rows.join("")}
-      ${v.note ? `<div class="visual-note">${v.note}</div>` : ""}
-    </div>
-  `;
-}
-
-/* ========= HELPERS ========= */
-function progressPercent(){
-  return Math.min(100, (state.oggiFatte / Math.max(1, limiteOggi())) * 100);
-}
-function homeHint(){
-  if(state.oggiFatte < limiteOggi()){
-    return "Missioni con oggetti di casa. Sicure. Creative. Subito pronte.";
-  }
-  if(!state.bonusUsatoOggi){
-    return "Hai finito le missioni di oggi. Il genitore può sbloccare +3 una sola volta.";
-  }
-  return "Hai finito le missioni di oggi. Torna domani per continuare.";
-}
-
-/* ========= RENDER ========= */
-function render(){
-  const app = document.getElementById("app");
-
-  if(state.fsm === "INIZIO"){
-    const frase = FRASI[Math.floor(Math.random()*FRASI.length)];
-    app.innerHTML = `
-      <div class="top">
-        <button class="icon-btn" onclick="apriDiario()">📚</button>
-        <div class="brand">SPARKPLAY</div>
-        <div style="width:50px"></div>
-      </div>
-      <div class="content">
-        <div class="hero-orbit">
-          <div class="hero-core">✨</div>
-          <div class="orbit-item orbit-1">🚀</div>
-          <div class="orbit-item orbit-2">🪄</div>
-          <div class="orbit-item orbit-3">🔍</div>
+    <section id="world-select" class="screen">
+        <h2>Scegli il Mondo</h2>
+        <div class="world-card" onclick="nav('mission')">
+            <span class="icon-huge">🚀</span>
+            <h2>SPAZIO</h2>
         </div>
-        <div class="hero-title">PRONTI?</div>
-        <div class="hero-sub">${frase}</div>
+        <button class="btn btn-back" onclick="nav('home')">Indietro</button>
+    </section>
 
-        <div class="progress-wrap">
-          <div class="progress-row">
-            <span>OGGI: ${state.oggiFatte}/${limiteOggi()}</span>
-            <span class="tiny-pill">Limite genitore</span>
-          </div>
-          <div class="progress-outer">
-            <div class="progress-inner" style="width:${progressPercent()}%"></div>
-          </div>
+    <section id="mission" class="screen">
+        <div>
+            <span class="icon-huge">👨‍🚀</span>
+            <h2>Missione</h2>
         </div>
+        <p>Trova qualcosa di <b>spaziale</b> nella stanza! 🚀</p>
+        <button class="btn" onclick="nav('end-screen')">FATTO!</button>
+    </section>
 
-        <button class="primary-btn" onclick="vaiMondi()">SCEGLI MONDO 🌍</button>
-        <div class="helper-text">${homeHint()}</div>
-      </div>
-    `;
-    return;
-  }
-
-  if(state.fsm === "MONDI"){
-    app.innerHTML = `
-      <div class="top">
-        <button class="ghost-btn" onclick="home()">⬅︎</button>
-        <div class="brand" style="font-size:26px">SCEGLI UN MONDO</div>
-        <div style="width:50px"></div>
-      </div>
-      <div class="content">
-        <div class="grid2">
-          <div class="world-card" onclick="scegliMondo('spazio')">
-            <div class="emoji">🚀</div>
-            <div class="name">Spazio</div>
-            <div class="desc">Missioni guidate. Progressione. Più facile per i piccoli.</div>
-            <div class="badge">DISPONIBILE</div>
-          </div>
-          <div class="world-card disabled">
-            <div class="emoji">🔍</div>
-            <div class="name">Detective</div>
-            <div class="desc">Indizi, misteri e osservazione. In arrivo.</div>
-            <div class="badge">IN ARRIVO</div>
-          </div>
-          <div class="world-card disabled">
-            <div class="emoji">🪄</div>
-            <div class="name">Magia</div>
-            <div class="desc">Incantesimi, rituali e creatività. In arrivo.</div>
-            <div class="badge">IN ARRIVO</div>
-          </div>
+    <section id="end-screen" class="screen">
+        <div>
+            <span class="icon-huge">🏆</span>
+            <h2>Bravissimo!</h2>
+            <p>Missione Compiuta!</p>
         </div>
-        <div class="card center">
-          <div style="font-weight:900;">✨ SparkPlay idea</div>
-          <div style="opacity:.78; margin-top:8px; font-weight:800;">Il genitore lancia la missione. Il bambino la vive.</div>
+        <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+            <button class="btn" onclick="nav('home')">TORNA ALL'INIZIO</button>
+            <button class="btn btn-back" onclick="nav('world-select')">Gioca ancora</button>
         </div>
-      </div>
-    `;
-    return;
-  }
+    </section>
 
-  if(state.fsm === "ETA"){
-    app.innerHTML = `
-      <div class="top">
-        <button class="ghost-btn" onclick="vaiMondi()">⬅︎</button>
-        <div class="brand" style="font-size:26px">QUANTI ANNI?</div>
-        <div style="width:50px"></div>
-      </div>
-      <div class="content">
-        <button class="select-age age-1" onclick="scegliEta('5-7')">
-          <span style="font-size:40px;">🚀</span>
-          <div style="text-align:right;">
-            <b style="font-size:22px;">ESPLORATORE</b><br>
-            <small class="helper-text" style="opacity:.8;">5-7 ANNI</small>
-          </div>
-        </button>
-        <button class="select-age age-2" onclick="scegliEta('8-10')">
-          <span style="font-size:40px;">🧠</span>
-          <div style="text-align:right;">
-            <b style="font-size:22px;">COMANDANTE</b><br>
-            <small class="helper-text" style="opacity:.8;">8-10 ANNI</small>
-          </div>
-        </button>
-        <div class="helper-text">Nei 5–7 il genitore avvia. Negli 8–10 il bambino è più autonomo.</div>
-      </div>
-    `;
-    return;
-  }
+    <script>
+        /**
+         * Navigazione tra schermi
+         */
+        function nav(screenId) {
+            // Rimuove la classe active da tutti
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(s => s.classList.remove('active'));
 
-  if(state.fsm === "GIOCO"){
-    const m = state.missioneAttuale;
-    const parentMode = state.eta === "5-7" && !!m.parent && !state.vistoGenitore;
-    const step = m.steps[state.stepIndex];
-
-    app.innerHTML = `
-      <div class="top">
-        <button class="ghost-btn" onclick="home()">ESCI</button>
-        <div class="brand" style="font-size:18px">${m.title}</div>
-        <div style="width:58px"></div>
-      </div>
-      <div class="content">
-        <div class="mission-shell">
-          <div class="center">
-            <div class="chapter-badge">${m.chapter}</div>
-            <h1 class="mission-title">${m.title}</h1>
-          </div>
-          <div class="mission-story">${m.story}</div>
-          <div class="objective-box">OBIETTIVO: ${m.goal}</div>
-
-          ${parentMode ? `
-            <div class="parent-box">
-              <div class="parent-box-title">Per mamma o babbo 👇</div>
-              <div class="parent-box-text">${m.parent}</div>
-            </div>
-          ` : `
-            <div class="step-card">
-              <div class="step-head">
-                <div class="step-icon">${step.icon}</div>
-                <div>
-                  <div class="step-title">${step.label}</div>
-                  <div class="step-text">${step.text}</div>
-                </div>
-              </div>
-              ${renderVisual(step.visual)}
-            </div>
-          `}
-        </div>
-
-        <div class="controls-row">
-          ${parentMode ? `
-            <button class="primary-btn" onclick="continuaDopoGenitore()">HO CAPITO ✅</button>
-          ` : `
-            ${state.stepIndex > 0 ? `<button class="ghost-btn" onclick="precedente()">INDIETRO</button>` : `<button class="ghost-btn disabled">INDIETRO</button>`}
-            <button class="primary-btn" onclick="successivo()">${state.stepIndex < m.steps.length-1 ? "FATTO" : "COMPLETA ✅"}</button>
-          `}
-        </div>
-      </div>
-    `;
-    return;
-  }
-
-  if(state.fsm === "SCELTA_GENITORE"){
-    const sbloccabileSpeciale = (state.oggiFatte >= 3) && !state.specialeFattaOggi;
-    const puoBonus = !state.bonusUsatoOggi;
-
-    app.innerHTML = `
-      <div class="top">
-        <div class="brand" style="font-size:26px">GENITORE</div>
-        <button class="ghost-btn" onclick="home()">CHIUDI</button>
-      </div>
-      <div class="content">
-        <div class="card center">
-          <h2 style="margin:0; font-family:'Fredoka One'; color:var(--yellow); font-size:30px;">STOP DEL GIORNO 🧡</h2>
-          <div style="margin-top:8px; opacity:.88; font-weight:900;">
-            Oggi: <b>${state.oggiFatte}</b>/${limiteOggi()} missioni
-          </div>
-          <div class="helper-text" style="margin-top:10px;">
-            Il limite giornaliero serve a mantenere un ritmo sano. Il bonus si usa una sola volta al giorno.
-          </div>
-        </div>
-
-        ${sbloccabileSpeciale
-          ? `<button class="secondary-btn" onclick="apriGate('SPECIALE')">MISSIONE SPECIALE 🤝</button>`
-          : `<div class="helper-text">${state.specialeFattaOggi ? "🌟 Missione speciale già fatta oggi." : "🌟 Missione speciale disponibile dopo 3 missioni."}</div>`
+            // Attiva il nuovo schermo
+            const target = document.getElementById(screenId);
+            if (target) {
+                target.classList.add('active');
+                // Feedback tattile (vibrazione) se supportato
+                if (navigator.vibrate) navigator.vibrate(10);
+            }
         }
 
-        ${puoBonus
-          ? `<button class="secondary-btn" onclick="apriGate('ALTRE')">SBLOCCA +3 🚀 (1 VOLTA OGGI)</button>`
-          : `<button class="secondary-btn disabled">BONUS GIÀ USATO OGGI ✅</button>`
-        }
-
-        <button class="danger-btn" style="width:100%;" onclick="home()">FINISCI PER OGGI</button>
-      </div>
-    `;
-    return;
-  }
-
-  if(state.fsm === "GATE"){
-    const titolo = state.gateTipo === "SPECIALE"
-      ? "SBLOCCA MISSIONE SPECIALE"
-      : "SBLOCCA +3 (SOLO 1 VOLTA OGGI)";
-    app.innerHTML = `
-      <div class="top">
-        <div class="brand" style="font-size:26px">GENITORE</div>
-        <button class="ghost-btn" onclick="annullaGate()">ANNULLA</button>
-      </div>
-      <div class="content">
-        <div class="card center">
-          <div style="font-family:'Fredoka One'; color:var(--yellow); font-size:22px;">${titolo}</div>
-          <div style="opacity:.78; font-weight:900; margin-top:10px;">Quanto fa <span style="color:var(--yellow)">5 + 5</span>?</div>
-          <input id="gate-input" inputmode="numeric" pattern="[0-9]*" placeholder="Risposta"
-            style="width:100%; margin-top:14px; padding:16px; border-radius:18px; border:2px solid rgba(255,255,255,.18); background:rgba(0,0,0,.25); color:white; font-size:18px; text-align:center; outline:none;">
-          ${state.gateErrore ? `<div style="margin-top:10px; color:${'#ff5e6c'}; font-weight:900;">${state.gateErrore}</div>` : ``}
-          <button class="primary-btn" style="margin-top:14px;" onclick="verificaGate()">CONFERMA ✅</button>
-          <div class="helper-text" style="margin-top:10px;">Gate semplice per evitare sblocchi accidentali.</div>
-        </div>
-      </div>
-    `;
-  }
-}
-
-/* ========= AZIONI ========= */
-function home(){
-  sfxClick();
-  state.fsm = "INIZIO";
-  state.stepIndex = 0;
-  state.missioneAttuale = null;
-  state.vistoGenitore = false;
-  render();
-}
-function vaiMondi(){
-  sfxClick();
-  state.fsm = state.oggiFatte >= limiteOggi() ? "SCELTA_GENITORE" : "MONDI";
-  render();
-}
-function scegliMondo(w){
-  if(w !== "spazio") return;
-  sfxClick();
-  state.world = w;
-  caricaCampagna();
-  state.fsm = "ETA";
-  render();
-}
-function scegliEta(eta){
-  sfxClick();
-  state.eta = eta;
-  if(state.oggiFatte >= limiteOggi()){
-    state.fsm = "SCELTA_GENITORE";
-    render();
-    return;
-  }
-  proproxima();
-}
-function apriDiario(){
-  sfxClick();
-  const l = document.getElementById("lista-diario");
-  l.innerHTML = state.diario.length
-    ? state.diario.map(m => `
-      <div class="scheda-ricordo">
-        <div class="emoji-diario">📖</div>
-        <div class="testo-diario">
-          <small>${m.data}</small>
-          <b>${m.titolo}</b>
-        </div>
-      </div>`).join("")
-    : "<p class='center' style='opacity:.65; font-weight:900;'>Il diario è vuoto.</p>";
-  document.getElementById("diario-modal").style.display = "flex";
-}
-function chiudiDiario(){
-  sfxClick();
-  document.getElementById("diario-modal").style.display = "none";
-}
-function apriGate(tipo){
-  sfxClick();
-  state.gateTipo = tipo;
-  state.gateErrore = "";
-  state.fsm = "GATE";
-  render();
-}
-function annullaGate(){
-  sfxClick();
-  state.fsm = "SCELTA_GENITORE";
-  render();
-}
-function verificaGate(){
-  const v = (document.getElementById("gate-input")?.value || "").trim();
-  if(v !== "10"){
-    state.gateErrore = "Risposta errata. Riprova 🙂";
-    render();
-    return;
-  }
-  sfxClick();
-
-  if(state.gateTipo === "ALTRE"){
-    if(state.bonusUsatoOggi){
-      state.gateErrore = "Bonus già usato oggi. Torna domani 🙂";
-      render();
-      return;
-    }
-    state.bonusUsatoOggi = true;
-    state.extraSbloccate = 3;
-    salvaStatoGiorno();
-    proproxima();
-    return;
-  }
-
-  if(state.gateTipo === "SPECIALE"){
-    if(state.specialeFattaOggi){
-      state.gateErrore = "Missione speciale già fatta oggi.";
-      render();
-      return;
-    }
-    state.specialeFattaOggi = true;
-    salvaStatoGiorno();
-    state.missioneIsSpeciale = true;
-    state.missioneAttuale = buildMission(SPECIAL_MISSION, state.eta);
-    state.stepIndex = 0;
-    state.vistoGenitore = state.eta !== "5-7";
-    state.fsm = "GIOCO";
-    render();
-  }
-}
-function continuaDopoGenitore(){
-  sfxClick();
-  state.vistoGenitore = true;
-  render();
-}
-function proproxima(){
-  if(!state.eta){
-    state.fsm = "ETA";
-    render();
-    return;
-  }
-  if(state.oggiFatte >= limiteOggi()){
-    state.fsm = "SCELTA_GENITORE";
-    render();
-    return;
-  }
-  const raw = MISSIONS[state.storyIndex % MISSIONS.length];
-  state.missioneIsSpeciale = false;
-  state.missioneAttuale = buildMission(raw, state.eta);
-  state.stepIndex = 0;
-  state.vistoGenitore = state.eta !== "5-7";
-  state.fsm = "GIOCO";
-  render();
-}
-function precedente(){
-  if(state.stepIndex <= 0) return;
-  sfxClick();
-  state.stepIndex--;
-  render();
-}
-function successivo(){
-  const m = state.missioneAttuale;
-  if(state.stepIndex < m.steps.length - 1){
-    sfxClick();
-    state.stepIndex++;
-    render();
-    return;
-  }
-
-  document.getElementById("overlay-success").style.display = "flex";
-  creaStelle(22);
-  vibra();
-  sfxSuccess();
-
-  state.diario.unshift({
-    titolo: m.title,
-    data: new Date().toLocaleDateString("it-IT")
-  });
-  salvaDiario();
-
-  setTimeout(()=>{
-    document.getElementById("overlay-success").style.display = "none";
-
-    if(state.missioneIsSpeciale){
-      state.fsm = "SCELTA_GENITORE";
-      state.vistoGenitore = false;
-      render();
-      return;
-    }
-
-    state.oggiFatte++;
-    salvaStatoGiorno();
-    state.storyIndex++;
-    salvaCampagna();
-    state.vistoGenitore = false;
-
-    if(state.oggiFatte >= limiteOggi()){
-      state.fsm = "SCELTA_GENITORE";
-      render();
-      return;
-    }
-
-    proproxima();
-  }, 1600);
-}
-
-/* ========= BOOTSTRAP ========= */
-caricaPreferenze();
-caricaStatoGiorno();
-caricaCampagna();
-
-window.addEventListener("load", ()=>{
-  const splash = document.getElementById("splash-screen");
-  if(splash) setTimeout(()=>{ splash.style.display = "none"; }, 900);
-});
-
-render();
-</script>
+        // Blocca solo il rimbalzo elastico tipico di iOS Safari 
+        // senza rompere l'interattività dei bottoni
+        document.addEventListener('touchmove', function (e) {
+            if (e.scale !== 1) { e.preventDefault(); }
+        }, { passive: false });
+    </script>
 </body>
 </html>
