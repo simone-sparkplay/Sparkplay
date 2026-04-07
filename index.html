@@ -6,7 +6,7 @@
     <title>SparkPlay - Avventura Spaziale</title>
     <style>
         :root {
-            --bg-space: #0b0e28;
+            --bg-deep: #060814;
             --p-magic: #a27cff;
             --p-magic-deep: #7c4dff;
             --s-gold: #ffdb58;
@@ -21,7 +21,7 @@
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: var(--bg-space);
+            background-color: var(--bg-deep);
             background-image: radial-gradient(circle at 50% 20%, #1a1c4d 0%, #0b0e28 100%);
             color: var(--text-white);
             font-family: var(--font-main);
@@ -88,9 +88,17 @@
         .quest-text { font-size: 1.6rem; font-weight: 700; line-height: 1.4; margin: 20px 0; min-height: 80px; }
         .quest-text b { color: var(--s-gold); }
 
-        /* --- ICONS --- */
+        /* --- ICONS & ANIMATIONS --- */
         .icon-box { height: 130px; display: flex; align-items: center; justify-content: center; animation: float 4s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+        .sparkle-group { animation: floatSparkle 5s ease-in-out infinite; transform-origin: center; }
+        .main-sparkle { animation: pulseSparkle 2s ease-in-out infinite; transform-origin: center; }
+        .side-sparkle { animation: sparkleBlink 3s ease-in-out infinite; transform-origin: center; }
+
+        @keyframes floatSparkle { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-10px) rotate(5deg); } }
+        @keyframes pulseSparkle { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,219,88,0.7)); } 50% { transform: scale(1.05); filter: drop-shadow(0 0 18px rgba(255,219,88,0.9)); } }
+        @keyframes sparkleBlink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
 
         /* --- DIARY BUTTON --- */
         .diary-btn {
@@ -126,7 +134,8 @@
     <section id="mission-screen" class="screen">
         <div class="quest-card">
             <div id="progress-bar" class="progress-bar"></div>
-            <div id="m-icon" class="icon-box"></div>
+            <div id="m-icon" class="icon-box">
+                </div>
             <p id="m-text" class="quest-text">Caricamento missione...</p>
         </div>
         <button class="btn-game" onclick="completeStep()">Completato!</button>
@@ -153,7 +162,7 @@
         <h2 style="font-size: 2.5rem; color: var(--s-gold); margin-bottom: 0;">BRAVISSIMO!</h2>
         <p id="reward-title" style="font-size: 1.8rem; font-weight: 800; margin: 10px 0;">TITOLO OTTENUTO</p>
         <p style="opacity: 0.8;">Missioni completate con successo!</p>
-        <button class="btn-game" onclick="location.reload()">Torna Domani</button>
+        <button class="btn-main" onclick="location.reload()">Torna Domani</button>
     </section>
 
     <section id="diary-screen" class="screen">
@@ -171,15 +180,33 @@
             isFinished: false
         };
 
+        // --- ASSET REPOSITORY CON NUOVA ICONA SPARKLE ANIMATA ---
         const icons = {
-            robot: `<svg width="100" height="100" viewBox="0 0 120 120"><rect x="30" y="40" width="60" height="50" rx="15" fill="#a27cff"/><rect x="40" y="50" width="40" height="20" rx="5" fill="#1a1c3d"/><circle cx="50" cy="60" r="4" fill="#4deeea"/><circle cx="70" cy="60" r="4" fill="#4deeea"/><path d="M60 40V30" stroke="#ffdb58" stroke-width="5" stroke-linecap="round"/><circle cx="60" cy="30" r="5" fill="#ffdb58"/></svg>`,
+            // L'icona principale ispirata allo screenshot, con animazioni complesse
+            sparkle: `
+            <svg width="120" height="120" viewBox="0 0 120 120">
+              <defs>
+                <linearGradient id="gSparkle" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#fff"/>
+                  <stop offset="100%" stop-color="#ffdb58"/>
+                </linearGradient>
+              </defs>
+              <g class="sparkle-group">
+                <path class="main-sparkle" d="M60 10 Q65 50 105 55 Q65 60 60 100 Q55 60 15 55 Q55 50 60 10 Z" fill="url(#gSparkle)" stroke="#fff" stroke-width="1.5"/>
+                
+                <path class="side-sparkle" d="M90 30 Q91 40 100 41 Q91 42 90 52 Q89 42 80 41 Q89 40 90 30 Z" fill="#ffdb58" style="animation-delay: 0.5s"/>
+                <path class="side-sparkle" d="M100 65 Q101 72 107 73 Q101 74 100 81 Q99 74 93 73 Q99 72 100 65 Z" fill="#ffdb58" style="animation-delay: 1s"/>
+                <path class="side-sparkle" d="M30 25 Q31 30 36 31 Q31 32 30 37 Q29 32 24 31 Q29 30 30 25 Z" fill="#ffdb58" style="animation-delay: 1.5s"/>
+              </g>
+            </svg>`,
             star: `<svg width="100" height="100" viewBox="0 0 100 100"><path d="M50 10 L60 40 L90 40 L65 60 L75 90 L50 70 L25 90 L35 60 L10 40 L40 40 Z" fill="#ffdb58" stroke="#fff" stroke-width="2"/></svg>`
         };
 
+        // Sostituiamo l'icona robot con la nuova icona sparkle nelle missioni
         const missionPool = [
-            { t: "Trova un oggetto <b>Rosso</b> come Marte!", i: icons.robot },
-            { t: "Fai 5 <b>Salti Spaziali</b> velocissimi!", i: icons.robot },
-            { t: "Trova una cosa <b>Tonda</b> come un pianeta!", i: icons.robot }
+            { t: "Trova un oggetto <b>Rosso</b> come Marte!", i: icons.sparkle },
+            { t: "Fai 5 <b>Salti Spaziali</b> velocissimi!", i: icons.sparkle },
+            { t: "Trova una cosa <b>Tonda</b> come un pianeta!", i: icons.sparkle }
         ];
 
         const superMission = { t: "Costruisci una <b>Base Spaziale</b> con i cuscini!", i: icons.star };
