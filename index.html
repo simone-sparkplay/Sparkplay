@@ -6,158 +6,188 @@
     <title>SparkPlay</title>
     <style>
         :root {
-            --bg-color: #0b0e14;
-            --card-color: #1e2530;
-            --accent-color: #a27cff;
-            --text-color: #ffffff;
-            --button-grad: linear-gradient(180deg, #9d50bb 0%, #6e48aa 100%);
-            --secondary-grad: linear-gradient(180deg, #444 0%, #222 100%);
-            --gold: #ffeb3b;
-            --transition-speed: 0.4s;
+            --bg-color: #0f1218;
+            --card-bg: #1a1f26;
+            --accent-soft: #9daaf2; /* Blu polvere calmo */
+            --gold-soft: #e5d392;   /* Oro tenue, non neon */
+            --text-main: #f0f2f5;
+            --text-dim: #94a3b8;
+            --transition-smooth: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
 
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: var(--bg-color); color: var(--text-color);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden; overscroll-behavior: none;
+            background-color: var(--bg-color); 
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden;
         }
 
         body { display: flex; justify-content: center; align-items: center; }
 
+        /* --- Schermi Minimali --- */
         .screen {
-            display: none; flex-direction: column; align-items: center; justify-content: space-around;
-            width: 100%; height: 100%; padding: 40px 20px; text-align: center;
-            position: absolute; top: 0; left: 0; opacity: 0;
-            transform: scale(1.1); transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none; z-index: 1;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            width: 100%; height: 100%; padding: 60px 30px; text-align: center;
+            position: absolute; opacity: 0;
+            transition: opacity var(--transition-smooth);
+            pointer-events: none;
         }
 
-        .screen.active { display: flex; opacity: 1; transform: scale(1); pointer-events: auto; z-index: 10; }
-
-        /* --- Memory UI --- */
-        .history-tag {
-            font-size: 0.9rem; color: var(--accent-color);
-            background: rgba(162, 124, 255, 0.1);
-            padding: 5px 15px; border-radius: 15px;
-            margin-top: 10px; display: none; /* Nascosto finché non c'è un badge */
+        .screen.active { 
+            display: flex; opacity: 1; pointer-events: auto; z-index: 10; 
         }
 
-        .welcome-msg { font-size: 1.2rem; color: var(--gold); margin-bottom: -20px; opacity: 0.9; }
-
-        /* --- Badge & Rewards --- */
-        .badge-box {
-            background: rgba(255, 235, 59, 0.1);
-            border: 2px dashed var(--gold); border-radius: 20px;
-            padding: 15px 25px; margin: 20px 0;
-            animation: celebrate 0.8s ease-out both;
+        /* --- Tipografia Montessori --- */
+        h1 { 
+            font-size: 2.8rem; font-weight: 300; letter-spacing: 4px; 
+            margin: 0; color: var(--text-main); 
         }
 
-        @keyframes celebrate {
-            0% { transform: scale(0); rotate: -10deg; }
-            70% { transform: scale(1.1); rotate: 5deg; }
-            100% { transform: scale(1); rotate: 0deg; }
+        h2 { 
+            font-size: 1.6rem; font-weight: 400; letter-spacing: 1px; 
+            margin-bottom: 40px; color: var(--text-dim);
         }
 
-        .badge-text { color: var(--gold); font-size: 1.8rem; font-weight: 900; text-transform: uppercase; }
+        p { 
+            font-size: 1.4rem; line-height: 1.6; font-weight: 300;
+            margin: 20px 0; color: var(--text-main); 
+        }
 
-        /* --- Typography & Buttons --- */
-        h1 { font-size: 3.5rem; margin: 0; text-shadow: 0 0 20px rgba(157, 80, 187, 0.4); }
-        h2 { font-size: 2.2rem; margin: 10px 0; }
-        p { font-size: 1.5rem; line-height: 1.4; margin: 15px 0; max-width: 85%; }
+        /* --- UI Status (Memory) --- */
+        .badge-status {
+            font-size: 0.9rem; font-weight: 400; letter-spacing: 2px;
+            margin-top: 20px; color: var(--accent-soft);
+            text-transform: uppercase;
+        }
 
+        .no-badge { opacity: 0.4; color: var(--text-dim); }
+
+        /* --- Bottoni Moderni --- */
         .btn {
-            position: relative; background: var(--button-grad); color: white;
-            border: none; border-radius: 30px; padding: 25px 20px;
-            font-size: 1.8rem; font-weight: 900; cursor: pointer;
-            box-shadow: 0 8px 0 #4a2d7a, 0 15px 25px rgba(0,0,0,0.4);
-            transition: all 0.1s ease; width: 90%; max-width: 400px;
-            text-transform: uppercase; letter-spacing: 2px;
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 22px 40px;
+            font-size: 1.1rem; font-weight: 400; letter-spacing: 2px;
+            cursor: pointer; transition: all 0.3s ease;
+            width: 85%; max-width: 320px;
+            text-transform: uppercase;
+            margin-top: 40px;
         }
 
-        .btn:active { transform: scale(0.92) translateY(4px); box-shadow: 0 2px 0 #4a2d7a; }
-        .btn-back { background: var(--secondary-grad); font-size: 1.2rem; padding: 15px; box-shadow: 0 5px 0 #111; margin-top: 20px; }
+        .btn:active { 
+            background: rgba(255,255,255,0.05);
+            transform: translateY(2px);
+            border-color: var(--accent-soft);
+        }
 
-        .icon-huge { font-size: 6rem; display: block; filter: drop-shadow(0 0 10px var(--accent-color)); }
-        .pulse { animation: pulse 1s infinite alternate; color: var(--gold); }
-        @keyframes pulse { from { transform: scale(1); opacity: 1; } to { transform: scale(1.1); opacity: 0.7; } }
+        .btn-primary {
+            background: var(--text-main);
+            color: var(--bg-color);
+            border: none;
+        }
+
+        .btn-back {
+            border: none; font-size: 0.9rem; color: var(--text-dim);
+            margin-top: 20px; padding: 10px;
+        }
+
+        /* --- Card Mondo --- */
+        .world-card {
+            background: var(--card-bg);
+            border-radius: 24px; padding: 60px 40px;
+            width: 100%; max-width: 320px;
+            transition: transform 0.3s ease;
+        }
+
+        .icon-large { 
+            font-size: 4rem; display: block; margin-bottom: 25px; 
+            opacity: 0.9; filter: grayscale(0.2);
+        }
+
+        /* --- Reward Box --- */
+        .reward-box {
+            padding: 30px; margin: 30px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .badge-display {
+            color: var(--gold-soft); font-size: 1.5rem;
+            font-weight: 300; letter-spacing: 1px;
+        }
+
+        /* --- Progress --- */
+        .progress-indicator {
+            font-size: 0.8rem; letter-spacing: 2px;
+            color: var(--text-dim); text-transform: uppercase;
+            margin-bottom: 40px;
+        }
     </style>
 </head>
 <body>
 
     <section id="home" class="screen active">
-        <div id="welcome-container" class="welcome-msg" style="display: none;">Bentornato Astronauta! 👨‍🚀</div>
-        <h1>✨ SparkPlay</h1>
-        <button class="btn" onclick="nav('world-select')">INIZIA</button>
-        <div id="last-badge-info" class="history-tag">Ultimo titolo: <span id="history-badge-name"></span></div>
+        <div>
+            <h1>SPARKPLAY</h1>
+            <div id="home-badge-display" class="badge-status no-badge">Esplorazione non iniziata</div>
+        </div>
+        <button class="btn btn-primary" onclick="nav('world-select')">Inizia</button>
     </section>
 
     <section id="world-select" class="screen">
-        <h2>Scegli il Mondo</h2>
-        <div style="background: var(--card-color); border-radius: 40px; padding: 40px 20px; border: 4px solid var(--accent-color);" onclick="startNewSession()">
-            <span class="icon-huge">🚀</span>
-            <h2>SPAZIO</h2>
+        <h2>Seleziona Ambiente</h2>
+        <div class="world-card" onclick="startNewSession()">
+            <span class="icon-large">🚀</span>
+            <div style="letter-spacing: 3px; font-weight: 300;">SPAZIO</div>
         </div>
-        <button class="btn btn-back" onclick="nav('home')">Indietro</button>
+        <button class="btn btn-back" onclick="nav('home')">Chiudi</button>
     </section>
 
     <section id="mission" class="screen">
+        <div id="progress" class="progress-indicator">Missione 1 / 3</div>
         <div id="mission-ui">
-            <div id="progress" style="background: rgba(162, 124, 255, 0.2); padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 1rem; color: var(--accent-color); margin-bottom: 10px; border: 1px solid var(--accent-color);">Missione 1 di 3</div>
-            <span id="mission-icon" class="icon-huge">🚀</span>
-            <h2 id="mission-title">Missione</h2>
-            <p id="mission-text">Caricamento...</p>
+            <span id="mission-icon" class="icon-large">🚀</span>
+            <p id="mission-text">...</p>
         </div>
-        <button class="btn" onclick="handleComplete()">FATTO!</button>
+        <button class="btn btn-primary" onclick="handleComplete()">Completata</button>
     </section>
 
     <section id="alert-screen" class="screen">
-        <h2 class="pulse">ATTENZIONE...</h2>
-        <span class="icon-huge">🌠</span>
-        <h2 style="color: var(--gold);">SUPER MISSIONE<br>IN ARRIVO!</h2>
+        <span class="icon-large">🌠</span>
+        <h1 style="font-size: 1.8rem; letter-spacing: 5px;">MISSIONE SPECIALE</h1>
     </section>
 
     <section id="end-screen" class="screen">
-        <div>
-            <span class="icon-huge">🏆</span>
-            <h2 id="final-title">ECCEZIONALE!</h2>
-            <p>Hai sbloccato un nuovo titolo:</p>
-            <div class="badge-box">
-                <span id="badge-display" class="badge-text">EROE GALATTICO</span>
-            </div>
-            <p id="teaser-text" style="font-size: 1.1rem; opacity: 0.9; color: var(--accent-color);">
-                Nuove sfide sbloccate per domani! 🚀
-            </p>
+        <div class="reward-box">
+            <h2 style="margin-bottom: 10px;">Obiettivo Raggiunto</h2>
+            <div id="badge-name-end" class="badge-display">Comandante</div>
         </div>
-        <button class="btn" onclick="resetAndHome()">TORNA ALLA BASE</button>
+        <p style="font-size: 1rem; color: var(--text-dim);">L'esplorazione prosegue domani.</p>
+        <button class="btn btn-primary" onclick="resetAndHome()">Menu Principale</button>
     </section>
 
     <script>
-        // --- MEMORIA DI SESSIONE (Runtime Only) ---
-        let sessionMemory = {
-            lastBadge: null,
-            hasPlayed: false
-        };
+        let lastBadge = "";
 
         const missionPool = [
-            { text: "Trova un oggetto <b>rosso</b> come Marte! 🔴", icon: "☄️" },
-            { text: "Fai 5 salti spaziali verso l'alto! ⬆️", icon: "👨‍🚀" },
-            { text: "Trova qualcosa di <b>tondo</b> come la Luna! 🌕", icon: "🛰️" },
-            { text: "Nasconditi dagli alieni per 10 secondi! 🛸", icon: "👽" },
-            { text: "Disegna una stella magica nell'aria! ✨", icon: "⭐" },
-            { text: "Cammina al rallentatore come sulla Luna! 👣", icon: "👨‍🚀" }
+            { text: "Cerca un oggetto <b>rosso</b> simile a Marte.", icon: "☄️" },
+            { text: "Esegui 5 movimenti lenti verso l'alto.", icon: "👨‍🚀" },
+            { text: "Trova una forma <b>rotonda</b> come la Luna.", icon: "🌕" },
+            { text: "Rimani in silenzio per 10 secondi spaziali.", icon: "🛸" },
+            { text: "Traccia una stella nell'aria con la mano.", icon: "✨" },
+            { text: "Cammina con cura, come se non ci fosse gravità.", icon: "👨‍🚀" }
         ];
 
-        const badges = ["Esploratore Spaziale", "Comandante delle Stelle", "Eroe Galattico", "Pilota Leggendario"];
-        const teasers = [
-            "Domani missioni più difficili ti aspettano! 🚀",
-            "Nuove sfide sbloccate per domani! ✨",
-            "Il comando spaziale ti aspetta domani! 🛰️"
-        ];
-
-        const specialMission = { text: "Missione Speciale: Costruisci una <b>base spaziale</b> con i cuscini! 🏠", icon: "🌠" };
+        const badges = ["Esploratore Spaziale", "Comandante", "Eroe Galattico", "Pilota Stellare"];
+        const specialMission = { text: "Crea una <b>base sicura</b> usando elementi della stanza.", icon: "🌠" };
         let gameState = { missionsCompleted: 0, sessionMissions: [] };
 
         function startNewSession() {
@@ -169,71 +199,45 @@
         }
 
         function updateMissionUI() {
-            const ui = document.getElementById('mission-ui');
-            ui.style.opacity = "0";
-            setTimeout(() => {
-                let data;
-                if (gameState.missionsCompleted < 3) {
-                    data = gameState.sessionMissions[gameState.missionsCompleted];
-                    document.getElementById('progress').innerText = `Missione ${gameState.missionsCompleted + 1} di 3`;
-                    document.getElementById('mission-title').innerText = "Missione";
-                } else {
-                    data = specialMission;
-                    document.getElementById('progress').innerText = `ULTIMA SFIDA!`;
-                    document.getElementById('mission-title').innerText = "SUPER MISSIONE";
-                }
-                document.getElementById('mission-text').innerHTML = data.text;
-                document.getElementById('mission-icon').innerText = data.icon;
-                ui.style.opacity = "1";
-            }, 200);
+            let data;
+            if (gameState.missionsCompleted < 3) {
+                data = gameState.sessionMissions[gameState.missionsCompleted];
+                document.getElementById('progress').innerText = `Missione ${gameState.missionsCompleted + 1} / 3`;
+            } else {
+                data = specialMission;
+                document.getElementById('progress').innerText = `Fase Finale`;
+            }
+            document.getElementById('mission-text').innerHTML = data.text;
+            document.getElementById('mission-icon').innerText = data.icon;
         }
 
         function handleComplete() {
-            if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
             gameState.missionsCompleted++;
-
             if (gameState.missionsCompleted === 3) {
                 nav('alert-screen');
-                setTimeout(() => { updateMissionUI(); nav('mission'); }, 2000);
+                setTimeout(() => { updateMissionUI(); nav('mission'); }, 1500);
             } else if (gameState.missionsCompleted > 3) {
-                showFinalVictory();
+                lastBadge = badges[Math.floor(Math.random() * badges.length)];
+                document.getElementById('badge-name-end').innerText = lastBadge;
+                nav('end-screen');
             } else {
-                setTimeout(() => { updateMissionUI(); }, 300);
+                updateMissionUI();
             }
-        }
-
-        function showFinalVictory() {
-            const randomBadge = badges[Math.floor(Math.random() * badges.length)];
-            const randomTeaser = teasers[Math.floor(Math.random() * teasers.length)];
-
-            // Salva nella memoria di sessione
-            sessionMemory.lastBadge = randomBadge;
-            sessionMemory.hasPlayed = true;
-
-            document.getElementById('badge-display').innerText = randomBadge;
-            document.getElementById('teaser-text').innerText = randomTeaser;
-            nav('end-screen');
         }
 
         function resetAndHome() {
+            const homeDisplay = document.getElementById('home-badge-display');
+            if (lastBadge !== "") {
+                homeDisplay.innerText = lastBadge;
+                homeDisplay.classList.remove('no-badge');
+            }
             gameState.missionsCompleted = 0;
-            
-            // Aggiorna la Home con i dati in memoria
-            if (sessionMemory.hasPlayed) {
-                document.getElementById('welcome-container').style.display = "block";
-            }
-            if (sessionMemory.lastBadge) {
-                document.getElementById('history-badge-name').innerText = sessionMemory.lastBadge;
-                document.getElementById('last-badge-info').style.display = "block";
-            }
-
             nav('home');
         }
 
         function nav(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById(screenId);
-            if (target) target.classList.add('active');
+            document.getElementById(screenId).classList.add('active');
         }
 
         document.addEventListener('touchstart', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
