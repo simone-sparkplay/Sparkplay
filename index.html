@@ -13,6 +13,8 @@
             --text-soft: #94a3b8;
             --panel-glass: rgba(255, 255, 255, 0.08);
             --inner-glow: inset 0 0 15px rgba(162, 124, 255, 0.2);
+            --svg-glow: drop-shadow(0 0 8px rgba(162, 124, 255, 0.6));
+            --gold-glow: drop-shadow(0 0 10px rgba(255, 219, 88, 0.5));
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -20,12 +22,9 @@
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background: var(--bg-deep);
-            background-image: 
-                radial-gradient(circle at 50% 50%, #161b3d 0%, #060814 100%),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="2" cy="2" r="1" fill="white" opacity="0.15"/></svg>');
+            background-image: radial-gradient(circle at 50% 50%, #161b3d 0%, #060814 100%);
             color: var(--text-main);
-            /* 1. Rimosso Google Fonts: Utilizzo font di sistema moderni e leggibili */
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            font-family: system-ui, -apple-system, sans-serif;
             overflow: hidden;
         }
 
@@ -40,14 +39,22 @@
 
         .screen.active { display: flex; opacity: 1; pointer-events: auto; z-index: 10; transform: scale(1); }
 
-        /* --- HOME SCREEN --- */
-        .home-hero { position: relative; margin-bottom: 20px; }
-        
+        /* --- SVG STYLING --- */
+        .icon-svg {
+            width: 80px; height: 80px;
+            fill: none; stroke: currentColor;
+            stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+            filter: var(--svg-glow);
+            margin-bottom: 20px;
+        }
+        .icon-gold { color: var(--accent-gold); filter: var(--gold-glow); }
+        .icon-white { color: #fff; }
+
+        /* --- UI ELEMENTS --- */
         h1 { 
             font-size: 4rem; margin: 0; font-weight: 800; letter-spacing: -1.5px;
             background: linear-gradient(to bottom, #ffffff 40%, #c0a4ff 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(162, 124, 255, 0.6));
         }
 
         .btn-main {
@@ -55,38 +62,24 @@
             color: white; border: none; border-radius: 60px; 
             padding: 22px 65px; font-size: 1.8rem; font-weight: 700; cursor: pointer;
             box-shadow: 0 10px 0 #4a2d7a, 0 20px 40px rgba(0,0,0,0.5);
-            transition: all 0.15s ease; text-transform: uppercase; letter-spacing: 1.5px;
-            margin-top: 40px; border: 2px solid rgba(255,255,255,0.2);
+            transition: all 0.15s ease; text-transform: uppercase; margin-top: 40px;
         }
-        .btn-main:active { transform: translateY(8px); box-shadow: 0 2px 0 #4a2d7a; filter: brightness(1.1); }
+        .btn-main:active { transform: translateY(8px); box-shadow: 0 2px 0 #4a2d7a; }
 
-        /* --- DIARY --- */
         .diary-trigger {
             position: absolute; top: 30px; right: 25px;
             width: 52px; height: 52px; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #3d457a, #1a1c3d);
-            border: 2px solid var(--accent-gold);
+            background: #1a1c3d; border: 2px solid var(--accent-gold);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; cursor: pointer; z-index: 100;
-            box-shadow: 0 0 20px rgba(255, 219, 88, 0.3);
+            cursor: pointer; z-index: 100; box-shadow: 0 0 20px rgba(255, 219, 88, 0.3);
         }
+        .diary-trigger .icon-svg { width: 28px; height: 28px; margin: 0; }
 
         .diary-modal {
-            background: linear-gradient(135deg, #1a1c3d 0%, #0a0b1e 100%);
-            border: 2px solid var(--accent-gold); border-radius: 35px;
+            background: #0a0b1e; border: 2px solid var(--accent-gold); border-radius: 35px;
             padding: 35px; width: 90%; max-width: 350px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
         }
 
-        .diary-item {
-            background: rgba(255,255,255,0.03); border-radius: 15px;
-            padding: 15px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05);
-            display: flex; flex-direction: column; align-items: flex-start;
-        }
-
-        .diary-val { color: #fff; font-size: 1rem; font-weight: 700; }
-
-        /* --- 3. MISSION SCREEN: MIGLIORATA LEGGIBILITÀ --- */
         .quest-card {
             background: var(--panel-glass); border-radius: 40px; padding: 50px 35px;
             width: 100%; max-width: 380px; border: 1px solid rgba(255,255,255,0.12);
@@ -97,88 +90,55 @@
         .quest-badge {
             position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
             background: var(--accent-magic); color: white; padding: 8px 22px;
-            border-radius: 20px; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(162, 124, 255, 0.4);
-            text-transform: uppercase;
+            border-radius: 20px; font-size: 0.85rem; font-weight: 700;
         }
 
-        .icon-container { font-size: 6rem; margin-bottom: 30px; filter: drop-shadow(0 0 20px var(--accent-magic)); }
-        
-        #m-text { 
-            font-size: 1.75rem; line-height: 1.5; color: #fff; font-weight: 500; 
-            margin: 0; text-wrap: balance;
-        }
-        #m-text b { color: var(--accent-gold); text-shadow: 0 0 10px rgba(255, 219, 88, 0.4); font-weight: 700; }
-
-        /* --- 2. END SCREEN: REWARD PRESENTATION --- */
         .reward-card {
             background: radial-gradient(circle at center, rgba(255, 219, 88, 0.15) 0%, transparent 75%);
             padding: 40px 20px; border-radius: 40px;
-            border: 1px solid rgba(255, 219, 88, 0.1);
-            width: 100%; max-width: 360px;
-            margin-bottom: 20px;
-            position: relative;
-            animation: rewardGlow 3s ease-in-out infinite alternate;
         }
 
-        @keyframes rewardGlow {
-            from { box-shadow: 0 0 20px rgba(255, 219, 88, 0); }
-            to { box-shadow: 0 0 40px rgba(255, 219, 88, 0.15); }
-        }
+        .icon-container-large .icon-svg { width: 120px; height: 120px; }
 
-        .reward-icon {
-            font-size: 6.5rem; display: block; margin-bottom: 20px;
-            filter: drop-shadow(0 0 25px var(--accent-gold));
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-        .final-badge-text { 
-            font-size: 2.3rem; color: var(--accent-gold); font-weight: 800; 
-            margin: 10px 0; text-shadow: 0 0 20px rgba(255, 219, 88, 0.5);
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-
-        /* --- UI UTILS --- */
-        .btn-sec { background: transparent; border: 2px solid rgba(255,255,255,0.1); color: var(--text-soft); padding: 15px 30px; border-radius: 20px; margin-top: 30px; cursor: pointer; font-weight: 700; }
-        .world-portal { background: var(--panel-glass); border-radius: 40px; padding: 50px; border: 1px solid rgba(162, 124, 255, 0.2); width: 280px; cursor: pointer; box-shadow: var(--inner-glow); }
+        .btn-sec { background: transparent; border: 2px solid rgba(255,255,255,0.1); color: var(--text-soft); padding: 15px 30px; border-radius: 20px; margin-top: 30px; cursor: pointer; }
+        .world-portal { background: var(--panel-glass); border-radius: 40px; padding: 50px; border: 1px solid rgba(162, 124, 255, 0.2); width: 280px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="diary-trigger" class="diary-trigger" onclick="nav('diary-screen')">📖</div>
+    <div id="diary-trigger" class="diary-trigger" onclick="nav('diary-screen')">
+        <svg class="icon-svg icon-gold" viewBox="0 0 24 24">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <path d="M12 8l1.5 3h3l-2.5 2 1 3.5-3-2-3 2 1-3.5-2.5-2h3z" fill="currentColor" stroke="none"></path>
+        </svg>
+    </div>
 
     <section id="home" class="screen active">
-        <div class="home-hero">
-            <h1>SparkPlay</h1>
-        </div>
+        <h1>SparkPlay</h1>
         <button class="btn-main" onclick="nav('world-select')">Gioca</button>
     </section>
 
     <section id="diary-screen" class="screen">
         <div class="diary-modal">
             <span style="color:var(--accent-gold); font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;">Diario di Bordo</span>
-            <div class="diary-item" style="margin-top:25px">
-                <span style="color:var(--text-soft); font-size: 0.75rem; text-transform: uppercase;">Ultimo Mondo</span>
-                <span id="d-world" class="diary-val">--</span>
+            <div id="diary-content" style="margin-top:25px; text-align: left;">
+                <p style="color:var(--text-soft); font-size: 0.8rem; margin: 10px 0;">MONDO: <span id="d-world" style="color:#fff; font-weight:700">--</span></p>
+                <p style="color:var(--text-soft); font-size: 0.8rem; margin: 10px 0;">TITOLO: <span id="d-badge" style="color:#fff; font-weight:700">--</span></p>
+                <p style="color:var(--text-soft); font-size: 0.8rem; margin: 10px 0;">SUPER MISSIONE: <span id="d-super" style="color:#fff; font-weight:700">--</span></p>
             </div>
-            <div class="diary-item">
-                <span style="color:var(--text-soft); font-size: 0.75rem; text-transform: uppercase;">Ultimo Titolo</span>
-                <span id="d-badge" class="diary-val">--</span>
-            </div>
-            <div class="diary-item">
-                <span style="color:var(--text-soft); font-size: 0.75rem; text-transform: uppercase;">Super Missione</span>
-                <span id="d-super" class="diary-val">--</span>
-            </div>
-            <button class="btn-sec" onclick="nav('home')" style="width:100%; border-color: var(--accent-gold); color: #fff;">Chiudi</button>
+            <button class="btn-sec" onclick="nav('home')" style="width:100%; color:#fff;">Chiudi</button>
         </div>
     </section>
 
     <section id="world-select" class="screen">
-        <h2 style="font-weight:700; margin-bottom:40px; letter-spacing: 2px;">Scegli il Portale</h2>
         <div class="world-portal" onclick="startSession('Spazio')">
-            <span style="font-size: 5.5rem; display: block; margin-bottom: 15px;">🚀</span>
+            <svg class="icon-svg icon-white" viewBox="0 0 24 24">
+                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+                <path d="M12 15l-3-3m4 2l-3-3"></path>
+                <path d="M14.5 10.5l-3-3"></path>
+                <path d="M11.5 6.5l3 3M9 1l2.5 3L23 15l-1 1-11-1.5L8 12 1 9l3-2.5L9 1z"></path>
+            </svg>
             <div style="letter-spacing:4px; font-weight:700; color: #fff;">SPAZIO</div>
         </div>
         <button class="btn-sec" onclick="nav('home')">Indietro</button>
@@ -187,39 +147,55 @@
     <section id="mission" class="screen">
         <div class="quest-card">
             <div id="m-progress" class="quest-badge">Missione 1 di 3</div>
-            <div id="m-icon" class="icon-container">🚀</div>
-            <p id="m-text">...</p>
+            <div id="m-icon-box" class="icon-container-large">
+                </div>
+            <p id="m-text" style="font-size: 1.7rem; line-height: 1.5;">...</p>
         </div>
         <button class="btn-main" onclick="handleComplete()">Completato!</button>
     </section>
 
     <section id="alert-s" class="screen">
-        <span style="font-size: 7rem; filter: drop-shadow(0 0 30px var(--accent-gold));">🌠</span>
+        <svg class="icon-svg icon-gold" style="width:150px; height:150px" viewBox="0 0 24 24">
+            <path d="M2 22l4-4M22 2l-4 4M2 2l4 4M22 22l-4-4"></path>
+            <path d="M12 2v4m0 12v4M2 12h4m12 0h4"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        </svg>
         <h1 style="font-size: 2.5rem; margin-top: 20px;">SUPER MISSIONE!</h1>
     </section>
 
     <section id="end-screen" class="screen">
         <div class="reward-card">
-            <span class="reward-icon">🏆</span>
-            <p style="text-transform: uppercase; letter-spacing: 3px; color: var(--accent-magic); font-weight: 800; margin: 0; font-size: 0.9rem;">Hai Ottenuto</p>
-            <div id="final-badge" class="final-badge-text">--</div>
+            <svg class="icon-svg icon-gold" style="width:120px; height:120px" viewBox="0 0 24 24">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M4 22h16"></path>
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21 1.18.54 2.03 2.03 2.03 3.79"></path>
+                <path d="M12 2v12.66"></path>
+                <path d="M12 2a6 6 0 0 1 6 6v1c0 3.31-2.69 6-6 6s-6-2.69-6-6V8a6 6 0 0 1 6-6z"></path>
+            </svg>
+            <div id="final-badge" style="font-size: 2.3rem; color: var(--accent-gold); font-weight: 800;">--</div>
         </div>
-        <p style="color: var(--text-soft); font-weight: 500;">Incredibile lavoro, astronauta!</p>
         <button class="btn-main" onclick="saveAndHome()">Torna alla Base</button>
     </section>
 
     <script>
-        /* LOGICA JAVASCRIPT: INALTERATA */
+        // --- SVG REPOSITORY ---
+        const svgs = {
+            mission: `<svg class="icon-svg icon-white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 2"></path></svg>`,
+            super: `<svg class="icon-svg icon-gold" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-5-6.5 5 2-7.5L2 9h7z"></path></svg>`
+        };
+
         let diaryData = { world: "--", badge: "--", super: "--" };
         let currentSessionBadge = "";
 
         const missions = [
-            { t: "Trova un oggetto <b>rosso</b> come Marte! 🔴", i: "☄️" },
-            { t: "Fai 5 salti spaziali verso l'alto! ⬆️", i: "👨‍🚀" },
-            { t: "Cerca qualcosa di <b>tondo</b> come la Luna! 🌕", i: "🛰️" }
+            { t: "Trova un oggetto <b>rosso</b> come Marte! ", i: 'mission' },
+            { t: "Fai 5 salti spaziali verso l'alto! ", i: 'mission' },
+            { t: "Cerca qualcosa di <b>tondo</b> come la Luna! ", i: 'mission' }
         ];
         const badges = ["Esploratore Spaziale", "Comandante", "Eroe Galattico"];
-        const superM = { name: "Base di Cuscini", t: "Costruisci una <b>base spaziale</b> con i cuscini!", i: "🌠" };
+        const superM = { name: "Base di Cuscini", t: "Costruisci una <b>base spaziale</b> con i cuscini!", i: 'super' };
         
         let state = { count: 0, pool: [], world: "" };
 
@@ -235,7 +211,7 @@
             let d = (state.count < 3) ? state.pool[state.count] : superM;
             document.getElementById('m-progress').innerText = (state.count < 3) ? `Missione ${state.count+1} di 3` : "SFIDA FINALE";
             document.getElementById('m-text').innerHTML = d.t;
-            document.getElementById('m-icon').innerText = d.i;
+            document.getElementById('m-icon-box').innerHTML = svgs[d.i];
         }
 
         function handleComplete() {
@@ -256,11 +232,9 @@
             diaryData.world = state.world;
             diaryData.badge = currentSessionBadge;
             diaryData.super = superM.name;
-            
             document.getElementById('d-world').innerText = diaryData.world;
             document.getElementById('d-badge').innerText = diaryData.badge;
             document.getElementById('d-super').innerText = diaryData.super;
-            
             nav('home');
         }
 
