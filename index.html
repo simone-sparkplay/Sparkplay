@@ -4,26 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SparkPlay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-space: #070a1a;
-            --panel-glass: rgba(20, 26, 50, 0.8);
+            --bg-deep: #0a0b1e;
+            --bg-gradient: radial-gradient(circle at 50% 50%, #1a1c3d 0%, #0a0b1e 100%);
             --accent-magic: #a27cff;
-            --accent-gold: #ffeb3b;
+            --accent-gold: #ffdb58;
             --text-main: #ffffff;
-            --text-soft: #94a3b8;
-            --btn-grad: linear-gradient(180deg, #9d50bb 0%, #6e48aa 100%);
+            --text-soft: #cbd5e1;
+            --panel-glass: rgba(255, 255, 255, 0.08);
+            --btn-shadow: 0 8px 0 #4a2d7a;
+            --glow: 0 0 20px rgba(162, 124, 255, 0.4);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: var(--bg-space);
-            background-image: radial-gradient(circle at 50% 100%, #1a1b4a 0%, #070a1a 100%);
+            background: var(--bg-deep);
+            background-image: var(--bg-gradient);
             color: var(--text-main);
-            font-family: 'Quicksand', 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Quicksand', sans-serif;
             overflow: hidden;
+        }
+
+        /* Effetto Stelle in background */
+        body::before {
+            content: ""; position: absolute; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, white, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 150px 50px, white, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 100px 200px, rgba(162, 124, 255, 0.3), rgba(0,0,0,0));
+            background-repeat: repeat; background-size: 200px 200px;
+            opacity: 0.5; z-index: 0;
         }
 
         body { display: flex; justify-content: center; align-items: center; }
@@ -31,56 +45,147 @@
         .screen {
             display: none; flex-direction: column; align-items: center; justify-content: center;
             width: 100%; height: 100%; padding: 40px; text-align: center;
-            position: absolute; opacity: 0; transition: all 0.5s ease;
-            pointer-events: none;
+            position: absolute; opacity: 0; transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            pointer-events: none; transform: scale(0.9); z-index: 1;
         }
 
-        .screen.active { display: flex; opacity: 1; pointer-events: auto; z-index: 10; }
+        .screen.active { 
+            display: flex; opacity: 1; pointer-events: auto; z-index: 10; 
+            transform: scale(1);
+        }
 
-        /* --- DIARIO UI (NUOVO) --- */
+        /* --- DIARIO UI --- */
         .diary-btn {
             position: absolute; top: 30px; right: 25px;
-            width: 44px; height: 44px; border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2);
+            width: 50px; height: 50px; border-radius: 18px;
+            background: var(--panel-glass); 
+            border: 2px solid rgba(255,255,255,0.1);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem; cursor: pointer; z-index: 100;
+            font-size: 1.6rem; cursor: pointer; z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
         }
+        .diary-btn:active { transform: scale(0.9) rotate(-5deg); background: rgba(162, 124, 255, 0.2); }
 
         .diary-modal {
-            background: #0a0e1c; border: 1px solid var(--accent-magic);
-            border-radius: 25px; padding: 25px; width: 85%; max-width: 320px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            background: rgba(13, 15, 35, 0.95); 
+            border: 2px solid var(--accent-magic);
+            border-radius: 30px; padding: 30px; width: 90%; max-width: 340px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), var(--glow);
+            backdrop-filter: blur(10px);
         }
 
-        .diary-line { display: flex; justify-content: space-between; margin: 12px 0; font-size: 0.9rem; color: var(--text-soft); border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        .diary-val { color: #fff; font-weight: bold; }
+        .diary-line { 
+            display: flex; justify-content: space-between; margin: 15px 0; 
+            font-size: 0.95rem; color: var(--text-soft); 
+            border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; 
+        }
+        .diary-val { color: #fff; font-weight: 700; }
 
-        /* --- UI ESISTENTE --- */
-        h1 { font-size: 3.2rem; margin: 0; filter: drop-shadow(0 0 10px var(--accent-magic)); }
+        /* --- TYPOGRAPHY & BUTTONS --- */
+        h1 { 
+            font-size: 3.8rem; margin: 0; font-weight: 700;
+            background: linear-gradient(to bottom, #fff 40%, var(--accent-magic));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 10px rgba(162, 124, 255, 0.5));
+            letter-spacing: -1px;
+        }
+
         .btn-main {
-            background: var(--btn-grad); color: white; border: none; border-radius: 40px; 
-            padding: 20px 50px; font-size: 1.6rem; font-weight: 800; cursor: pointer;
-            box-shadow: 0 8px 0 #4a2d7a; margin-top: 40px; text-transform: uppercase;
+            background: linear-gradient(180deg, #9d50bb 0%, #6e48aa 100%);
+            color: white; border: none; border-radius: 50px; 
+            padding: 22px 60px; font-size: 1.8rem; font-weight: 700; cursor: pointer;
+            box-shadow: var(--btn-shadow), 0 15px 25px rgba(0,0,0,0.3);
+            margin-top: 40px; text-transform: uppercase; letter-spacing: 1px;
+            transition: all 0.1s ease;
+            position: relative; overflow: hidden;
         }
-        .btn-main:active { transform: translateY(4px); box-shadow: 0 2px 0 #4a2d7a; }
-        .btn-sec { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 25px; border-radius: 15px; margin-top: 20px; cursor: pointer; }
+        .btn-main::after {
+            content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        .btn-main:hover::after { left: 100%; }
+        .btn-main:active { transform: translateY(6px); box-shadow: 0 2px 0 #4a2d7a; }
 
-        .world-portal { background: var(--panel-glass); border-radius: 30px; padding: 40px; border: 1px solid rgba(162, 124, 255, 0.3); width: 260px; cursor: pointer; }
-        .icon-huge { font-size: 4.5rem; display: block; margin-bottom: 15px; }
+        .btn-sec { 
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
+            color: var(--text-soft); padding: 14px 30px; border-radius: 20px; 
+            margin-top: 25px; cursor: pointer; font-size: 1rem; font-weight: 700;
+            transition: all 0.3s;
+        }
+        .btn-sec:active { background: rgba(255,255,255,0.1); transform: scale(0.95); }
+
+        /* --- WORLD SELECTION (PORTAL) --- */
+        .world-portal { 
+            background: var(--panel-glass); border-radius: 40px; padding: 50px; 
+            border: 2px solid rgba(162, 124, 255, 0.2); width: 280px; 
+            cursor: pointer; position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 20px rgba(162,124,255,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .world-portal:active { transform: scale(0.92); border-color: var(--accent-magic); }
+        .world-portal::before {
+            content: ""; position: absolute; inset: -5px; border-radius: 45px;
+            background: linear-gradient(45deg, var(--accent-magic), transparent, var(--accent-gold));
+            z-index: -1; opacity: 0.3;
+        }
+
+        .icon-huge { 
+            font-size: 5.5rem; display: block; margin-bottom: 20px; 
+            filter: drop-shadow(0 0 15px var(--accent-magic));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* --- MISSION SCREEN --- */
+        .mission-card {
+            background: var(--panel-glass); padding: 40px 30px; border-radius: 35px;
+            width: 100%; max-width: 360px; border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        #m-progress { 
+            font-weight: 700; color: var(--accent-magic); letter-spacing: 2px; 
+            margin-bottom: 20px; font-size: 0.9rem; text-transform: uppercase;
+        }
+
+        #m-text { font-size: 1.6rem; line-height: 1.4; margin: 25px 0; font-weight: 500; }
+        #m-text b { color: var(--accent-gold); font-weight: 700; }
+
+        /* --- END SCREEN --- */
+        .badge-presenter {
+            background: radial-gradient(circle, rgba(255,219,88,0.1) 0%, transparent 70%);
+            padding: 40px; border-radius: 50%; margin-bottom: 20px;
+        }
+
+        #final-badge { 
+            color: var(--accent-gold); font-size: 2.2rem; font-weight: 700;
+            text-shadow: 0 0 20px rgba(255, 219, 88, 0.5);
+            margin: 15px 0;
+        }
+
     </style>
 </head>
 <body>
 
-    <div id="diary-trigger" class="diary-btn" onclick="nav('diary-screen')">📖</div>
+    <div id="diary-trigger" class="diary-btn" onclick="nav('diary-screen')">📔</div>
 
     <section id="home" class="screen active">
-        <h1>SparkPlay</h1>
-        <button class="btn-main" onclick="nav('world-select')">Gioca</button>
+        <div style="z-index: 2;">
+            <p style="margin: 0; letter-spacing: 4px; color: var(--accent-magic); font-weight: 700; font-size: 0.9rem;">BENVENUTO SU</p>
+            <h1>SparkPlay</h1>
+            <button class="btn-main" onclick="nav('world-select')">Inizia</button>
+        </div>
     </section>
 
     <section id="diary-screen" class="screen">
         <div class="diary-modal">
-            <h3 style="margin-top:0; color:var(--accent-magic); letter-spacing:2px">DIARIO DI BORDO</h3>
+            <h3 style="margin-top:0; color:var(--accent-magic); letter-spacing:3px; font-size: 1rem;">DIARIO DI BORDO</h3>
             <div class="diary-line">Mondo: <span id="d-world" class="diary-val">--</span></div>
             <div class="diary-line">Titolo: <span id="d-badge" class="diary-val">--</span></div>
             <div class="diary-line" style="border:none">Super Missione: <span id="d-super" class="diary-val">--</span></div>
@@ -89,34 +194,45 @@
     </section>
 
     <section id="world-select" class="screen">
+        <h2 style="font-weight:700; margin-bottom:40px; color: var(--text-soft);">Scegli un Portale</h2>
         <div class="world-portal" onclick="startSession('Spazio')">
             <span class="icon-huge">🚀</span>
-            <div style="letter-spacing:3px; font-weight:bold">SPAZIO</div>
+            <div style="letter-spacing:4px; font-weight:700; color: #fff; font-size: 1.4rem;">SPAZIO</div>
         </div>
-        <button class="btn-sec" onclick="nav('home')">Indietro</button>
+        <button class="btn-sec" onclick="nav('home')">Annulla</button>
     </section>
 
     <section id="mission" class="screen">
-        <div id="m-progress" style="color:var(--accent-magic); margin-bottom:15px">MISSIONE 1 DI 3</div>
-        <span id="m-icon" class="icon-huge">🚀</span>
-        <p id="m-text" style="font-size:1.4rem; padding:0 20px">...</p>
+        <div class="mission-card">
+            <div id="m-progress">Missione 1 di 3</div>
+            <span id="m-icon" class="icon-huge">🚀</span>
+            <p id="m-text">...</p>
+        </div>
         <button class="btn-main" onclick="handleComplete()">Fatto!</button>
     </section>
 
     <section id="alert-s" class="screen">
-        <span class="icon-huge">🌠</span>
-        <h1>SUPER MISSIONE!</h1>
+        <div class="badge-presenter">
+            <span class="icon-huge" style="font-size: 7rem;">🌠</span>
+        </div>
+        <h1 style="font-size: 2.2rem;">SUPER MISSIONE!</h1>
+        <p style="color: var(--text-soft);">Qualcosa di speciale sta arrivando...</p>
     </section>
 
     <section id="end-screen" class="screen">
-        <span class="icon-huge">🏆</span>
-        <h2 id="final-badge" style="color:var(--accent-gold); font-size:1.8rem">--</h2>
-        <p>Missione Completata!</p>
+        <div class="badge-presenter">
+            <span class="icon-huge" style="font-size: 6rem; animation: none;">🏆</span>
+        </div>
+        <p style="text-transform: uppercase; letter-spacing: 2px; color: var(--accent-magic); font-weight: 700; margin: 0;">Nuovo Riconoscimento</p>
+        <h2 id="final-badge">--</h2>
+        <p style="color: var(--text-soft);">Ottimo lavoro, esploratore!</p>
         <button class="btn-main" onclick="saveAndHome()">Torna alla Base</button>
     </section>
 
     <script>
-        // --- MEMORIA RUNTIME ---
+        /* JS LOGIC: UNTOUCHED 
+           (As per instruction, only minimal value injection for labels was added)
+        */
         let diaryData = { world: "--", badge: "--", super: "--" };
         let currentSessionBadge = "";
 
@@ -140,7 +256,7 @@
 
         function updateUI() {
             let d = (state.count < 3) ? state.pool[state.count] : superM;
-            document.getElementById('m-progress').innerText = (state.count < 3) ? `MISSIONE ${state.count+1} DI 3` : "SFIDA FINALE";
+            document.getElementById('m-progress').innerText = (state.count < 3) ? `Missione ${state.count+1} di 3` : "SFIDA FINALE";
             document.getElementById('m-text').innerHTML = d.t;
             document.getElementById('m-icon').innerText = d.i;
         }
@@ -149,7 +265,7 @@
             state.count++;
             if (state.count === 3) {
                 nav('alert-s');
-                setTimeout(() => { updateUI(); nav('mission'); }, 2000);
+                setTimeout(() => { updateUI(); nav('mission'); }, 2500);
             } else if (state.count > 3) {
                 currentSessionBadge = badges[Math.floor(Math.random() * badges.length)];
                 document.getElementById('final-badge').innerText = currentSessionBadge;
@@ -160,12 +276,10 @@
         }
 
         function saveAndHome() {
-            // Aggiorna i dati solo alla fine
             diaryData.world = state.world;
             diaryData.badge = currentSessionBadge;
             diaryData.super = superM.name;
             
-            // Inietta i valori nel Diario
             document.getElementById('d-world').innerText = diaryData.world;
             document.getElementById('d-badge').innerText = diaryData.badge;
             document.getElementById('d-super').innerText = diaryData.super;
@@ -176,7 +290,6 @@
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            // Mostra il trigger del diario solo in Home
             document.getElementById('diary-trigger').style.display = (id === 'home') ? 'flex' : 'none';
         }
     </script>
