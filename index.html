@@ -1,1393 +1,2347 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<title>SparkPlay - Spazio</title>
-<style>
-:root{
-  --bg:#0b1026;
-  --bg2:#161d44;
-  --panel:rgba(255,255,255,.10);
-  --panel-2:rgba(255,255,255,.06);
-  --white:#ffffff;
-  --soft:#cfd8ff;
-  --purple:#a27cff;
-  --purple-deep:#7c4dff;
-  --gold:#ffdb58;
-  --cyan:#4deeea;
-  --danger:#ff5e6c;
-  --success:#56f39a;
-  --shadow:0 14px 30px rgba(0,0,0,.35);
-  --shadow-btn:0 8px 0 rgba(58,30,122,.95), 0 14px 24px rgba(0,0,0,.35);
-  --radius-xl:34px;
-  --radius-lg:26px;
-  --radius-md:18px;
-  --safe-top:env(safe-area-inset-top, 0px);
-  --safe-bottom:env(safe-area-inset-bottom, 0px);
-  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-}
-
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 12%, #242d66 0%, #151c47 28%, #0b1026 68%),
-    linear-gradient(180deg,#0b1026 0%, #070a19 100%);
-  color:var(--white);
-  font-family:var(--font);
-  user-select:none;
-}
-body{
-  position:relative;
-}
-
-button{
-  font:inherit;
-}
-
-.starfield{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  overflow:hidden;
-  z-index:0;
-}
-.star{
-  position:absolute;
-  width:2px;
-  height:2px;
-  border-radius:50%;
-  background:#fff;
-  opacity:.45;
-  animation:twinkle linear infinite;
-}
-.star.big{
-  width:3px;
-  height:3px;
-  opacity:.7;
-}
-@keyframes twinkle{
-  0%,100%{opacity:.2;transform:scale(.9)}
-  50%{opacity:.85;transform:scale(1.25)}
-}
-
-.app{
-  position:relative;
-  width:100%;
-  height:100%;
-  z-index:1;
-}
-
-.screen{
-  position:absolute;
-  inset:0;
-  display:none;
-  opacity:0;
-  transform:scale(.96) translateY(14px);
-  transition:opacity .32s ease, transform .32s cubic-bezier(.22,1,.36,1);
-  padding:calc(20px + var(--safe-top)) 20px calc(18px + var(--safe-bottom));
-  overflow:hidden;
-}
-.screen.active{
-  display:flex;
-  opacity:1;
-  transform:scale(1) translateY(0);
-}
-.screen-inner{
-  width:100%;
-  max-width:540px;
-  margin:0 auto;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-}
-
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  min-height:56px;
-}
-
-.brand{
-  font-size:clamp(2rem,6vw,3.3rem);
-  font-weight:900;
-  line-height:1;
-  letter-spacing:-.04em;
-  margin:0;
-  background:linear-gradient(180deg,#fff 10%, #dfd4ff 50%, #b292ff 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 0 18px rgba(162,124,255,.32));
-}
-
-.mini-btn{
-  width:52px;
-  height:52px;
-  border:none;
-  border-radius:16px;
-  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
-  box-shadow:0 8px 20px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.08);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--gold);
-  cursor:pointer;
-  transition:transform .12s ease, filter .12s ease;
-}
-.mini-btn:active{transform:translateY(2px) scale(.97);filter:brightness(1.08)}
-.mini-btn svg{width:28px;height:28px;display:block}
-
-.hero{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:18px;
-  text-align:center;
-}
-
-.hero-sub{
-  max-width:360px;
-  color:var(--soft);
-  font-size:1.08rem;
-  line-height:1.35;
-  margin:0;
-}
-
-.main-cta{
-  border:none;
-  color:#fff;
-  font-weight:900;
-  letter-spacing:.02em;
-  font-size:1.2rem;
-  padding:20px 28px;
-  min-width:240px;
-  border-radius:999px;
-  cursor:pointer;
-  background:linear-gradient(180deg,#b78cff 0%, #915fff 42%, #7c4dff 100%);
-  box-shadow:var(--shadow-btn);
-  transition:transform .12s ease, filter .12s ease, box-shadow .12s ease;
-}
-.main-cta:active{
-  transform:translateY(6px);
-  box-shadow:0 2px 0 rgba(58,30,122,.95), 0 7px 16px rgba(0,0,0,.32);
-  filter:brightness(1.05);
-}
-
-.secondary-cta{
-  border:none;
-  background:rgba(255,255,255,.09);
-  color:#fff;
-  font-weight:800;
-  border-radius:999px;
-  padding:14px 22px;
-  cursor:pointer;
-  box-shadow:0 10px 20px rgba(0,0,0,.18), inset 0 0 0 1px rgba(255,255,255,.08);
-}
-.secondary-cta:active{transform:translateY(2px)}
-
-.home-orbit{
-  width:min(78vw, 290px);
-  height:min(78vw, 290px);
-  position:relative;
-  margin-bottom:8px;
-}
-.orbit-core{
-  position:absolute;
-  inset:50%;
-  width:86px;
-  height:86px;
-  margin-left:-43px;
-  margin-top:-43px;
-  border-radius:50%;
-  background:radial-gradient(circle at 30% 30%, #fff, #f5f1ff 30%, #cdb4ff 70%, #8f5fff 100%);
-  box-shadow:
-    0 0 40px rgba(255,219,88,.28),
-    0 0 70px rgba(162,124,255,.24);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.orbit-core svg{width:42px;height:42px}
-.orbit-ring{
-  position:absolute;
-  inset:0;
-  border-radius:50%;
-  border:2px dashed rgba(255,255,255,.12);
-  animation:spinSlow 22s linear infinite;
-}
-.orbit-item{
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:72px;
-  height:72px;
-  margin:-36px;
-  transform-origin:0 0;
-}
-.orbit-item svg{
-  width:72px;
-  height:72px;
-  filter:drop-shadow(0 0 18px rgba(162,124,255,.26));
-}
-.orbit-1{animation:orbitA 10s linear infinite}
-.orbit-2{animation:orbitB 14s linear infinite}
-.orbit-3{animation:orbitC 12s linear infinite}
-@keyframes spinSlow{to{transform:rotate(360deg)}}
-@keyframes orbitA{
-  from{transform:rotate(0deg) translateX(118px) rotate(0deg)}
-  to{transform:rotate(360deg) translateX(118px) rotate(-360deg)}
-}
-@keyframes orbitB{
-  from{transform:rotate(120deg) translateX(118px) rotate(-120deg)}
-  to{transform:rotate(480deg) translateX(118px) rotate(-480deg)}
-}
-@keyframes orbitC{
-  from{transform:rotate(240deg) translateX(118px) rotate(-240deg)}
-  to{transform:rotate(600deg) translateX(118px) rotate(-600deg)}
-}
-
-.panel{
-  background:linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.07));
-  border-radius:var(--radius-xl);
-  padding:22px;
-  box-shadow:var(--shadow), inset 0 0 0 1px rgba(255,255,255,.08);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-}
-
-.portal-wrap{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:20px;
-}
-.portal-title{
-  font-size:1.05rem;
-  color:var(--soft);
-  margin:0;
-  letter-spacing:.02em;
-}
-.portal-card{
-  width:min(100%, 360px);
-  padding:26px 22px 24px;
-  border:none;
-  border-radius:32px;
-  background:
-    radial-gradient(circle at 50% 20%, rgba(162,124,255,.22) 0%, rgba(162,124,255,.08) 42%, rgba(255,255,255,.05) 100%),
-    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
-  box-shadow:var(--shadow), inset 0 0 0 1px rgba(255,255,255,.08);
-  color:#fff;
-  cursor:pointer;
-  transition:transform .15s ease, filter .15s ease;
-}
-.portal-card:active{transform:translateY(4px) scale(.985)}
-.portal-name{
-  font-size:1.55rem;
-  font-weight:900;
-  letter-spacing:.08em;
-  margin:12px 0 4px;
-}
-.portal-sub{
-  margin:0;
-  color:var(--soft);
-  font-size:.98rem;
-}
-.portal-icon{
-  height:120px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.portal-icon svg{
-  width:110px;
-  height:110px;
-  display:block;
-}
-
-.quest-layout{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:18px;
-  min-height:0;
-}
-.quest-card{
-  position:relative;
-  padding:24px 20px 22px;
-}
-.quest-badge{
-  position:absolute;
-  top:-14px;
-  left:50%;
-  transform:translateX(-50%);
-  min-width:110px;
-  padding:8px 16px;
-  border-radius:999px;
-  background:linear-gradient(180deg,#b78cff,#7c4dff);
-  color:#fff;
-  font-weight:900;
-  font-size:.82rem;
-  letter-spacing:.06em;
-  box-shadow:0 8px 18px rgba(124,77,255,.35);
-}
-.progress{
-  display:flex;
-  justify-content:center;
-  gap:8px;
-  margin:8px 0 20px;
-}
-.dot{
-  width:34px;
-  height:10px;
-  border-radius:999px;
-  background:rgba(255,255,255,.14);
-  transition:all .22s ease;
-}
-.dot.done{
-  background:var(--cyan);
-  box-shadow:0 0 16px rgba(77,238,234,.6);
-}
-.dot.now{
-  background:var(--gold);
-  transform:scaleX(1.16);
-  box-shadow:0 0 18px rgba(255,219,88,.58);
-}
-.quest-icon{
-  height:132px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-bottom:6px;
-}
-.quest-icon svg{
-  width:112px;
-  height:112px;
-  display:block;
-}
-.quest-story{
-  font-size:1.12rem;
-  line-height:1.38;
-  color:var(--soft);
-  margin:0 0 14px;
-  min-height:56px;
-}
-.objective{
-  padding:14px 16px;
-  border-radius:20px;
-  background:rgba(77,238,234,.08);
-  border:2px dashed rgba(77,238,234,.55);
-  color:var(--cyan);
-  font-weight:900;
-  text-transform:uppercase;
-  font-size:.9rem;
-  margin-bottom:14px;
-}
-.steps{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.step{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  text-align:left;
-  padding:14px 14px;
-  border-radius:20px;
-  background:rgba(255,255,255,.06);
-  transition:all .22s ease;
-}
-.step-num{
-  flex:0 0 32px;
-  width:32px;
-  height:32px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(255,255,255,.13);
-  color:#fff;
-  font-weight:900;
-}
-.step.active{
-  background:#fff;
-  color:#101534;
-  transform:scale(1.02);
-  box-shadow:0 10px 24px rgba(0,0,0,.18);
-}
-.step.active .step-num{
-  background:var(--danger);
-}
-.step.done{
-  background:rgba(86,243,154,.12);
-  color:#fff;
-}
-.step.done .step-num{
-  background:var(--success);
-}
-.quest-actions{
-  display:flex;
-  gap:12px;
-}
-.quest-actions .secondary-cta{
-  flex:1;
-}
-.quest-actions .main-cta{
-  flex:1.35;
-  min-width:0;
-  padding-left:0;
-  padding-right:0;
-}
-.hidden{
-  visibility:hidden;
-}
-
-.alert-screen .screen-inner,
-.end-screen .screen-inner{
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-}
-.alert-wrap,.end-wrap{
-  width:min(100%, 460px);
-}
-.big-icon{
-  width:160px;
-  height:160px;
-  margin:0 auto 18px;
-  display:block;
-}
-.alert-title{
-  font-size:2.2rem;
-  font-weight:900;
-  color:var(--gold);
-  margin:0 0 8px;
-  text-transform:uppercase;
-}
-.alert-sub{
-  margin:0;
-  color:var(--soft);
-  font-size:1.1rem;
-}
-
-.reward-card{
-  padding:26px 22px 28px;
-  width:min(100%, 430px);
-  position:relative;
-  overflow:hidden;
-}
-.reward-card::after{
-  content:"";
-  position:absolute;
-  inset:auto -20% -40% -20%;
-  height:140px;
-  background:radial-gradient(circle, rgba(255,219,88,.22), transparent 68%);
-  pointer-events:none;
-}
-.reward-kicker{
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  font-size:.78rem;
-  color:var(--purple);
-  font-weight:900;
-  margin:0 0 10px;
-}
-.reward-title{
-  font-size:2rem;
-  font-weight:1000;
-  color:var(--gold);
-  margin:4px 0 8px;
-  line-height:1.06;
-  text-shadow:0 0 24px rgba(255,219,88,.22);
-}
-.reward-sub{
-  margin:0 0 12px;
-  color:var(--soft);
-  font-size:1rem;
-}
-.tomorrow{
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  color:#fff;
-  font-weight:800;
-  font-size:.9rem;
-}
-
-.diary-screen .screen-inner{
-  justify-content:center;
-}
-.diary-card{
-  width:min(100%, 460px);
-  max-height:min(76vh, 620px);
-  display:flex;
-  flex-direction:column;
-}
-.diary-title{
-  font-size:1.5rem;
-  font-weight:900;
-  color:var(--gold);
-  margin:0 0 16px;
-}
-.diary-list{
-  overflow:auto;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  padding-right:4px;
-  min-height:120px;
-}
-.diary-entry{
-  display:flex;
-  gap:12px;
-  align-items:flex-start;
-  padding:14px;
-  border-radius:18px;
-  background:rgba(255,255,255,.06);
-}
-.diary-entry .entry-icon{
-  width:34px;
-  height:34px;
-  flex:0 0 34px;
-  border-radius:12px;
-  background:rgba(255,219,88,.12);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.diary-entry .entry-icon svg{
-  width:20px;
-  height:20px;
-}
-.entry-meta{
-  color:var(--soft);
-  font-size:.78rem;
-  margin-bottom:3px;
-}
-.entry-title{
-  font-weight:900;
-  margin-bottom:4px;
-}
-.entry-small{
-  color:#fff;
-  opacity:.88;
-  font-size:.92rem;
-}
-
-.canvas-wrap{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:30;
-}
-#fxCanvas{
-  width:100%;
-  height:100%;
-  display:block;
-}
-
-.sr-only{
-  position:absolute;
-  width:1px;
-  height:1px;
-  padding:0;
-  margin:-1px;
-  overflow:hidden;
-  clip:rect(0,0,0,0);
-  white-space:nowrap;
-  border:0;
-}
-
-@media (max-width:420px){
-  .screen{padding:calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom))}
-  .brand{font-size:2.7rem}
-  .main-cta{min-width:0;width:100%;font-size:1.08rem}
-  .quest-story{font-size:1rem}
-  .quest-text{font-size:1.05rem}
-}
-</style>
-</head>
-<body>
-<div class="starfield" id="starfield" aria-hidden="true"></div>
-<div class="canvas-wrap" aria-hidden="true"><canvas id="fxCanvas"></canvas></div>
-
-<div class="app">
-  <button id="diaryBtn" class="mini-btn" aria-label="Apri diario" title="Diario" style="position:absolute;top:calc(16px + var(--safe-top));right:16px;z-index:20;">
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M6 4.5h10a2 2 0 0 1 2 2v12.5H8a2 2 0 0 0-2 2V4.5Z" fill="currentColor" opacity=".18"></path>
-      <path d="M6 4.5h10a2 2 0 0 1 2 2v12.5H8a2 2 0 0 0-2 2V4.5Z" stroke="currentColor" stroke-width="1.6"></path>
-      <path d="M8.5 7.5h6M8.5 10.5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
-      <path d="m11.7 14.2.8 1.6 1.8.2-1.3 1.2.3 1.7-1.6-.8-1.6.8.3-1.7-1.3-1.2 1.8-.2.8-1.6Z" fill="currentColor"></path>
-    </svg>
-  </button>
-
-  <section id="homeScreen" class="screen active" aria-label="Home">
-    <div class="screen-inner">
-      <div class="topbar">
-        <div style="width:52px"></div>
-        <div style="width:52px"></div>
-      </div>
-      <div class="hero">
-        <div class="home-orbit" aria-hidden="true">
-          <div class="orbit-ring"></div>
-          <div class="orbit-core">
-            <svg viewBox="0 0 120 120" fill="none">
-              <circle cx="60" cy="60" r="22" fill="#ffffff" opacity=".85"></circle>
-              <path d="M60 30 69 51 92 53 74 68 80 91 60 79 40 91 46 68 28 53 51 51Z" fill="#ffdb58"></path>
-            </svg>
-          </div>
-          <div class="orbit-item orbit-1">
-            <svg viewBox="0 0 120 120" fill="none">
-              <circle cx="60" cy="60" r="34" fill="rgba(162,124,255,.12)"></circle>
-              <path d="M60 22c14 8 22 20 22 34 0 10-4 20-10 28l6 16-18-9-18 9 6-16c-6-8-10-18-10-28 0-14 8-26 22-34Z" fill="#a27cff"></path>
-              <circle cx="60" cy="56" r="8" fill="#fff"></circle>
-            </svg>
-          </div>
-          <div class="orbit-item orbit-2">
-            <svg viewBox="0 0 120 120" fill="none">
-              <circle cx="60" cy="60" r="22" fill="rgba(77,238,234,.18)"></circle>
-              <circle cx="60" cy="60" r="16" fill="#4deeea"></circle>
-              <path d="M60 36v48M36 60h48" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".8"></path>
-            </svg>
-          </div>
-          <div class="orbit-item orbit-3">
-            <svg viewBox="0 0 120 120" fill="none">
-              <circle cx="60" cy="60" r="28" fill="rgba(255,219,88,.15)"></circle>
-              <path d="M60 24 68 46 92 46 73 60 80 84 60 71 40 84 47 60 28 46 52 46Z" fill="#ffdb58"></path>
-            </svg>
-          </div>
-        </div>
-        <h1 class="brand">SparkPlay</h1>
-        <p class="hero-sub">Missioni spaziali da vivere davvero. Tre sfide, una finale speciale, poi si torna domani.</p>
-        <button id="startBtn" class="main-cta">Inizia l’avventura</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="worldScreen" class="screen" aria-label="Scelta mondo">
-    <div class="screen-inner">
-      <div class="topbar">
-        <button id="backHomeBtn" class="secondary-cta">Indietro</button>
-        <div></div>
-      </div>
-      <div class="portal-wrap">
-        <p class="portal-title">Scegli il tuo portale</p>
-        <button id="spacePortalBtn" class="portal-card">
-          <div class="portal-icon" id="portalIcon"></div>
-          <div class="portal-name">SPAZIO</div>
-          <p class="portal-sub">Entra nella prossima missione</p>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <section id="missionScreen" class="screen" aria-label="Missione">
-    <div class="screen-inner">
-      <div class="topbar">
-        <button id="exitMissionBtn" class="secondary-cta">Esci</button>
-        <div></div>
-      </div>
-      <div class="quest-layout">
-        <div class="panel quest-card">
-          <div id="questBadge" class="quest-badge">MISSIONE 1</div>
-          <div id="progressDots" class="progress"></div>
-          <div id="questIcon" class="quest-icon"></div>
-          <p id="questStory" class="quest-story"></p>
-          <div id="questObjective" class="objective"></div>
-          <div id="questSteps" class="steps"></div>
-        </div>
-        <div class="quest-actions">
-          <button id="prevBtn" class="secondary-cta">Indietro</button>
-          <button id="nextBtn" class="main-cta">Avanti</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="alertScreen" class="screen alert-screen" aria-label="Sfida finale">
-    <div class="screen-inner">
-      <div class="alert-wrap">
-        <div class="big-icon" id="alertIcon"></div>
-        <h2 class="alert-title">Sfida finale!</h2>
-        <p class="alert-sub">Preparati. Sta arrivando la missione speciale.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="endScreen" class="screen end-screen" aria-label="Fine sessione">
-    <div class="screen-inner">
-      <div class="end-wrap">
-        <div class="panel reward-card">
-          <div class="big-icon" id="rewardIcon"></div>
-          <p class="reward-kicker">Titolo ottenuto</p>
-          <h2 id="rewardTitle" class="reward-title">Esploratore Galattico</h2>
-          <p class="reward-sub">Missioni completate con successo.</p>
-          <div class="tomorrow">Torna domani per nuove missioni</div>
-        </div>
-        <button id="homeFromEndBtn" class="main-cta">Torna alla base</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="diaryScreen" class="screen diary-screen" aria-label="Diario">
-    <div class="screen-inner">
-      <div class="panel diary-card">
-        <div class="topbar" style="min-height:unset;margin-bottom:8px;">
-          <h2 class="diary-title">Diario di bordo</h2>
-          <button id="closeDiaryBtn" class="secondary-cta">Chiudi</button>
-        </div>
-        <div id="diaryList" class="diary-list"></div>
-      </div>
-    </div>
-  </section>
-</div>
-
-<script>
-(() => {
-  "use strict";
-
-  const STORAGE_DAILY = "sparkplay_space_daily_lock_v1";
-  const STORAGE_HISTORY = "sparkplay_space_diary_v1";
-
-  const state = {
-    screen: "home",
-    world: "Spazio",
-    missionIndex: 0,
-    stepIndex: 0,
-    titlesPool: [
-      "Esploratore Galattico",
-      "Comandante Stellare",
-      "Pilota delle Nebulose",
-      "Guardiano delle Costellazioni",
-      "Eroe del Cosmo"
-    ],
-    currentTitle: "",
-    currentMissionSet: [],
-    currentMission: null,
-    specialDone: false,
-    finished: false
-  };
-
-  const DB = {
-    normal: [
-      {
-        id: "signal",
-        title: "Segnale perduto",
-        story: "La base ha perso il contatto. Serve un piccolo pilota per riattivare il segnale.",
-        objective: "Riaccendi l’antenna",
-        steps: [
-          "Trova un oggetto morbido da usare come antenna.",
-          "Portalo alla base spaziale.",
-          "Fai tre bip lenti: bip… bip… bip…"
-        ],
-        icon: "scanner"
-      },
-      {
-        id: "satellite",
-        title: "Satellite morbido",
-        story: "Un satellite è atterrato male. Va recuperato prima che si spenga.",
-        objective: "Recupera il satellite",
-        steps: [
-          "Trova un peluche o un oggetto soffice.",
-          "Fagli fare un giro intorno al tavolo.",
-          "Mettilo in un posto alto e sicuro."
-        ],
-        icon: "satellite"
-      },
-      {
-        id: "dust",
-        title: "Polvere di stelle",
-        story: "I motori sono pieni di polvere spaziale. Serve una pulizia rapida.",
-        objective: "Pulisci i motori",
-        steps: [
-          "Usa le mani come spazzole spaziali.",
-          "Pulisci tre superfici diverse.",
-          "Soffia via l’ultima polvere."
-        ],
-        icon: "spark"
-      },
-      {
-        id: "gravity",
-        title: "Gravità impazzita",
-        story: "La gravità fa i capricci. Bisogna muoversi con controllo perfetto.",
-        objective: "Muoviti come nello spazio",
-        steps: [
-          "Cammina lentissimo fino a un punto della stanza.",
-          "Tocca il pavimento solo con la punta dei piedi.",
-          "Siediti senza usare le mani."
-        ],
-        icon: "planet"
-      },
-      {
-        id: "code",
-        title: "Codice stellare",
-        story: "La base deve inviare un messaggio segreto alla Terra.",
-        objective: "Componi il codice",
-        steps: [
-          "Trova tre oggetti dello stesso colore.",
-          "Mettili in fila dal più piccolo al più grande.",
-          "Tocca ogni oggetto dicendo: pronto."
-        ],
-        icon: "badge"
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <title>SparkPlay</title>
+    <style>
+      :root {
+        --navy: #0a0e2e;
+        --deep-blue: #0d1545;
+        --royal: #1a237e;
+        --purple: #6a1de8;
+        --purple-soft: #9c4dfc;
+        --gold: #ffd700;
+        --gold-soft: #ffecb3;
+        --white: #f0f4ff;
+        --star: rgba(255, 255, 255, 0.85);
+        --card-bg: rgba(255, 255, 255, 0.07);
+        --card-border: rgba(255, 255, 255, 0.13);
+        --glow-purple: 0 0 32px rgba(106, 29, 232, 0.55);
+        --glow-gold: 0 0 24px rgba(255, 215, 0, 0.45);
+        --radius: 28px;
+        --radius-sm: 16px;
       }
-    ],
-    special: {
-      id: "special_base",
-      title: "Missione speciale",
-      story: "Ultima prova. La base spaziale deve essere costruita subito.",
-      objective: "Costruisci la base",
-      steps: [
-        "Prendi due o più cuscini.",
-        "Crea una piccola base o rifugio.",
-        "Entraci dentro e dì: base pronta al lancio!"
-      ],
-      icon: "special"
-    }
-  };
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        background: var(--navy);
+        color: var(--white);
+        touch-action: manipulation;
+      }
+      #app {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        position: relative;
+      }
+      .screen {
+        min-height: 100vh;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        padding: 24px 20px 40px;
+        position: relative;
+        background: linear-gradient(
+          160deg,
+          #0a0e2e 0%,
+          #0d1545 45%,
+          #1a0a35 100%
+        );
+        animation: fadeIn 0.35s ease;
+      }
+      .screen.active {
+        display: flex;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes floatUp {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+      @keyframes sparkle {
+        0% {
+          transform: scale(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1.5) rotate(180deg);
+          opacity: 0;
+        }
+      }
+      @keyframes levelUp {
+        0% {
+          transform: scale(0.6) translateY(20px);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(1.1) translateY(-5px);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1) translateY(0);
+          opacity: 1;
+        }
+      }
+      @keyframes barFill {
+        from {
+          width: 0;
+        }
+        to {
+          width: var(--w);
+        }
+      }
 
-  const el = {
-    starfield: document.getElementById("starfield"),
-    fxCanvas: document.getElementById("fxCanvas"),
-    diaryBtn: document.getElementById("diaryBtn"),
-    startBtn: document.getElementById("startBtn"),
-    backHomeBtn: document.getElementById("backHomeBtn"),
-    spacePortalBtn: document.getElementById("spacePortalBtn"),
-    exitMissionBtn: document.getElementById("exitMissionBtn"),
-    prevBtn: document.getElementById("prevBtn"),
-    nextBtn: document.getElementById("nextBtn"),
-    homeFromEndBtn: document.getElementById("homeFromEndBtn"),
-    closeDiaryBtn: document.getElementById("closeDiaryBtn"),
-    portalIcon: document.getElementById("portalIcon"),
-    questBadge: document.getElementById("questBadge"),
-    progressDots: document.getElementById("progressDots"),
-    questIcon: document.getElementById("questIcon"),
-    questStory: document.getElementById("questStory"),
-    questObjective: document.getElementById("questObjective"),
-    questSteps: document.getElementById("questSteps"),
-    alertIcon: document.getElementById("alertIcon"),
-    rewardIcon: document.getElementById("rewardIcon"),
-    rewardTitle: document.getElementById("rewardTitle"),
-    diaryList: document.getElementById("diaryList"),
-    screens: {
-      home: document.getElementById("homeScreen"),
-      world: document.getElementById("worldScreen"),
-      mission: document.getElementById("missionScreen"),
-      alert: document.getElementById("alertScreen"),
-      end: document.getElementById("endScreen"),
-      diary: document.getElementById("diaryScreen")
-    }
-  };
+      /* STARS BACKGROUND */
+      .stars {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+      .star-dot {
+        position: absolute;
+        border-radius: 50%;
+        background: white;
+        opacity: 0;
+        animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+      }
+      @keyframes twinkle {
+        0%,
+        100% {
+          opacity: 0;
+        }
+        50% {
+          opacity: var(--op, 0.8);
+        }
+      }
 
-  function svgIcon(name) {
-    const icons = {
-      portal: `
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <defs>
-            <linearGradient id="gPortal" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#ffffff"/>
-              <stop offset="60%" stop-color="#d5c4ff"/>
-              <stop offset="100%" stop-color="#8f5fff"/>
-            </linearGradient>
-          </defs>
-          <g>
-            <ellipse cx="60" cy="92" rx="18" ry="7" fill="rgba(0,0,0,.25)"/>
-            <g style="transform-origin:60px 54px;animation:floatShip 3s ease-in-out infinite;">
-              <path d="M60 18c14 8 24 23 24 40 0 11-4 21-11 29l7 15-20-10-20 10 7-15c-7-8-11-18-11-29 0-17 10-32 24-40Z" fill="url(#gPortal)"/>
-              <circle cx="60" cy="50" r="8" fill="#0b1026"/>
-              <path d="M49 87h22" stroke="#ffdb58" stroke-width="5" stroke-linecap="round"/>
-              <path d="M54 92l6 10 6-10" fill="#ffdb58"/>
-            </g>
-          </g>
-          <style>
-            @keyframes floatShip{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-          </style>
-        </svg>
-      `,
-      scanner: `
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <defs>
-            <radialGradient id="scanGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#ffffff" stop-opacity=".95"/>
-              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-          <g>
-            <circle cx="60" cy="60" r="42" fill="rgba(162,124,255,.10)"/>
-            <circle cx="60" cy="60" r="34" fill="rgba(162,124,255,.16)"/>
-            <circle cx="60" cy="60" r="27" fill="#7c4dff"/>
-            <circle cx="60" cy="60" r="18" fill="#1d2453"/>
-            <circle cx="60" cy="60" r="6" fill="#ffffff"/>
-            <circle cx="60" cy="60" r="40" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="4"/>
-            <path d="M60 20A40 40 0 0 1 100 60" fill="none" stroke="#ffdb58" stroke-width="5" stroke-linecap="round" style="transform-origin:60px 60px;animation:scanRotate 2.8s linear infinite"/>
-            <circle cx="60" cy="60" r="42" fill="url(#scanGlow)" style="animation:scanPulse 1.8s ease-in-out infinite"/>
-          </g>
-          <style>
-            @keyframes scanRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-            @keyframes scanPulse{0%,100%{opacity:.2}50%{opacity:.7}}
-          </style>
-        </svg>
-      `,
-      satellite: `
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <g style="transform-origin:60px 60px;animation:floatSat 3.4s ease-in-out infinite;">
-            <rect x="44" y="42" width="32" height="36" rx="12" fill="#a27cff"/>
-            <rect x="50" y="48" width="20" height="14" rx="7" fill="#ffffff"/>
-            <rect x="22" y="46" width="16" height="28" rx="4" fill="#4deeea"/>
-            <rect x="82" y="46" width="16" height="28" rx="4" fill="#4deeea"/>
-            <path d="M38 60H44M76 60H82" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-            <path d="M60 78v12" stroke="#ffdb58" stroke-width="5" stroke-linecap="round"/>
-            <circle cx="60" cy="94" r="5" fill="#ffdb58"/>
-          </g>
-          <style>
-            @keyframes floatSat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
-          </style>
-        </svg>
-      `,
-      spark: `
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <g style="transform-origin:60px 60px;animation:floatSpark 3s ease-in-out infinite;">
-            <circle cx="60" cy="60" r="36" fill="rgba(255,219,88,.14)"/>
-            <path d="M60 18 70 46 100 46 76 62 84 92 60 76 36 92 44 62 20 46 50 46Z" fill="#ffdb58"/>
-            <circle cx="28" cy="28" r="4" fill="#ffffff" style="animation:blinkSpark 1.4s ease-in-out infinite"/>
-            <circle cx="90" cy="30" r="5" fill="#4deeea" style="animation:blinkSpark 1.8s ease-in-out infinite"/>
-          </g>
-          <style>
-            @keyframes floatSpark{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-            @keyframes blinkSpark{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
-          </style>
-        </svg>
-      `,
-      planet: `
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <g style="transform-origin:60px 60px;animation:planetBob 3.2s ease-in-out infinite;">
-            <circle cx="60" cy="60" r="28" fill="#4deeea"/>
-            <path d="M38 52c8-6 17-8 28-7 8 1 14 5 18 9-10 2-17 5-24 11-7 6-12 7-20 5-6-2-8-9-2-18Z" fill="rgba(255,255,255,.28)"/>
-            <ellipse cx="60" cy="60" rx="45" ry="14" fill="none" stroke="#ffdb58" stroke-width="6"/>
-            <ellipse cx="60" cy="60" rx="45" ry="14" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
-          </g>
-          <style>
-            @keyframes planetBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-          </style>
-        </svg>
-      `,
-      badge: `
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <g style="transform-origin:60px 60px;animation:badgePulse 2.2s ease-in-out infinite;">
-            <circle cx="60" cy="54" r="26" fill="#a27cff"/>
-            <circle cx="60" cy="54" r="16" fill="#ffffff"/>
-            <path d="m60 42 3.8 7.8 8.7 1.3-6.2 6 1.5 8.6L60 61.5l-7.8 4.2 1.5-8.6-6.2-6 8.7-1.3Z" fill="#ffdb58"/>
-            <path d="M48 80 60 70 72 80v20l-12-8-12 8Z" fill="#4deeea"/>
-          </g>
-          <style>
-            @keyframes badgePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
-          </style>
-        </svg>
-      `,
-      special: `
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <g style="transform-origin:60px 60px;animation:specialFloat 2.8s ease-in-out infinite;">
-            <circle cx="60" cy="60" r="40" fill="rgba(255,219,88,.12)"/>
-            <path d="M60 18 70 44 98 44 76 60 84 88 60 72 36 88 44 60 22 44 50 44Z" fill="#ffdb58"/>
-            <circle cx="22" cy="30" r="4" fill="#fff" style="animation:sparkle 1.2s ease-in-out infinite"/>
-            <circle cx="95" cy="28" r="5" fill="#4deeea" style="animation:sparkle 1.6s ease-in-out infinite"/>
-            <circle cx="92" cy="82" r="4" fill="#fff" style="animation:sparkle 1.4s ease-in-out infinite"/>
-          </g>
-          <style>
-            @keyframes specialFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-            @keyframes sparkle{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
-          </style>
-        </svg>
-      `,
-      reward: `
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <g style="transform-origin:60px 60px;animation:rewardBounce 2s ease-in-out infinite;">
-            <circle cx="60" cy="56" r="40" fill="rgba(255,219,88,.16)"/>
-            <path d="M40 26h40v20c0 17-10 30-20 30s-20-13-20-30V26Z" fill="#ffdb58"/>
-            <path d="M40 34H28c0 12 7 20 18 20M80 34h12c0 12-7 20-18 20" fill="none" stroke="#ffdb58" stroke-width="7" stroke-linecap="round"/>
-            <path d="M60 76v14M46 96h28" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
-            <circle cx="60" cy="46" r="10" fill="#fff"/>
-            <path d="m60 37 2.8 5.6 6.2.9-4.5 4.3 1.1 6.2L60 51.4 54.4 54l1.1-6.2-4.5-4.3 6.2-.9Z" fill="#ffdb58"/>
-          </g>
-          <style>
-            @keyframes rewardBounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.02)}}
-          </style>
-        </svg>
-      `,
-      diary: `
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <rect x="28" y="22" width="64" height="76" rx="16" fill="#ffdb58"/>
-          <rect x="34" y="28" width="52" height="64" rx="12" fill="#1a1f4a"/>
-          <path d="M45 44h30M45 54h24" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
-          <path d="m60 62 4 8 9 1.4-6.5 6.1 1.6 9-8.1-4.3-8.1 4.3 1.6-9-6.5-6.1 9-1.4Z" fill="#ffdb58"/>
-        </svg>
-      `
-    };
-    return icons[name] || "";
-  }
+      /* TOP BAR */
+      .top-bar {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0 20px;
+      }
+      .top-bar .xp-area {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .xp-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--gold);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .xp-bar-wrap {
+        width: 140px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .xp-bar-fill {
+        height: 100%;
+        border-radius: 10px;
+        background: linear-gradient(90deg, var(--gold), #ff9d00);
+        transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 10px rgba(255, 200, 0, 0.6);
+      }
+      .audio-btn {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1.5px solid var(--card-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        backdrop-filter: blur(8px);
+      }
+      .audio-btn:active {
+        transform: scale(0.9);
+        background: rgba(255, 255, 255, 0.2);
+      }
 
-  function createStars() {
-    const count = 48;
-    const frag = document.createDocumentFragment();
-    for (let i = 0; i < count; i++) {
-      const s = document.createElement("div");
-      s.className = "star" + (Math.random() > 0.78 ? " big" : "");
-      s.style.left = Math.random() * 100 + "%";
-      s.style.top = Math.random() * 100 + "%";
-      s.style.animationDuration = (2 + Math.random() * 3.6).toFixed(2) + "s";
-      s.style.animationDelay = (Math.random() * 3).toFixed(2) + "s";
-      frag.appendChild(s);
-    }
-    el.starfield.appendChild(frag);
-  }
+      /* CARDS */
+      .card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+        padding: 24px;
+        width: 100%;
+      }
+      .card-glow {
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.35),
+          var(--glow-purple);
+      }
 
-  function todayKey() {
-    return new Date().toLocaleDateString("sv-SE");
-  }
+      /* BUTTONS */
+      .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 18px 24px;
+        border-radius: var(--radius-sm);
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        transition: all 0.2s;
+        position: relative;
+        overflow: hidden;
+        font-family: inherit;
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--purple), #4a0abf);
+        color: white;
+        box-shadow: var(--glow-purple);
+      }
+      .btn-gold {
+        background: linear-gradient(135deg, #d4a000, #ff9900);
+        color: #1a0a00;
+        box-shadow: var(--glow-gold);
+      }
+      .btn-ghost {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--white);
+        border: 1px solid var(--card-border);
+      }
+      .btn-ghost:active {
+        background: rgba(255, 255, 255, 0.16);
+      }
+      .btn-sm {
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+      }
+      .btn-danger {
+        background: rgba(200, 50, 50, 0.25);
+        color: #ff8080;
+        border: 1px solid rgba(200, 50, 50, 0.3);
+      }
 
-  function getHistory() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_HISTORY) || "[]");
-    } catch {
-      return [];
-    }
-  }
+      /* SCREEN: WELCOME */
+      #screen-welcome {
+        justify-content: center;
+        gap: 32px;
+        text-align: center;
+      }
+      .logo-wrap {
+        animation: floatUp 4s ease-in-out infinite;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      .logo-icon {
+        width: 120px;
+        height: 120px;
+        background: radial-gradient(
+          circle at 40% 35%,
+          #b06afc,
+          #6a1de8 55%,
+          #1a0a45
+        );
+        border-radius: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 62px;
+        box-shadow:
+          0 8px 40px rgba(106, 29, 232, 0.7),
+          0 0 0 2px rgba(255, 255, 255, 0.12);
+      }
+      .logo-name {
+        font-size: 42px;
+        font-weight: 900;
+        letter-spacing: -1px;
+        background: linear-gradient(90deg, #ffffff, var(--gold));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .logo-tagline {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 400;
+        line-height: 1.4;
+      }
+      .welcome-cta {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+      }
 
-  function setHistory(list) {
-    localStorage.setItem(STORAGE_HISTORY, JSON.stringify(list));
-  }
+      /* WORLD CARDS */
+      .worlds-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+      }
+      .world-card {
+        border-radius: var(--radius);
+        padding: 28px 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.25s;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      }
+      .world-card:active {
+        transform: scale(0.98);
+      }
+      .world-card.spazio {
+        background: linear-gradient(135deg, #0d1545 0%, #1a2a7e 100%);
+        border-color: rgba(100, 180, 255, 0.4);
+      }
+      .world-card.magia {
+        background: linear-gradient(135deg, #1a0a35 0%, #6a1de8 100%);
+        border-color: rgba(180, 100, 255, 0.4);
+      }
+      .world-card.detective {
+        background: linear-gradient(135deg, #1a1000 0%, #5c3d00 100%);
+        border-color: rgba(255, 200, 50, 0.4);
+      }
+      .world-icon {
+        font-size: 52px;
+        flex-shrink: 0;
+      }
+      .world-info h2 {
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+      .world-info p {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.65);
+        line-height: 1.4;
+      }
+      .world-lock {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.4);
+        margin-top: 6px;
+      }
+      .world-badge {
+        margin-left: auto;
+        flex-shrink: 0;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
 
-  function isLockedToday() {
-    return localStorage.getItem(STORAGE_DAILY) === todayKey();
-  }
+      /* MISSION LIST */
+      .mission-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        width: 100%;
+      }
+      .mission-item {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-sm);
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      }
+      .mission-item:active {
+        transform: scale(0.98);
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .mission-item.done {
+        opacity: 0.45;
+        pointer-events: none;
+      }
+      .mission-num {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--purple-soft), var(--purple));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 800;
+        flex-shrink: 0;
+        box-shadow: 0 2px 12px rgba(106, 29, 232, 0.45);
+      }
+      .mission-num.done {
+        background: linear-gradient(135deg, #3a3a3a, #222);
+        box-shadow: none;
+      }
+      .mission-info {
+        flex: 1;
+      }
+      .mission-info h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 3px;
+      }
+      .mission-info p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.55);
+      }
+      .mission-item .arr {
+        font-size: 20px;
+        color: rgba(255, 255, 255, 0.3);
+      }
 
-  function lockToday() {
-    localStorage.setItem(STORAGE_DAILY, todayKey());
-  }
+      /* MISSION DETAIL */
+      #screen-mission {
+        gap: 20px;
+      }
+      .mission-header {
+        text-align: center;
+        padding: 8px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .mission-world-badge {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .mission-emoji {
+        font-size: 64px;
+        animation: floatUp 4s ease-in-out infinite;
+      }
+      .mission-title {
+        font-size: 26px;
+        font-weight: 900;
+        text-align: center;
+        line-height: 1.2;
+      }
+      .mission-intro {
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.7);
+        text-align: center;
+        line-height: 1.5;
+        font-style: italic;
+      }
+      .objects-card {
+        padding: 18px 20px;
+      }
+      .objects-label {
+        font-size: 12px;
+        color: var(--gold);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .objects-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .object-tag {
+        background: rgba(255, 215, 0, 0.12);
+        border: 1px solid rgba(255, 215, 0, 0.25);
+        border-radius: 20px;
+        padding: 5px 12px;
+        font-size: 13px;
+        color: var(--gold-soft);
+      }
+      .steps-card {
+        padding: 20px;
+      }
+      .steps-label {
+        font-size: 12px;
+        color: var(--purple-soft);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+      .step-row {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .step-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .step-num {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--purple-soft), var(--purple));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 800;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .step-text {
+        font-size: 15px;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.88);
+      }
 
-  function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
+      /* COMPLETION / REWARD */
+      .reward-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: rgba(5, 5, 25, 0.92);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.3s ease;
+      }
+      .reward-card {
+        background: linear-gradient(160deg, #1a0a45, #0d1545);
+        border: 2px solid var(--gold);
+        border-radius: var(--radius);
+        padding: 36px 28px;
+        text-align: center;
+        max-width: 380px;
+        width: 100%;
+        box-shadow:
+          0 0 60px rgba(255, 215, 0, 0.3),
+          0 20px 60px rgba(0, 0, 0, 0.6);
+        animation: levelUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .reward-trophy {
+        font-size: 72px;
+        margin-bottom: 8px;
+      }
+      .reward-title {
+        font-size: 28px;
+        font-weight: 900;
+        color: var(--gold);
+        margin-bottom: 8px;
+      }
+      .reward-msg {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.75);
+        line-height: 1.5;
+        margin-bottom: 24px;
+      }
+      .xp-earned {
+        background: rgba(255, 215, 0, 0.12);
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        border-radius: var(--radius-sm);
+        padding: 12px 20px;
+        margin-bottom: 20px;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--gold);
+      }
+      .sparkles-container {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .sparkle-dot {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--gold);
+        animation: sparkle 1s ease-out forwards;
+      }
 
-  function setScreen(name) {
-    state.screen = name;
-    Object.entries(el.screens).forEach(([key, node]) => {
-      if (key === name) node.classList.add("active");
-      else node.classList.remove("active");
-    });
-    el.diaryBtn.style.display = name === "home" ? "flex" : "none";
-  }
+      /* SESSION COMPLETE */
+      .session-complete-card {
+        text-align: center;
+        padding: 36px 24px;
+      }
+      .level-badge {
+        font-size: 80px;
+        margin-bottom: 8px;
+        animation: floatUp 3s ease-in-out infinite;
+      }
+      .level-text {
+        font-size: 14px;
+        color: var(--gold);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .level-num {
+        font-size: 52px;
+        font-weight: 900;
+        color: white;
+        line-height: 1;
+      }
+      .session-missions {
+        margin: 20px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .session-mission-chip {
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 12px;
+        padding: 10px 16px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-  function buildWorldIcon() {
-    el.portalIcon.innerHTML = svgIcon("portal");
-  }
+      /* DAILY LOCK */
+      #screen-lock {
+        justify-content: center;
+        gap: 24px;
+        text-align: center;
+      }
+      .lock-icon {
+        font-size: 80px;
+        animation: floatUp 4s ease-in-out infinite;
+      }
+      .lock-title {
+        font-size: 28px;
+        font-weight: 900;
+      }
+      .lock-msg {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.5;
+      }
+      .lock-time {
+        font-size: 48px;
+        font-weight: 900;
+        color: var(--gold);
+      }
 
-  function buildAlertIcon() {
-    el.alertIcon.innerHTML = svgIcon("special");
-  }
+      /* PARENT GATE */
+      .parent-gate {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.25s ease;
+      }
+      .gate-card {
+        background: linear-gradient(160deg, #1a1a3a, #0d0d2a);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: var(--radius);
+        padding: 36px 28px;
+        max-width: 360px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        animation: levelUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .gate-title {
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 8px;
+      }
+      .gate-sub {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.55);
+        margin-bottom: 24px;
+        line-height: 1.5;
+      }
+      .gate-math {
+        font-size: 28px;
+        font-weight: 900;
+        color: var(--gold);
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      .gate-input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        font-size: 20px;
+        color: white;
+        font-family: inherit;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 16px;
+        -webkit-appearance: none;
+      }
+      .gate-input:focus {
+        outline: none;
+        border-color: var(--purple-soft);
+        box-shadow: 0 0 0 2px rgba(156, 77, 252, 0.3);
+      }
+      .gate-error {
+        color: #ff8080;
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 12px;
+        min-height: 20px;
+      }
+      .gate-btns {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
 
-  function buildRewardIcon() {
-    el.rewardIcon.innerHTML = svgIcon("reward");
-  }
+      /* DIARY */
+      #screen-diary {
+        gap: 20px;
+      }
+      .diary-empty {
+        text-align: center;
+        padding: 40px 20px;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 16px;
+      }
+      .diary-entry {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-sm);
+        padding: 20px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      }
+      .diary-entry-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .diary-world-icon {
+        font-size: 32px;
+      }
+      .diary-entry-meta {
+        flex: 1;
+      }
+      .diary-world-name {
+        font-size: 16px;
+        font-weight: 800;
+      }
+      .diary-date {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .diary-xp {
+        font-size: 14px;
+        color: var(--gold);
+        font-weight: 700;
+      }
+      .diary-missions {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .diary-mission-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.65);
+      }
 
-  function buildProgress() {
-    el.progressDots.innerHTML = "";
-    for (let i = 0; i < 4; i++) {
-      const d = document.createElement("div");
-      d.className = "dot";
-      if (i < state.missionIndex) d.classList.add("done");
-      if (i === state.missionIndex) d.classList.add("now");
-      el.progressDots.appendChild(d);
-    }
-  }
+      /* PAGE HEADERS */
+      .page-header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-bottom: 4px;
+      }
+      .back-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.09);
+        border: 1px solid var(--card-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: all 0.2s;
+      }
+      .back-btn:active {
+        transform: scale(0.9);
+        background: rgba(255, 255, 255, 0.18);
+      }
+      .page-header h1 {
+        font-size: 22px;
+        font-weight: 800;
+      }
 
-  function currentMission() {
-    if (state.missionIndex < 3) return state.currentMissionSet[state.missionIndex];
-    return DB.special;
-  }
+      .section-title {
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+        padding: 4px 0;
+      }
 
-  function renderSteps() {
-    const m = state.currentMission;
-    el.questSteps.innerHTML = "";
-    m.steps.forEach((step, idx) => {
-      const row = document.createElement("div");
-      row.className = "step";
-      if (idx < state.stepIndex) row.classList.add("done");
-      if (idx === state.stepIndex) row.classList.add("active");
+      /* SPECIAL MISSION CARD */
+      .special-card {
+        background: linear-gradient(135deg, #1a0a35 0%, #4a1a8a 100%);
+        border: 2px solid var(--gold);
+        border-radius: var(--radius);
+        padding: 24px;
+        text-align: center;
+        box-shadow:
+          var(--glow-gold),
+          0 8px 24px rgba(0, 0, 0, 0.4);
+      }
+      .special-lock-icon {
+        font-size: 48px;
+        margin-bottom: 8px;
+      }
+      .special-title {
+        font-size: 20px;
+        font-weight: 900;
+        color: var(--gold);
+        margin-bottom: 6px;
+      }
+      .special-sub {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 16px;
+      }
 
-      const num = document.createElement("div");
-      num.className = "step-num";
-      num.textContent = idx + 1;
+      /* NAV FOOTER */
+      .nav-footer {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        display: flex;
+        gap: 10px;
+        margin-top: auto;
+        padding-top: 20px;
+      }
+      .nav-btn {
+        flex: 1;
+        padding: 14px;
+        border-radius: var(--radius-sm);
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid var(--card-border);
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+      .nav-btn:active {
+        background: rgba(255, 255, 255, 0.14);
+        color: white;
+      }
+      .nav-btn .nav-icon {
+        font-size: 22px;
+        display: block;
+        margin-bottom: 3px;
+      }
+      .nav-btn.active {
+        background: rgba(106, 29, 232, 0.25);
+        border-color: rgba(106, 29, 232, 0.5);
+        color: var(--purple-soft);
+      }
 
-      const tx = document.createElement("div");
-      tx.textContent = step;
+      /* FINAL SCREEN */
+      #screen-final {
+        justify-content: center;
+        gap: 24px;
+        text-align: center;
+      }
+      .final-star {
+        font-size: 90px;
+        animation: floatUp 3s ease-in-out infinite;
+      }
 
-      row.appendChild(num);
-      row.appendChild(tx);
-      el.questSteps.appendChild(row);
-    });
-  }
+      /* PROGRESS COUNTER */
+      .progress-dots {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        padding: 8px 0;
+      }
+      .progress-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transition: all 0.4s;
+      }
+      .progress-dot.done {
+        background: var(--gold);
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+      }
+      .progress-dot.active {
+        background: var(--purple-soft);
+        box-shadow: 0 0 10px rgba(156, 77, 252, 0.6);
+        animation: pulse 1.5s infinite;
+      }
 
-  function renderMission() {
-    state.currentMission = currentMission();
+      /* MISC */
+      h1 {
+        font-size: 28px;
+        font-weight: 900;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 800;
+      }
+      .text-gold {
+        color: var(--gold);
+      }
+      .text-small {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .text-center {
+        text-align: center;
+      }
+      .gap-sm {
+        gap: 10px;
+      }
+      .relative {
+        position: relative;
+      }
+      .z1 {
+        position: relative;
+        z-index: 1;
+      }
 
-    buildProgress();
+      @media (min-width: 420px) {
+        .btn {
+          font-size: 19px;
+        }
+        .logo-name {
+          font-size: 50px;
+        }
+      }
+      @media (min-width: 600px) {
+        #app {
+          max-width: 480px;
+          margin: 0 auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="stars" id="stars"></div>
 
-    const missionNumberText = state.missionIndex < 3
-      ? `MISSIONE ${state.missionIndex + 1}`
-      : "MISSIONE SPECIALE";
-
-    el.questBadge.textContent = missionNumberText;
-    el.questStory.textContent = state.currentMission.story;
-    el.questObjective.textContent = state.currentMission.objective;
-    el.questIcon.innerHTML = svgIcon(state.currentMission.icon);
-    renderSteps();
-
-    el.prevBtn.classList.toggle("hidden", state.stepIndex === 0);
-
-    const isLastStep = state.stepIndex === state.currentMission.steps.length - 1;
-    el.nextBtn.textContent = isLastStep ? "Completa" : "Avanti";
-  }
-
-  function startAdventure() {
-    if (isLockedToday()) {
-      alert("Hai già completato la sessione di oggi. Torna domani per nuove missioni.");
-      return;
-    }
-    state.finished = false;
-    state.specialDone = false;
-    state.missionIndex = 0;
-    state.stepIndex = 0;
-    state.currentMissionSet = shuffle(DB.normal).slice(0, 3);
-    renderMission();
-    setScreen("mission");
-  }
-
-  function nextStep() {
-    const m = state.currentMission;
-    if (state.stepIndex < m.steps.length - 1) {
-      state.stepIndex += 1;
-      renderMission();
-      pulseButton(el.nextBtn);
-      return;
-    }
-
-    if (state.missionIndex < 2) {
-      state.missionIndex += 1;
-      state.stepIndex = 0;
-      renderMission();
-      pulseButton(el.nextBtn);
-      return;
-    }
-
-    if (state.missionIndex === 2) {
-      setScreen("alert");
-      setTimeout(() => {
-        state.missionIndex = 3;
-        state.stepIndex = 0;
-        renderMission();
-        setScreen("mission");
-      }, 1800);
-      return;
-    }
-
-    finishSession();
-  }
-
-  function prevStep() {
-    if (state.stepIndex > 0) {
-      state.stepIndex -= 1;
-      renderMission();
-    }
-  }
-
-  function pulseButton(btn) {
-    btn.animate([
-      { transform: "scale(1)" },
-      { transform: "scale(0.97)" },
-      { transform: "scale(1)" }
-    ], { duration: 180, easing: "ease-out" });
-  }
-
-  function finishSession() {
-    state.finished = true;
-    state.currentTitle = state.titlesPool[Math.floor(Math.random() * state.titlesPool.length)];
-    el.rewardTitle.textContent = state.currentTitle;
-
-    const entry = {
-      date: new Date().toLocaleDateString("it-IT"),
-      title: state.currentTitle,
-      world: state.world,
-      special: DB.special.title
-    };
-
-    const history = getHistory();
-    history.unshift(entry);
-    setHistory(history.slice(0, 12));
-    lockToday();
-
-    setScreen("end");
-    fireConfetti();
-  }
-
-  function openDiary() {
-    const history = getHistory();
-    el.diaryList.innerHTML = "";
-
-    if (!history.length) {
-      const empty = document.createElement("div");
-      empty.className = "diary-entry";
-      empty.innerHTML = `
-        <div class="entry-icon">${svgIcon("diary")}</div>
-        <div>
-          <div class="entry-title">Diario vuoto</div>
-          <div class="entry-small">Completa la tua prima missione per riempirlo.</div>
+      <!-- WELCOME -->
+      <div class="screen active" id="screen-welcome">
+        <div class="logo-wrap z1">
+          <div class="logo-icon">✨</div>
+          <div class="logo-name">SparkPlay</div>
+          <div class="logo-tagline">Avventure magiche nella tua stanza</div>
         </div>
-      `;
-      el.diaryList.appendChild(empty);
-    } else {
-      history.forEach(item => {
-        const row = document.createElement("div");
-        row.className = "diary-entry";
-        row.innerHTML = `
-          <div class="entry-icon">${svgIcon("diary")}</div>
-          <div>
-            <div class="entry-meta">${item.date}</div>
-            <div class="entry-title">${item.title}</div>
-            <div class="entry-small">${item.world} · ${item.special}</div>
+        <div class="welcome-cta z1">
+          <button class="btn btn-primary" onclick="goTo('worlds')">
+            ✨ Inizia l'Avventura
+          </button>
+          <button class="btn btn-ghost" onclick="goTo('diary')">
+            📖 Il mio Diario
+          </button>
+        </div>
+      </div>
+
+      <!-- WORLDS -->
+      <div class="screen" id="screen-worlds">
+        <div class="top-bar z1">
+          <div class="xp-area">
+            <div class="xp-label">Livello <span id="level-num">1</span></div>
+            <div class="xp-bar-wrap">
+              <div class="xp-bar-fill" id="xp-bar" style="width: 0%"></div>
+            </div>
+            <div class="text-small">
+              <span id="xp-num">0</span> / <span id="xp-next">100</span> XP
+            </div>
           </div>
-        `;
-        el.diaryList.appendChild(row);
-      });
-    }
+          <button class="audio-btn" id="audio-btn" onclick="toggleAudio()">
+            🔊
+          </button>
+        </div>
+        <div
+          class="z1"
+          style="width: 100%; text-align: center; margin-bottom: 8px"
+        >
+          <h1>Scegli il Mondo</h1>
+          <div class="text-small" style="margin-top: 4px">
+            Dove vuoi andare oggi?
+          </div>
+        </div>
+        <div class="worlds-grid z1">
+          <div class="world-card spazio" onclick="selectWorld('spazio')">
+            <div class="world-icon">🚀</div>
+            <div class="world-info">
+              <h2 style="color: #a0d0ff">SPAZIO</h2>
+              <p>Missioni cosmiche tra stelle e pianeti</p>
+              <div class="world-lock" id="lock-spazio"></div>
+            </div>
+            <div class="world-badge">›</div>
+          </div>
+          <div class="world-card magia" onclick="selectWorld('magia')">
+            <div class="world-icon">🪄</div>
+            <div class="world-info">
+              <h2 style="color: #d0aaff">MAGIA</h2>
+              <p>Incantesimi, rune e tesori nascosti</p>
+              <div class="world-lock" id="lock-magia"></div>
+            </div>
+            <div class="world-badge">›</div>
+          </div>
+          <div class="world-card detective" onclick="selectWorld('detective')">
+            <div class="world-icon">🔍</div>
+            <div class="world-info">
+              <h2 style="color: #ffd27a">DETECTIVE</h2>
+              <p>Misteri, indizi e casi da risolvere</p>
+              <div class="world-lock" id="lock-detective"></div>
+            </div>
+            <div class="world-badge">›</div>
+          </div>
+        </div>
+        <div class="nav-footer z1">
+          <button class="nav-btn" onclick="goTo('worlds')">
+            <span class="nav-icon">🌍</span>Mondi
+          </button>
+          <button class="nav-btn" onclick="goTo('diary')">
+            <span class="nav-icon">📖</span>Diario
+          </button>
+        </div>
+      </div>
 
-    setScreen("diary");
-  }
+      <!-- MISSIONS LIST -->
+      <div class="screen" id="screen-missions">
+        <div class="top-bar z1">
+          <div class="page-header" style="flex: 1">
+            <button class="back-btn" onclick="goTo('worlds')">←</button>
+            <h1 id="missions-title">Missioni</h1>
+          </div>
+          <button class="audio-btn" id="audio-btn2" onclick="toggleAudio()">
+            🔊
+          </button>
+        </div>
+        <div
+          class="z1"
+          style="
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+          "
+        >
+          <div class="section-title">Oggi</div>
+          <div class="progress-dots" id="progress-dots"></div>
+        </div>
+        <div class="mission-list z1" id="mission-list"></div>
+        <div
+          class="special-card z1"
+          id="special-section"
+          style="display: none; margin-top: 8px"
+        >
+          <div class="special-lock-icon">⭐</div>
+          <div class="special-title" id="special-title">Missione Speciale</div>
+          <div class="special-sub">Completa le 3 missioni per sbloccarla</div>
+          <button
+            class="btn btn-gold btn-sm"
+            id="special-btn"
+            onclick="trySpecial()"
+          >
+            🔓 Attiva
+          </button>
+        </div>
+      </div>
 
-  function backHome() {
-    setScreen("home");
-  }
+      <!-- MISSION DETAIL -->
+      <div class="screen" id="screen-mission">
+        <div class="top-bar z1">
+          <div class="page-header" style="flex: 1">
+            <button class="back-btn" onclick="goTo('missions')">←</button>
+            <div></div>
+          </div>
+          <button class="audio-btn" onclick="toggleAudio()">🔊</button>
+        </div>
+        <div class="mission-header z1">
+          <div class="mission-world-badge" id="mission-world-badge"></div>
+          <div class="mission-emoji" id="mission-emoji"></div>
+          <div class="mission-title" id="mission-title"></div>
+          <div class="mission-intro" id="mission-intro"></div>
+        </div>
+        <div class="card objects-card z1" id="objects-card">
+          <div class="objects-label">Oggetti</div>
+          <div class="objects-list" id="objects-list"></div>
+        </div>
+        <div class="card steps-card z1">
+          <div class="steps-label">La Missione</div>
+          <div id="steps-list"></div>
+        </div>
+        <div class="z1" style="width: 100%; padding-top: 8px">
+          <button
+            class="btn btn-gold"
+            id="complete-btn"
+            onclick="completeMission()"
+          >
+            🌟 Missione Compiuta!
+          </button>
+        </div>
+      </div>
 
-  function exitMission() {
-    state.missionIndex = 0;
-    state.stepIndex = 0;
-    state.currentMission = null;
-    setScreen("home");
-  }
+      <!-- SESSION COMPLETE -->
+      <div class="screen" id="screen-session">
+        <div class="z1 session-complete-card card">
+          <div class="level-badge" id="session-badge">🏆</div>
+          <div class="level-text">Livello raggiunto</div>
+          <div class="level-num" id="session-level">1</div>
+          <div
+            style="
+              margin: 16px 0;
+              font-size: 15px;
+              color: rgba(255, 255, 255, 0.6);
+            "
+          >
+            Missioni completate oggi:
+          </div>
+          <div class="session-missions" id="session-missions"></div>
+          <div class="xp-earned" id="session-xp">+150 XP</div>
+          <div
+            style="
+              font-size: 15px;
+              color: rgba(255, 255, 255, 0.65);
+              margin-bottom: 20px;
+              line-height: 1.5;
+            "
+          >
+            Sei stato straordinario! Torna domani per nuove avventure.
+          </div>
+        </div>
+        <div
+          class="z1"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+          "
+        >
+          <div class="special-card">
+            <div class="special-lock-icon">⭐</div>
+            <div class="special-title">Missione Speciale Disponibile!</div>
+            <div class="special-sub">Chiedi ad un genitore di sbloccarla</div>
+            <button class="btn btn-gold btn-sm" onclick="trySpecial()">
+              🔓 Sblocca
+            </button>
+          </div>
+          <button class="btn btn-ghost" onclick="goTo('diary')">
+            📖 Apri il Diario
+          </button>
+        </div>
+      </div>
 
-  function resizeCanvas() {
-    const ratio = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-    el.fxCanvas.width = Math.floor(window.innerWidth * ratio);
-    el.fxCanvas.height = Math.floor(window.innerHeight * ratio);
-    el.fxCanvas.style.width = window.innerWidth + "px";
-    el.fxCanvas.style.height = window.innerHeight + "px";
-    const ctx = el.fxCanvas.getContext("2d");
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-  }
+      <!-- DAILY LOCK -->
+      <div class="screen" id="screen-lock">
+        <div class="lock-icon z1">🔒</div>
+        <div class="z1">
+          <div class="lock-title">Bel lavoro per oggi!</div>
+        </div>
+        <div class="z1">
+          <div class="lock-time" id="lock-time-display">😴</div>
+          <div class="lock-msg" style="margin-top: 8px">
+            Torna domani per nuove<br />avventure magiche!
+          </div>
+        </div>
+        <div
+          class="z1"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+          "
+        >
+          <button class="btn btn-ghost" onclick="goTo('diary')">
+            📖 Apri il Diario
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="devReset()">
+            ↺ Reset (test)
+          </button>
+        </div>
+      </div>
 
-  function fireConfetti() {
-    resizeCanvas();
-    const ctx = el.fxCanvas.getContext("2d");
-    const pieces = [];
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    const colors = ["#ffdb58", "#a27cff", "#4deeea", "#ff5e6c", "#ffffff"];
+      <!-- DIARY -->
+      <div class="screen" id="screen-diary">
+        <div class="top-bar z1">
+          <div class="page-header" style="flex: 1">
+            <button class="back-btn" onclick="goTo('worlds')">←</button>
+            <h1>Il mio Diario</h1>
+          </div>
+        </div>
+        <div class="z1" style="width: 100%" id="diary-list"></div>
+      </div>
 
-    for (let i = 0; i < 120; i++) {
-      pieces.push({
-        x: Math.random() * W,
-        y: -20 - Math.random() * H * 0.35,
-        w: 6 + Math.random() * 8,
-        h: 8 + Math.random() * 10,
-        vy: 2 + Math.random() * 3.6,
-        vx: -1.6 + Math.random() * 3.2,
-        rot: Math.random() * Math.PI,
-        vr: -0.12 + Math.random() * 0.24,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        alpha: 1
-      });
-    }
+      <!-- FINAL COMPLETE -->
+      <div class="screen" id="screen-final">
+        <div class="final-star z1">🌟</div>
+        <div class="z1" style="text-align: center">
+          <h1
+            style="
+              font-size: 32px;
+              background: linear-gradient(90deg, #fff, var(--gold));
+              -webkit-background-clip: text;
+              background-clip: text;
+              -webkit-text-fill-color: transparent;
+            "
+          >
+            Avventura Completata!
+          </h1>
+          <p
+            style="
+              font-size: 16px;
+              color: rgba(255, 255, 255, 0.65);
+              margin-top: 10px;
+              line-height: 1.6;
+            "
+          >
+            Hai completato la missione speciale.<br />Sei un vero eroe!
+          </p>
+        </div>
+        <div class="card z1" style="text-align: center; padding: 24px">
+          <div
+            style="font-size: 48px; margin-bottom: 8px"
+            id="final-world-icon"
+          >
+            ✨
+          </div>
+          <div
+            style="font-size: 18px; font-weight: 800; margin-bottom: 4px"
+            id="final-mission-name"
+          ></div>
+          <div class="xp-earned" style="margin-top: 12px" id="final-xp">
+            +200 XP
+          </div>
+        </div>
+        <div
+          class="z1"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+          "
+        >
+          <button class="btn btn-ghost" onclick="goTo('diary')">
+            📖 Apri il Diario
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="devReset()">
+            ↺ Reset (test)
+          </button>
+        </div>
+      </div>
 
-    const start = performance.now();
-    const duration = 2600;
+      <!-- PARENT GATE MODAL -->
+      <div class="parent-gate" id="parent-gate" style="display: none">
+        <div class="gate-card">
+          <div style="font-size: 40px; text-align: center; margin-bottom: 12px">
+            🧑‍💼
+          </div>
+          <div class="gate-title">Area Genitori</div>
+          <div class="gate-sub">
+            Risolvi il calcolo per sbloccare la missione speciale per il tuo
+            bambino.
+          </div>
+          <div class="gate-math" id="gate-math">? + ? = ?</div>
+          <input
+            class="gate-input"
+            type="number"
+            id="gate-input"
+            placeholder="Risposta..."
+            inputmode="numeric"
+          />
+          <div class="gate-error" id="gate-error"></div>
+          <div class="gate-btns">
+            <button class="btn btn-primary" onclick="checkGate()">
+              Sblocca
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="closeGate()">
+              Annulla
+            </button>
+          </div>
+        </div>
+      </div>
 
-    function frame(now) {
-      ctx.clearRect(0, 0, W, H);
+      <!-- REWARD OVERLAY -->
+      <div class="reward-overlay" id="reward-overlay" style="display: none">
+        <div class="sparkles-container" id="sparkles"></div>
+        <div class="reward-card">
+          <div class="reward-trophy" id="reward-trophy">🌟</div>
+          <div class="reward-title" id="reward-title">Missione Completata!</div>
+          <div class="reward-msg" id="reward-msg">
+            Fantastico! Hai completato questa missione!
+          </div>
+          <div class="xp-earned" id="reward-xp">+50 XP</div>
+          <button class="btn btn-gold" onclick="closeReward()">
+            Continua ›
+          </button>
+        </div>
+      </div>
+    </div>
 
-      pieces.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.rot += p.vr;
-        if (p.y > H + 40) {
-          p.y = -20;
-          p.x = Math.random() * W;
+    <script>
+      // ===== DATA =====
+      const WORLDS = {
+        spazio: {
+          name: 'SPAZIO',
+          icon: '🚀',
+          color: '#a0d0ff',
+          badge: '🌌',
+          missions: [
+            {
+              id: 'sp1', emoji: '🛸', title: 'La Base di Lancio',
+              intro: 'Il centro di controllo ha rilevato segnali alieni! Costruisci la base di lancio.',
+              objects: ['Cuscini', 'Coperta', 'Libri', 'Scatola'],
+              steps: [
+                'Metti 4 cuscini in cerchio: questa è la tua base di lancio.',
+                'Metti una coperta sopra per creare il tetto della navicella.',
+                'Posiziona 3 libri come pannelli di controllo davanti a te.',
+                'Siediti dentro e conta alla rovescia: 5, 4, 3, 2, 1... Decollo!'
+              ],
+              completion: 'Base di lancio attivata! Sei pronto per la missione.'
+            },
+            {
+              id: 'sp2', emoji: '☄️', title: 'Caccia ai Meteoriti',
+              intro: 'Frammenti di meteorite sono sparsi nella galassia. Raccoglili tutti!',
+              objects: ['Calzini colorati', 'Tazze di plastica', 'Cestone'],
+              steps: [
+                'Forma 5 palline con i calzini: questi sono i tuoi meteoriti.',
+                'Nascondili in 5 posti diversi della stanza.',
+                'Posiziona una tazza come "deposito sicuro".',
+                'Cerca i meteoriti e portali uno alla volta nella tua base!'
+              ],
+              completion: 'Raccolta meteoriti completata! La Terra è salva.'
+            },
+            {
+              id: 'sp3', emoji: '🌙', title: 'Mappa dei Pianeti',
+              intro: 'L\'astronomo ha perso la mappa! Ricreala tu con gli oggetti della stanza.',
+              objects: ['Oggetti di diverse dimensioni', 'Fogli di carta', 'Crayons'],
+              steps: [
+                'Trova 5 oggetti di dimensioni diverse (come i pianeti del sistema solare).',
+                'Disponili in fila dal più piccolo al più grande.',
+                'Su un foglio, disegna un cerchio giallo al centro: è il Sole.',
+                'Assegna un nome inventato ad ogni pianeta e presentali ad alta voce!'
+              ],
+              completion: 'Mappa galattica completata! Sei un grande astronomo.'
+            },
+            {
+              id: 'sp4', emoji: '📡', title: 'Segnale Alieno',
+              intro: 'Un segnale misterioso arriva da lontano. Devi decodificarlo!',
+              objects: ['Torcia / Luce telefono', 'Coperta', 'Cuscino'],
+              steps: [
+                'Costruisci una piccola tenda con la coperta e il cuscino.',
+                'Entra dentro con la torcia accesa.',
+                'Batti sul pavimento questo ritmo segreto: 3 veloci, 2 lenti, 1 forte.',
+                'Ripetilo 3 volte: hai inviato la risposta agli alieni!'
+              ],
+              completion: 'Segnale ricevuto! Gli alieni ti hanno risposto.'
+            },
+            {
+              id: 'sp5', emoji: '🧑‍🚀', title: 'Passeggiata Spaziale',
+              intro: 'C\'è un guasto alla navicella! Devi raggiungere il modulo di riparazione.',
+              objects: ['Fogli di carta', 'Cuscini', 'Libri'],
+              steps: [
+                'Posiziona 6 fogli di carta sul pavimento: sono le tue piattaforme nello spazio.',
+                'Metti 2 cuscini come "zone sicure" agli angoli della stanza.',
+                'Devi muoverti SOLO sui fogli e sui cuscini, senza toccare il pavimento.',
+                'Raggiungi entrambe le zone sicure senza toccare lo "spazio aperto"!'
+              ],
+              completion: 'Riparazione completata! La navicella è salva.'
+            },
+            {
+              id: 'sp6', emoji: '🌠', title: 'Pioggia di Stelle',
+              intro: 'Un fenomeno rarissimo! Le stelle cadenti portano messaggi segreti.',
+              objects: ['Fogli di carta', 'Crayons'],
+              steps: [
+                'Strappa 5 pezzi di carta e appallottolali: sono le tue stelle cadenti.',
+                'Scrivi o disegna su ognuno un desiderio segreto.',
+                'Lancia le stelle in aria una alla volta dalla stessa posizione.',
+                'Raccogli tutte le stelle e mettile in un posto speciale come "archivio galattico".'
+              ],
+              completion: 'I tuoi desideri sono stati lanciati nello spazio!'
+            },
+            {
+              id: 'sp7', emoji: '🔭', title: 'Osservatorio Segreto',
+              intro: 'L\'osservatorio deve essere pronto prima del tramonto!',
+              objects: ['Rotolo di carta', 'Scatola', 'Torcia'],
+              steps: [
+                'Arrotola un foglio di carta formando un tubo: è il tuo telescopio.',
+                'Metti la scatola come piedistallo dell\'osservatorio.',
+                'Gira lentamente per la stanza cercando "stelle" (qualsiasi puntino o oggetto brillante).',
+                'Conta almeno 5 stelle e annuncia le tue scoperte ad alta voce!'
+              ],
+              completion: 'Osservatorio attivo! Sei un esploratore galattico.'
+            }
+          ],
+          specialMissions: [
+            {
+              id: 'sp_s1', emoji: '👽', title: 'Primo Contatto',
+              intro: 'Gli alieni vogliono comunicare! Devi creare un messaggio interstellare.',
+              objects: ['Fogli di carta grandi', 'Crayons', 'Oggetti vari'],
+              steps: [
+                'Disegna un grande cerchio su un foglio: è il "Messaggio per gli Alieni".',
+                'Dentro il cerchio, disegna 3 cose importanti della tua vita.',
+                'Disponi gli oggetti della stanza attorno al foglio come "confini del campo'.',
+                'Presenta ad alta voce il tuo messaggio come se gli alieni potessero sentirti!'
+              ],
+              completion: 'Messaggio interstellare inviato! Gli alieni capiscono.'
+            },
+            {
+              id: 'sp_s2', emoji: '🪐', title: 'La Grande Nebulosa',
+              intro: 'Una nebulosa ha risucchiato tutti gli oggetti! Ricostruisci la galassia.',
+              objects: ['Tutti gli oggetti morbidi disponibili', 'Coperte', 'Cuscini'],
+              steps: [
+                'Raccoglie ogni oggetto morbido che riesci a trovare nella stanza.',
+                'Costruisci una "galassia" disponendoli a spirale partendo dal centro della stanza.',
+                'Crea 3 "pianeti abitati" con diversi gruppi di oggetti.',
+                'Cammina intorno alla galassia e dai un nome ai 3 pianeti.'
+              ],
+              completion: 'La galassia è stata ricostruita! Sei l\'astronomo più grande dell\'universo.'
+            }
+          ]
+        },
+        magia: {
+          name: 'MAGIA',
+          icon: '🪄',
+          color: '#d0aaff',
+          badge: '✨',
+          missions: [
+            {
+              id: 'mg1', emoji: '🧙', title: 'L\'Accademia degli Stregoni',
+              intro: 'Sei stato ammesso all\'Accademia! Il tuo primo compito è allestire la scuola di magia.',
+              objects: ['Libri', 'Cuscini', 'Coperta'],
+              steps: [
+                'Metti 3 libri in fila: sono i banchi degli studenti.',
+                'Posiziona un cuscino per ogni "studente" (usa peluche o oggetti come compagni).',
+                'Stendi la coperta come "tappeto magico" davanti alla classe.',
+                'Siediti davanti e insegna il primo incantesimo: "Lumos! Sparkus! Volare!" con gesti grandiosi.'
+              ],
+              completion: 'L\'Accademia è aperta! I tuoi studenti applaudono.'
+            },
+            {
+              id: 'mg2', emoji: '🗝️', title: 'La Porta Incantata',
+              intro: 'Una porta segreta è apparsa! Per aprirla devi completare il rito magico.',
+              objects: ['Libri', 'Cuscini', 'Oggetti della stanza'],
+              steps: [
+                'Posiziona 2 libri in piedi affiancati: sono i pilastri della porta magica.',
+                'Metti 3 oggetti davanti: sono le chiavi dell\'incantesimo.',
+                'Tocca ogni oggetto in ordine ripetendo una parola magica che inventi tu.',
+                'Attraversa la "porta" con un salto e dichiara che sei entrato nel regno magico!'
+              ],
+              completion: 'La porta si è aperta! Sei entrato nel regno incantato.'
+            },
+            {
+              id: 'mg3', emoji: '🔮', title: 'La Sfera del Destino',
+              intro: 'La sfera di cristallo rivela il futuro solo ai più coraggiosi.',
+              objects: ['Pallone morbido o tazza rotonda', 'Coperta', 'Crayons'],
+              steps: [
+                'Posiziona un oggetto tondo su una coperta piegata: è la sfera di cristallo.',
+                'Siediti davanti con le mani appoggiate dolcemente ai lati.',
+                'Chiudi gli occhi e immagina 3 avventure future.',
+                'Aprili e racconta ad alta voce le tue 3 visioni come fossero profezie!'
+              ],
+              completion: 'La sfera ha parlato! Le tue profezie sono state registrate.'
+            },
+            {
+              id: 'mg4', emoji: '🧪', title: 'La Pozione Segreta',
+              intro: 'Lo stregone ha perso la ricetta! Crea la tua pozione magica.',
+              objects: ['Tazza o bicchiere di plastica', 'Foglio di carta', 'Oggetti piccoli'],
+              steps: [
+                'Prendi una tazza vuota: è il tuo calderone magico.',
+                'Scegli 4 ingredienti (oggetti piccoli, non cibo) e mettili vicino al calderone.',
+                'Aggiungi ogni ingrediente pronunciando un nome magico inventato.',
+                'Mescola con una bacchetta immaginaria e dichiara il nome della pozione!'
+              ],
+              completion: 'Pozione completata! I poteri magici si attivano.'
+            },
+            {
+              id: 'mg5', emoji: '🌀', title: 'Il Labirinto Incantato',
+              intro: 'Un labirinto magico è comparso in casa! Riesci a trovare l\'uscita?',
+              objects: ['Cuscini', 'Libri', 'Calzini come segnali'],
+              steps: [
+                'Metti 6 oggetti sul pavimento come "ostacoli magici" da non toccare.',
+                'Posiziona un calzino all\'altra parte della stanza: è l\'uscita del labirinto.',
+                'Muoviti lentamente aggirando tutti gli ostacoli senza toccarli.',
+                'Quando arrivi al calzino, solleva le braccia e grida "Incantesimo rotto!"'
+              ],
+              completion: 'Labirinto superato! Il tuo potere magico cresce.'
+            },
+            {
+              id: 'mg6', emoji: '⚡', title: 'L\'Incantesimo del Risveglio',
+              intro: 'Un giocattolo è stato addormentato da una maledizione! Solo tu puoi salvarlo.',
+              objects: ['Peluche o giocattolo', 'Foglio di carta', 'Crayons'],
+              steps: [
+                'Scegli un peluche o giocattolo: è stato maledetto e non può muoversi.',
+                'Disegna 3 "rune magiche" su un foglio (forme a tua scelta).',
+                'Posiziona il foglio sotto il giocattolo e tocca ogni runa dicendo una parola magica.',
+                'Solleva il giocattolo e fallo "svegliare" con entusiasmo: la maledizione è rotta!'
+              ],
+              completion: 'Il giocattolo si è svegliato! Sei un grande stregone.'
+            },
+            {
+              id: 'mg7', emoji: '🗺️', title: 'La Mappa delle Rune',
+              intro: 'Le rune antiche indicano dove è nascosto il tesoro magico!',
+              objects: ['Fogli di carta', 'Crayons', 'Oggetto da nascondere'],
+              steps: [
+                'Scegli un piccolo oggetto come "tesoro magico" e nascondilo nella stanza.',
+                'Disegna 3 foglietti con indizi in codice (frecce, X, simboli inventati).',
+                'Posiziona i foglietti come una caccia al tesoro a catena.',
+                'Seguili in ordine per trovare il tesoro nascosto!'
+              ],
+              completion: 'Il tesoro è stato trovato! Le rune antiche non mentono mai.'
+            }
+          ],
+          specialMissions: [
+            {
+              id: 'mg_s1', emoji: '🏰', title: 'Il Castello Magico',
+              intro: 'Il regno ha bisogno di un castello! Costruiscilo prima del tramonto.',
+              objects: ['Tutti i cuscini', 'Coperte', 'Libri', 'Scatole'],
+              steps: [
+                'Raccoglie tutti i cuscini e le coperte disponibili.',
+                'Costruisci le mura del castello con i cuscini in quadrato.',
+                'Usa i libri come torri agli angoli.',
+                'Entra dentro e dichiara il nome del tuo regno magico!'
+              ],
+              completion: 'Il castello è pronto! Sei il re o la regina del regno magico.'
+            },
+            {
+              id: 'mg_s2', emoji: '🌈', title: 'Il Portale degli Incantesimi',
+              intro: 'Il libro degli incantesimi è stato completato! Esegui il rito finale.',
+              objects: ['Fogli di carta', 'Crayons', 'Oggetti colorati'],
+              steps: [
+                'Disegna su un grande foglio il "Libro degli Incantesimi".',
+                'Scrivi o disegna 5 incantesimi che hai imparato oggi.',
+                'Disponi gli oggetti colorati a semicerchio davanti a te come un altare magico.',
+                'Leggi ogni incantesimo ad alta voce con la voce più stregonesca che hai!'
+              ],
+              completion: 'Il libro degli incantesimi è completo! La magia è con te per sempre.'
+            }
+          ]
+        },
+        detective: {
+          name: 'DETECTIVE',
+          icon: '🔍',
+          color: '#ffd27a',
+          badge: '🕵️',
+          missions: [
+            {
+              id: 'dt1', emoji: '🕵️', title: 'Il Caso del Giocattolo Scomparso',
+              intro: 'Un giocattolo è misteriosamente sparito! Tocca a te indagare.',
+              objects: ['Fogli di carta', 'Crayons', 'Qualsiasi oggetto da nascondere'],
+              steps: [
+                'Chiedi a qualcuno di nascondere un oggetto mentre sei fuori dalla stanza (o chiudi gli occhi).',
+                'Rientra e osserva attentamente la stanza per 30 secondi senza muoverti.',
+                'Annota o disegna 3 cose "sospette" che noti.',
+                'Trova l\'oggetto nascosto solo usando le tue osservazioni!'
+              ],
+              completion: 'Caso risolto! Sei un detective nato.'
+            },
+            {
+              id: 'dt2', emoji: '👣', title: 'Le Impronte Misteriose',
+              intro: 'Tracce misteriose portano verso una stanza segreta. Seguile!',
+              objects: ['Fogli di carta', 'Crayons o matite'],
+              steps: [
+                'Disegna 6 impronte su pezzi di carta (forme di piede o zampa).',
+                'Posizionali come un sentiero che porta da un punto A a un punto B della stanza.',
+                'Segui il sentiero fermandoti su ogni impronta per 2 secondi.',
+                'Alla fine del percorso, nascondi un "indizio finale": un bigliettino con un disegno.'
+              ],
+              completion: 'Il sentiero misterioso è stato seguito! L\'indizio è tuo.'
+            },
+            {
+              id: 'dt3', emoji: '📋', title: 'Il Sospetto Principale',
+              intro: 'Tre sospetti sono stati interrogati. Devi scoprire chi è colpevole!',
+              objects: ['3 peluche o giocattoli', 'Fogli di carta', 'Crayons'],
+              steps: [
+                'Scegli 3 giocattoli: sono i tuoi sospetti. Dai loro un nome.',
+                'Inventa una storia semplice: cosa è sparito e chi potrebbe averlo preso.',
+                'Interroga ogni sospetto: inventa le loro risposte ad alta voce.',
+                'Scegli il colpevole e spiega le tue ragioni come un vero detective!'
+              ],
+              completion: 'Il caso è risolto! La tua deduzione era perfetta.'
+            },
+            {
+              id: 'dt4', emoji: '🔐', title: 'Il Codice Segreto',
+              intro: 'Il criminale ha lasciato un messaggio in codice. Decifralo!',
+              objects: ['Fogli di carta', 'Crayons'],
+              steps: [
+                'Crea il tuo alfabeto segreto: ogni lettera diventa un simbolo (es. A=★, B=●).',
+                'Scrivi un messaggio segreto di 3-5 parole usando il tuo codice.',
+                'Lascia il messaggio in bella vista nella stanza.',
+                'Risolvi tu stesso il codice usando il "manuale di decifratura" che hai creato!'
+              ],
+              completion: 'Codice decifrato! Sei il detective più intelligente della città.'
+            },
+            {
+              id: 'dt5', emoji: '🗺️', title: 'La Mappa del Crimine',
+              intro: 'La scena del crimine deve essere mappata! Ogni dettaglio conta.',
+              objects: ['Foglio grande', 'Crayons', 'Oggetti come segnali'],
+              steps: [
+                'Disegna la piantina della stanza su un foglio grande.',
+                'Segna con X le posizioni di 4 oggetti importanti della stanza.',
+                'Inventa perché quegli oggetti sono "prove" e scrivilo vicino ad ogni X.',
+                'Presenta la tua mappa come farebbe un detective in una conferenza!'
+              ],
+              completion: 'La scena del crimine è documentata! Ottimo lavoro, detective.'
+            },
+            {
+              id: 'dt6', emoji: '🧩', title: 'Il Puzzle degli Indizi',
+              intro: 'Gli indizi sono sparsi. Solo mettendoli insieme riveleranno la verità!',
+              objects: ['Foglio di carta', 'Crayons', 'Oggetti vari'],
+              steps: [
+                'Scrivi o disegna 4 indizi su pezzi di carta separati.',
+                'Nascondili in punti diversi della stanza.',
+                'Cercali tutti e disponili in ordine su un tavolo o sul pavimento.',
+                'Collegali con linee immaginarie e racconta la storia che formano insieme!'
+              ],
+              completion: 'Il puzzle è risolto! La verità era nascosta tra gli indizi.'
+            },
+            {
+              id: 'dt7', emoji: '🎯', title: 'Operazione Memoria',
+              intro: 'Il detective deve ricordare tutto! Allena la tua memoria prima del caso.',
+              objects: ['10 oggetti qualsiasi', 'Coperta'],
+              steps: [
+                'Disponi 10 oggetti in fila e guardali bene per 30 secondi.',
+                'Coprili con una coperta.',
+                'Cerca di ricordare e nominare tutti i 10 oggetti ad alta voce.',
+                'Scopri e conta quanti ne hai ricordati: 7+ sei un maestro detective!'
+              ],
+              completion: 'Memoria allenata! Nessun dettaglio ti sfuggirà mai più.'
+            }
+          ],
+          specialMissions: [
+            {
+              id: 'dt_s1', emoji: '🏆', title: 'Il Grande Caso Irrisolto',
+              intro: 'Il caso più difficile dell\'anno! Tutti i detective ci hanno rinunciato. Ce la fai tu?',
+              objects: ['Foglio grande', 'Crayons', 'Tutti gli oggetti disponibili'],
+              steps: [
+                'Crea un "ufficio investigativo" con un tavolo e i tuoi materiali.',
+                'Inventa il caso: cosa è sparito, dove, chi era presente.',
+                'Crea 5 prove fisiche usando oggetti della stanza.',
+                'Risolvi il caso e presenta la tua conclusione come al TG della sera!'
+              ],
+              completion: 'Caso chiuso! Sei il detective numero uno del paese.'
+            },
+            {
+              id: 'dt_s2', emoji: '🌃', title: 'Missione Notturna',
+              intro: 'L\'operazione più segreta richiede silenzio e concentrazione assoluta.',
+              objects: ['Torcia', 'Fogli di carta', 'Oggetti vari'],
+              steps: [
+                'Abbassa le luci e usa solo la torcia.',
+                'Nascondi 3 "file segreti" (pezzi di carta con disegni) nella stanza.',
+                'Cerca i file usando solo la luce della torcia.',
+                'Riporta tutti i file alla base e dichiarate che la missione è compiuta!'
+              ],
+              completion: 'Missione notturna completata con successo! Sei una leggenda.'
+            }
+          ]
+        }
+      };
+
+      const XP_PER_MISSION = 50;
+      const XP_PER_SPECIAL = 100;
+      const XP_PER_LEVEL = 100;
+      const MAX_DAILY_MISSIONS = 3;
+
+      // ===== STATE =====
+      let state = {};
+
+      function defaultState() {
+        return {
+          xp: 0,
+          level: 1,
+          audioOn: true,
+          lastDate: null,
+          currentWorld: null,
+          todayMissions: [],
+          todaySpecialDone: false,
+          completedMissions: { spazio: [], magia: [], detective: [] },
+          diary: []
+        };
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem('sparkplay_v2');
+          if (!raw) { state = defaultState(); return; }
+          const saved = JSON.parse(raw);
+          state = Object.assign(defaultState(), saved);
+          if (!state.completedMissions) state.completedMissions = { spazio: [], magia: [], detective: [] };
+          if (!state.diary) state.diary = [];
+          checkDateReset();
+        } catch (e) {
+          state = defaultState();
+        }
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem('sparkplay_v2', JSON.stringify(state));
+        } catch (e) {}
+      }
+
+      function todayString() {
+        const d = new Date();
+        return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+      }
+
+      function checkDateReset() {
+        const today = todayString();
+        if (state.lastDate !== today) {
+          state.lastDate = today;
+          state.todayMissions = [];
+          state.todaySpecialDone = false;
+          saveState();
+        }
+      }
+
+      // ===== STARS =====
+      function createStars() {
+        const container = document.getElementById('stars');
+        for (let i = 0; i < 60; i++) {
+          const s = document.createElement('div');
+          s.className = 'star-dot';
+          const size = Math.random() * 3 + 1;
+          s.style.cssText = `
+            width:${size}px;height:${size}px;
+            left:${Math.random()*100}%;top:${Math.random()*100}%;
+            --op:${Math.random()*0.7+0.1};
+            --dur:${Math.random()*4+2}s;
+            --delay:-${Math.random()*5}s;
+          `;
+          container.appendChild(s);
+        }
+      }
+
+      // ===== AUDIO =====
+      let speechSynth = window.speechSynthesis;
+      let speaking = false;
+
+      function toggleAudio() {
+        state.audioOn = !state.audioOn;
+        saveState();
+        updateAudioBtn();
+        if (!state.audioOn) stopSpeech();
+      }
+
+      function updateAudioBtn() {
+        document.querySelectorAll('.audio-btn, #audio-btn, #audio-btn2').forEach(btn => {
+          btn.textContent = state.audioOn ? '🔊' : '🔇';
+        });
+      }
+
+      function stopSpeech() {
+        if (speechSynth) speechSynth.cancel();
+        speaking = false;
+      }
+
+      function speak(text) {
+        if (!state.audioOn || !speechSynth) return;
+        stopSpeech();
+        const clean = text.replace(/[\u{1F000}-\u{FFFF}]/gu, '').replace(/[✨🌟⭐🚀🔍🪄]/g, '').trim();
+        if (!clean) return;
+        const utt = new SpeechSynthesisUtterance(clean);
+        utt.lang = 'it-IT';
+        utt.rate = 0.82;
+        utt.pitch = 1.05;
+        utt.volume = 0.95;
+        utt.onstart = () => { speaking = true; };
+        utt.onend = utt.onerror = () => { speaking = false; };
+        speechSynth.speak(utt);
+      }
+
+      // ===== NAVIGATION =====
+      let currentScreen = 'welcome';
+
+      function goTo(screen) {
+        stopSpeech();
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const el = document.getElementById('screen-' + screen);
+        if (el) {
+          el.classList.add('active');
+          el.scrollTop = 0;
+          currentScreen = screen;
+        }
+        updateAudioBtn();
+        if (screen === 'worlds') renderWorlds();
+        if (screen === 'missions') renderMissions();
+        if (screen === 'diary') renderDiary();
+      }
+
+      // ===== WORLDS =====
+      function renderWorlds() {
+        updateXpUI();
+        ['spazio', 'magia', 'detective'].forEach(wid => {
+          const el = document.getElementById('lock-' + wid);
+          if (!el) return;
+          const isLocked = isWorldLockedToday(wid);
+          el.textContent = isLocked ? '✓ Completato oggi' : '';
+        });
+      }
+
+      function isWorldLockedToday(worldId) {
+        if (state.todayMissions.length >= MAX_DAILY_MISSIONS && state.currentWorld === worldId) return true;
+        return false;
+      }
+
+      function selectWorld(worldId) {
+        if (state.currentWorld && state.currentWorld !== worldId && state.todayMissions.length > 0) {
+          const ok = confirm('Hai già iniziato con un altro mondo oggi. Cambiare ora azzererà i progressi di oggi. Continuare?');
+          if (!ok) return;
+          state.todayMissions = [];
+          state.todaySpecialDone = false;
+        }
+        state.currentWorld = worldId;
+        saveState();
+
+        if (state.todayMissions.length >= MAX_DAILY_MISSIONS) {
+          goTo('session');
+          renderSession();
+          return;
         }
 
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
-        ctx.globalAlpha = p.alpha;
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-        ctx.restore();
+        goTo('missions');
+      }
+
+      // ===== MISSIONS =====
+      function getAvailableMissions(worldId) {
+        const world = WORLDS[worldId];
+        const all = world.missions.map(m => m.id);
+        const done = state.completedMissions[worldId] || [];
+        let available = all.filter(id => !done.includes(id));
+        if (available.length === 0) {
+          state.completedMissions[worldId] = [];
+          saveState();
+          available = all;
+        }
+        return available;
+      }
+
+      function getTodayMissions(worldId) {
+        const world = WORLDS[worldId];
+        const allMissions = world.missions;
+        const todayIds = state.todayMissions;
+
+        if (todayIds.length === 0) {
+          const available = getAvailableMissions(worldId);
+          const picked = shuffleArr([...available]).slice(0, MAX_DAILY_MISSIONS);
+          return picked.map(id => allMissions.find(m => m.id === id)).filter(Boolean);
+        }
+
+        return todayIds.map(id => allMissions.find(m => m.id === id)).filter(Boolean);
+      }
+
+      function getSpecialMission(worldId) {
+        const world = WORLDS[worldId];
+        const sms = world.specialMissions;
+        return sms[Math.floor(Math.random() * sms.length)];
+      }
+
+      function shuffleArr(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      function renderMissions() {
+        const world = WORLDS[state.currentWorld];
+        if (!world) { goTo('worlds'); return; }
+
+        document.getElementById('missions-title').textContent = world.name;
+
+        const missions = getTodayMissions(state.currentWorld);
+        if (state.todayMissions.length === 0) {
+          state.todayMissions = missions.map(m => m.id);
+          saveState();
+        }
+
+        const list = document.getElementById('mission-list');
+        list.innerHTML = '';
+
+        const doneTodayIds = state.todayMissions.filter((id, idx) => {
+          return state.completedMissions[state.currentWorld]?.includes(id);
+        });
+
+        const dots = document.getElementById('progress-dots');
+        dots.innerHTML = '';
+        missions.forEach((m, i) => {
+          const isDone = state.completedMissions[state.currentWorld]?.includes(m.id);
+          const dot = document.createElement('div');
+          dot.className = 'progress-dot' + (isDone ? ' done' : (i === doneTodayIds.length ? ' active' : ''));
+          dots.appendChild(dot);
+        });
+
+        const completedToday = missions.filter(m => state.completedMissions[state.currentWorld]?.includes(m.id)).length;
+
+        missions.forEach((mission, i) => {
+          const isDone = state.completedMissions[state.currentWorld]?.includes(mission.id);
+          const isUnlocked = !isDone && i <= completedToday;
+          const item = document.createElement('div');
+          item.className = 'mission-item' + (isDone ? ' done' : '');
+          item.innerHTML = `
+            <div class="mission-num ${isDone ? 'done' : ''}">${isDone ? '✓' : (i+1)}</div>
+            <div class="mission-info">
+              <h3>${mission.emoji} ${mission.title}</h3>
+              <p>${isDone ? 'Completata!' : mission.intro.substring(0,60)+'...'}</p>
+            </div>
+            <div class="arr">${isDone ? '✓' : (isUnlocked ? '›' : '🔒')}</div>
+          `;
+          if (!isDone && isUnlocked) {
+            item.onclick = () => openMission(mission);
+          }
+          list.appendChild(item);
+        });
+
+        const specialSection = document.getElementById('special-section');
+        const specialBtn = document.getElementById('special-btn');
+        const specialTitle = document.getElementById('special-title');
+        const specialMission = getSpecialMission(state.currentWorld);
+
+        if (completedToday >= MAX_DAILY_MISSIONS) {
+          specialSection.style.display = 'block';
+          specialTitle.textContent = specialMission.emoji + ' ' + specialMission.title;
+          if (state.todaySpecialDone) {
+            specialBtn.style.display = 'none';
+            specialSection.querySelector('.special-sub').textContent = '✓ Completata oggi!';
+          } else {
+            specialBtn.style.display = '';
+            specialSection.querySelector('.special-sub').textContent = 'Chiedi ad un genitore di sbloccarla';
+          }
+        } else {
+          specialSection.style.display = 'none';
+        }
+      }
+
+      // ===== OPEN MISSION =====
+      let activeMission = null;
+      let completionGuard = false;
+
+      function openMission(mission, isSpecial = false) {
+        activeMission = mission;
+        activeMission._isSpecial = isSpecial;
+        completionGuard = false;
+
+        document.getElementById('mission-world-badge').textContent = WORLDS[state.currentWorld].name;
+        document.getElementById('mission-emoji').textContent = mission.emoji;
+        document.getElementById('mission-title').textContent = mission.title;
+        document.getElementById('mission-intro').textContent = mission.intro;
+
+        const objList = document.getElementById('objects-list');
+        objList.innerHTML = '';
+        (mission.objects || []).forEach(obj => {
+          const tag = document.createElement('div');
+          tag.className = 'object-tag';
+          tag.textContent = obj;
+          objList.appendChild(tag);
+        });
+
+        const stepsList = document.getElementById('steps-list');
+        stepsList.innerHTML = '';
+        (mission.steps || []).forEach((step, i) => {
+          const row = document.createElement('div');
+          row.className = 'step-row';
+          row.innerHTML = `<div class="step-num">${i+1}</div><div class="step-text">${step}</div>`;
+          stepsList.appendChild(row);
+        });
+
+        goTo('mission');
+        const textToSpeak = `${mission.title}. ${mission.intro}. Passo uno: ${mission.steps[0]}`;
+        setTimeout(() => speak(textToSpeak), 600);
+      }
+
+      // ===== COMPLETE MISSION =====
+      function completeMission() {
+        if (completionGuard) return;
+        completionGuard = true;
+
+        const mission = activeMission;
+        const isSpecial = mission._isSpecial;
+
+        if (isSpecial) {
+          state.todaySpecialDone = true;
+          if (!state.completedMissions[state.currentWorld]) state.completedMissions[state.currentWorld] = [];
+          addXP(XP_PER_SPECIAL);
+          saveState();
+          addDiaryEntry(mission, true);
+          showReward(mission, true);
+        } else {
+          if (!state.completedMissions[state.currentWorld]) state.completedMissions[state.currentWorld] = [];
+          if (!state.completedMissions[state.currentWorld].includes(mission.id)) {
+            state.completedMissions[state.currentWorld].push(mission.id);
+          }
+          addXP(XP_PER_MISSION);
+          saveState();
+
+          const completedToday = state.todayMissions.filter(id =>
+            state.completedMissions[state.currentWorld]?.includes(id)
+          ).length;
+
+          showReward(mission, false, completedToday >= MAX_DAILY_MISSIONS);
+        }
+      }
+
+      function addXP(amount) {
+        state.xp += amount;
+        const newLevel = Math.floor(state.xp / XP_PER_LEVEL) + 1;
+        state.level = newLevel;
+        updateXpUI();
+      }
+
+      function updateXpUI() {
+        const xpInLevel = state.xp % XP_PER_LEVEL;
+        const pct = (xpInLevel / XP_PER_LEVEL) * 100;
+        const bar = document.getElementById('xp-bar');
+        if (bar) bar.style.width = pct + '%';
+        const lvlEl = document.getElementById('level-num');
+        if (lvlEl) lvlEl.textContent = state.level;
+        const xpEl = document.getElementById('xp-num');
+        if (xpEl) xpEl.textContent = state.xp;
+        const nextEl = document.getElementById('xp-next');
+        if (nextEl) nextEl.textContent = state.level * XP_PER_LEVEL;
+      }
+
+      // ===== REWARDS =====
+      let rewardCallback = null;
+
+      function showReward(mission, isSpecial, sessionDone = false) {
+        stopSpeech();
+
+        const overlay = document.getElementById('reward-overlay');
+        const trophy = document.getElementById('reward-trophy');
+        const title = document.getElementById('reward-title');
+        const msg = document.getElementById('reward-msg');
+        const xpEl = document.getElementById('reward-xp');
+
+        if (isSpecial) {
+          trophy.textContent = '🌟';
+          title.textContent = 'Missione Speciale!';
+          msg.textContent = `"${mission.title}" — Sei incredibile!`;
+          xpEl.textContent = `+${XP_PER_SPECIAL} XP`;
+          rewardCallback = () => goToFinal(mission);
+        } else if (sessionDone) {
+          trophy.textContent = '🏆';
+          title.textContent = 'Tre Missioni Completate!';
+          msg.textContent = `"${mission.title}" — Giornata straordinaria!`;
+          xpEl.textContent = `+${XP_PER_MISSION} XP`;
+          rewardCallback = () => { renderSession(); goTo('session'); };
+        } else {
+          trophy.textContent = '⭐';
+          title.textContent = 'Missione Completata!';
+          msg.textContent = `"${mission.title}" — Fantastico!`;
+          xpEl.textContent = `+${XP_PER_MISSION} XP`;
+          rewardCallback = () => goTo('missions');
+        }
+
+        createSparkles();
+        overlay.style.display = 'flex';
+        speak(title.textContent + '. ' + msg.textContent);
+      }
+
+      function closeReward() {
+        document.getElementById('reward-overlay').style.display = 'none';
+        if (rewardCallback) { rewardCallback(); rewardCallback = null; }
+      }
+
+      function createSparkles() {
+        const container = document.getElementById('sparkles');
+        container.innerHTML = '';
+        for (let i = 0; i < 18; i++) {
+          const s = document.createElement('div');
+          s.className = 'sparkle-dot';
+          s.style.cssText = `
+            left:${Math.random()*100}%;
+            top:${Math.random()*100}%;
+            background:${['#ffd700','#fff','#b06afc','#ff9900'][Math.floor(Math.random()*4)]};
+            animation-delay:${Math.random()*0.6}s;
+            width:${Math.random()*12+4}px;
+            height:${Math.random()*12+4}px;
+          `;
+          container.appendChild(s);
+          setTimeout(() => s.remove(), 1200);
+        }
+      }
+
+      // ===== SESSION =====
+      function renderSession() {
+        const world = WORLDS[state.currentWorld];
+        document.getElementById('session-badge').textContent = world.badge;
+        document.getElementById('session-level').textContent = state.level;
+
+        const sessionMissions = state.todayMissions
+          .map(id => world.missions.find(m => m.id === id))
+          .filter(Boolean);
+
+        const sessionEl = document.getElementById('session-missions');
+        sessionEl.innerHTML = '';
+        sessionMissions.forEach(m => {
+          const chip = document.createElement('div');
+          chip.className = 'session-mission-chip';
+          chip.innerHTML = `<span>${m.emoji}</span><span>${m.title}</span><span style="margin-left:auto;color:var(--gold)">✓</span>`;
+          sessionEl.appendChild(chip);
+        });
+
+        const totalXpToday = MAX_DAILY_MISSIONS * XP_PER_MISSION;
+        document.getElementById('session-xp').textContent = `+${totalXpToday} XP guadagnati oggi`;
+        addDiaryEntry(null, false, true);
+      }
+
+      function addDiaryEntry(specialMission, isSpecialOnly = false, isSessionSave = false) {
+        if (!state.currentWorld) return;
+        const world = WORLDS[state.currentWorld];
+        const today = todayString();
+
+        const existing = state.diary.find(e => e.date === today && e.world === state.currentWorld);
+        if (existing) {
+          if (specialMission && !existing.specialMission) {
+            existing.specialMission = specialMission.title;
+          }
+          if (isSessionSave) {
+            existing.missions = state.todayMissions
+              .map(id => world.missions.find(m => m.id === id)?.title)
+              .filter(Boolean);
+            existing.xp = state.xp;
+            existing.level = state.level;
+          }
+          saveState();
+          return;
+        }
+
+        const entry = {
+          date: today,
+          world: state.currentWorld,
+          worldIcon: world.icon,
+          worldName: world.name,
+          missions: state.todayMissions
+            .map(id => world.missions.find(m => m.id === id)?.title)
+            .filter(Boolean),
+          specialMission: specialMission ? specialMission.title : null,
+          xp: state.xp,
+          level: state.level
+        };
+        state.diary.unshift(entry);
+        if (state.diary.length > 30) state.diary = state.diary.slice(0, 30);
+        saveState();
+      }
+
+      // ===== FINAL SCREEN =====
+      function goToFinal(mission) {
+        const world = WORLDS[state.currentWorld];
+        document.getElementById('final-world-icon').textContent = world.icon;
+        document.getElementById('final-mission-name').textContent = mission.title;
+        document.getElementById('final-xp').textContent = `+${XP_PER_SPECIAL} XP — Livello ${state.level}`;
+        goTo('final');
+      }
+
+      // ===== PARENT GATE =====
+      let gateA, gateB, gateAnswer;
+
+      function trySpecial() {
+        const completedToday = state.todayMissions.filter(id =>
+          state.completedMissions[state.currentWorld]?.includes(id)
+        ).length;
+
+        if (completedToday < MAX_DAILY_MISSIONS) {
+          alert('Completa prima le 3 missioni del giorno!');
+          return;
+        }
+
+        if (state.todaySpecialDone) {
+          alert('La missione speciale è già stata completata oggi!');
+          return;
+        }
+
+        gateA = Math.floor(Math.random() * 15) + 10;
+        gateB = Math.floor(Math.random() * 15) + 10;
+        gateAnswer = gateA + gateB;
+        document.getElementById('gate-math').textContent = `${gateA} + ${gateB} = ?`;
+        document.getElementById('gate-input').value = '';
+        document.getElementById('gate-error').textContent = '';
+        document.getElementById('parent-gate').style.display = 'flex';
+      }
+
+      function checkGate() {
+        const val = parseInt(document.getElementById('gate-input').value);
+        if (val === gateAnswer) {
+          closeGate();
+          const special = getSpecialMission(state.currentWorld);
+          openMission(special, true);
+        } else {
+          document.getElementById('gate-error').textContent = 'Risposta errata. Riprova!';
+          document.getElementById('gate-input').value = '';
+        }
+      }
+
+      function closeGate() {
+        document.getElementById('parent-gate').style.display = 'none';
+      }
+
+      document.getElementById('gate-input').addEventListener('keydown', e => {
+        if (e.key === 'Enter') checkGate();
       });
 
-      if (now - start < duration) {
-        requestAnimationFrame(frame);
-      } else {
-        ctx.clearRect(0, 0, W, H);
+      // ===== DIARY =====
+      function renderDiary() {
+        const container = document.getElementById('diary-list');
+        container.innerHTML = '';
+
+        if (!state.diary || state.diary.length === 0) {
+          container.innerHTML = '<div class="diary-empty">Il tuo diario è ancora vuoto.<br>Completa la prima missione per iniziare!</div>';
+          return;
+        }
+
+        state.diary.forEach(entry => {
+          const card = document.createElement('div');
+          card.className = 'diary-entry';
+
+          const dateStr = entry.date.split('-').reverse().join('/');
+          const missions = (entry.missions || []).map(m =>
+            `<div class="diary-mission-row"><span>⭐</span><span>${m}</span></div>`
+          ).join('');
+          const special = entry.specialMission
+            ? `<div class="diary-mission-row"><span>🌟</span><span><strong>${entry.specialMission}</strong> (Speciale)</span></div>`
+            : '';
+
+          card.innerHTML = `
+            <div class="diary-entry-header">
+              <div class="diary-world-icon">${entry.worldIcon || '✨'}</div>
+              <div class="diary-entry-meta">
+                <div class="diary-world-name">${entry.worldName || entry.world}</div>
+                <div class="diary-date">${dateStr}</div>
+              </div>
+              <div class="diary-xp">Lv. ${entry.level} · ${entry.xp} XP</div>
+            </div>
+            <div class="diary-missions">${missions}${special}</div>
+          `;
+          container.appendChild(card);
+        });
       }
-    }
 
-    requestAnimationFrame(frame);
-  }
+      // ===== DEV RESET =====
+      function devReset() {
+        if (confirm('Resettare tutto? (Solo per test)')) {
+          localStorage.removeItem('sparkplay_v2');
+          location.reload();
+        }
+      }
 
-  function bind() {
-    el.startBtn.addEventListener("click", () => {
-      pulseButton(el.startBtn);
-      setTimeout(() => setScreen("world"), 70);
-    });
-    el.backHomeBtn.addEventListener("click", backHome);
-    el.spacePortalBtn.addEventListener("click", startAdventure);
-    el.exitMissionBtn.addEventListener("click", exitMission);
-    el.prevBtn.addEventListener("click", prevStep);
-    el.nextBtn.addEventListener("click", nextStep);
-    el.homeFromEndBtn.addEventListener("click", backHome);
-    el.diaryBtn.addEventListener("click", openDiary);
-    el.closeDiaryBtn.addEventListener("click", backHome);
-    window.addEventListener("resize", resizeCanvas);
-  }
+      // ===== INIT =====
+      function init() {
+        createStars();
+        loadState();
+        updateXpUI();
+        updateAudioBtn();
 
-  function init() {
-    createStars();
-    buildWorldIcon();
-    buildAlertIcon();
-    buildRewardIcon();
-    bind();
-    resizeCanvas();
-    setScreen("home");
-  }
+        const today = todayString();
+        if (state.lastDate === today && state.todaySpecialDone && state.todayMissions.length >= MAX_DAILY_MISSIONS) {
+          goTo('lock');
+          return;
+        }
 
-  init();
-})();
-</script>
-</body>
+        goTo('welcome');
+        speak('Benvenuto in SparkPlay! Inizia la tua avventura.');
+      }
+
+      window.addEventListener('load', init);
+    </script>
+  </body>
 </html>
