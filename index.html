@@ -2,633 +2,1022 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>SparkPlay ✨</title>
+<title>SparkPlay</title>
 <style>
 :root{
---bg:#050714;
---purple:#7c2ff7;
---purple-mid:#9c4dfc;
---purple-light:#c084fc;
---gold:#ffd700;
---gold-warm:#ffb300;
---gold-light:#fff0a0;
---teal:#00d4aa;
---white:#f0f4ff;
---card:rgba(255,255,255,0.06);
---card-border:rgba(255,255,255,0.12);
---r:28px;
---r-sm:18px;
---r-xs:12px;
---gp:0 10px 40px rgba(124,47,247,0.4);
---gg:0 10px 40px rgba(255,180,0,0.3);
+  --bg-1:#060816;
+  --bg-2:#0f1430;
+  --bg-3:#1d0f3f;
+  --card:rgba(255,255,255,.08);
+  --card-2:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.12);
+  --text:#eef2ff;
+  --muted:rgba(238,242,255,.62);
+  --purple:#7c3aed;
+  --purple-2:#a855f7;
+  --purple-3:#c084fc;
+  --gold:#ffd54a;
+  --gold-2:#ffb300;
+  --cyan:#67e8f9;
+  --green:#34d399;
+  --danger:#ff6b7d;
+  --shadow:0 18px 50px rgba(0,0,0,.38);
+  --shadow-soft:0 8px 24px rgba(0,0,0,.25);
+  --r-xl:30px;
+  --r-lg:22px;
+  --r-md:16px;
+  --safe-top:env(safe-area-inset-top, 0px);
+  --safe-bottom:env(safe-area-inset-bottom, 0px);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--white);touch-action:manipulation}
-#app{width:100%;height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative}
-@media(min-width:600px){#app{max-width:460px;margin:0 auto;border-left:1px solid var(--card-border);border-right:1px solid var(--card-border)}}
-/* ── ANIMATIONS ── */
-@keyframes fadeSlide{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:0.8}}
-@keyframes goldGlow{0%,100%{box-shadow:0 0 20px rgba(255,215,0,0.3)}50%{box-shadow:0 0 40px rgba(255,215,0,0.6)}}
-@keyframes shimmer{0%{transform:translateX(-150%)}100%{transform:translateX(150%)}}
-@keyframes pop{0%{transform:scale(0.8);opacity:0}80%{transform:scale(1.05);opacity:1}100%{transform:scale(1);opacity:1}}
-@keyframes orbit{from{transform:rotate(0deg) translateX(65px) rotate(0deg)}to{transform:rotate(360deg) translateX(65px) rotate(-360deg)}}
-@keyframes slideInRight{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
-/* ── AURORA & STARS ── */
-.aurora{position:fixed;inset:0;pointer-events:none;z-index:0}
-.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.15;animation:float 20s infinite alternate}
-.blob1{width:400px;height:400px;background:radial-gradient(var(--purple),transparent);top:-100px;left:-100px}
-.blob2{width:350px;height:350px;background:radial-gradient(var(--teal),transparent);bottom:-50px;right:-50px;animation-delay:-5s}
-.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
-.star{position:absolute;background:#fff;border-radius:50%;opacity:0}
-/* ── SCREENS ── */
-.screen{min-height:100vh;display:none;flex-direction:column;padding:24px 20px 40px;position:relative;z-index:1;background:linear-gradient(180deg, rgba(5,7,20,0) 0%, rgba(10,12,40,0.8) 100%)}
-.screen.active{display:flex;animation:fadeSlide 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)}
-/* ── UI COMPONENTS ── */
-.top-bar{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.xp-group{display:flex;flex-direction:column;gap:6px}
-.xp-header{font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
-.xp-bar-bg{width:140px;height:10px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.05)}
-.xp-bar-fill{height:100%;background:linear-gradient(90deg, #ffd700, #ff9800);border-radius:10px;width:0%;transition:width 1s cubic-bezier(0.34, 1.56, 0.64, 1);position:relative}
-.xp-bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);animation:shimmer 2s infinite}
-.btn-icon{width:44px;height:44px;border-radius:50%;background:var(--card);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;font-size:18px;color:white;cursor:pointer;backdrop-filter:blur(10px)}
-.btn-icon:active{transform:scale(0.9)}
-.btn-primary{background:linear-gradient(135deg, var(--purple-mid), var(--purple));color:white;border:none;padding:18px;border-radius:var(--r-sm);font-size:18px;font-weight:800;box-shadow:var(--gp);cursor:pointer;transition:all 0.2s;width:100%;display:flex;align-items:center;justify-content:center;gap:10px}
-.btn-primary:active{transform:scale(0.96);filter:brightness(1.1)}
-.btn-gold{background:linear-gradient(135deg, #ffcc00, #ff9500);color:#201000;border:none;padding:18px;border-radius:var(--r-sm);font-size:18px;font-weight:900;box-shadow:var(--gg);cursor:pointer;transition:all 0.2s;width:100%;display:flex;align-items:center;justify-content:center;gap:10px}
-.btn-gold:active{transform:scale(0.96)}
-.btn-ghost{background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15);padding:16px;border-radius:var(--r-sm);font-size:16px;font-weight:700;cursor:pointer;width:100%}
-/* ── WELCOME SCREEN ── */
-#screen-welcome{justify-content:center;text-align:center}
-.logo-container{position:relative;width:160px;height:160px;margin:0 auto 30px;display:flex;align-items:center;justify-content:center}
-.logo-main{width:110px;height:110px;background:linear-gradient(135deg, #9c4dfc, #6a1de8);border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:60px;box-shadow:0 20px 50px rgba(106,29,232,0.6);z-index:2;animation:float 4s infinite ease-in-out}
-.logo-orbit-ring{position:absolute;width:160px;height:160px;border:2px solid rgba(255,255,255,0.1);border-radius:50%;animation:pulse 3s infinite}
-.logo-dot{position:absolute;width:12px;height:12px;background:var(--gold);border-radius:50%;box-shadow:0 0 15px var(--gold);animation:orbit 4s infinite linear}
-.app-title{font-size:48px;font-weight:900;background:linear-gradient(to bottom, #fff, #b0b0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-.app-subtitle{font-size:16px;color:rgba(255,255,255,0.5);margin-bottom:40px}
-/* ── WORLD SELECTION ── */
-.section-title{font-size:28px;font-weight:900;margin-bottom:8px}
-.section-desc{font-size:15px;color:rgba(255,255,255,0.5);margin-bottom:24px}
-.world-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--r);padding:24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;position:relative;overflow:hidden;transition:all 0.3s}
-.world-card:active{transform:scale(0.97);background:rgba(255,255,255,0.12)}
-.world-icon{font-size:48px;width:80px;height:80px;background:rgba(255,255,255,0.05);border-radius:20px;display:flex;align-items:center;justify-content:center}
-.world-info h3{font-size:20px;font-weight:800;margin-bottom:4px}
-.world-info p{font-size:13px;color:rgba(255,255,255,0.5)}
-.world-progress{margin-top:10px;font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase}
-/* ── MISSION LIST ── */
-.mission-item{background:var(--card);border:1px solid var(--card-border);border-radius:var(--r-sm);padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:15px;transition:0.2s}
-.mission-item.locked{opacity:0.4;filter:grayscale(1)}
-.mission-item.done{border-color:rgba(0,212,170,0.3);background:rgba(0,212,170,0.05)}
-.mission-number{width:36px;height:36px;border-radius:10px;background:var(--purple);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px}
-.mission-item.done .mission-number{background:var(--teal)}
-.mission-item-content{flex:1}
-.mission-item-content h4{font-size:16px;margin-bottom:2px}
-.mission-item-content p{font-size:12px;color:rgba(255,255,255,0.4)}
-.special-mission-box{background:linear-gradient(135deg, #1a0b3a, #31136b);border:2px solid var(--gold);border-radius:var(--r);padding:24px;margin-top:20px;text-align:center;position:relative;animation:goldGlow 3s infinite}
-.special-tag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:black;font-size:10px;font-weight:900;padding:4px 12px;border-radius:20px;text-transform:uppercase}
-/* ── MISSION DETAIL (The "Adventure" Screen) ── */
-.adventure-header{text-align:center;margin-bottom:30px;animation:slideInRight 0.5s ease-out}
-.adventure-badge{display:inline-block;padding:6px 14px;background:rgba(255,255,255,0.1);border-radius:20px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:15px;color:var(--purple-light)}
-.adventure-icon-wrap{width:120px;height:120px;background:radial-gradient(circle, rgba(156,77,252,0.2), transparent);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:70px;position:relative}
-.adventure-icon-wrap::after{content:'';position:absolute;inset:0;border:1px dashed rgba(255,255,255,0.2);border-radius:50%;animation:orbit 10s infinite linear}
-.adventure-title{font-size:32px;font-weight:900;margin-bottom:10px;line-height:1.1}
-.adventure-intro{font-size:16px;color:rgba(255,255,255,0.7);line-height:1.5;max-width:320px;margin:0 auto}
-.adventure-card{background:rgba(255,255,255,0.05);border-radius:var(--r);padding:24px;margin-bottom:20px;border:1px solid rgba(255,255,255,0.08)}
-.card-label{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:900;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-.card-label span{width:20px;height:2px;background:var(--gold);border-radius:2px}
-.inventory-list{display:flex;flex-wrap:wrap;gap:10px}
-.inventory-item{background:rgba(255,255,255,0.08);padding:8px 16px;border-radius:12px;font-size:14px;font-weight:600;border:1px solid rgba(255,255,255,0.1)}
-.steps-list{display:flex;flex-direction:column;gap:16px}
-.step-item{display:flex;gap:15px;align-items:flex-start}
-.step-bullet{width:28px;height:28px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;margin-top:2px;box-shadow:0 4px 10px rgba(124,47,247,0.3)}
-.step-text{font-size:15px;line-height:1.5;color:rgba(255,255,255,0.9)}
-/* ── REWARD OVERLAY ── */
-.reward-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px)}
-.reward-popup{background:linear-gradient(160deg, #251050, #0a0c20);border:2px solid var(--gold);border-radius:var(--r);padding:40px 24px;text-align:center;width:100%;max-width:340px;animation:pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);position:relative;overflow:hidden}
-.reward-popup::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(transparent, rgba(255,215,0,0.1), transparent);animation:orbit 10s infinite linear}
-.reward-icon{font-size:80px;margin-bottom:20px;display:block;animation:float 3s infinite}
-.reward-title{font-size:28px;font-weight:900;color:var(--gold);margin-bottom:10px}
-.reward-xp-badge{display:inline-block;padding:10px 24px;background:rgba(255,215,0,0.15);border:1px solid var(--gold);border-radius:30px;font-size:24px;font-weight:900;color:var(--gold);margin-bottom:24px;box-shadow:0 0 20px rgba(255,215,0,0.2)}
-/* ── DIARY (Album Style) ── */
-.diary-grid{display:grid;grid-template-columns:1fr;gap:16px}
-.diary-entry{background:var(--card);border:1px solid var(--card-border);border-radius:var(--r-sm);overflow:hidden;position:relative}
-.diary-entry::after{content:'';position:absolute;top:0;right:0;width:60px;height:60px;background:linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.05) 50%);pointer-events:none}
-.diary-header{padding:16px;background:rgba(255,255,255,0.03);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--card-border)}
-.diary-date{font-size:12px;font-weight:700;color:rgba(255,255,255,0.4)}
-.diary-world-tag{font-size:10px;font-weight:900;padding:4px 10px;border-radius:10px;text-transform:uppercase}
-.diary-content{padding:16px}
-.diary-mission-line{font-size:14px;margin-bottom:6px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.8)}
-.diary-mission-line.special{color:var(--gold);font-weight:700}
-/* ── PARENT GATE ── */
-.parent-gate{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
-.gate-card{background:#1a1a2e;border:1px solid rgba(255,255,255,0.2);border-radius:var(--r);padding:30px;width:100%;max-width:320px;text-align:center}
-.gate-question{font-size:32px;font-weight:900;margin:20px 0;color:var(--gold)}
-.gate-input{width:100%;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);padding:15px;border-radius:var(--r-xs);color:white;font-size:24px;text-align:center;margin-bottom:20px;outline:none}
-.gate-input:focus{border-color:var(--purple-light)}
-/* ── UTILS ── */
-.mt-auto{margin-top:auto}
-.text-center{text-align:center}
-.hidden{display:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:var(--font);
+  color:var(--text);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(124,58,237,.28), transparent 28%),
+    radial-gradient(circle at 100% 80%, rgba(255,181,71,.16), transparent 30%),
+    linear-gradient(180deg,var(--bg-2),var(--bg-1) 58%, #04050f 100%);
+}
+body{position:relative}
+button,input{font:inherit}
+#app{
+  position:relative;
+  width:100%;
+  height:100%;
+  max-width:520px;
+  margin:0 auto;
+  overflow:hidden;
+}
+.aurora,.stars,.fx-layer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+.aurora{z-index:0;overflow:hidden}
+.blob{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(80px);
+  opacity:.18;
+  animation:drift 18s ease-in-out infinite alternate;
+}
+.blob.b1{width:340px;height:340px;left:-90px;top:-80px;background:radial-gradient(circle,#7c3aed,transparent 65%)}
+.blob.b2{width:280px;height:280px;right:-70px;bottom:0;background:radial-gradient(circle,#22d3ee,transparent 65%);animation-delay:-6s}
+.blob.b3{width:220px;height:220px;left:35%;top:40%;background:radial-gradient(circle,#ffb300,transparent 65%);opacity:.09;animation-delay:-10s}
+@keyframes drift{
+  0%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(22px,-18px,0) scale(1.08)}
+  100%{transform:translate3d(-18px,14px,0) scale(.96)}
+}
+.stars{z-index:0;overflow:hidden}
+.star{
+  position:absolute;
+  border-radius:50%;
+  background:#fff;
+  opacity:0;
+  animation:twinkle var(--d,3s) ease-in-out infinite var(--delay,0s);
+}
+@keyframes twinkle{
+  0%,100%{opacity:0}
+  50%{opacity:var(--o,.7)}
+}
+.fx-layer{z-index:25;overflow:hidden}
+.screen{
+  position:absolute;
+  inset:0;
+  display:none;
+  flex-direction:column;
+  padding:calc(18px + var(--safe-top)) 18px calc(22px + var(--safe-bottom));
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  z-index:1;
+  background:linear-gradient(180deg, rgba(7,9,24,.02), rgba(7,9,24,.22));
+}
+.screen.active{
+  display:flex;
+  animation:screenIn .34s cubic-bezier(.22,1,.36,1);
+}
+@keyframes screenIn{
+  from{opacity:0;transform:translateY(16px) scale(.985)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:18px;
+  position:relative;
+  z-index:2;
+}
+.leftpack{display:flex;align-items:center;gap:10px}
+.icon-btn{
+  width:46px;
+  height:46px;
+  border:none;
+  border-radius:16px;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:var(--shadow-soft), inset 0 0 0 1px rgba(255,255,255,.08);
+  cursor:pointer;
+  transition:transform .14s ease, background .14s ease;
+}
+.icon-btn:active{transform:scale(.9);background:rgba(255,255,255,.16)}
+.icon-btn svg{width:22px;height:22px;display:block}
+.xp-wrap{
+  min-width:155px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.xp-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.xp-head .label{color:var(--gold)}
+.xp-track{
+  width:100%;
+  height:10px;
+  background:rgba(255,255,255,.1);
+  border-radius:999px;
+  overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.xp-fill{
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  background:linear-gradient(90deg, var(--gold), var(--gold-2));
+  box-shadow:0 0 18px rgba(255,193,7,.5);
+  position:relative;
+  transition:width .8s cubic-bezier(.34,1.56,.64,1);
+}
+.xp-fill::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent);
+  animation:shine 2.2s linear infinite;
+}
+@keyframes shine{
+  from{transform:translateX(-130%)}
+  to{transform:translateX(130%)}
+}
+.hero{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:18px;
+}
+.logo-zone{
+  position:relative;
+  width:160px;
+  height:160px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:8px;
+}
+.ring{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.08);
+  animation:pulseRing 3.2s ease-in-out infinite;
+}
+.ring.r2{inset:-18px;border-width:1px;animation-delay:.8s}
+.ring.r3{inset:-38px;border-width:1px;opacity:.5;animation-delay:1.6s}
+@keyframes pulseRing{
+  0%,100%{transform:scale(1);opacity:.24}
+  50%{transform:scale(1.08);opacity:.6}
+}
+.orbit{
+  position:absolute;
+  inset:0;
+  animation:spin 6s linear infinite;
+}
+.orbit .dot{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:12px;
+  height:12px;
+  margin:-6px;
+  background:var(--gold);
+  border-radius:50%;
+  box-shadow:0 0 16px rgba(255,213,74,.95);
+  transform:translateX(72px);
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.logo-box{
+  width:122px;
+  height:122px;
+  border-radius:34px;
+  background:linear-gradient(145deg,var(--purple-2),var(--purple));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:60px;
+  box-shadow:0 18px 44px rgba(124,58,237,.55), inset 0 1px 0 rgba(255,255,255,.22);
+  animation:floatY 4s ease-in-out infinite;
+  position:relative;
+  z-index:2;
+}
+@keyframes floatY{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+.title{
+  font-size:50px;
+  line-height:1;
+  letter-spacing:-.04em;
+  font-weight:950;
+  margin:0;
+  background:linear-gradient(100deg,#fff 18%,#e9d5ff 56%,#ffd54a 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 10px rgba(255,213,74,.14));
+}
+.subtitle{
+  max-width:300px;
+  margin:0;
+  font-size:15px;
+  line-height:1.55;
+  color:var(--muted);
+}
+.actions{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.btn{
+  width:100%;
+  border:none;
+  border-radius:18px;
+  padding:18px 18px;
+  font-size:17px;
+  font-weight:850;
+  cursor:pointer;
+  transition:transform .12s ease, filter .12s ease, opacity .12s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  position:relative;
+  overflow:hidden;
+}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.45;pointer-events:none}
+.btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),transparent 55%);
+  pointer-events:none;
+}
+.btn.primary{
+  color:#fff;
+  background:linear-gradient(135deg,var(--purple-2),var(--purple));
+  box-shadow:0 16px 40px rgba(124,58,237,.36);
+}
+.btn.gold{
+  color:#140b00;
+  background:linear-gradient(135deg,#ffd54a,#ffb300);
+  box-shadow:0 14px 36px rgba(255,179,0,.34);
+}
+.btn.ghost{
+  color:#fff;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
+}
+.page-title{
+  font-size:28px;
+  line-height:1.1;
+  letter-spacing:-.03em;
+  font-weight:950;
+  margin:2px 0 6px;
+}
+.page-sub{
+  font-size:14px;
+  color:var(--muted);
+  margin:0 0 18px;
+  line-height:1.5;
+}
+.world-list,.mission-list,.diary-list{display:flex;flex-direction:column;gap:14px}
+.world-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:26px;
+  padding:20px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  border:1px solid rgba(255,255,255,.14);
+  transition:transform .16s ease, filter .16s ease;
+}
+.world-card:active{transform:scale(.98)}
+.world-card::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+}
+.world-card.spazio{background:linear-gradient(145deg,#0e1a56,#1c2f89 55%,#0b1b53)}
+.world-card.magia{background:linear-gradient(145deg,#1a0a3d,#5f1bc4 55%,#27086e)}
+.world-card.detective{background:linear-gradient(145deg,#241300,#6f4800 55%,#362000)}
+.world-icon{
+  flex:0 0 74px;
+  width:74px;
+  height:74px;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:42px;
+  background:rgba(255,255,255,.09);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+}
+.world-info{flex:1}
+.world-name{
+  font-size:22px;
+  font-weight:950;
+  margin-bottom:4px;
+  letter-spacing:.04em;
+}
+.world-desc{
+  font-size:13px;
+  color:rgba(255,255,255,.66);
+  line-height:1.4;
+}
+.world-status{
+  margin-top:8px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.52);
+}
+.world-arrow{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.11);
+  font-size:18px;
+}
+.progress-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 18px;
+}
+.progress-dots{display:flex;gap:8px}
+.progress-dot{
+  width:13px;
+  height:13px;
+  border-radius:50%;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.08);
+}
+.progress-dot.done{
+  background:var(--gold);
+  box-shadow:0 0 12px rgba(255,213,74,.6);
+}
+.progress-dot.active{
+  background:var(--purple-3);
+  box-shadow:0 0 12px rgba(192,132,252,.6);
+  animation:pulseDot 1.6s ease-in-out infinite;
+}
+@keyframes pulseDot{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.14)}
+}
+.progress-label{
+  margin-left:auto;
+  font-size:12px;
+  font-weight:800;
+  color:rgba(255,255,255,.5);
+}
+.mission-card{
+  border-radius:20px;
+  background:var(--card);
+  box-shadow:var(--shadow-soft);
+  border:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:15px 16px;
+  transition:transform .14s ease, background .14s ease;
+  position:relative;
+  overflow:hidden;
+}
+.mission-card:active{transform:scale(.98)}
+.mission-card::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+}
+.mission-card.done{opacity:.42;pointer-events:none}
+.mission-card.locked{opacity:.5;pointer-events:none;filter:saturate(.6)}
+.mission-card.active-card{
+  box-shadow:0 0 0 1px rgba(168,85,247,.32), 0 16px 40px rgba(124,58,237,.22);
+}
+.mission-num{
+  flex:0 0 42px;
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--purple-2),var(--purple));
+  color:#fff;
+  font-weight:950;
+  box-shadow:0 8px 20px rgba(124,58,237,.36);
+}
+.mission-num.done{background:linear-gradient(135deg,#293045,#171d2d);box-shadow:none}
+.mission-body{flex:1}
+.mission-title{
+  font-size:15px;
+  font-weight:850;
+  margin-bottom:3px;
+  line-height:1.2;
+}
+.mission-desc{
+  font-size:12px;
+  color:rgba(255,255,255,.52);
+  line-height:1.35;
+}
+.mission-tag{
+  display:inline-block;
+  margin-top:6px;
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  background:rgba(52,211,153,.12);
+  color:#8ff0c4;
+  border:1px solid rgba(52,211,153,.18);
+}
+.mission-arrow{font-size:18px;color:rgba(255,255,255,.32)}
+.special-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:26px;
+  margin-top:8px;
+  background:linear-gradient(145deg,#180735,#4c178a 55%,#2a0d5c);
+  box-shadow:0 18px 44px rgba(255,179,0,.18);
+  border:2px solid rgba(255,213,74,.6);
+}
+.special-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 0%, rgba(255,213,74,.16), transparent 55%);
+  pointer-events:none;
+}
+.special-card-inner{
+  padding:24px 20px;
+  text-align:center;
+  position:relative;
+  z-index:1;
+}
+.special-tag{
+  position:absolute;
+  top:10px;
+  right:10px;
+  padding:4px 10px;
+  border-radius:999px;
+  background:rgba(255,213,74,.16);
+  color:var(--gold);
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  border:1px solid rgba(255,213,74,.3);
+}
+.special-icon{
+  font-size:46px;
+  display:block;
+  margin-bottom:8px;
+  animation:floatY 4s ease-in-out infinite;
+}
+.special-title{
+  font-size:20px;
+  font-weight:950;
+  color:var(--gold);
+  margin-bottom:6px;
+}
+.special-sub{
+  font-size:13px;
+  color:rgba(255,255,255,.64);
+  line-height:1.5;
+  margin-bottom:16px;
+}
+.detail-hero{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+.detail-pill{
+  padding:6px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.09);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.76);
+}
+.detail-icon-wrap{
+  width:116px;
+  height:116px;
+  border-radius:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(circle at 30% 30%, rgba(192,132,252,.3), rgba(124,58,237,.12));
+  box-shadow:0 18px 42px rgba(124,58,237,.24), inset 0 0 0 1px rgba(255,255,255,.1);
+  position:relative;
+  animation:floatY 4s ease-in-out infinite;
+}
+.detail-icon-wrap::after{
+  content:"";
+  position:absolute;
+  inset:-8px;
+  border-radius:38px;
+  border:1px dashed rgba(255,255,255,.16);
+  animation:spin 13s linear infinite;
+}
+.detail-emoji{
+  font-size:64px;
+  position:relative;
+  z-index:1;
+}
+.detail-title{
+  font-size:30px;
+  line-height:1.06;
+  letter-spacing:-.03em;
+  font-weight:950;
+  margin:0;
+}
+.detail-intro{
+  max-width:320px;
+  font-size:15px;
+  color:var(--muted);
+  line-height:1.55;
+  margin:0;
+}
+.block{
+  width:100%;
+  border-radius:22px;
+  background:var(--card-2);
+  box-shadow:var(--shadow-soft);
+  border:1px solid var(--line);
+  padding:18px;
+  margin-bottom:14px;
+  position:relative;
+  overflow:hidden;
+}
+.block::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+}
+.block-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:12px;
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.block-line{
+  width:3px;
+  height:14px;
+  border-radius:4px;
+}
+.items{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.item-chip{
+  border-radius:999px;
+  padding:7px 12px;
+  background:rgba(255,213,74,.1);
+  border:1px solid rgba(255,213,74,.18);
+  color:#fff1aa;
+  font-size:13px;
+  font-weight:700;
+}
+.steps{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.step{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+.step-bullet{
+  flex:0 0 32px;
+  width:32px;
+  height:32px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--purple-2),var(--purple));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  font-weight:950;
+  box-shadow:0 8px 18px rgba(124,58,237,.28);
+}
+.step-text{
+  font-size:14px;
+  line-height:1.56;
+  color:rgba(255,255,255,.9);
+  padding-top:5px;
+}
+.reward-overlay,.gate-overlay{
+  position:fixed;
+  inset:0;
+  z-index:30;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.86);
+  backdrop-filter:blur(8px);
+}
+.reward-card{
+  width:100%;
+  max-width:370px;
+  border-radius:28px;
+  padding:36px 24px 26px;
+  text-align:center;
+  background:linear-gradient(160deg,#220d53,#0f1233);
+  border:2px solid rgba(255,213,74,.7);
+  box-shadow:0 0 100px rgba(255,179,0,.16), 0 26px 70px rgba(0,0,0,.56);
+  animation:rewardIn .42s cubic-bezier(.34,1.56,.64,1);
+  position:relative;
+  overflow:hidden;
+}
+.reward-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 0%, rgba(255,213,74,.14), transparent 58%);
+  pointer-events:none;
+}
+@keyframes rewardIn{
+  0%{opacity:0;transform:scale(.82) translateY(28px)}
+  70%{opacity:1;transform:scale(1.05) translateY(-4px)}
+  100%{opacity:1;transform:scale(1) translateY(0)}
+}
+.reward-icon{
+  font-size:84px;
+  display:block;
+  margin-bottom:8px;
+  animation:floatY 3.6s ease-in-out infinite;
+}
+.reward-title{
+  font-size:30px;
+  line-height:1.06;
+  font-weight:950;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+.reward-msg{
+  font-size:14px;
+  line-height:1.55;
+  color:rgba(255,255,255,.7);
+  margin-bottom:18px;
+}
+.reward-xp{
+  display:inline-block;
+  padding:12px 22px;
+  border-radius:16px;
+  background:linear-gradient(135deg, rgba(255,213,74,.16), rgba(255,179,0,.1));
+  border:1px solid rgba(255,213,74,.32);
+  color:var(--gold);
+  font-size:26px;
+  font-weight:950;
+  margin-bottom:20px;
+  box-shadow:0 0 26px rgba(255,179,0,.12);
+  animation:popNum .7s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popNum{
+  0%{opacity:0;transform:scale(.55)}
+  70%{opacity:1;transform:scale(1.12)}
+  100%{opacity:1;transform:scale(1)}
+}
+.burst{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.spark,.conf{
+  position:absolute;
+  border-radius:50%;
+  animation:burstOut 1s ease-out forwards;
+}
+.conf{
+  border-radius:2px;
+  animation:fallOut 1.25s ease-out forwards;
+}
+@keyframes burstOut{
+  0%{transform:scale(0);opacity:1}
+  100%{transform:scale(2) rotate(180deg);opacity:0}
+}
+@keyframes fallOut{
+  0%{transform:translateY(-8px) rotate(0deg);opacity:1}
+  100%{transform:translateY(130px) rotate(340deg);opacity:0}
+}
+.gate-card{
+  width:100%;
+  max-width:350px;
+  border-radius:28px;
+  padding:32px 24px 24px;
+  background:linear-gradient(160deg,#181733,#0d0c24);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 30px 80px rgba(0,0,0,.62);
+  animation:rewardIn .36s cubic-bezier(.34,1.56,.64,1);
+}
+.gate-icon{
+  font-size:44px;
+  text-align:center;
+  margin-bottom:8px;
+}
+.gate-title{
+  font-size:24px;
+  font-weight:950;
+  text-align:center;
+  margin-bottom:6px;
+}
+.gate-sub{
+  font-size:13px;
+  line-height:1.5;
+  color:rgba(255,255,255,.56);
+  text-align:center;
+  margin-bottom:18px;
+}
+.gate-eq{
+  font-size:34px;
+  font-weight:950;
+  color:var(--gold);
+  text-align:center;
+  margin-bottom:14px;
+}
+.gate-input{
+  width:100%;
+  border:none;
+  border-radius:16px;
+  padding:16px;
+  text-align:center;
+  font-size:24px;
+  font-weight:950;
+  color:#fff;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
+  margin-bottom:12px;
+}
+.gate-input:focus{
+  outline:none;
+  box-shadow:inset 0 0 0 2px rgba(168,85,247,.52), 0 0 0 3px rgba(168,85,247,.15);
+}
+.gate-err{
+  min-height:18px;
+  font-size:13px;
+  color:#ff9baa;
+  text-align:center;
+  margin-bottom:10px;
+  font-weight:800;
+}
+.session-card,.lock-card,.final-card,.diary-card{
+  width:100%;
+  border-radius:28px;
+  background:var(--card);
+  box-shadow:var(--shadow);
+  border:1px solid var(--line);
+  overflow:hidden;
+  position:relative;
+}
+.session-card::before,.lock-card::before,.final-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 0%, rgba(255,213,74,.1), transparent 58%);
+  pointer-events:none;
+}
+.session-body,.lock-body,.final-body{
+  position:relative;
+  z-index:1;
+  padding:28px 22px 24px;
+  text-align:center;
+}
+.session-badge,.lock-badge,.final-badge{
+  font-size:76px;
+  display:block;
+  margin-bottom:10px;
+  animation:floatY 3.8s ease-in-out infinite;
+}
+.session-kicker,.final-kicker{
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:6px;
+}
+.session-level{
+  font-size:60px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:-.06em;
+  background:linear-gradient(100deg,#fff,#ffd54a);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:18px;
+}
+.session-sub,.lock-sub,.final-sub{
+  font-size:14px;
+  line-height:1.6;
+  color:var(--muted);
+}
+.session-missions{
+  margin:18px 0 16px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.session-chip{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-radius:14px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.09);
+  padding:10px 12px;
+  font-size:14px;
+}
+.session-chip .name{flex:1;font-weight:700}
+.session-chip .ok{color:#9af2c7;font-weight:950}
+.session-xp{
+  display:inline-block;
+  padding:12px 20px;
+  border-radius:16px;
+  background:linear-gradient(135deg, rgba(255,213,74,.16), rgba(255,179,0,.1));
+  border:1px solid rgba(255,213,74,.32);
+  color:var(--gold);
+  font-size:22px;
+  font-weight:950;
+  margin-bottom:12px;
+}
+.diary-list{margin-top:8px}
+.diary-empty{
+  text-align:center;
+  padding:46px 18px;
+  color:rgba(255,255,255,.42);
+}
+.diary-empty .icon{
+  font-size:54px;
+  display:block;
+  margin-bottom:10px;
+  opacity:.6;
+}
+.diary-card{
+  padding:0;
+  overflow:hidden;
+}
+.diary-stripe{
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:5px;
+}
+.diary-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px 12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+}
+.diary-world-icon{
+  width:38px;
+  height:38px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  background:rgba(255,255,255,.08);
+}
+.diary-meta{flex:1}
+.diary-world-name{
+  font-size:15px;
+  font-weight:850;
+}
+.diary-date{
+  font-size:12px;
+  color:rgba(255,255,255,.45);
+  margin-top:2px;
+}
+.diary-xp{
+  font-size:12px;
+  font-weight:900;
+  color:var(--gold);
+  padding:5px 10px;
+  border-radius:10px;
+  background:rgba(255,213,74,.1);
+  border:1px solid rgba(255,213,74,.16);
+}
+.diary-missions{
+  padding:12px 16px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.diary-row{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  font-size:13px;
+  color:rgba(255,255,255,.68);
+}
+.diary-row.special{
+  color:#fff2b0;
+  font-weight:700;
+}
+.spacer{flex:1}
+.small-note{
+  font-size:12px;
+  color:rgba(255,255,255,.44);
+  text-align:center;
+}
+@media (max-width:390px){
+  .title{font-size:42px}
+  .page-title{font-size:24px}
+  .detail-title{font-size:26px}
+  .btn,.btn.gold,.btn.primary{font-size:16px}
+}
 </style>
 </head>
 <body>
 <div id="app">
-<div class="aurora">
-<div class="blob blob1"></div>
-<div class="blob blob2"></div>
-</div>
-<div class="stars" id="stars-container"></div>
-<div class="screen active" id="screen-welcome">
-<div class="mt-auto">
-<div class="logo-container">
-<div class="logo-orbit-ring"></div>
-<div class="logo-dot"></div>
-<div class="logo-main">✨</div>
-</div>
-<h1 class="app-title">SparkPlay</h1>
-<p class="app-subtitle">Avventure magiche per piccoli eroi</p>
-</div>
-<div class="mt-auto">
-<button class="btn-primary" onclick="goTo('worlds')" style="margin-bottom:12px">
-Inizia l'Avventura 🚀
-</button>
-<button class="btn-ghost" onclick="goTo('diary')">
-Il mio Diario 📖
-</button>
-</div>
-</div>
-<div class="screen" id="screen-worlds">
-<div class="top-bar">
-<div class="xp-group">
-<div class="xp-header">Livello <span id="ui-level">1</span></div>
-<div class="xp-bar-bg"><div class="xp-bar-fill" id="ui-xp-bar"></div></div>
-</div>
-<button class="btn-icon" onclick="toggleAudio()" id="audio-toggle">🔊</button>
-</div>
-<h2 class="section-title">Scegli il Mondo</h2>
-<p class="section-desc">Dove vuoi andare oggi?</p>
-```
-<div id="worlds-container">
+  <div class="aurora">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
   </div>
-
-<div class="mt-auto">
-  <button class="btn-ghost" onclick="goTo('diary')">📖 Vedi i tuoi progressi nel Diario</button>
-</div>
-
-```
-</div>
-<div class="screen" id="screen-missions">
-<div class="top-bar">
-<button class="btn-icon" onclick="goTo('worlds')">←</button>
-<div class="xp-group">
-<div class="xp-header" id="missions-world-name">Mondo</div>
-<div class="xp-bar-bg"><div class="xp-bar-fill" id="ui-xp-bar-2"></div></div>
-</div>
-<button class="btn-icon" onclick="toggleAudio()">🔊</button>
-</div>
-```
-<div class="text-center" style="margin-bottom:24px">
-  <h2 class="section-title" id="missions-title">Missioni di Oggi</h2>
-  <p id="missions-count-label" style="font-weight:700; color:var(--gold)">0 di 3 completate</p>
-</div>
-
-<div id="mission-list-container">
-  </div>
-
-<div id="special-mission-container" class="hidden">
-  <div class="special-mission-box">
-    <div class="special-tag">Raro</div>
-    <span style="font-size:40px; display:block; margin-bottom:10px">⭐</span>
-    <h3 id="special-title" style="color:var(--gold); margin-bottom:8px">Missione Speciale</h3>
-    <p style="font-size:13px; opacity:0.7; margin-bottom:20px">Una sfida epica ti aspetta per chiudere la giornata!</p>
-    <button class="btn-gold" id="btn-unlock-special" onclick="tryUnlockSpecial()">
-      Sblocca Missione 🔓
-    </button>
-  </div>
-</div>
-
-```
-</div>
-<div class="screen" id="screen-mission-detail">
-<div class="top-bar">
-<button class="btn-icon" onclick="goTo('missions')">←</button>
-<button class="btn-icon" onclick="toggleAudio()">🔊</button>
-</div>
-```
-<div class="adventure-header">
-  <div class="adventure-badge" id="det-world-name">Spazio</div>
-  <div class="adventure-icon-wrap" id="det-emoji">🚀</div>
-  <h2 class="adventure-title" id="det-title">Titolo Missione</h2>
-  <p class="adventure-intro" id="det-intro">Descrizione magica della missione per il bambino.</p>
-</div>
-
-<div class="adventure-card">
-  <div class="card-label"><span></span> Occorrente</div>
-  <div class="inventory-list" id="det-items">
-    </div>
-</div>
-
-<div class="adventure-card" style="margin-bottom:40px">
-  <div class="card-label"><span></span> La tua Sfida</div>
-  <div class="steps-list" id="det-steps">
-    </div>
-</div>
-
-<div class="mt-auto">
-  <button class="btn-gold" id="btn-complete-mission" onclick="completeCurrentMission()">
-    Missione Compiuta! ✨
-  </button>
-</div>
-
-```
-</div>
-<div class="screen" id="screen-diary">
-<div class="top-bar">
-<button class="btn-icon" onclick="goTo('welcome')">←</button>
-<h2 style="font-weight:900">Il mio Diario</h2>
-<div style="width:44px"></div>
-</div>
-```
-<div id="diary-empty" class="text-center" style="padding:40px 20px">
-  <span style="font-size:60px; opacity:0.3">📖</span>
-  <p style="margin-top:20px; opacity:0.5">Non hai ancora scritto ricordi nel tuo diario. Completa una missione!</p>
-</div>
-
-<div class="diary-grid" id="diary-list">
-  </div>
-
-```
-</div>
-<div class="screen" id="screen-session-complete">
-<div class="mt-auto text-center">
-<span style="font-size:80px; display:block; margin-bottom:20px">🏆</span>
-<h2 class="section-title">Giornata Incredibile!</h2>
-<p class="section-desc">Hai completato tutte le missioni regolari per oggi. Sei un vero campione!</p>
-```
-  <div class="adventure-card" style="background:rgba(255,215,0,0.1)">
-     <p style="font-weight:900; color:var(--gold); font-size:20px">+150 XP Guadagnati</p>
-  </div>
-</div>
-
-<div class="mt-auto" id="session-special-cta">
-  </div>
-
-<button class="btn-ghost" onclick="goTo('worlds')" style="margin-top:12px">Torna ai Mondi</button>
-
-```
-</div>
-<div class="screen" id="screen-lock">
-<div class="mt-auto text-center">
-<span style="font-size:100px; display:block; margin-bottom:30px">🌙</span>
-<h2 class="section-title">Ora di Riposare</h2>
-<p class="section-desc">Hai completato tutto per oggi! Le stelle ti stanno aspettando. Torna domani per nuove missioni.</p>
-</div>
-<div class="mt-auto">
-<button class="btn-primary" onclick="goTo('diary')">Guarda il Diario 📖</button>
-<button class="btn-ghost" onclick="devReset()" style="margin-top:20px; font-size:10px; opacity:0.3">Reset (Solo Test)</button>
-</div>
-</div>
-</div>
-<div class="reward-overlay" id="reward-modal">
-<div class="reward-popup">
-<span class="reward-icon" id="rw-icon">⭐</span>
-<h2 class="reward-title">Evviva!</h2>
-<p id="rw-msg" style="margin-bottom:20px; opacity:0.8">Hai completato la missione.</p>
-<div class="reward-xp-badge" id="rw-xp">+50 XP</div>
-<button class="btn-gold" onclick="closeReward()">Continua ➔</button>
-</div>
-</div>
-<div class="parent-gate" id="parent-gate">
-<div class="gate-card">
-<h3>Area Genitori</h3>
-<p style="font-size:13px; opacity:0.7; margin-top:8px">Risolvi per sbloccare la missione speciale</p>
-<div class="gate-question" id="gate-question">12 + 5 = ?</div>
-<input type="number" class="gate-input" id="gate-input" placeholder="?" inputmode="numeric">
-<button class="btn-primary" onclick="checkGate()">Verifica</button>
-<button class="btn-ghost" onclick="closeGate()" style="margin-top:10px; border:none">Chiudi</button>
-</div>
-</div>
-<script>
-const DATA = {
-spazio: {
-name: 'Spazio', icon: '🚀', color: '#4d9eff',
-missions: [
-{ id: 's1', title: 'Base di Lancio', emoji: '🏠', intro: 'Costruisci un rifugio sicuro per il tuo equipaggio.', items: ['Cuscini', 'Coperta', 'Torcia'], steps: ['Usa i cuscini per fare le mura', 'Metti la coperta come tetto', 'Entra con la torcia e fai il countdown!'] },
-{ id: 's2', title: 'Rocce Lunari', emoji: '🌕', intro: 'Raccogli rari campioni dal suolo lunare.', items: ['Cucchiaio', 'Contenitore', 'Calzini appallottolati'], steps: ['Spargi i calzini (rocce) per la stanza', 'Usa il cucchiaio per raccoglierli senza mani', 'Portali tutti nel contenitore della base'] },
-{ id: 's3', title: 'Messaggio Stellare', emoji: '📡', intro: 'Invia un segnale di pace agli alieni.', items: ['Foglio', 'Colori'], steps: ['Disegna te stesso nello spazio', 'Scrivi una parola gentile', 'Metti il disegno vicino alla finestra per gli alieni'] }
-],
-special: { id: 'ss1', title: 'Passeggiata Spaziale', emoji: '👨‍🚀', intro: 'Esci dalla navicella per una missione riparazione epica!', items: ['Scarpe', 'Zaino', 'Guanti'], steps: ['Indossa lo zaino (ossigeno)', 'Cammina al rallentatore come se non ci fosse gravità', 'Tocca 5 punti alti della stanza per riparare i circuiti'] }
-},
-magia: {
-name: 'Magia', icon: '🪄', color: '#a855f7',
-missions: [
-{ id: 'm1', title: 'La Bacchetta', emoji: '🥖', intro: 'Ogni mago ha bisogno del suo strumento.', items: ['Rametto o mestolo', 'Nastro o carta'], steps: ['Trova un oggetto lungo e dritto', 'Decoralo con il nastro', 'Pronuncia il tuo primo incantesimo inventato!'] },
-{ id: 'm2', title: 'Pozione Colorata', emoji: '🧪', intro: 'Mescola gli ingredienti per una pozione di forza.', items: ['Bicchiere d&#39;acqua', 'Cucchiaino'], steps: ['Riempi il bicchiere (calderone)', 'Gira 3 volte a destra e 3 a sinistra', 'Immagina di aggiungere polvere di stelle e bevi un sorso'] },
-{ id: 'm3', title: 'Mantello Invisibile', emoji: '🧥', intro: 'Impara a muoverti senza farti sentire.', items: ['Giacca o asciugamano'], steps: ['Metti il mantello sulle spalle', 'Attraversa la stanza senza fare il minimo rumore', 'Se nessuno ti vede, l&#39;incantesimo ha funzionato!'] }
-],
-special: { id: 'sm1', title: 'Il Grande Rituale', emoji: '🔮', intro: 'Unisci tutti i tuoi poteri per proteggere il regno.', items: ['Candela (spenta) o luce', 'Peluche'], steps: ['Metti i tuoi peluche in cerchio', 'Siediti al centro con la luce', 'Racconta loro una storia magica per dar loro coraggio'] }
-},
-detective: {
-name: 'Detective', icon: '🕵️', color: '#f59e0b',
-missions: [
-{ id: 'd1', title: 'Impronte Digitali', emoji: '👣', intro: 'Trova le tracce lasciate dal misterioso visitatore.', items: ['Lente d&#39;ingrandimento (o mani a cerchio)', 'Torcia'], steps: ['Cerca "segreti" sotto i mobili con la torcia', 'Controlla le maniglie delle porte', 'Annota su un foglio immaginario cosa hai trovato'] },
-{ id: 'd2', title: 'Codice Segreto', emoji: '🔢', intro: 'Decifra il messaggio nascosto dietro i libri.', items: ['Libro', 'Segnalibro'], steps: ['Scegli un libro e trova la pagina 10', 'Trova la prima parola della pagina', 'Quella è la parola d&#39;ordine di oggi!'] },
-{ id: 'd3', title: 'Travestimento', emoji: '🕶️', intro: 'Un bravo detective non si fa mai riconoscere.', items: ['Occhiali', 'Cappello'], steps: ['Indossa il tuo kit da spia', 'Guarda fuori dalla porta per 1 minuto', 'Torna alla base e fai rapporto'] }
-],
-special: { id: 'sd1', title: 'L&#39;Ultimo Indizio', emoji: '🔍', intro: 'Risolvi il caso più difficile della città!', items: ['Scatola chiusa', 'Chiave (o oggetto simile)'], steps: ['Nascondi la "chiave" in un posto difficilissimo', 'Crea una mappa con 3 indizi per trovarla', 'Segui la tua stessa mappa e recupera il tesoro'] }
-}
-};
-let state = {
-xp: 0,
-level: 1,
-audio: true,
-currentWorld: null,
-completedToday: [],
-specialDone: false,
-lastDate: '',
-diary: []
-};
-function init() {
-const saved = localStorage.getItem('sparkplay_v3_save');
-if (saved) {
-state = {...state, ...JSON.parse(saved)};
-}
-checkDailyReset();
-createStars();
-updateUI();
-if (state.specialDone) {
-goTo('lock');
-} else {
-goTo('welcome');
-}
-}
-function checkDailyReset() {
-const today = new Date().toDateString();
-if (state.lastDate !== today) {
-state.lastDate = today;
-state.completedToday = [];
-state.specialDone = false;
-save();
-}
-}
-function save() {
-localStorage.setItem('sparkplay_v3_save', JSON.stringify(state));
-}
-function createStars() {
-const container = document.getElementById('stars-container');
-for (let i = 0; i < 50; i++) {
-const star = document.createElement('div');
-star.className = 'star';
-const size = Math.random() * 3;
-star.style.width = size + 'px';
-star.style.height = size + 'px';
-star.style.top = Math.random() * 100 + '%';
-star.style.left = Math.random() * 100 + '%';
-star.style.opacity = Math.random();
-container.appendChild(star);
-}
-}
-function goTo(screenId) {
-document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-document.getElementById('screen-' + screenId).classList.add('active');
-if (screenId === 'worlds') renderWorlds();
-if (screenId === 'missions') renderMissions();
-if (screenId === 'diary') renderDiary();
-}
-function updateUI() {
-const nextXP = state.level * 100;
-const progress = (state.xp % 100);
-document.getElementById('ui-level').innerText = state.level;
-document.getElementById('ui-xp-bar').style.width = progress + '%';
-if (document.getElementById('ui-xp-bar-2')) {
-document.getElementById('ui-xp-bar-2').style.width = progress + '%';
-}
-}
-function toggleAudio() {
-state.audio = !state.audio;
-document.getElementById('audio-toggle').innerText = state.audio ? '🔊' : '🔈';
-if (!state.audio) window.speechSynthesis.cancel();
-}
-function speak(text) {
-if (!state.audio) return;
-window.speechSynthesis.cancel();
-const utterance = new SpeechSynthesisUtterance(text);
-utterance.lang = 'it-IT';
-utterance.rate = 0.9;
-window.speechSynthesis.speak(utterance);
-}
-function renderWorlds() {
-const container = document.getElementById('worlds-container');
-container.innerHTML = '';
-Object.keys(DATA).forEach(key => {
-const w = DATA[key];
-const doneCount = state.currentWorld === key ? state.completedToday.length : 0;
-```
-const card = document.createElement(&#39;div&#39;);
-card.className = &#39;world-card&#39;;
-card.onclick = () =&gt; selectWorld(key);
-card.innerHTML = `
-  &lt;div class=&quot;world-icon&quot; style=&quot;color:${w.color}&quot;&gt;${w.icon}&lt;/div&gt;
-  &lt;div class=&quot;world-info&quot;&gt;
-    &lt;h3&gt;${w.name}&lt;/h3&gt;
-    &lt;p&gt;Esplora e gioca&lt;/p&gt;
-    &lt;div class=&quot;world-progress&quot;&gt;${doneCount}/3 Completate&lt;/div&gt;
-  &lt;/div&gt;
-`;
-container.appendChild(card);
-
-```
-});
-updateUI();
-}
-function selectWorld(key) {
-if (state.currentWorld && state.currentWorld !== key && state.completedToday.length > 0) {
-if (!confirm("Hai già iniziato un altro mondo oggi. Vuoi cambiare? I progressi di oggi verranno resettati.")) return;
-state.completedToday = [];
-}
-state.currentWorld = key;
-save();
-goTo('missions');
-}
-function renderMissions() {
-const w = DATA[state.currentWorld];
-document.getElementById('missions-title').innerText = "Missioni: " + w.name;
-document.getElementById('missions-world-name').innerText = w.name;
-const container = document.getElementById('mission-list-container');
-container.innerHTML = '';
-const count = state.completedToday.length;
-document.getElementById('missions-count-label').innerText = ${count} di 3 completate;
-w.missions.forEach((m, index) => {
-const isDone = state.completedToday.includes(m.id);
-const isLocked = !isDone && index > count;
-```
-const div = document.createElement(&#39;div&#39;);
-div.className = `mission-item ${isDone ? &#39;done&#39; : &#39;&#39;} ${isLocked ? &#39;locked&#39; : &#39;&#39;}`;
-if (!isLocked) div.onclick = () =&gt; openMission(m);
-
-div.innerHTML = `
-  &lt;div class=&quot;mission-number&quot;&gt;${isDone ? &#39;✓&#39; : index + 1}&lt;/div&gt;
-  &lt;div class=&quot;mission-item-content&quot;&gt;
-    &lt;h4&gt;${m.emoji} ${m.title}&lt;/h4&gt;
-    &lt;p&gt;${isDone ? &#39;Completata!&#39; : &#39;Tocca per iniziare&#39;}&lt;/p&gt;
-  &lt;/div&gt;
-  ${!isLocked &amp;&amp; !isDone ? &#39;&lt;span&gt;➔&lt;/span&gt;&#39; : &#39;&#39;}
-`;
-container.appendChild(div);
-
-```
-});
-if (count >= 3) {
-document.getElementById('special-mission-container').classList.remove('hidden');
-const sBtn = document.getElementById('btn-unlock-special');
-if (state.specialDone) {
-sBtn.innerText = "Già completata! ✓";
-sBtn.disabled = true;
-} else {
-sBtn.innerText = "Sblocca Missione 🔓";
-sBtn.disabled = false;
-}
-} else {
-document.getElementById('special-mission-container').classList.add('hidden');
-}
-updateUI();
-}
-let activeMission = null;
-let isSpecialActive = false;
-function openMission(m, isSpecial = false) {
-activeMission = m;
-isSpecialActive = isSpecial;
-document.getElementById('det-world-name').innerText = DATA[state.currentWorld].name;
-document.getElementById('det-emoji').innerText = m.emoji;
-document.getElementById('det-title').innerText = m.title;
-document.getElementById('det-intro').innerText = m.intro;
-const itemsCont = document.getElementById('det-items');
-itemsCont.innerHTML = m.items.map(i => &lt;div class=&quot;inventory-item&quot;&gt;${i}&lt;/div&gt;).join('');
-const stepsCont = document.getElementById('det-steps');
-stepsCont.innerHTML = m.steps.map((s, i) => &lt;div class=&quot;step-item&quot;&gt; &lt;div class=&quot;step-bullet&quot;&gt;${i + 1}&lt;/div&gt; &lt;div class=&quot;step-text&quot;&gt;${s}&lt;/div&gt; &lt;/div&gt;).join('');
-goTo('mission-detail');
-speak(${m.title}. ${m.intro}. Per iniziare ti serve: ${m.items.join(&#39;, &#39;)}.);
-}
-function completeCurrentMission() {
-const xpGain = isSpecialActive ? 100 : 50;
-state.xp += xpGain;
-if (isSpecialActive) {
-state.specialDone = true;
-} else {
-if (!state.completedToday.includes(activeMission.id)) {
-state.completedToday.push(activeMission.id);
-}
-}
-// Level Up Check
-if (state.xp >= state.level * 100) {
-state.level++;
-}
-// Save to diary if day complete or special complete
-if (state.completedToday.length === 3 || isSpecialActive) {
-updateDiary();
-}
-save();
-showReward(xpGain);
-}
-function showReward(amount) {
-document.getElementById('rw-xp').innerText = +${amount} XP;
-document.getElementById('rw-icon').innerText = isSpecialActive ? '🏆' : '⭐';
-document.getElementById('rw-msg').innerText = isSpecialActive ? 'Hai completato la Sfida Speciale!' : 'Ottimo lavoro, piccolo eroe!';
-document.getElementById('reward-modal').style.display = 'flex';
-speak("Evviva! Missione compiuta!");
-}
-function closeReward() {
-document.getElementById('reward-modal').style.display = 'none';
-if (isSpecialActive) {
-goTo('lock');
-} else if (state.completedToday.length === 3) {
-goTo('session-complete');
-renderSessionComplete();
-} else {
-goTo('missions');
-}
-}
-function renderSessionComplete() {
-const cta = document.getElementById('session-special-cta');
-if (!state.specialDone) {
-cta.innerHTML = &lt;button class=&quot;btn-gold&quot; onclick=&quot;tryUnlockSpecial()&quot;&gt; Sblocca Missione Speciale ⭐ &lt;/button&gt;;
-} else {
-cta.innerHTML = &lt;p style=&quot;color:var(--gold)&quot;&gt;Missione speciale completata! ✓&lt;/p&gt;;
-}
-}
-let gateAnswer = 0;
-function tryUnlockSpecial() {
-const n1 = Math.floor(Math.random() * 10) + 5;
-const n2 = Math.floor(Math.random() * 10) + 2;
-gateAnswer = n1 + n2;
-document.getElementById('gate-question').innerText = ${n1} + ${n2} = ?;
-document.getElementById('parent-gate').style.display = 'flex';
-}
-function checkGate() {
-const input = document.getElementById('gate-input').value;
-if (parseInt(input) === gateAnswer) {
-closeGate();
-openMission(DATA[state.currentWorld].special, true);
-} else {
-alert("Ops! Chiedi aiuto a un grande.");
-document.getElementById('gate-input').value = '';
-}
-}
-function closeGate() {
-document.getElementById('parent-gate').style.display = 'none';
-}
-function updateDiary() {
-const today = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long' });
-const worldData = DATA[state.currentWorld];
-let entry = state.diary.find(d => d.date === today && d.world === state.currentWorld);
-if (!entry) {
-entry = {
-date: today,
-world: state.currentWorld,
-worldName: worldData.name,
-missions: [],
-special: null
-};
-state.diary.unshift(entry);
-}
-// Sync missions
-entry.missions = state.completedToday.map(id => {
-return worldData.missions.find(m => m.id === id).title;
-});
-if (state.specialDone) {
-entry.special = worldData.special.title;
-}
-if (state.diary.length > 10) state.diary.pop();
-save();
-}
-function renderDiary() {
-const container = document.getElementById('diary-list');
-const empty = document.getElementById('diary-empty');
-container.innerHTML = '';
-if (state.diary.length === 0) {
-empty.style.display = 'block';
-return;
-}
-empty.style.display = 'none';
-state.diary.forEach(entry => {
-const worldColor = DATA[entry.world]?.color || '#fff';
-const div = document.createElement('div');
-div.className = 'diary-entry';
-div.innerHTML = &lt;div class=&quot;diary-header&quot;&gt; &lt;span class=&quot;diary-date&quot;&gt;${entry.date}&lt;/span&gt; &lt;span class=&quot;diary-world-tag&quot; style=&quot;background:${worldColor}33; color:${worldColor}&quot;&gt;${entry.worldName}&lt;/span&gt; &lt;/div&gt; &lt;div class=&quot;diary-content&quot;&gt; ${entry.missions.map(m =&gt;<div class="diary-mission-line">⭐ ${m}</div>).join(&#39;&#39;)} ${entry.special ? <div class="diary-mission-line special">🏆 ${entry.special}</div>: &#39;&#39;} &lt;/div&gt;;
-container.appendChild(div);
-});
-}
-function devReset() {
-if (confirm("Vuoi cancellare tutti i progressi?")) {
-localStorage.removeItem('sparkplay_v3_save');
-location.reload();
-}
-}
-window.onload = init;
-</script>
-</body>
-</html></html>
+  <div class="stars" id="stars"></div>
+  <div class="fx-layer" id="fx"></div>
