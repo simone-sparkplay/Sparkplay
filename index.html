@@ -1,344 +1,1393 @@
-import "tailwindcss";
-@import "tw-animate-css";
-@plugin "@tailwindcss/typography";
-
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-card-border: hsl(var(--card-border));
-
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-popover-border: hsl(var(--popover-border));
-
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-primary-border: var(--primary-border);
-
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-secondary-border: var(--secondary-border);
-
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-muted-border: var(--muted-border);
-
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-accent-border: var(--accent-border);
-
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-destructive-border: var(--destructive-border);
-
-  --color-chart-1: hsl(var(--chart-1));
-  --color-chart-2: hsl(var(--chart-2));
-  --color-chart-3: hsl(var(--chart-3));
-  --color-chart-4: hsl(var(--chart-4));
-  --color-chart-5: hsl(var(--chart-5));
-
-  --color-sidebar: hsl(var(--sidebar));
-  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
-  --color-sidebar-border: hsl(var(--sidebar-border));
-  --color-sidebar-primary: hsl(var(--sidebar-primary));
-  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
-  --color-sidebar-primary-border: var(--sidebar-primary-border);
-  --color-sidebar-accent: hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-accent-border: var(--sidebar-accent-border);
-  --color-sidebar-ring: hsl(var(--sidebar-ring));
-
-  --font-sans: var(--app-font-sans);
-  --font-serif: var(--app-font-serif);
-  --font-mono: var(--app-font-mono);
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>SparkPlay - Spazio</title>
+<style>
+:root{
+  --bg:#0b1026;
+  --bg2:#161d44;
+  --panel:rgba(255,255,255,.10);
+  --panel-2:rgba(255,255,255,.06);
+  --white:#ffffff;
+  --soft:#cfd8ff;
+  --purple:#a27cff;
+  --purple-deep:#7c4dff;
+  --gold:#ffdb58;
+  --cyan:#4deeea;
+  --danger:#ff5e6c;
+  --success:#56f39a;
+  --shadow:0 14px 30px rgba(0,0,0,.35);
+  --shadow-btn:0 8px 0 rgba(58,30,122,.95), 0 14px 24px rgba(0,0,0,.35);
+  --radius-xl:34px;
+  --radius-lg:26px;
+  --radius-md:18px;
+  --safe-top:env(safe-area-inset-top, 0px);
+  --safe-bottom:env(safe-area-inset-bottom, 0px);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
 
-/* LIGHT MODE */
-:root {
-  --button-outline: rgba(0,0,0, .10);
-  --badge-outline: rgba(0,0,0, .05);
-
-  /* Automatic computation of border around primary / danger buttons */
-  --opaque-button-border-intensity: -8; /* In terms of percentages */
-
-  /* Backgrounds applied on top of other backgrounds when hovered/active */
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
-
-  --background: red; /*replace with H S L */
-
-  --foreground: red; /*replace with H S L */
-
-  --border: red; /*replace with H S L */
-
-  --card: red; /*replace with H S L */
-
-  --card-foreground: red; /*replace with H S L */
-
-  --card-border: red; /*replace with H S L */
-
-  --sidebar: red; /*replace with H S L */
-
-  --sidebar-foreground: red; /*replace with H S L */
-
-  --sidebar-border: red; /*replace with H S L */
-
-  --sidebar-primary: red; /*replace with H S L */
-
-  --sidebar-primary-foreground: red; /*replace with H S L */
-
-  --sidebar-accent: red; /*replace with H S L */
-
-  --sidebar-accent-foreground: red; /*replace with H S L */
-
-  --sidebar-ring: red; /*replace with H S L */
-
-  --popover: red; /*replace with H S L */
-
-  --popover-foreground: red; /*replace with H S L */
-
-  --popover-border: red; /*replace with H S L */
-
-  --primary: red; /*replace with H S L */
-
-  --primary-foreground: red; /*replace with H S L */
-
-  --secondary: red; /*replace with H S L */
-
-  --secondary-foreground: red; /*replace with H S L */
-
-  --muted: red; /*replace with H S L */
-
-  --muted-foreground: red; /*replace with H S L */
-
-  --accent: red; /*replace with H S L */
-
-  --accent-foreground: red; /*replace with H S L */
-
-  --destructive: red; /*replace with H S L */
-
-  --destructive-foreground: red; /*replace with H S L */
-
-  --input: red; /*replace with H S L */
-  --ring: red; /*replace with H S L */
-  --chart-1: red; /*replace with H S L */
-  --chart-2: red; /*replace with H S L */
-  --chart-3: red; /*replace with H S L */
-  --chart-4: red; /*replace with H S L */
-  --chart-5: red; /*replace with H S L */
-
-  --app-font-sans: 'Inter', sans-serif;
-  --app-font-serif: Georgia, serif;
-  --app-font-mono: Menlo, monospace;
-  --radius: .5rem; /* 8px */
-  --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00); /*replace with H S L */
-  --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00); /*replace with H S L */
-  --shadow-sm: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-md: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 2px 4px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-lg: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 4px 6px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --tracking-normal: 0em;
-  --spacing: 0.25rem;
-
-  /* Automatically computed borders - intensity can be controlled by the user by the --opaque-button-border-intensity setting */
-
-  /* Fallback for older browsers */
-  --sidebar-primary-border: hsl(var(--sidebar-primary));
-  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
-
-  /* Fallback for older browsers */
-  --sidebar-accent-border: hsl(var(--sidebar-accent));
-  --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
-
-  /* Fallback for older browsers */
-  --primary-border: hsl(var(--primary));
-  --primary-border: hsl(from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
-
-  /* Fallback for older browsers */
-  --secondary-border: hsl(var(--secondary));
-  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
-
-  /* Fallback for older browsers */
-  --muted-border: hsl(var(--muted));
-  --muted-border: hsl(from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
-
-  /* Fallback for older browsers */
-  --accent-border: hsl(var(--accent));
-  --accent-border: hsl(from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
-
-  /* Fallback for older browsers */
-  --destructive-border: hsl(var(--destructive));
-  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 12%, #242d66 0%, #151c47 28%, #0b1026 68%),
+    linear-gradient(180deg,#0b1026 0%, #070a19 100%);
+  color:var(--white);
+  font-family:var(--font);
+  user-select:none;
+}
+body{
+  position:relative;
 }
 
-.dark {
-  --button-outline: rgba(255,255,255, .10);
-  --badge-outline: rgba(255,255,255, .05);
-
-  --opaque-button-border-intensity: 9;  /* In terms of percentages */
-
-  /* Backgrounds applied on top of other backgrounds when hovered/active */
-  --elevate-1: rgba(255,255,255, .04);
-  --elevate-2: rgba(255,255,255, .09);
-
-  --background: red; /*replace with H S L */
-
-  --foreground: red; /*replace with H S L */
-
-  --border: red; /*replace with H S L */
-
-  --card: red; /*replace with H S L */
-
-  --card-foreground: red; /*replace with H S L */
-
-  --card-border: red; /*replace with H S L */
-
-  --sidebar: red; /*replace with H S L */
-
-  --sidebar-foreground: red; /*replace with H S L */
-
-  --sidebar-border: red; /*replace with H S L */
-
-  --sidebar-primary: red; /*replace with H S L */
-
-  --sidebar-primary-foreground: red; /*replace with H S L */
-
-  --sidebar-accent: red; /*replace with H S L */
-
-  --sidebar-accent-foreground: red; /*replace with H S L */
-
-  --sidebar-ring: red; /*replace with H S L */
-
-  --popover: red; /*replace with H S L */
-
-  --popover-foreground: red; /*replace with H S L */
-
-  --popover-border: red; /*replace with H S L */
-
-  --primary: red; /*replace with H S L */
-
-  --primary-foreground: red; /*replace with H S L */
-
-  --secondary: red; /*replace with H S L */
-
-  --secondary-foreground: red; /*replace with H S L */
-
-  --muted: red; /*replace with H S L */
-
-  --muted-foreground: red; /*replace with H S L */
-
-  --accent: red; /*replace with H S L */
-
-  --accent-foreground: red; /*replace with H S L */
-
-  --destructive: red; /*replace with H S L */
-
-  --destructive-foreground: red; /*replace with H S L */
-
-  /* Used as the border around inputs. Dark mode: Should be a border that is light enough to have high contrast when rendered on a --card background. More contrast than standard --border */
-  --input: red; /*replace with H S L */
-  --ring: red; /*replace with H S L */
-  --chart-1: red; /*replace with H S L */
-  --chart-2: red; /*replace with H S L */
-  --chart-3: red; /*replace with H S L */
-  --chart-4: red; /*replace with H S L */
-  --chart-5: red; /*replace with H S L */
-
-  --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-sm: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-md: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 2px 4px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-lg: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 4px 6px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
-
-  --app-font-sans: system-ui, -apple-system, sans-serif;
-  --radius: 1rem;
-  --background: 230 40% 8%;
-  --foreground: 220 20% 95%;
+button{
+  font:inherit;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+.starfield{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:0;
+}
+.star{
+  position:absolute;
+  width:2px;
+  height:2px;
+  border-radius:50%;
+  background:#fff;
+  opacity:.45;
+  animation:twinkle linear infinite;
+}
+.star.big{
+  width:3px;
+  height:3px;
+  opacity:.7;
+}
+@keyframes twinkle{
+  0%,100%{opacity:.2;transform:scale(.9)}
+  50%{opacity:.85;transform:scale(1.25)}
+}
+
+.app{
+  position:relative;
+  width:100%;
+  height:100%;
+  z-index:1;
+}
+
+.screen{
+  position:absolute;
+  inset:0;
+  display:none;
+  opacity:0;
+  transform:scale(.96) translateY(14px);
+  transition:opacity .32s ease, transform .32s cubic-bezier(.22,1,.36,1);
+  padding:calc(20px + var(--safe-top)) 20px calc(18px + var(--safe-bottom));
+  overflow:hidden;
+}
+.screen.active{
+  display:flex;
+  opacity:1;
+  transform:scale(1) translateY(0);
+}
+.screen-inner{
+  width:100%;
+  max-width:540px;
+  margin:0 auto;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  min-height:56px;
+}
+
+.brand{
+  font-size:clamp(2rem,6vw,3.3rem);
+  font-weight:900;
+  line-height:1;
+  letter-spacing:-.04em;
+  margin:0;
+  background:linear-gradient(180deg,#fff 10%, #dfd4ff 50%, #b292ff 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 18px rgba(162,124,255,.32));
+}
+
+.mini-btn{
+  width:52px;
+  height:52px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+  box-shadow:0 8px 20px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold);
+  cursor:pointer;
+  transition:transform .12s ease, filter .12s ease;
+}
+.mini-btn:active{transform:translateY(2px) scale(.97);filter:brightness(1.08)}
+.mini-btn svg{width:28px;height:28px;display:block}
+
+.hero{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  text-align:center;
+}
+
+.hero-sub{
+  max-width:360px;
+  color:var(--soft);
+  font-size:1.08rem;
+  line-height:1.35;
+  margin:0;
+}
+
+.main-cta{
+  border:none;
+  color:#fff;
+  font-weight:900;
+  letter-spacing:.02em;
+  font-size:1.2rem;
+  padding:20px 28px;
+  min-width:240px;
+  border-radius:999px;
+  cursor:pointer;
+  background:linear-gradient(180deg,#b78cff 0%, #915fff 42%, #7c4dff 100%);
+  box-shadow:var(--shadow-btn);
+  transition:transform .12s ease, filter .12s ease, box-shadow .12s ease;
+}
+.main-cta:active{
+  transform:translateY(6px);
+  box-shadow:0 2px 0 rgba(58,30,122,.95), 0 7px 16px rgba(0,0,0,.32);
+  filter:brightness(1.05);
+}
+
+.secondary-cta{
+  border:none;
+  background:rgba(255,255,255,.09);
+  color:#fff;
+  font-weight:800;
+  border-radius:999px;
+  padding:14px 22px;
+  cursor:pointer;
+  box-shadow:0 10px 20px rgba(0,0,0,.18), inset 0 0 0 1px rgba(255,255,255,.08);
+}
+.secondary-cta:active{transform:translateY(2px)}
+
+.home-orbit{
+  width:min(78vw, 290px);
+  height:min(78vw, 290px);
+  position:relative;
+  margin-bottom:8px;
+}
+.orbit-core{
+  position:absolute;
+  inset:50%;
+  width:86px;
+  height:86px;
+  margin-left:-43px;
+  margin-top:-43px;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #fff, #f5f1ff 30%, #cdb4ff 70%, #8f5fff 100%);
+  box-shadow:
+    0 0 40px rgba(255,219,88,.28),
+    0 0 70px rgba(162,124,255,.24);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.orbit-core svg{width:42px;height:42px}
+.orbit-ring{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  border:2px dashed rgba(255,255,255,.12);
+  animation:spinSlow 22s linear infinite;
+}
+.orbit-item{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:72px;
+  height:72px;
+  margin:-36px;
+  transform-origin:0 0;
+}
+.orbit-item svg{
+  width:72px;
+  height:72px;
+  filter:drop-shadow(0 0 18px rgba(162,124,255,.26));
+}
+.orbit-1{animation:orbitA 10s linear infinite}
+.orbit-2{animation:orbitB 14s linear infinite}
+.orbit-3{animation:orbitC 12s linear infinite}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+@keyframes orbitA{
+  from{transform:rotate(0deg) translateX(118px) rotate(0deg)}
+  to{transform:rotate(360deg) translateX(118px) rotate(-360deg)}
+}
+@keyframes orbitB{
+  from{transform:rotate(120deg) translateX(118px) rotate(-120deg)}
+  to{transform:rotate(480deg) translateX(118px) rotate(-480deg)}
+}
+@keyframes orbitC{
+  from{transform:rotate(240deg) translateX(118px) rotate(-240deg)}
+  to{transform:rotate(600deg) translateX(118px) rotate(-600deg)}
+}
+
+.panel{
+  background:linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.07));
+  border-radius:var(--radius-xl);
+  padding:22px;
+  box-shadow:var(--shadow), inset 0 0 0 1px rgba(255,255,255,.08);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+.portal-wrap{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+}
+.portal-title{
+  font-size:1.05rem;
+  color:var(--soft);
+  margin:0;
+  letter-spacing:.02em;
+}
+.portal-card{
+  width:min(100%, 360px);
+  padding:26px 22px 24px;
+  border:none;
+  border-radius:32px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(162,124,255,.22) 0%, rgba(162,124,255,.08) 42%, rgba(255,255,255,.05) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+  box-shadow:var(--shadow), inset 0 0 0 1px rgba(255,255,255,.08);
+  color:#fff;
+  cursor:pointer;
+  transition:transform .15s ease, filter .15s ease;
+}
+.portal-card:active{transform:translateY(4px) scale(.985)}
+.portal-name{
+  font-size:1.55rem;
+  font-weight:900;
+  letter-spacing:.08em;
+  margin:12px 0 4px;
+}
+.portal-sub{
+  margin:0;
+  color:var(--soft);
+  font-size:.98rem;
+}
+.portal-icon{
+  height:120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.portal-icon svg{
+  width:110px;
+  height:110px;
+  display:block;
+}
+
+.quest-layout{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:18px;
+  min-height:0;
+}
+.quest-card{
+  position:relative;
+  padding:24px 20px 22px;
+}
+.quest-badge{
+  position:absolute;
+  top:-14px;
+  left:50%;
+  transform:translateX(-50%);
+  min-width:110px;
+  padding:8px 16px;
+  border-radius:999px;
+  background:linear-gradient(180deg,#b78cff,#7c4dff);
+  color:#fff;
+  font-weight:900;
+  font-size:.82rem;
+  letter-spacing:.06em;
+  box-shadow:0 8px 18px rgba(124,77,255,.35);
+}
+.progress{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin:8px 0 20px;
+}
+.dot{
+  width:34px;
+  height:10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.14);
+  transition:all .22s ease;
+}
+.dot.done{
+  background:var(--cyan);
+  box-shadow:0 0 16px rgba(77,238,234,.6);
+}
+.dot.now{
+  background:var(--gold);
+  transform:scaleX(1.16);
+  box-shadow:0 0 18px rgba(255,219,88,.58);
+}
+.quest-icon{
+  height:132px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:6px;
+}
+.quest-icon svg{
+  width:112px;
+  height:112px;
+  display:block;
+}
+.quest-story{
+  font-size:1.12rem;
+  line-height:1.38;
+  color:var(--soft);
+  margin:0 0 14px;
+  min-height:56px;
+}
+.objective{
+  padding:14px 16px;
+  border-radius:20px;
+  background:rgba(77,238,234,.08);
+  border:2px dashed rgba(77,238,234,.55);
+  color:var(--cyan);
+  font-weight:900;
+  text-transform:uppercase;
+  font-size:.9rem;
+  margin-bottom:14px;
+}
+.steps{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.step{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-align:left;
+  padding:14px 14px;
+  border-radius:20px;
+  background:rgba(255,255,255,.06);
+  transition:all .22s ease;
+}
+.step-num{
+  flex:0 0 32px;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.13);
+  color:#fff;
+  font-weight:900;
+}
+.step.active{
+  background:#fff;
+  color:#101534;
+  transform:scale(1.02);
+  box-shadow:0 10px 24px rgba(0,0,0,.18);
+}
+.step.active .step-num{
+  background:var(--danger);
+}
+.step.done{
+  background:rgba(86,243,154,.12);
+  color:#fff;
+}
+.step.done .step-num{
+  background:var(--success);
+}
+.quest-actions{
+  display:flex;
+  gap:12px;
+}
+.quest-actions .secondary-cta{
+  flex:1;
+}
+.quest-actions .main-cta{
+  flex:1.35;
+  min-width:0;
+  padding-left:0;
+  padding-right:0;
+}
+.hidden{
+  visibility:hidden;
+}
+
+.alert-screen .screen-inner,
+.end-screen .screen-inner{
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+.alert-wrap,.end-wrap{
+  width:min(100%, 460px);
+}
+.big-icon{
+  width:160px;
+  height:160px;
+  margin:0 auto 18px;
+  display:block;
+}
+.alert-title{
+  font-size:2.2rem;
+  font-weight:900;
+  color:var(--gold);
+  margin:0 0 8px;
+  text-transform:uppercase;
+}
+.alert-sub{
+  margin:0;
+  color:var(--soft);
+  font-size:1.1rem;
+}
+
+.reward-card{
+  padding:26px 22px 28px;
+  width:min(100%, 430px);
+  position:relative;
+  overflow:hidden;
+}
+.reward-card::after{
+  content:"";
+  position:absolute;
+  inset:auto -20% -40% -20%;
+  height:140px;
+  background:radial-gradient(circle, rgba(255,219,88,.22), transparent 68%);
+  pointer-events:none;
+}
+.reward-kicker{
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-size:.78rem;
+  color:var(--purple);
+  font-weight:900;
+  margin:0 0 10px;
+}
+.reward-title{
+  font-size:2rem;
+  font-weight:1000;
+  color:var(--gold);
+  margin:4px 0 8px;
+  line-height:1.06;
+  text-shadow:0 0 24px rgba(255,219,88,.22);
+}
+.reward-sub{
+  margin:0 0 12px;
+  color:var(--soft);
+  font-size:1rem;
+}
+.tomorrow{
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-weight:800;
+  font-size:.9rem;
+}
+
+.diary-screen .screen-inner{
+  justify-content:center;
+}
+.diary-card{
+  width:min(100%, 460px);
+  max-height:min(76vh, 620px);
+  display:flex;
+  flex-direction:column;
+}
+.diary-title{
+  font-size:1.5rem;
+  font-weight:900;
+  color:var(--gold);
+  margin:0 0 16px;
+}
+.diary-list{
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding-right:4px;
+  min-height:120px;
+}
+.diary-entry{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  padding:14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.06);
+}
+.diary-entry .entry-icon{
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  border-radius:12px;
+  background:rgba(255,219,88,.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.diary-entry .entry-icon svg{
+  width:20px;
+  height:20px;
+}
+.entry-meta{
+  color:var(--soft);
+  font-size:.78rem;
+  margin-bottom:3px;
+}
+.entry-title{
+  font-weight:900;
+  margin-bottom:4px;
+}
+.entry-small{
+  color:#fff;
+  opacity:.88;
+  font-size:.92rem;
+}
+
+.canvas-wrap{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:30;
+}
+#fxCanvas{
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.sr-only{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+
+@media (max-width:420px){
+  .screen{padding:calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom))}
+  .brand{font-size:2.7rem}
+  .main-cta{min-width:0;width:100%;font-size:1.08rem}
+  .quest-story{font-size:1rem}
+  .quest-text{font-size:1.05rem}
+}
+</style>
+</head>
+<body>
+<div class="starfield" id="starfield" aria-hidden="true"></div>
+<div class="canvas-wrap" aria-hidden="true"><canvas id="fxCanvas"></canvas></div>
+
+<div class="app">
+  <button id="diaryBtn" class="mini-btn" aria-label="Apri diario" title="Diario" style="position:absolute;top:calc(16px + var(--safe-top));right:16px;z-index:20;">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M6 4.5h10a2 2 0 0 1 2 2v12.5H8a2 2 0 0 0-2 2V4.5Z" fill="currentColor" opacity=".18"></path>
+      <path d="M6 4.5h10a2 2 0 0 1 2 2v12.5H8a2 2 0 0 0-2 2V4.5Z" stroke="currentColor" stroke-width="1.6"></path>
+      <path d="M8.5 7.5h6M8.5 10.5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+      <path d="m11.7 14.2.8 1.6 1.8.2-1.3 1.2.3 1.7-1.6-.8-1.6.8.3-1.7-1.3-1.2 1.8-.2.8-1.6Z" fill="currentColor"></path>
+    </svg>
+  </button>
+
+  <section id="homeScreen" class="screen active" aria-label="Home">
+    <div class="screen-inner">
+      <div class="topbar">
+        <div style="width:52px"></div>
+        <div style="width:52px"></div>
+      </div>
+      <div class="hero">
+        <div class="home-orbit" aria-hidden="true">
+          <div class="orbit-ring"></div>
+          <div class="orbit-core">
+            <svg viewBox="0 0 120 120" fill="none">
+              <circle cx="60" cy="60" r="22" fill="#ffffff" opacity=".85"></circle>
+              <path d="M60 30 69 51 92 53 74 68 80 91 60 79 40 91 46 68 28 53 51 51Z" fill="#ffdb58"></path>
+            </svg>
+          </div>
+          <div class="orbit-item orbit-1">
+            <svg viewBox="0 0 120 120" fill="none">
+              <circle cx="60" cy="60" r="34" fill="rgba(162,124,255,.12)"></circle>
+              <path d="M60 22c14 8 22 20 22 34 0 10-4 20-10 28l6 16-18-9-18 9 6-16c-6-8-10-18-10-28 0-14 8-26 22-34Z" fill="#a27cff"></path>
+              <circle cx="60" cy="56" r="8" fill="#fff"></circle>
+            </svg>
+          </div>
+          <div class="orbit-item orbit-2">
+            <svg viewBox="0 0 120 120" fill="none">
+              <circle cx="60" cy="60" r="22" fill="rgba(77,238,234,.18)"></circle>
+              <circle cx="60" cy="60" r="16" fill="#4deeea"></circle>
+              <path d="M60 36v48M36 60h48" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".8"></path>
+            </svg>
+          </div>
+          <div class="orbit-item orbit-3">
+            <svg viewBox="0 0 120 120" fill="none">
+              <circle cx="60" cy="60" r="28" fill="rgba(255,219,88,.15)"></circle>
+              <path d="M60 24 68 46 92 46 73 60 80 84 60 71 40 84 47 60 28 46 52 46Z" fill="#ffdb58"></path>
+            </svg>
+          </div>
+        </div>
+        <h1 class="brand">SparkPlay</h1>
+        <p class="hero-sub">Missioni spaziali da vivere davvero. Tre sfide, una finale speciale, poi si torna domani.</p>
+        <button id="startBtn" class="main-cta">Inizia l’avventura</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="worldScreen" class="screen" aria-label="Scelta mondo">
+    <div class="screen-inner">
+      <div class="topbar">
+        <button id="backHomeBtn" class="secondary-cta">Indietro</button>
+        <div></div>
+      </div>
+      <div class="portal-wrap">
+        <p class="portal-title">Scegli il tuo portale</p>
+        <button id="spacePortalBtn" class="portal-card">
+          <div class="portal-icon" id="portalIcon"></div>
+          <div class="portal-name">SPAZIO</div>
+          <p class="portal-sub">Entra nella prossima missione</p>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="missionScreen" class="screen" aria-label="Missione">
+    <div class="screen-inner">
+      <div class="topbar">
+        <button id="exitMissionBtn" class="secondary-cta">Esci</button>
+        <div></div>
+      </div>
+      <div class="quest-layout">
+        <div class="panel quest-card">
+          <div id="questBadge" class="quest-badge">MISSIONE 1</div>
+          <div id="progressDots" class="progress"></div>
+          <div id="questIcon" class="quest-icon"></div>
+          <p id="questStory" class="quest-story"></p>
+          <div id="questObjective" class="objective"></div>
+          <div id="questSteps" class="steps"></div>
+        </div>
+        <div class="quest-actions">
+          <button id="prevBtn" class="secondary-cta">Indietro</button>
+          <button id="nextBtn" class="main-cta">Avanti</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="alertScreen" class="screen alert-screen" aria-label="Sfida finale">
+    <div class="screen-inner">
+      <div class="alert-wrap">
+        <div class="big-icon" id="alertIcon"></div>
+        <h2 class="alert-title">Sfida finale!</h2>
+        <p class="alert-sub">Preparati. Sta arrivando la missione speciale.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="endScreen" class="screen end-screen" aria-label="Fine sessione">
+    <div class="screen-inner">
+      <div class="end-wrap">
+        <div class="panel reward-card">
+          <div class="big-icon" id="rewardIcon"></div>
+          <p class="reward-kicker">Titolo ottenuto</p>
+          <h2 id="rewardTitle" class="reward-title">Esploratore Galattico</h2>
+          <p class="reward-sub">Missioni completate con successo.</p>
+          <div class="tomorrow">Torna domani per nuove missioni</div>
+        </div>
+        <button id="homeFromEndBtn" class="main-cta">Torna alla base</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="diaryScreen" class="screen diary-screen" aria-label="Diario">
+    <div class="screen-inner">
+      <div class="panel diary-card">
+        <div class="topbar" style="min-height:unset;margin-bottom:8px;">
+          <h2 class="diary-title">Diario di bordo</h2>
+          <button id="closeDiaryBtn" class="secondary-cta">Chiudi</button>
+        </div>
+        <div id="diaryList" class="diary-list"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const STORAGE_DAILY = "sparkplay_space_daily_lock_v1";
+  const STORAGE_HISTORY = "sparkplay_space_diary_v1";
+
+  const state = {
+    screen: "home",
+    world: "Spazio",
+    missionIndex: 0,
+    stepIndex: 0,
+    titlesPool: [
+      "Esploratore Galattico",
+      "Comandante Stellare",
+      "Pilota delle Nebulose",
+      "Guardiano delle Costellazioni",
+      "Eroe del Cosmo"
+    ],
+    currentTitle: "",
+    currentMissionSet: [],
+    currentMission: null,
+    specialDone: false,
+    finished: false
+  };
+
+  const DB = {
+    normal: [
+      {
+        id: "signal",
+        title: "Segnale perduto",
+        story: "La base ha perso il contatto. Serve un piccolo pilota per riattivare il segnale.",
+        objective: "Riaccendi l’antenna",
+        steps: [
+          "Trova un oggetto morbido da usare come antenna.",
+          "Portalo alla base spaziale.",
+          "Fai tre bip lenti: bip… bip… bip…"
+        ],
+        icon: "scanner"
+      },
+      {
+        id: "satellite",
+        title: "Satellite morbido",
+        story: "Un satellite è atterrato male. Va recuperato prima che si spenga.",
+        objective: "Recupera il satellite",
+        steps: [
+          "Trova un peluche o un oggetto soffice.",
+          "Fagli fare un giro intorno al tavolo.",
+          "Mettilo in un posto alto e sicuro."
+        ],
+        icon: "satellite"
+      },
+      {
+        id: "dust",
+        title: "Polvere di stelle",
+        story: "I motori sono pieni di polvere spaziale. Serve una pulizia rapida.",
+        objective: "Pulisci i motori",
+        steps: [
+          "Usa le mani come spazzole spaziali.",
+          "Pulisci tre superfici diverse.",
+          "Soffia via l’ultima polvere."
+        ],
+        icon: "spark"
+      },
+      {
+        id: "gravity",
+        title: "Gravità impazzita",
+        story: "La gravità fa i capricci. Bisogna muoversi con controllo perfetto.",
+        objective: "Muoviti come nello spazio",
+        steps: [
+          "Cammina lentissimo fino a un punto della stanza.",
+          "Tocca il pavimento solo con la punta dei piedi.",
+          "Siediti senza usare le mani."
+        ],
+        icon: "planet"
+      },
+      {
+        id: "code",
+        title: "Codice stellare",
+        story: "La base deve inviare un messaggio segreto alla Terra.",
+        objective: "Componi il codice",
+        steps: [
+          "Trova tre oggetti dello stesso colore.",
+          "Mettili in fila dal più piccolo al più grande.",
+          "Tocca ogni oggetto dicendo: pronto."
+        ],
+        icon: "badge"
+      }
+    ],
+    special: {
+      id: "special_base",
+      title: "Missione speciale",
+      story: "Ultima prova. La base spaziale deve essere costruita subito.",
+      objective: "Costruisci la base",
+      steps: [
+        "Prendi due o più cuscini.",
+        "Crea una piccola base o rifugio.",
+        "Entraci dentro e dì: base pronta al lancio!"
+      ],
+      icon: "special"
+    }
+  };
+
+  const el = {
+    starfield: document.getElementById("starfield"),
+    fxCanvas: document.getElementById("fxCanvas"),
+    diaryBtn: document.getElementById("diaryBtn"),
+    startBtn: document.getElementById("startBtn"),
+    backHomeBtn: document.getElementById("backHomeBtn"),
+    spacePortalBtn: document.getElementById("spacePortalBtn"),
+    exitMissionBtn: document.getElementById("exitMissionBtn"),
+    prevBtn: document.getElementById("prevBtn"),
+    nextBtn: document.getElementById("nextBtn"),
+    homeFromEndBtn: document.getElementById("homeFromEndBtn"),
+    closeDiaryBtn: document.getElementById("closeDiaryBtn"),
+    portalIcon: document.getElementById("portalIcon"),
+    questBadge: document.getElementById("questBadge"),
+    progressDots: document.getElementById("progressDots"),
+    questIcon: document.getElementById("questIcon"),
+    questStory: document.getElementById("questStory"),
+    questObjective: document.getElementById("questObjective"),
+    questSteps: document.getElementById("questSteps"),
+    alertIcon: document.getElementById("alertIcon"),
+    rewardIcon: document.getElementById("rewardIcon"),
+    rewardTitle: document.getElementById("rewardTitle"),
+    diaryList: document.getElementById("diaryList"),
+    screens: {
+      home: document.getElementById("homeScreen"),
+      world: document.getElementById("worldScreen"),
+      mission: document.getElementById("missionScreen"),
+      alert: document.getElementById("alertScreen"),
+      end: document.getElementById("endScreen"),
+      diary: document.getElementById("diaryScreen")
+    }
+  };
+
+  function svgIcon(name) {
+    const icons = {
+      portal: `
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <defs>
+            <linearGradient id="gPortal" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="60%" stop-color="#d5c4ff"/>
+              <stop offset="100%" stop-color="#8f5fff"/>
+            </linearGradient>
+          </defs>
+          <g>
+            <ellipse cx="60" cy="92" rx="18" ry="7" fill="rgba(0,0,0,.25)"/>
+            <g style="transform-origin:60px 54px;animation:floatShip 3s ease-in-out infinite;">
+              <path d="M60 18c14 8 24 23 24 40 0 11-4 21-11 29l7 15-20-10-20 10 7-15c-7-8-11-18-11-29 0-17 10-32 24-40Z" fill="url(#gPortal)"/>
+              <circle cx="60" cy="50" r="8" fill="#0b1026"/>
+              <path d="M49 87h22" stroke="#ffdb58" stroke-width="5" stroke-linecap="round"/>
+              <path d="M54 92l6 10 6-10" fill="#ffdb58"/>
+            </g>
+          </g>
+          <style>
+            @keyframes floatShip{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+          </style>
+        </svg>
+      `,
+      scanner: `
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <defs>
+            <radialGradient id="scanGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity=".95"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <g>
+            <circle cx="60" cy="60" r="42" fill="rgba(162,124,255,.10)"/>
+            <circle cx="60" cy="60" r="34" fill="rgba(162,124,255,.16)"/>
+            <circle cx="60" cy="60" r="27" fill="#7c4dff"/>
+            <circle cx="60" cy="60" r="18" fill="#1d2453"/>
+            <circle cx="60" cy="60" r="6" fill="#ffffff"/>
+            <circle cx="60" cy="60" r="40" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="4"/>
+            <path d="M60 20A40 40 0 0 1 100 60" fill="none" stroke="#ffdb58" stroke-width="5" stroke-linecap="round" style="transform-origin:60px 60px;animation:scanRotate 2.8s linear infinite"/>
+            <circle cx="60" cy="60" r="42" fill="url(#scanGlow)" style="animation:scanPulse 1.8s ease-in-out infinite"/>
+          </g>
+          <style>
+            @keyframes scanRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+            @keyframes scanPulse{0%,100%{opacity:.2}50%{opacity:.7}}
+          </style>
+        </svg>
+      `,
+      satellite: `
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <g style="transform-origin:60px 60px;animation:floatSat 3.4s ease-in-out infinite;">
+            <rect x="44" y="42" width="32" height="36" rx="12" fill="#a27cff"/>
+            <rect x="50" y="48" width="20" height="14" rx="7" fill="#ffffff"/>
+            <rect x="22" y="46" width="16" height="28" rx="4" fill="#4deeea"/>
+            <rect x="82" y="46" width="16" height="28" rx="4" fill="#4deeea"/>
+            <path d="M38 60H44M76 60H82" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+            <path d="M60 78v12" stroke="#ffdb58" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="60" cy="94" r="5" fill="#ffdb58"/>
+          </g>
+          <style>
+            @keyframes floatSat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+          </style>
+        </svg>
+      `,
+      spark: `
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <g style="transform-origin:60px 60px;animation:floatSpark 3s ease-in-out infinite;">
+            <circle cx="60" cy="60" r="36" fill="rgba(255,219,88,.14)"/>
+            <path d="M60 18 70 46 100 46 76 62 84 92 60 76 36 92 44 62 20 46 50 46Z" fill="#ffdb58"/>
+            <circle cx="28" cy="28" r="4" fill="#ffffff" style="animation:blinkSpark 1.4s ease-in-out infinite"/>
+            <circle cx="90" cy="30" r="5" fill="#4deeea" style="animation:blinkSpark 1.8s ease-in-out infinite"/>
+          </g>
+          <style>
+            @keyframes floatSpark{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+            @keyframes blinkSpark{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+          </style>
+        </svg>
+      `,
+      planet: `
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <g style="transform-origin:60px 60px;animation:planetBob 3.2s ease-in-out infinite;">
+            <circle cx="60" cy="60" r="28" fill="#4deeea"/>
+            <path d="M38 52c8-6 17-8 28-7 8 1 14 5 18 9-10 2-17 5-24 11-7 6-12 7-20 5-6-2-8-9-2-18Z" fill="rgba(255,255,255,.28)"/>
+            <ellipse cx="60" cy="60" rx="45" ry="14" fill="none" stroke="#ffdb58" stroke-width="6"/>
+            <ellipse cx="60" cy="60" rx="45" ry="14" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
+          </g>
+          <style>
+            @keyframes planetBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+          </style>
+        </svg>
+      `,
+      badge: `
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <g style="transform-origin:60px 60px;animation:badgePulse 2.2s ease-in-out infinite;">
+            <circle cx="60" cy="54" r="26" fill="#a27cff"/>
+            <circle cx="60" cy="54" r="16" fill="#ffffff"/>
+            <path d="m60 42 3.8 7.8 8.7 1.3-6.2 6 1.5 8.6L60 61.5l-7.8 4.2 1.5-8.6-6.2-6 8.7-1.3Z" fill="#ffdb58"/>
+            <path d="M48 80 60 70 72 80v20l-12-8-12 8Z" fill="#4deeea"/>
+          </g>
+          <style>
+            @keyframes badgePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+          </style>
+        </svg>
+      `,
+      special: `
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <g style="transform-origin:60px 60px;animation:specialFloat 2.8s ease-in-out infinite;">
+            <circle cx="60" cy="60" r="40" fill="rgba(255,219,88,.12)"/>
+            <path d="M60 18 70 44 98 44 76 60 84 88 60 72 36 88 44 60 22 44 50 44Z" fill="#ffdb58"/>
+            <circle cx="22" cy="30" r="4" fill="#fff" style="animation:sparkle 1.2s ease-in-out infinite"/>
+            <circle cx="95" cy="28" r="5" fill="#4deeea" style="animation:sparkle 1.6s ease-in-out infinite"/>
+            <circle cx="92" cy="82" r="4" fill="#fff" style="animation:sparkle 1.4s ease-in-out infinite"/>
+          </g>
+          <style>
+            @keyframes specialFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+            @keyframes sparkle{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+          </style>
+        </svg>
+      `,
+      reward: `
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <g style="transform-origin:60px 60px;animation:rewardBounce 2s ease-in-out infinite;">
+            <circle cx="60" cy="56" r="40" fill="rgba(255,219,88,.16)"/>
+            <path d="M40 26h40v20c0 17-10 30-20 30s-20-13-20-30V26Z" fill="#ffdb58"/>
+            <path d="M40 34H28c0 12 7 20 18 20M80 34h12c0 12-7 20-18 20" fill="none" stroke="#ffdb58" stroke-width="7" stroke-linecap="round"/>
+            <path d="M60 76v14M46 96h28" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="60" cy="46" r="10" fill="#fff"/>
+            <path d="m60 37 2.8 5.6 6.2.9-4.5 4.3 1.1 6.2L60 51.4 54.4 54l1.1-6.2-4.5-4.3 6.2-.9Z" fill="#ffdb58"/>
+          </g>
+          <style>
+            @keyframes rewardBounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.02)}}
+          </style>
+        </svg>
+      `,
+      diary: `
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <rect x="28" y="22" width="64" height="76" rx="16" fill="#ffdb58"/>
+          <rect x="34" y="28" width="52" height="64" rx="12" fill="#1a1f4a"/>
+          <path d="M45 44h30M45 54h24" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+          <path d="m60 62 4 8 9 1.4-6.5 6.1 1.6 9-8.1-4.3-8.1 4.3 1.6-9-6.5-6.1 9-1.4Z" fill="#ffdb58"/>
+        </svg>
+      `
+    };
+    return icons[name] || "";
   }
 
-  body {
-    @apply font-sans antialiased bg-background text-foreground;
-    font-family: var(--app-font-sans);
-    background: hsl(var(--background));
-    color: hsl(var(--foreground));
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-    min-height: 100dvh;
+  function createStars() {
+    const count = 48;
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement("div");
+      s.className = "star" + (Math.random() > 0.78 ? " big" : "");
+      s.style.left = Math.random() * 100 + "%";
+      s.style.top = Math.random() * 100 + "%";
+      s.style.animationDuration = (2 + Math.random() * 3.6).toFixed(2) + "s";
+      s.style.animationDelay = (Math.random() * 3).toFixed(2) + "s";
+      frag.appendChild(s);
+    }
+    el.starfield.appendChild(frag);
   }
 
-  #root {
-    min-height: 100dvh;
+  function todayKey() {
+    return new Date().toLocaleDateString("sv-SE");
   }
-}
 
-/**
- * Using the elevate system.
- * Automatic contrast adjustment.
- *
- * <element className="hover-elevate" />
- * <element className="active-elevate-2" />
- *
- * // Using the tailwind utility when a data attribute is "on"
- * <element className="toggle-elevate data-[state=on]:toggle-elevated" />
- * // Or manually controlling the toggle state
- * <element className="toggle-elevate toggle-elevated" />
- *
- * Elevation systems have to handle many states.
- * - not-hovered, vs. hovered vs. active  (three mutually exclusive states)
- * - toggled or not
- * - focused or not (this is not handled with these utilities)
- *
- * Even without handling focused or not, this is six possible combinations that
- * need to be distinguished from eachother visually.
- */
-@layer utilities {
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-
-  /* Hide ugly search cancel button in Chrome until we can style it properly */
-  input[type="search"]::-webkit-search-cancel-button {
-    @apply hidden;
+  function getHistory() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_HISTORY) || "[]");
+    } catch {
+      return [];
+    }
   }
-@keyframes glow-pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
 
-  /* Placeholder styling for contentEditable div */
-  [contenteditable][data-placeholder]:empty::before {
-    content: attr(data-placeholder);
-    color: hsl(var(--muted-foreground));
-    pointer-events: none;
+  function setHistory(list) {
+    localStorage.setItem(STORAGE_HISTORY, JSON.stringify(list));
   }
-@keyframe...
-[truncated]
-[truncated]
-[truncated]
+
+  function isLockedToday() {
+    return localStorage.getItem(STORAGE_DAILY) === todayKey();
+  }
+
+  function lockToday() {
+    localStorage.setItem(STORAGE_DAILY, todayKey());
+  }
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function setScreen(name) {
+    state.screen = name;
+    Object.entries(el.screens).forEach(([key, node]) => {
+      if (key === name) node.classList.add("active");
+      else node.classList.remove("active");
+    });
+    el.diaryBtn.style.display = name === "home" ? "flex" : "none";
+  }
+
+  function buildWorldIcon() {
+    el.portalIcon.innerHTML = svgIcon("portal");
+  }
+
+  function buildAlertIcon() {
+    el.alertIcon.innerHTML = svgIcon("special");
+  }
+
+  function buildRewardIcon() {
+    el.rewardIcon.innerHTML = svgIcon("reward");
+  }
+
+  function buildProgress() {
+    el.progressDots.innerHTML = "";
+    for (let i = 0; i < 4; i++) {
+      const d = document.createElement("div");
+      d.className = "dot";
+      if (i < state.missionIndex) d.classList.add("done");
+      if (i === state.missionIndex) d.classList.add("now");
+      el.progressDots.appendChild(d);
+    }
+  }
+
+  function currentMission() {
+    if (state.missionIndex < 3) return state.currentMissionSet[state.missionIndex];
+    return DB.special;
+  }
+
+  function renderSteps() {
+    const m = state.currentMission;
+    el.questSteps.innerHTML = "";
+    m.steps.forEach((step, idx) => {
+      const row = document.createElement("div");
+      row.className = "step";
+      if (idx < state.stepIndex) row.classList.add("done");
+      if (idx === state.stepIndex) row.classList.add("active");
+
+      const num = document.createElement("div");
+      num.className = "step-num";
+      num.textContent = idx + 1;
+
+      const tx = document.createElement("div");
+      tx.textContent = step;
+
+      row.appendChild(num);
+      row.appendChild(tx);
+      el.questSteps.appendChild(row);
+    });
+  }
+
+  function renderMission() {
+    state.currentMission = currentMission();
+
+    buildProgress();
+
+    const missionNumberText = state.missionIndex < 3
+      ? `MISSIONE ${state.missionIndex + 1}`
+      : "MISSIONE SPECIALE";
+
+    el.questBadge.textContent = missionNumberText;
+    el.questStory.textContent = state.currentMission.story;
+    el.questObjective.textContent = state.currentMission.objective;
+    el.questIcon.innerHTML = svgIcon(state.currentMission.icon);
+    renderSteps();
+
+    el.prevBtn.classList.toggle("hidden", state.stepIndex === 0);
+
+    const isLastStep = state.stepIndex === state.currentMission.steps.length - 1;
+    el.nextBtn.textContent = isLastStep ? "Completa" : "Avanti";
+  }
+
+  function startAdventure() {
+    if (isLockedToday()) {
+      alert("Hai già completato la sessione di oggi. Torna domani per nuove missioni.");
+      return;
+    }
+    state.finished = false;
+    state.specialDone = false;
+    state.missionIndex = 0;
+    state.stepIndex = 0;
+    state.currentMissionSet = shuffle(DB.normal).slice(0, 3);
+    renderMission();
+    setScreen("mission");
+  }
+
+  function nextStep() {
+    const m = state.currentMission;
+    if (state.stepIndex < m.steps.length - 1) {
+      state.stepIndex += 1;
+      renderMission();
+      pulseButton(el.nextBtn);
+      return;
+    }
+
+    if (state.missionIndex < 2) {
+      state.missionIndex += 1;
+      state.stepIndex = 0;
+      renderMission();
+      pulseButton(el.nextBtn);
+      return;
+    }
+
+    if (state.missionIndex === 2) {
+      setScreen("alert");
+      setTimeout(() => {
+        state.missionIndex = 3;
+        state.stepIndex = 0;
+        renderMission();
+        setScreen("mission");
+      }, 1800);
+      return;
+    }
+
+    finishSession();
+  }
+
+  function prevStep() {
+    if (state.stepIndex > 0) {
+      state.stepIndex -= 1;
+      renderMission();
+    }
+  }
+
+  function pulseButton(btn) {
+    btn.animate([
+      { transform: "scale(1)" },
+      { transform: "scale(0.97)" },
+      { transform: "scale(1)" }
+    ], { duration: 180, easing: "ease-out" });
+  }
+
+  function finishSession() {
+    state.finished = true;
+    state.currentTitle = state.titlesPool[Math.floor(Math.random() * state.titlesPool.length)];
+    el.rewardTitle.textContent = state.currentTitle;
+
+    const entry = {
+      date: new Date().toLocaleDateString("it-IT"),
+      title: state.currentTitle,
+      world: state.world,
+      special: DB.special.title
+    };
+
+    const history = getHistory();
+    history.unshift(entry);
+    setHistory(history.slice(0, 12));
+    lockToday();
+
+    setScreen("end");
+    fireConfetti();
+  }
+
+  function openDiary() {
+    const history = getHistory();
+    el.diaryList.innerHTML = "";
+
+    if (!history.length) {
+      const empty = document.createElement("div");
+      empty.className = "diary-entry";
+      empty.innerHTML = `
+        <div class="entry-icon">${svgIcon("diary")}</div>
+        <div>
+          <div class="entry-title">Diario vuoto</div>
+          <div class="entry-small">Completa la tua prima missione per riempirlo.</div>
+        </div>
+      `;
+      el.diaryList.appendChild(empty);
+    } else {
+      history.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "diary-entry";
+        row.innerHTML = `
+          <div class="entry-icon">${svgIcon("diary")}</div>
+          <div>
+            <div class="entry-meta">${item.date}</div>
+            <div class="entry-title">${item.title}</div>
+            <div class="entry-small">${item.world} · ${item.special}</div>
+          </div>
+        `;
+        el.diaryList.appendChild(row);
+      });
+    }
+
+    setScreen("diary");
+  }
+
+  function backHome() {
+    setScreen("home");
+  }
+
+  function exitMission() {
+    state.missionIndex = 0;
+    state.stepIndex = 0;
+    state.currentMission = null;
+    setScreen("home");
+  }
+
+  function resizeCanvas() {
+    const ratio = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    el.fxCanvas.width = Math.floor(window.innerWidth * ratio);
+    el.fxCanvas.height = Math.floor(window.innerHeight * ratio);
+    el.fxCanvas.style.width = window.innerWidth + "px";
+    el.fxCanvas.style.height = window.innerHeight + "px";
+    const ctx = el.fxCanvas.getContext("2d");
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  }
+
+  function fireConfetti() {
+    resizeCanvas();
+    const ctx = el.fxCanvas.getContext("2d");
+    const pieces = [];
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    const colors = ["#ffdb58", "#a27cff", "#4deeea", "#ff5e6c", "#ffffff"];
+
+    for (let i = 0; i < 120; i++) {
+      pieces.push({
+        x: Math.random() * W,
+        y: -20 - Math.random() * H * 0.35,
+        w: 6 + Math.random() * 8,
+        h: 8 + Math.random() * 10,
+        vy: 2 + Math.random() * 3.6,
+        vx: -1.6 + Math.random() * 3.2,
+        rot: Math.random() * Math.PI,
+        vr: -0.12 + Math.random() * 0.24,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: 1
+      });
+    }
+
+    const start = performance.now();
+    const duration = 2600;
+
+    function frame(now) {
+      ctx.clearRect(0, 0, W, H);
+
+      pieces.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        if (p.y > H + 40) {
+          p.y = -20;
+          p.x = Math.random() * W;
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+
+      if (now - start < duration) {
+        requestAnimationFrame(frame);
+      } else {
+        ctx.clearRect(0, 0, W, H);
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  function bind() {
+    el.startBtn.addEventListener("click", () => {
+      pulseButton(el.startBtn);
+      setTimeout(() => setScreen("world"), 70);
+    });
+    el.backHomeBtn.addEventListener("click", backHome);
+    el.spacePortalBtn.addEventListener("click", startAdventure);
+    el.exitMissionBtn.addEventListener("click", exitMission);
+    el.prevBtn.addEventListener("click", prevStep);
+    el.nextBtn.addEventListener("click", nextStep);
+    el.homeFromEndBtn.addEventListener("click", backHome);
+    el.diaryBtn.addEventListener("click", openDiary);
+    el.closeDiaryBtn.addEventListener("click", backHome);
+    window.addEventListener("resize", resizeCanvas);
+  }
+
+  function init() {
+    createStars();
+    buildWorldIcon();
+    buildAlertIcon();
+    buildRewardIcon();
+    bind();
+    resizeCanvas();
+    setScreen("home");
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
