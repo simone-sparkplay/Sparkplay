@@ -1,2347 +1,1681 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
-    <title>SparkPlay</title>
-    <style>
-      :root {
-        --navy: #0a0e2e;
-        --deep-blue: #0d1545;
-        --royal: #1a237e;
-        --purple: #6a1de8;
-        --purple-soft: #9c4dfc;
-        --gold: #ffd700;
-        --gold-soft: #ffecb3;
-        --white: #f0f4ff;
-        --star: rgba(255, 255, 255, 0.85);
-        --card-bg: rgba(255, 255, 255, 0.07);
-        --card-border: rgba(255, 255, 255, 0.13);
-        --glow-purple: 0 0 32px rgba(106, 29, 232, 0.55);
-        --glow-gold: 0 0 24px rgba(255, 215, 0, 0.45);
-        --radius: 28px;
-        --radius-sm: 16px;
-      }
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        -webkit-tap-highlight-color: transparent;
-      }
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-        background: var(--navy);
-        color: var(--white);
-        touch-action: manipulation;
-      }
-      #app {
-        width: 100%;
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
-        position: relative;
-      }
-      .screen {
-        min-height: 100vh;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        padding: 24px 20px 40px;
-        position: relative;
-        background: linear-gradient(
-          160deg,
-          #0a0e2e 0%,
-          #0d1545 45%,
-          #1a0a35 100%
-        );
-        animation: fadeIn 0.35s ease;
-      }
-      .screen.active {
-        display: flex;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(12px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      @keyframes floatUp {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
-      }
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.6;
-        }
-      }
-      @keyframes sparkle {
-        0% {
-          transform: scale(0) rotate(0deg);
-          opacity: 1;
-        }
-        100% {
-          transform: scale(1.5) rotate(180deg);
-          opacity: 0;
-        }
-      }
-      @keyframes levelUp {
-        0% {
-          transform: scale(0.6) translateY(20px);
-          opacity: 0;
-        }
-        60% {
-          transform: scale(1.1) translateY(-5px);
-          opacity: 1;
-        }
-        100% {
-          transform: scale(1) translateY(0);
-          opacity: 1;
-        }
-      }
-      @keyframes barFill {
-        from {
-          width: 0;
-        }
-        to {
-          width: var(--w);
-        }
-      }
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SparkPlay</title>
+<style>
+  :root {
+    --navy: #0a0e2e;
+    --deep-blue: #0d1545;
+    --royal: #1a237e;
+    --purple: #6a1de8;
+    --purple-soft: #9c4dfc;
+    --gold: #ffd700;
+    --gold-soft: #ffecb3;
+    --white: #f0f4ff;
+    --card-bg: rgba(255,255,255,0.07);
+    --card-border: rgba(255,255,255,0.13);
+    --glow-purple: 0 0 32px rgba(106,29,232,0.55);
+    --glow-gold: 0 0 24px rgba(255,215,0,0.45);
+    --radius: 28px;
+    --radius-sm: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    touch-action: manipulation;
+  }
+  #app {
+    width: 100%; height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+  }
+  .screen {
+    min-height: 100vh;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 20px 40px;
+    position: relative;
+    background: linear-gradient(160deg, #0a0e2e 0%, #0d1545 45%, #1a0a35 100%);
+    animation: fadeIn 0.35s ease;
+  }
+  .screen.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes floatUp { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+  @keyframes sparkle { 0%{transform:scale(0) rotate(0deg);opacity:1} 100%{transform:scale(1.5) rotate(180deg);opacity:0} }
+  @keyframes levelUp { 0%{transform:scale(0.6) translateY(20px);opacity:0} 60%{transform:scale(1.1) translateY(-5px);opacity:1} 100%{transform:scale(1) translateY(0);opacity:1} }
 
-      /* STARS BACKGROUND */
-      .stars {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 0;
-        overflow: hidden;
-      }
-      .star-dot {
-        position: absolute;
-        border-radius: 50%;
-        background: white;
-        opacity: 0;
-        animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
-      }
-      @keyframes twinkle {
-        0%,
-        100% {
-          opacity: 0;
-        }
-        50% {
-          opacity: var(--op, 0.8);
-        }
-      }
+  .stars {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .star-dot {
+    position: absolute; border-radius: 50%;
+    background: white; opacity: 0;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+  }
+  @keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:var(--op,0.8)} }
 
-      /* TOP BAR */
-      .top-bar {
-        position: relative;
-        z-index: 10;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 0 20px;
-      }
-      .top-bar .xp-area {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-      .xp-label {
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--gold);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-      .xp-bar-wrap {
-        width: 140px;
-        height: 10px;
-        background: rgba(255, 255, 255, 0.12);
-        border-radius: 10px;
-        overflow: hidden;
-      }
-      .xp-bar-fill {
-        height: 100%;
-        border-radius: 10px;
-        background: linear-gradient(90deg, var(--gold), #ff9d00);
-        transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 0 10px rgba(255, 200, 0, 0.6);
-      }
-      .audio-btn {
-        width: 46px;
-        height: 46px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1.5px solid var(--card-border);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        cursor: pointer;
-        transition: all 0.2s;
-        backdrop-filter: blur(8px);
-      }
-      .audio-btn:active {
-        transform: scale(0.9);
-        background: rgba(255, 255, 255, 0.2);
-      }
+  .top-bar {
+    position: relative; z-index: 10;
+    width: 100%; display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0 20px;
+  }
+  .top-bar .xp-area { display: flex; flex-direction: column; gap: 4px; }
+  .xp-label { font-size: 11px; font-weight: 600; color: var(--gold); letter-spacing: 0.08em; text-transform: uppercase; }
+  .xp-bar-wrap { width: 140px; height: 10px; background: rgba(255,255,255,0.12); border-radius: 10px; overflow: hidden; }
+  .xp-bar-fill {
+    height: 100%; border-radius: 10px;
+    background: linear-gradient(90deg, var(--gold), #ff9d00);
+    transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 0 10px rgba(255,200,0,0.6);
+  }
+  .audio-btn {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); border: 1.5px solid var(--card-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; cursor: pointer; transition: all 0.2s; backdrop-filter: blur(8px);
+  }
+  .audio-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
 
-      /* CARDS */
-      .card {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: var(--radius);
-        backdrop-filter: blur(16px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-        padding: 24px;
-        width: 100%;
-      }
-      .card-glow {
-        box-shadow:
-          0 8px 32px rgba(0, 0, 0, 0.35),
-          var(--glow-purple);
-      }
+  .card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35); padding: 24px; width: 100%;
+  }
 
-      /* BUTTONS */
-      .btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        padding: 18px 24px;
-        border-radius: var(--radius-sm);
-        border: none;
-        cursor: pointer;
-        font-size: 18px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        transition: all 0.2s;
-        position: relative;
-        overflow: hidden;
-        font-family: inherit;
-      }
-      .btn:active {
-        transform: scale(0.97);
-      }
-      .btn-primary {
-        background: linear-gradient(135deg, var(--purple), #4a0abf);
-        color: white;
-        box-shadow: var(--glow-purple);
-      }
-      .btn-gold {
-        background: linear-gradient(135deg, #d4a000, #ff9900);
-        color: #1a0a00;
-        box-shadow: var(--glow-gold);
-      }
-      .btn-ghost {
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--white);
-        border: 1px solid var(--card-border);
-      }
-      .btn-ghost:active {
-        background: rgba(255, 255, 255, 0.16);
-      }
-      .btn-sm {
-        padding: 12px 20px;
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: var(--radius-sm);
-      }
-      .btn-danger {
-        background: rgba(200, 50, 50, 0.25);
-        color: #ff8080;
-        border: 1px solid rgba(200, 50, 50, 0.3);
-      }
+  .btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; padding: 18px 24px;
+    border-radius: var(--radius-sm); border: none; cursor: pointer;
+    font-size: 18px; font-weight: 700; letter-spacing: 0.02em;
+    transition: all 0.2s; position: relative; overflow: hidden; font-family: inherit;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.5; pointer-events: none; }
+  .btn-primary { background: linear-gradient(135deg, var(--purple), #4a0abf); color: white; box-shadow: var(--glow-purple); }
+  .btn-gold { background: linear-gradient(135deg, #d4a000, #ff9900); color: #1a0a00; box-shadow: var(--glow-gold); }
+  .btn-ghost { background: rgba(255,255,255,0.08); color: var(--white); border: 1px solid var(--card-border); }
+  .btn-ghost:active { background: rgba(255,255,255,0.16); }
+  .btn-sm { padding: 12px 20px; font-size: 15px; font-weight: 600; border-radius: var(--radius-sm); }
+  .btn-danger { background: rgba(200,50,50,0.25); color: #ff8080; border: 1px solid rgba(200,50,50,0.3); }
 
-      /* SCREEN: WELCOME */
-      #screen-welcome {
-        justify-content: center;
-        gap: 32px;
-        text-align: center;
-      }
-      .logo-wrap {
-        animation: floatUp 4s ease-in-out infinite;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-      }
-      .logo-icon {
-        width: 120px;
-        height: 120px;
-        background: radial-gradient(
-          circle at 40% 35%,
-          #b06afc,
-          #6a1de8 55%,
-          #1a0a45
-        );
-        border-radius: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 62px;
-        box-shadow:
-          0 8px 40px rgba(106, 29, 232, 0.7),
-          0 0 0 2px rgba(255, 255, 255, 0.12);
-      }
-      .logo-name {
-        font-size: 42px;
-        font-weight: 900;
-        letter-spacing: -1px;
-        background: linear-gradient(90deg, #ffffff, var(--gold));
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .logo-tagline {
-        font-size: 16px;
-        color: rgba(255, 255, 255, 0.6);
-        font-weight: 400;
-        line-height: 1.4;
-      }
-      .welcome-cta {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        width: 100%;
-      }
+  #screen-welcome { justify-content: center; gap: 32px; text-align: center; }
+  .logo-wrap { animation: floatUp 4s ease-in-out infinite; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 120px; height: 120px;
+    background: radial-gradient(circle at 40% 35%, #b06afc, #6a1de8 55%, #1a0a45);
+    border-radius: 32px; display: flex; align-items: center; justify-content: center; font-size: 62px;
+    box-shadow: 0 8px 40px rgba(106,29,232,0.7), 0 0 0 2px rgba(255,255,255,0.12);
+  }
+  .logo-name {
+    font-size: 42px; font-weight: 900; letter-spacing: -1px;
+    background: linear-gradient(90deg, #ffffff, var(--gold));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .logo-tagline { font-size: 16px; color: rgba(255,255,255,0.6); font-weight: 400; line-height: 1.4; }
+  .welcome-cta { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
-      /* WORLD CARDS */
-      .worlds-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        width: 100%;
-      }
-      .world-card {
-        border-radius: var(--radius);
-        padding: 28px 24px;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        cursor: pointer;
-        border: 2px solid transparent;
-        transition: all 0.25s;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-      }
-      .world-card:active {
-        transform: scale(0.98);
-      }
-      .world-card.spazio {
-        background: linear-gradient(135deg, #0d1545 0%, #1a2a7e 100%);
-        border-color: rgba(100, 180, 255, 0.4);
-      }
-      .world-card.magia {
-        background: linear-gradient(135deg, #1a0a35 0%, #6a1de8 100%);
-        border-color: rgba(180, 100, 255, 0.4);
-      }
-      .world-card.detective {
-        background: linear-gradient(135deg, #1a1000 0%, #5c3d00 100%);
-        border-color: rgba(255, 200, 50, 0.4);
-      }
-      .world-icon {
-        font-size: 52px;
-        flex-shrink: 0;
-      }
-      .world-info h2 {
-        font-size: 24px;
-        font-weight: 800;
-        margin-bottom: 4px;
-      }
-      .world-info p {
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.65);
-        line-height: 1.4;
-      }
-      .world-lock {
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.4);
-        margin-top: 6px;
-      }
-      .world-badge {
-        margin-left: auto;
-        flex-shrink: 0;
-        background: rgba(255, 255, 255, 0.12);
-        border-radius: 50%;
-        width: 44px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-      }
+  .worlds-grid { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+  .world-card {
+    border-radius: var(--radius); padding: 28px 24px;
+    display: flex; align-items: center; gap: 20px;
+    cursor: pointer; border: 2px solid transparent;
+    transition: all 0.25s; position: relative; overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .world-card:active { transform: scale(0.98); }
+  .world-card.spazio { background: linear-gradient(135deg, #0d1545 0%, #1a2a7e 100%); border-color: rgba(100,180,255,0.4); }
+  .world-card.magia { background: linear-gradient(135deg, #1a0a35 0%, #6a1de8 100%); border-color: rgba(180,100,255,0.4); }
+  .world-card.detective { background: linear-gradient(135deg, #1a1000 0%, #5c3d00 100%); border-color: rgba(255,200,50,0.4); }
+  .world-icon { font-size: 52px; flex-shrink: 0; }
+  .world-info h2 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+  .world-info p { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.4; }
+  .world-lock { font-size: 14px; color: rgba(255,255,255,0.4); margin-top: 6px; }
+  .world-badge {
+    margin-left: auto; flex-shrink: 0;
+    background: rgba(255,255,255,0.12); border-radius: 50%; width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
 
-      /* MISSION LIST */
-      .mission-list {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        width: 100%;
-      }
-      .mission-item {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: var(--radius-sm);
-        padding: 18px 20px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-      }
-      .mission-item:active {
-        transform: scale(0.98);
-        background: rgba(255, 255, 255, 0.12);
-      }
-      .mission-item.done {
-        opacity: 0.45;
-        pointer-events: none;
-      }
-      .mission-num {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--purple-soft), var(--purple));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        font-weight: 800;
-        flex-shrink: 0;
-        box-shadow: 0 2px 12px rgba(106, 29, 232, 0.45);
-      }
-      .mission-num.done {
-        background: linear-gradient(135deg, #3a3a3a, #222);
-        box-shadow: none;
-      }
-      .mission-info {
-        flex: 1;
-      }
-      .mission-info h3 {
-        font-size: 16px;
-        font-weight: 700;
-        margin-bottom: 3px;
-      }
-      .mission-info p {
-        font-size: 13px;
-        color: rgba(255, 255, 255, 0.55);
-      }
-      .mission-item .arr {
-        font-size: 20px;
-        color: rgba(255, 255, 255, 0.3);
-      }
+  .mission-list { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+  .mission-item {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm); padding: 18px 20px;
+    display: flex; align-items: center; gap: 16px;
+    cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .mission-item:active { transform: scale(0.98); background: rgba(255,255,255,0.12); }
+  .mission-item.done { opacity: 0.45; pointer-events: none; }
+  .mission-item.locked { opacity: 0.55; pointer-events: none; }
+  .mission-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple-soft), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; flex-shrink: 0;
+    box-shadow: 0 2px 12px rgba(106,29,232,0.45);
+  }
+  .mission-num.done { background: linear-gradient(135deg, #3a3a3a, #222); box-shadow: none; }
+  .mission-info { flex: 1; }
+  .mission-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+  .mission-info p { font-size: 13px; color: rgba(255,255,255,0.55); }
+  .mission-item .arr { font-size: 20px; color: rgba(255,255,255,0.3); }
 
-      /* MISSION DETAIL */
-      #screen-mission {
-        gap: 20px;
-      }
-      .mission-header {
-        text-align: center;
-        padding: 8px 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-      }
-      .mission-world-badge {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 5px 14px;
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-      .mission-emoji {
-        font-size: 64px;
-        animation: floatUp 4s ease-in-out infinite;
-      }
-      .mission-title {
-        font-size: 26px;
-        font-weight: 900;
-        text-align: center;
-        line-height: 1.2;
-      }
-      .mission-intro {
-        font-size: 15px;
-        color: rgba(255, 255, 255, 0.7);
-        text-align: center;
-        line-height: 1.5;
-        font-style: italic;
-      }
-      .objects-card {
-        padding: 18px 20px;
-      }
-      .objects-label {
-        font-size: 12px;
-        color: var(--gold);
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        margin-bottom: 10px;
-      }
-      .objects-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .object-tag {
-        background: rgba(255, 215, 0, 0.12);
-        border: 1px solid rgba(255, 215, 0, 0.25);
-        border-radius: 20px;
-        padding: 5px 12px;
-        font-size: 13px;
-        color: var(--gold-soft);
-      }
-      .steps-card {
-        padding: 20px;
-      }
-      .steps-label {
-        font-size: 12px;
-        color: var(--purple-soft);
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        margin-bottom: 14px;
-      }
-      .step-row {
-        display: flex;
-        gap: 14px;
-        align-items: flex-start;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      }
-      .step-row:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-      }
-      .step-num {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--purple-soft), var(--purple));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        font-weight: 800;
-        flex-shrink: 0;
-        margin-top: 1px;
-      }
-      .step-text {
-        font-size: 15px;
-        line-height: 1.5;
-        color: rgba(255, 255, 255, 0.88);
-      }
+  #screen-mission { gap: 20px; }
+  .mission-header { text-align: center; padding: 8px 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .mission-world-badge { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .mission-emoji { font-size: 64px; animation: floatUp 4s ease-in-out infinite; }
+  .mission-title { font-size: 26px; font-weight: 900; text-align: center; line-height: 1.2; }
+  .mission-intro { font-size: 15px; color: rgba(255,255,255,0.7); text-align: center; line-height: 1.5; font-style: italic; }
+  .objects-card { padding: 18px 20px; }
+  .objects-label { font-size: 12px; color: var(--gold); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+  .objects-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .object-tag { background: rgba(255,215,0,0.12); border: 1px solid rgba(255,215,0,0.25); border-radius: 20px; padding: 5px 12px; font-size: 13px; color: var(--gold-soft); }
+  .steps-card { padding: 20px; }
+  .steps-label { font-size: 12px; color: var(--purple-soft); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
+  .step-row { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .step-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .step-num {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple-soft), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+  }
+  .step-text { font-size: 15px; line-height: 1.5; color: rgba(255,255,255,0.88); }
 
-      /* COMPLETION / REWARD */
-      .reward-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 100;
-        background: rgba(5, 5, 25, 0.92);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        animation: fadeIn 0.3s ease;
-      }
-      .reward-card {
-        background: linear-gradient(160deg, #1a0a45, #0d1545);
-        border: 2px solid var(--gold);
-        border-radius: var(--radius);
-        padding: 36px 28px;
-        text-align: center;
-        max-width: 380px;
-        width: 100%;
-        box-shadow:
-          0 0 60px rgba(255, 215, 0, 0.3),
-          0 20px 60px rgba(0, 0, 0, 0.6);
-        animation: levelUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      .reward-trophy {
-        font-size: 72px;
-        margin-bottom: 8px;
-      }
-      .reward-title {
-        font-size: 28px;
-        font-weight: 900;
-        color: var(--gold);
-        margin-bottom: 8px;
-      }
-      .reward-msg {
-        font-size: 16px;
-        color: rgba(255, 255, 255, 0.75);
-        line-height: 1.5;
-        margin-bottom: 24px;
-      }
-      .xp-earned {
-        background: rgba(255, 215, 0, 0.12);
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        border-radius: var(--radius-sm);
-        padding: 12px 20px;
-        margin-bottom: 20px;
-        font-size: 20px;
-        font-weight: 800;
-        color: var(--gold);
-      }
-      .sparkles-container {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        overflow: hidden;
-      }
-      .sparkle-dot {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--gold);
-        animation: sparkle 1s ease-out forwards;
-      }
+  .reward-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(5,5,25,0.92);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    animation: fadeIn 0.3s ease;
+  }
+  .reward-card {
+    background: linear-gradient(160deg, #1a0a45, #0d1545);
+    border: 2px solid var(--gold); border-radius: var(--radius);
+    padding: 36px 28px; text-align: center; max-width: 380px; width: 100%;
+    box-shadow: 0 0 60px rgba(255,215,0,0.3), 0 20px 60px rgba(0,0,0,0.6);
+    animation: levelUp 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .reward-trophy { font-size: 72px; margin-bottom: 8px; }
+  .reward-title { font-size: 28px; font-weight: 900; color: var(--gold); margin-bottom: 8px; }
+  .reward-msg { font-size: 16px; color: rgba(255,255,255,0.75); line-height: 1.5; margin-bottom: 24px; }
+  .xp-earned { background: rgba(255,215,0,0.12); border: 1px solid rgba(255,215,0,0.3); border-radius: var(--radius-sm); padding: 12px 20px; margin-bottom: 20px; font-size: 20px; font-weight: 800; color: var(--gold); }
+  .sparkles-container { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .sparkle-dot { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: sparkle 1s ease-out forwards; }
 
-      /* SESSION COMPLETE */
-      .session-complete-card {
-        text-align: center;
-        padding: 36px 24px;
-      }
-      .level-badge {
-        font-size: 80px;
-        margin-bottom: 8px;
-        animation: floatUp 3s ease-in-out infinite;
-      }
-      .level-text {
-        font-size: 14px;
-        color: var(--gold);
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        margin-bottom: 6px;
-      }
-      .level-num {
-        font-size: 52px;
-        font-weight: 900;
-        color: white;
-        line-height: 1;
-      }
-      .session-missions {
-        margin: 20px 0;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .session-mission-chip {
-        background: rgba(255, 255, 255, 0.07);
-        border-radius: 12px;
-        padding: 10px 16px;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
+  .session-complete-card { text-align: center; padding: 36px 24px; }
+  .level-badge { font-size: 80px; margin-bottom: 8px; animation: floatUp 3s ease-in-out infinite; }
+  .level-text { font-size: 14px; color: var(--gold); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .level-num { font-size: 52px; font-weight: 900; color: white; line-height: 1; }
+  .session-missions { margin: 20px 0; display: flex; flex-direction: column; gap: 8px; }
+  .session-mission-chip { background: rgba(255,255,255,0.07); border-radius: 12px; padding: 10px 16px; font-size: 14px; display: flex; align-items: center; gap: 10px; }
 
-      /* DAILY LOCK */
-      #screen-lock {
-        justify-content: center;
-        gap: 24px;
-        text-align: center;
-      }
-      .lock-icon {
-        font-size: 80px;
-        animation: floatUp 4s ease-in-out infinite;
-      }
-      .lock-title {
-        font-size: 28px;
-        font-weight: 900;
-      }
-      .lock-msg {
-        font-size: 16px;
-        color: rgba(255, 255, 255, 0.6);
-        line-height: 1.5;
-      }
-      .lock-time {
-        font-size: 48px;
-        font-weight: 900;
-        color: var(--gold);
-      }
+  #screen-lock { justify-content: center; gap: 24px; text-align: center; }
+  .lock-icon { font-size: 80px; animation: floatUp 4s ease-in-out infinite; }
+  .lock-title { font-size: 28px; font-weight: 900; }
+  .lock-msg { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+  .lock-time { font-size: 48px; font-weight: 900; color: var(--gold); }
 
-      /* PARENT GATE */
-      .parent-gate {
-        position: fixed;
-        inset: 0;
-        z-index: 200;
-        background: rgba(0, 0, 0, 0.85);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        animation: fadeIn 0.25s ease;
-      }
-      .gate-card {
-        background: linear-gradient(160deg, #1a1a3a, #0d0d2a);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: var(--radius);
-        padding: 36px 28px;
-        max-width: 360px;
-        width: 100%;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-        animation: levelUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      .gate-title {
-        font-size: 22px;
-        font-weight: 800;
-        margin-bottom: 8px;
-      }
-      .gate-sub {
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.55);
-        margin-bottom: 24px;
-        line-height: 1.5;
-      }
-      .gate-math {
-        font-size: 28px;
-        font-weight: 900;
-        color: var(--gold);
-        text-align: center;
-        margin-bottom: 16px;
-      }
-      .gate-input {
-        width: 100%;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: var(--radius-sm);
-        padding: 14px 16px;
-        font-size: 20px;
-        color: white;
-        font-family: inherit;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 16px;
-        -webkit-appearance: none;
-      }
-      .gate-input:focus {
-        outline: none;
-        border-color: var(--purple-soft);
-        box-shadow: 0 0 0 2px rgba(156, 77, 252, 0.3);
-      }
-      .gate-error {
-        color: #ff8080;
-        font-size: 14px;
-        text-align: center;
-        margin-bottom: 12px;
-        min-height: 20px;
-      }
-      .gate-btns {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
+  .parent-gate {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.85);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    animation: fadeIn 0.25s ease;
+  }
+  .gate-card {
+    background: linear-gradient(160deg, #1a1a3a, #0d0d2a);
+    border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius);
+    padding: 36px 28px; max-width: 360px; width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    animation: levelUp 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .gate-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+  .gate-sub { font-size: 14px; color: rgba(255,255,255,0.55); margin-bottom: 24px; line-height: 1.5; }
+  .gate-math { font-size: 28px; font-weight: 900; color: var(--gold); text-align: center; margin-bottom: 16px; }
+  .gate-input {
+    width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    font-size: 20px; color: white; font-family: inherit; font-weight: 700;
+    text-align: center; margin-bottom: 16px; -webkit-appearance: none;
+  }
+  .gate-input:focus { outline: none; border-color: var(--purple-soft); box-shadow: 0 0 0 2px rgba(156,77,252,0.3); }
+  .gate-error { color: #ff8080; font-size: 14px; text-align: center; margin-bottom: 12px; min-height: 20px; }
+  .gate-btns { display: flex; flex-direction: column; gap: 10px; }
 
-      /* DIARY */
-      #screen-diary {
-        gap: 20px;
-      }
-      .diary-empty {
-        text-align: center;
-        padding: 40px 20px;
-        color: rgba(255, 255, 255, 0.4);
-        font-size: 16px;
-      }
-      .diary-entry {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: var(--radius-sm);
-        padding: 20px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-      }
-      .diary-entry-header {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 14px;
-      }
-      .diary-world-icon {
-        font-size: 32px;
-      }
-      .diary-entry-meta {
-        flex: 1;
-      }
-      .diary-world-name {
-        font-size: 16px;
-        font-weight: 800;
-      }
-      .diary-date {
-        font-size: 13px;
-        color: rgba(255, 255, 255, 0.5);
-      }
-      .diary-xp {
-        font-size: 14px;
-        color: var(--gold);
-        font-weight: 700;
-      }
-      .diary-missions {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-      .diary-mission-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        color: rgba(255, 255, 255, 0.65);
-      }
+  #screen-diary { gap: 20px; }
+  .diary-empty { text-align: center; padding: 40px 20px; color: rgba(255,255,255,0.4); font-size: 16px; }
+  .diary-entry { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+  .diary-entry-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .diary-world-icon { font-size: 32px; }
+  .diary-entry-meta { flex: 1; }
+  .diary-world-name { font-size: 16px; font-weight: 800; }
+  .diary-date { font-size: 13px; color: rgba(255,255,255,0.5); }
+  .diary-xp { font-size: 14px; color: var(--gold); font-weight: 700; }
+  .diary-missions { display: flex; flex-direction: column; gap: 6px; }
+  .diary-mission-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.65); }
 
-      /* PAGE HEADERS */
-      .page-header {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        padding-bottom: 4px;
-      }
-      .back-btn {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.09);
-        border: 1px solid var(--card-border);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        cursor: pointer;
-        flex-shrink: 0;
-        transition: all 0.2s;
-      }
-      .back-btn:active {
-        transform: scale(0.9);
-        background: rgba(255, 255, 255, 0.18);
-      }
-      .page-header h1 {
-        font-size: 22px;
-        font-weight: 800;
-      }
+  .page-header { width: 100%; display: flex; align-items: center; gap: 14px; padding-bottom: 4px; }
+  .back-btn {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,0.09); border: 1px solid var(--card-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; cursor: pointer; flex-shrink: 0; transition: all 0.2s;
+  }
+  .back-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.18); }
+  .page-header h1 { font-size: 22px; font-weight: 800; }
+  .section-title { font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); padding: 4px 0; }
 
-      .section-title {
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.5);
-        padding: 4px 0;
-      }
+  .special-card {
+    background: linear-gradient(135deg, #1a0a35 0%, #4a1a8a 100%);
+    border: 2px solid var(--gold); border-radius: var(--radius); padding: 24px; text-align: center;
+    box-shadow: var(--glow-gold), 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .special-lock-icon { font-size: 48px; margin-bottom: 8px; }
+  .special-title { font-size: 20px; font-weight: 900; color: var(--gold); margin-bottom: 6px; }
+  .special-sub { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
 
-      /* SPECIAL MISSION CARD */
-      .special-card {
-        background: linear-gradient(135deg, #1a0a35 0%, #4a1a8a 100%);
-        border: 2px solid var(--gold);
-        border-radius: var(--radius);
-        padding: 24px;
-        text-align: center;
-        box-shadow:
-          var(--glow-gold),
-          0 8px 24px rgba(0, 0, 0, 0.4);
-      }
-      .special-lock-icon {
-        font-size: 48px;
-        margin-bottom: 8px;
-      }
-      .special-title {
-        font-size: 20px;
-        font-weight: 900;
-        color: var(--gold);
-        margin-bottom: 6px;
-      }
-      .special-sub {
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.6);
-        margin-bottom: 16px;
-      }
+  .nav-footer { position: relative; z-index: 10; width: 100%; display: flex; gap: 10px; margin-top: auto; padding-top: 20px; }
+  .nav-btn {
+    flex: 1; padding: 14px; border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.07); border: 1px solid var(--card-border);
+    color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 600;
+    cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit;
+  }
+  .nav-btn:active { background: rgba(255,255,255,0.14); color: white; }
+  .nav-btn .nav-icon { font-size: 22px; display: block; margin-bottom: 3px; }
 
-      /* NAV FOOTER */
-      .nav-footer {
-        position: relative;
-        z-index: 10;
-        width: 100%;
-        display: flex;
-        gap: 10px;
-        margin-top: auto;
-        padding-top: 20px;
-      }
-      .nav-btn {
-        flex: 1;
-        padding: 14px;
-        border-radius: var(--radius-sm);
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid var(--card-border);
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        text-align: center;
-        transition: all 0.2s;
-        font-family: inherit;
-      }
-      .nav-btn:active {
-        background: rgba(255, 255, 255, 0.14);
-        color: white;
-      }
-      .nav-btn .nav-icon {
-        font-size: 22px;
-        display: block;
-        margin-bottom: 3px;
-      }
-      .nav-btn.active {
-        background: rgba(106, 29, 232, 0.25);
-        border-color: rgba(106, 29, 232, 0.5);
-        color: var(--purple-soft);
-      }
+  #screen-final { justify-content: center; gap: 24px; text-align: center; }
+  .final-star { font-size: 90px; animation: floatUp 3s ease-in-out infinite; }
 
-      /* FINAL SCREEN */
-      #screen-final {
-        justify-content: center;
-        gap: 24px;
-        text-align: center;
-      }
-      .final-star {
-        font-size: 90px;
-        animation: floatUp 3s ease-in-out infinite;
-      }
+  .progress-dots { display: flex; gap: 8px; justify-content: center; padding: 8px 0; }
+  .progress-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.4s; }
+  .progress-dot.done { background: var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.6); }
+  .progress-dot.active { background: var(--purple-soft); box-shadow: 0 0 10px rgba(156,77,252,0.6); animation: pulse 1.5s infinite; }
 
-      /* PROGRESS COUNTER */
-      .progress-dots {
-        display: flex;
-        gap: 8px;
-        justify-content: center;
-        padding: 8px 0;
-      }
-      .progress-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.2);
-        transition: all 0.4s;
-      }
-      .progress-dot.done {
-        background: var(--gold);
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-      }
-      .progress-dot.active {
-        background: var(--purple-soft);
-        box-shadow: 0 0 10px rgba(156, 77, 252, 0.6);
-        animation: pulse 1.5s infinite;
-      }
+  h1 { font-size: 28px; font-weight: 900; }
+  h2 { font-size: 22px; font-weight: 800; }
+  .text-gold { color: var(--gold); }
+  .text-small { font-size: 13px; color: rgba(255,255,255,0.5); }
+  .text-center { text-align: center; }
+  .relative { position: relative; }
+  .z1 { position: relative; z-index: 1; }
 
-      /* MISC */
-      h1 {
-        font-size: 28px;
-        font-weight: 900;
-      }
-      h2 {
-        font-size: 22px;
-        font-weight: 800;
-      }
-      .text-gold {
-        color: var(--gold);
-      }
-      .text-small {
-        font-size: 13px;
-        color: rgba(255, 255, 255, 0.5);
-      }
-      .text-center {
-        text-align: center;
-      }
-      .gap-sm {
-        gap: 10px;
-      }
-      .relative {
-        position: relative;
-      }
-      .z1 {
-        position: relative;
-        z-index: 1;
-      }
+  @media (min-width: 420px) {
+    .btn { font-size: 19px; }
+    .logo-name { font-size: 50px; }
+  }
+  @media (min-width: 600px) {
+    #app { max-width: 480px; margin: 0 auto; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="stars" id="stars"></div>
 
-      @media (min-width: 420px) {
-        .btn {
-          font-size: 19px;
-        }
-        .logo-name {
-          font-size: 50px;
-        }
-      }
-      @media (min-width: 600px) {
-        #app {
-          max-width: 480px;
-          margin: 0 auto;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="app">
-      <div class="stars" id="stars"></div>
+  <!-- WELCOME -->
+  <div class="screen active" id="screen-welcome">
+    <div class="logo-wrap z1">
+      <div class="logo-icon">&#x2728;</div>
+      <div class="logo-name">SparkPlay</div>
+      <div class="logo-tagline">Avventure magiche nella tua stanza</div>
+    </div>
+    <div class="welcome-cta z1">
+      <button class="btn btn-primary" onclick="goTo('worlds')">&#x2728; Inizia l'Avventura</button>
+      <button class="btn btn-ghost" onclick="goTo('diary')">&#x1F4D6; Il mio Diario</button>
+    </div>
+  </div>
 
-      <!-- WELCOME -->
-      <div class="screen active" id="screen-welcome">
-        <div class="logo-wrap z1">
-          <div class="logo-icon">✨</div>
-          <div class="logo-name">SparkPlay</div>
-          <div class="logo-tagline">Avventure magiche nella tua stanza</div>
-        </div>
-        <div class="welcome-cta z1">
-          <button class="btn btn-primary" onclick="goTo('worlds')">
-            ✨ Inizia l'Avventura
-          </button>
-          <button class="btn btn-ghost" onclick="goTo('diary')">
-            📖 Il mio Diario
-          </button>
-        </div>
+  <!-- WORLDS -->
+  <div class="screen" id="screen-worlds">
+    <div class="top-bar z1">
+      <div class="xp-area">
+        <div class="xp-label">Livello <span id="level-num">1</span></div>
+        <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+        <div class="text-small"><span id="xp-num">0</span> / <span id="xp-next">100</span> XP</div>
       </div>
-
-      <!-- WORLDS -->
-      <div class="screen" id="screen-worlds">
-        <div class="top-bar z1">
-          <div class="xp-area">
-            <div class="xp-label">Livello <span id="level-num">1</span></div>
-            <div class="xp-bar-wrap">
-              <div class="xp-bar-fill" id="xp-bar" style="width: 0%"></div>
-            </div>
-            <div class="text-small">
-              <span id="xp-num">0</span> / <span id="xp-next">100</span> XP
-            </div>
-          </div>
-          <button class="audio-btn" id="audio-btn" onclick="toggleAudio()">
-            🔊
-          </button>
+      <button class="audio-btn" id="audio-btn" onclick="toggleAudio()">&#x1F50A;</button>
+    </div>
+    <div class="z1" style="width:100%;text-align:center;margin-bottom:8px;">
+      <h1>Scegli il Mondo</h1>
+      <div class="text-small" style="margin-top:4px;">Dove vuoi andare oggi?</div>
+    </div>
+    <div class="worlds-grid z1">
+      <div class="world-card spazio" onclick="selectWorld('spazio')">
+        <div class="world-icon">&#x1F680;</div>
+        <div class="world-info">
+          <h2 style="color:#a0d0ff">SPAZIO</h2>
+          <p>Missioni cosmiche tra stelle e pianeti</p>
+          <div class="world-lock" id="lock-spazio"></div>
         </div>
-        <div
-          class="z1"
-          style="width: 100%; text-align: center; margin-bottom: 8px"
-        >
-          <h1>Scegli il Mondo</h1>
-          <div class="text-small" style="margin-top: 4px">
-            Dove vuoi andare oggi?
-          </div>
-        </div>
-        <div class="worlds-grid z1">
-          <div class="world-card spazio" onclick="selectWorld('spazio')">
-            <div class="world-icon">🚀</div>
-            <div class="world-info">
-              <h2 style="color: #a0d0ff">SPAZIO</h2>
-              <p>Missioni cosmiche tra stelle e pianeti</p>
-              <div class="world-lock" id="lock-spazio"></div>
-            </div>
-            <div class="world-badge">›</div>
-          </div>
-          <div class="world-card magia" onclick="selectWorld('magia')">
-            <div class="world-icon">🪄</div>
-            <div class="world-info">
-              <h2 style="color: #d0aaff">MAGIA</h2>
-              <p>Incantesimi, rune e tesori nascosti</p>
-              <div class="world-lock" id="lock-magia"></div>
-            </div>
-            <div class="world-badge">›</div>
-          </div>
-          <div class="world-card detective" onclick="selectWorld('detective')">
-            <div class="world-icon">🔍</div>
-            <div class="world-info">
-              <h2 style="color: #ffd27a">DETECTIVE</h2>
-              <p>Misteri, indizi e casi da risolvere</p>
-              <div class="world-lock" id="lock-detective"></div>
-            </div>
-            <div class="world-badge">›</div>
-          </div>
-        </div>
-        <div class="nav-footer z1">
-          <button class="nav-btn" onclick="goTo('worlds')">
-            <span class="nav-icon">🌍</span>Mondi
-          </button>
-          <button class="nav-btn" onclick="goTo('diary')">
-            <span class="nav-icon">📖</span>Diario
-          </button>
-        </div>
+        <div class="world-badge">&#x203A;</div>
       </div>
-
-      <!-- MISSIONS LIST -->
-      <div class="screen" id="screen-missions">
-        <div class="top-bar z1">
-          <div class="page-header" style="flex: 1">
-            <button class="back-btn" onclick="goTo('worlds')">←</button>
-            <h1 id="missions-title">Missioni</h1>
-          </div>
-          <button class="audio-btn" id="audio-btn2" onclick="toggleAudio()">
-            🔊
-          </button>
+      <div class="world-card magia" onclick="selectWorld('magia')">
+        <div class="world-icon">&#x1FA84;</div>
+        <div class="world-info">
+          <h2 style="color:#d0aaff">MAGIA</h2>
+          <p>Incantesimi, rune e tesori nascosti</p>
+          <div class="world-lock" id="lock-magia"></div>
         </div>
-        <div
-          class="z1"
-          style="
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 4px;
-          "
-        >
-          <div class="section-title">Oggi</div>
-          <div class="progress-dots" id="progress-dots"></div>
-        </div>
-        <div class="mission-list z1" id="mission-list"></div>
-        <div
-          class="special-card z1"
-          id="special-section"
-          style="display: none; margin-top: 8px"
-        >
-          <div class="special-lock-icon">⭐</div>
-          <div class="special-title" id="special-title">Missione Speciale</div>
-          <div class="special-sub">Completa le 3 missioni per sbloccarla</div>
-          <button
-            class="btn btn-gold btn-sm"
-            id="special-btn"
-            onclick="trySpecial()"
-          >
-            🔓 Attiva
-          </button>
-        </div>
+        <div class="world-badge">&#x203A;</div>
       </div>
-
-      <!-- MISSION DETAIL -->
-      <div class="screen" id="screen-mission">
-        <div class="top-bar z1">
-          <div class="page-header" style="flex: 1">
-            <button class="back-btn" onclick="goTo('missions')">←</button>
-            <div></div>
-          </div>
-          <button class="audio-btn" onclick="toggleAudio()">🔊</button>
+      <div class="world-card detective" onclick="selectWorld('detective')">
+        <div class="world-icon">&#x1F50D;</div>
+        <div class="world-info">
+          <h2 style="color:#ffd27a">DETECTIVE</h2>
+          <p>Misteri, indizi e casi da risolvere</p>
+          <div class="world-lock" id="lock-detective"></div>
         </div>
-        <div class="mission-header z1">
-          <div class="mission-world-badge" id="mission-world-badge"></div>
-          <div class="mission-emoji" id="mission-emoji"></div>
-          <div class="mission-title" id="mission-title"></div>
-          <div class="mission-intro" id="mission-intro"></div>
-        </div>
-        <div class="card objects-card z1" id="objects-card">
-          <div class="objects-label">Oggetti</div>
-          <div class="objects-list" id="objects-list"></div>
-        </div>
-        <div class="card steps-card z1">
-          <div class="steps-label">La Missione</div>
-          <div id="steps-list"></div>
-        </div>
-        <div class="z1" style="width: 100%; padding-top: 8px">
-          <button
-            class="btn btn-gold"
-            id="complete-btn"
-            onclick="completeMission()"
-          >
-            🌟 Missione Compiuta!
-          </button>
-        </div>
-      </div>
-
-      <!-- SESSION COMPLETE -->
-      <div class="screen" id="screen-session">
-        <div class="z1 session-complete-card card">
-          <div class="level-badge" id="session-badge">🏆</div>
-          <div class="level-text">Livello raggiunto</div>
-          <div class="level-num" id="session-level">1</div>
-          <div
-            style="
-              margin: 16px 0;
-              font-size: 15px;
-              color: rgba(255, 255, 255, 0.6);
-            "
-          >
-            Missioni completate oggi:
-          </div>
-          <div class="session-missions" id="session-missions"></div>
-          <div class="xp-earned" id="session-xp">+150 XP</div>
-          <div
-            style="
-              font-size: 15px;
-              color: rgba(255, 255, 255, 0.65);
-              margin-bottom: 20px;
-              line-height: 1.5;
-            "
-          >
-            Sei stato straordinario! Torna domani per nuove avventure.
-          </div>
-        </div>
-        <div
-          class="z1"
-          style="
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 8px;
-          "
-        >
-          <div class="special-card">
-            <div class="special-lock-icon">⭐</div>
-            <div class="special-title">Missione Speciale Disponibile!</div>
-            <div class="special-sub">Chiedi ad un genitore di sbloccarla</div>
-            <button class="btn btn-gold btn-sm" onclick="trySpecial()">
-              🔓 Sblocca
-            </button>
-          </div>
-          <button class="btn btn-ghost" onclick="goTo('diary')">
-            📖 Apri il Diario
-          </button>
-        </div>
-      </div>
-
-      <!-- DAILY LOCK -->
-      <div class="screen" id="screen-lock">
-        <div class="lock-icon z1">🔒</div>
-        <div class="z1">
-          <div class="lock-title">Bel lavoro per oggi!</div>
-        </div>
-        <div class="z1">
-          <div class="lock-time" id="lock-time-display">😴</div>
-          <div class="lock-msg" style="margin-top: 8px">
-            Torna domani per nuove<br />avventure magiche!
-          </div>
-        </div>
-        <div
-          class="z1"
-          style="
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 16px;
-          "
-        >
-          <button class="btn btn-ghost" onclick="goTo('diary')">
-            📖 Apri il Diario
-          </button>
-          <button class="btn btn-danger btn-sm" onclick="devReset()">
-            ↺ Reset (test)
-          </button>
-        </div>
-      </div>
-
-      <!-- DIARY -->
-      <div class="screen" id="screen-diary">
-        <div class="top-bar z1">
-          <div class="page-header" style="flex: 1">
-            <button class="back-btn" onclick="goTo('worlds')">←</button>
-            <h1>Il mio Diario</h1>
-          </div>
-        </div>
-        <div class="z1" style="width: 100%" id="diary-list"></div>
-      </div>
-
-      <!-- FINAL COMPLETE -->
-      <div class="screen" id="screen-final">
-        <div class="final-star z1">🌟</div>
-        <div class="z1" style="text-align: center">
-          <h1
-            style="
-              font-size: 32px;
-              background: linear-gradient(90deg, #fff, var(--gold));
-              -webkit-background-clip: text;
-              background-clip: text;
-              -webkit-text-fill-color: transparent;
-            "
-          >
-            Avventura Completata!
-          </h1>
-          <p
-            style="
-              font-size: 16px;
-              color: rgba(255, 255, 255, 0.65);
-              margin-top: 10px;
-              line-height: 1.6;
-            "
-          >
-            Hai completato la missione speciale.<br />Sei un vero eroe!
-          </p>
-        </div>
-        <div class="card z1" style="text-align: center; padding: 24px">
-          <div
-            style="font-size: 48px; margin-bottom: 8px"
-            id="final-world-icon"
-          >
-            ✨
-          </div>
-          <div
-            style="font-size: 18px; font-weight: 800; margin-bottom: 4px"
-            id="final-mission-name"
-          ></div>
-          <div class="xp-earned" style="margin-top: 12px" id="final-xp">
-            +200 XP
-          </div>
-        </div>
-        <div
-          class="z1"
-          style="
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 8px;
-          "
-        >
-          <button class="btn btn-ghost" onclick="goTo('diary')">
-            📖 Apri il Diario
-          </button>
-          <button class="btn btn-danger btn-sm" onclick="devReset()">
-            ↺ Reset (test)
-          </button>
-        </div>
-      </div>
-
-      <!-- PARENT GATE MODAL -->
-      <div class="parent-gate" id="parent-gate" style="display: none">
-        <div class="gate-card">
-          <div style="font-size: 40px; text-align: center; margin-bottom: 12px">
-            🧑‍💼
-          </div>
-          <div class="gate-title">Area Genitori</div>
-          <div class="gate-sub">
-            Risolvi il calcolo per sbloccare la missione speciale per il tuo
-            bambino.
-          </div>
-          <div class="gate-math" id="gate-math">? + ? = ?</div>
-          <input
-            class="gate-input"
-            type="number"
-            id="gate-input"
-            placeholder="Risposta..."
-            inputmode="numeric"
-          />
-          <div class="gate-error" id="gate-error"></div>
-          <div class="gate-btns">
-            <button class="btn btn-primary" onclick="checkGate()">
-              Sblocca
-            </button>
-            <button class="btn btn-ghost btn-sm" onclick="closeGate()">
-              Annulla
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- REWARD OVERLAY -->
-      <div class="reward-overlay" id="reward-overlay" style="display: none">
-        <div class="sparkles-container" id="sparkles"></div>
-        <div class="reward-card">
-          <div class="reward-trophy" id="reward-trophy">🌟</div>
-          <div class="reward-title" id="reward-title">Missione Completata!</div>
-          <div class="reward-msg" id="reward-msg">
-            Fantastico! Hai completato questa missione!
-          </div>
-          <div class="xp-earned" id="reward-xp">+50 XP</div>
-          <button class="btn btn-gold" onclick="closeReward()">
-            Continua ›
-          </button>
-        </div>
+        <div class="world-badge">&#x203A;</div>
       </div>
     </div>
+    <div class="nav-footer z1">
+      <button class="nav-btn" onclick="goTo('worlds')"><span class="nav-icon">&#x1F30D;</span>Mondi</button>
+      <button class="nav-btn" onclick="goTo('diary')"><span class="nav-icon">&#x1F4D6;</span>Diario</button>
+    </div>
+  </div>
 
-    <script>
-      // ===== DATA =====
-      const WORLDS = {
-        spazio: {
-          name: 'SPAZIO',
-          icon: '🚀',
-          color: '#a0d0ff',
-          badge: '🌌',
-          missions: [
-            {
-              id: 'sp1', emoji: '🛸', title: 'La Base di Lancio',
-              intro: 'Il centro di controllo ha rilevato segnali alieni! Costruisci la base di lancio.',
-              objects: ['Cuscini', 'Coperta', 'Libri', 'Scatola'],
-              steps: [
-                'Metti 4 cuscini in cerchio: questa è la tua base di lancio.',
-                'Metti una coperta sopra per creare il tetto della navicella.',
-                'Posiziona 3 libri come pannelli di controllo davanti a te.',
-                'Siediti dentro e conta alla rovescia: 5, 4, 3, 2, 1... Decollo!'
-              ],
-              completion: 'Base di lancio attivata! Sei pronto per la missione.'
-            },
-            {
-              id: 'sp2', emoji: '☄️', title: 'Caccia ai Meteoriti',
-              intro: 'Frammenti di meteorite sono sparsi nella galassia. Raccoglili tutti!',
-              objects: ['Calzini colorati', 'Tazze di plastica', 'Cestone'],
-              steps: [
-                'Forma 5 palline con i calzini: questi sono i tuoi meteoriti.',
-                'Nascondili in 5 posti diversi della stanza.',
-                'Posiziona una tazza come "deposito sicuro".',
-                'Cerca i meteoriti e portali uno alla volta nella tua base!'
-              ],
-              completion: 'Raccolta meteoriti completata! La Terra è salva.'
-            },
-            {
-              id: 'sp3', emoji: '🌙', title: 'Mappa dei Pianeti',
-              intro: 'L\'astronomo ha perso la mappa! Ricreala tu con gli oggetti della stanza.',
-              objects: ['Oggetti di diverse dimensioni', 'Fogli di carta', 'Crayons'],
-              steps: [
-                'Trova 5 oggetti di dimensioni diverse (come i pianeti del sistema solare).',
-                'Disponili in fila dal più piccolo al più grande.',
-                'Su un foglio, disegna un cerchio giallo al centro: è il Sole.',
-                'Assegna un nome inventato ad ogni pianeta e presentali ad alta voce!'
-              ],
-              completion: 'Mappa galattica completata! Sei un grande astronomo.'
-            },
-            {
-              id: 'sp4', emoji: '📡', title: 'Segnale Alieno',
-              intro: 'Un segnale misterioso arriva da lontano. Devi decodificarlo!',
-              objects: ['Torcia / Luce telefono', 'Coperta', 'Cuscino'],
-              steps: [
-                'Costruisci una piccola tenda con la coperta e il cuscino.',
-                'Entra dentro con la torcia accesa.',
-                'Batti sul pavimento questo ritmo segreto: 3 veloci, 2 lenti, 1 forte.',
-                'Ripetilo 3 volte: hai inviato la risposta agli alieni!'
-              ],
-              completion: 'Segnale ricevuto! Gli alieni ti hanno risposto.'
-            },
-            {
-              id: 'sp5', emoji: '🧑‍🚀', title: 'Passeggiata Spaziale',
-              intro: 'C\'è un guasto alla navicella! Devi raggiungere il modulo di riparazione.',
-              objects: ['Fogli di carta', 'Cuscini', 'Libri'],
-              steps: [
-                'Posiziona 6 fogli di carta sul pavimento: sono le tue piattaforme nello spazio.',
-                'Metti 2 cuscini come "zone sicure" agli angoli della stanza.',
-                'Devi muoverti SOLO sui fogli e sui cuscini, senza toccare il pavimento.',
-                'Raggiungi entrambe le zone sicure senza toccare lo "spazio aperto"!'
-              ],
-              completion: 'Riparazione completata! La navicella è salva.'
-            },
-            {
-              id: 'sp6', emoji: '🌠', title: 'Pioggia di Stelle',
-              intro: 'Un fenomeno rarissimo! Le stelle cadenti portano messaggi segreti.',
-              objects: ['Fogli di carta', 'Crayons'],
-              steps: [
-                'Strappa 5 pezzi di carta e appallottolali: sono le tue stelle cadenti.',
-                'Scrivi o disegna su ognuno un desiderio segreto.',
-                'Lancia le stelle in aria una alla volta dalla stessa posizione.',
-                'Raccogli tutte le stelle e mettile in un posto speciale come "archivio galattico".'
-              ],
-              completion: 'I tuoi desideri sono stati lanciati nello spazio!'
-            },
-            {
-              id: 'sp7', emoji: '🔭', title: 'Osservatorio Segreto',
-              intro: 'L\'osservatorio deve essere pronto prima del tramonto!',
-              objects: ['Rotolo di carta', 'Scatola', 'Torcia'],
-              steps: [
-                'Arrotola un foglio di carta formando un tubo: è il tuo telescopio.',
-                'Metti la scatola come piedistallo dell\'osservatorio.',
-                'Gira lentamente per la stanza cercando "stelle" (qualsiasi puntino o oggetto brillante).',
-                'Conta almeno 5 stelle e annuncia le tue scoperte ad alta voce!'
-              ],
-              completion: 'Osservatorio attivo! Sei un esploratore galattico.'
-            }
-          ],
-          specialMissions: [
-            {
-              id: 'sp_s1', emoji: '👽', title: 'Primo Contatto',
-              intro: 'Gli alieni vogliono comunicare! Devi creare un messaggio interstellare.',
-              objects: ['Fogli di carta grandi', 'Crayons', 'Oggetti vari'],
-              steps: [
-                'Disegna un grande cerchio su un foglio: è il "Messaggio per gli Alieni".',
-                'Dentro il cerchio, disegna 3 cose importanti della tua vita.',
-                'Disponi gli oggetti della stanza attorno al foglio come "confini del campo'.',
-                'Presenta ad alta voce il tuo messaggio come se gli alieni potessero sentirti!'
-              ],
-              completion: 'Messaggio interstellare inviato! Gli alieni capiscono.'
-            },
-            {
-              id: 'sp_s2', emoji: '🪐', title: 'La Grande Nebulosa',
-              intro: 'Una nebulosa ha risucchiato tutti gli oggetti! Ricostruisci la galassia.',
-              objects: ['Tutti gli oggetti morbidi disponibili', 'Coperte', 'Cuscini'],
-              steps: [
-                'Raccoglie ogni oggetto morbido che riesci a trovare nella stanza.',
-                'Costruisci una "galassia" disponendoli a spirale partendo dal centro della stanza.',
-                'Crea 3 "pianeti abitati" con diversi gruppi di oggetti.',
-                'Cammina intorno alla galassia e dai un nome ai 3 pianeti.'
-              ],
-              completion: 'La galassia è stata ricostruita! Sei l\'astronomo più grande dell\'universo.'
-            }
-          ]
-        },
-        magia: {
-          name: 'MAGIA',
-          icon: '🪄',
-          color: '#d0aaff',
-          badge: '✨',
-          missions: [
-            {
-              id: 'mg1', emoji: '🧙', title: 'L\'Accademia degli Stregoni',
-              intro: 'Sei stato ammesso all\'Accademia! Il tuo primo compito è allestire la scuola di magia.',
-              objects: ['Libri', 'Cuscini', 'Coperta'],
-              steps: [
-                'Metti 3 libri in fila: sono i banchi degli studenti.',
-                'Posiziona un cuscino per ogni "studente" (usa peluche o oggetti come compagni).',
-                'Stendi la coperta come "tappeto magico" davanti alla classe.',
-                'Siediti davanti e insegna il primo incantesimo: "Lumos! Sparkus! Volare!" con gesti grandiosi.'
-              ],
-              completion: 'L\'Accademia è aperta! I tuoi studenti applaudono.'
-            },
-            {
-              id: 'mg2', emoji: '🗝️', title: 'La Porta Incantata',
-              intro: 'Una porta segreta è apparsa! Per aprirla devi completare il rito magico.',
-              objects: ['Libri', 'Cuscini', 'Oggetti della stanza'],
-              steps: [
-                'Posiziona 2 libri in piedi affiancati: sono i pilastri della porta magica.',
-                'Metti 3 oggetti davanti: sono le chiavi dell\'incantesimo.',
-                'Tocca ogni oggetto in ordine ripetendo una parola magica che inventi tu.',
-                'Attraversa la "porta" con un salto e dichiara che sei entrato nel regno magico!'
-              ],
-              completion: 'La porta si è aperta! Sei entrato nel regno incantato.'
-            },
-            {
-              id: 'mg3', emoji: '🔮', title: 'La Sfera del Destino',
-              intro: 'La sfera di cristallo rivela il futuro solo ai più coraggiosi.',
-              objects: ['Pallone morbido o tazza rotonda', 'Coperta', 'Crayons'],
-              steps: [
-                'Posiziona un oggetto tondo su una coperta piegata: è la sfera di cristallo.',
-                'Siediti davanti con le mani appoggiate dolcemente ai lati.',
-                'Chiudi gli occhi e immagina 3 avventure future.',
-                'Aprili e racconta ad alta voce le tue 3 visioni come fossero profezie!'
-              ],
-              completion: 'La sfera ha parlato! Le tue profezie sono state registrate.'
-            },
-            {
-              id: 'mg4', emoji: '🧪', title: 'La Pozione Segreta',
-              intro: 'Lo stregone ha perso la ricetta! Crea la tua pozione magica.',
-              objects: ['Tazza o bicchiere di plastica', 'Foglio di carta', 'Oggetti piccoli'],
-              steps: [
-                'Prendi una tazza vuota: è il tuo calderone magico.',
-                'Scegli 4 ingredienti (oggetti piccoli, non cibo) e mettili vicino al calderone.',
-                'Aggiungi ogni ingrediente pronunciando un nome magico inventato.',
-                'Mescola con una bacchetta immaginaria e dichiara il nome della pozione!'
-              ],
-              completion: 'Pozione completata! I poteri magici si attivano.'
-            },
-            {
-              id: 'mg5', emoji: '🌀', title: 'Il Labirinto Incantato',
-              intro: 'Un labirinto magico è comparso in casa! Riesci a trovare l\'uscita?',
-              objects: ['Cuscini', 'Libri', 'Calzini come segnali'],
-              steps: [
-                'Metti 6 oggetti sul pavimento come "ostacoli magici" da non toccare.',
-                'Posiziona un calzino all\'altra parte della stanza: è l\'uscita del labirinto.',
-                'Muoviti lentamente aggirando tutti gli ostacoli senza toccarli.',
-                'Quando arrivi al calzino, solleva le braccia e grida "Incantesimo rotto!"'
-              ],
-              completion: 'Labirinto superato! Il tuo potere magico cresce.'
-            },
-            {
-              id: 'mg6', emoji: '⚡', title: 'L\'Incantesimo del Risveglio',
-              intro: 'Un giocattolo è stato addormentato da una maledizione! Solo tu puoi salvarlo.',
-              objects: ['Peluche o giocattolo', 'Foglio di carta', 'Crayons'],
-              steps: [
-                'Scegli un peluche o giocattolo: è stato maledetto e non può muoversi.',
-                'Disegna 3 "rune magiche" su un foglio (forme a tua scelta).',
-                'Posiziona il foglio sotto il giocattolo e tocca ogni runa dicendo una parola magica.',
-                'Solleva il giocattolo e fallo "svegliare" con entusiasmo: la maledizione è rotta!'
-              ],
-              completion: 'Il giocattolo si è svegliato! Sei un grande stregone.'
-            },
-            {
-              id: 'mg7', emoji: '🗺️', title: 'La Mappa delle Rune',
-              intro: 'Le rune antiche indicano dove è nascosto il tesoro magico!',
-              objects: ['Fogli di carta', 'Crayons', 'Oggetto da nascondere'],
-              steps: [
-                'Scegli un piccolo oggetto come "tesoro magico" e nascondilo nella stanza.',
-                'Disegna 3 foglietti con indizi in codice (frecce, X, simboli inventati).',
-                'Posiziona i foglietti come una caccia al tesoro a catena.',
-                'Seguili in ordine per trovare il tesoro nascosto!'
-              ],
-              completion: 'Il tesoro è stato trovato! Le rune antiche non mentono mai.'
-            }
-          ],
-          specialMissions: [
-            {
-              id: 'mg_s1', emoji: '🏰', title: 'Il Castello Magico',
-              intro: 'Il regno ha bisogno di un castello! Costruiscilo prima del tramonto.',
-              objects: ['Tutti i cuscini', 'Coperte', 'Libri', 'Scatole'],
-              steps: [
-                'Raccoglie tutti i cuscini e le coperte disponibili.',
-                'Costruisci le mura del castello con i cuscini in quadrato.',
-                'Usa i libri come torri agli angoli.',
-                'Entra dentro e dichiara il nome del tuo regno magico!'
-              ],
-              completion: 'Il castello è pronto! Sei il re o la regina del regno magico.'
-            },
-            {
-              id: 'mg_s2', emoji: '🌈', title: 'Il Portale degli Incantesimi',
-              intro: 'Il libro degli incantesimi è stato completato! Esegui il rito finale.',
-              objects: ['Fogli di carta', 'Crayons', 'Oggetti colorati'],
-              steps: [
-                'Disegna su un grande foglio il "Libro degli Incantesimi".',
-                'Scrivi o disegna 5 incantesimi che hai imparato oggi.',
-                'Disponi gli oggetti colorati a semicerchio davanti a te come un altare magico.',
-                'Leggi ogni incantesimo ad alta voce con la voce più stregonesca che hai!'
-              ],
-              completion: 'Il libro degli incantesimi è completo! La magia è con te per sempre.'
-            }
-          ]
-        },
-        detective: {
-          name: 'DETECTIVE',
-          icon: '🔍',
-          color: '#ffd27a',
-          badge: '🕵️',
-          missions: [
-            {
-              id: 'dt1', emoji: '🕵️', title: 'Il Caso del Giocattolo Scomparso',
-              intro: 'Un giocattolo è misteriosamente sparito! Tocca a te indagare.',
-              objects: ['Fogli di carta', 'Crayons', 'Qualsiasi oggetto da nascondere'],
-              steps: [
-                'Chiedi a qualcuno di nascondere un oggetto mentre sei fuori dalla stanza (o chiudi gli occhi).',
-                'Rientra e osserva attentamente la stanza per 30 secondi senza muoverti.',
-                'Annota o disegna 3 cose "sospette" che noti.',
-                'Trova l\'oggetto nascosto solo usando le tue osservazioni!'
-              ],
-              completion: 'Caso risolto! Sei un detective nato.'
-            },
-            {
-              id: 'dt2', emoji: '👣', title: 'Le Impronte Misteriose',
-              intro: 'Tracce misteriose portano verso una stanza segreta. Seguile!',
-              objects: ['Fogli di carta', 'Crayons o matite'],
-              steps: [
-                'Disegna 6 impronte su pezzi di carta (forme di piede o zampa).',
-                'Posizionali come un sentiero che porta da un punto A a un punto B della stanza.',
-                'Segui il sentiero fermandoti su ogni impronta per 2 secondi.',
-                'Alla fine del percorso, nascondi un "indizio finale": un bigliettino con un disegno.'
-              ],
-              completion: 'Il sentiero misterioso è stato seguito! L\'indizio è tuo.'
-            },
-            {
-              id: 'dt3', emoji: '📋', title: 'Il Sospetto Principale',
-              intro: 'Tre sospetti sono stati interrogati. Devi scoprire chi è colpevole!',
-              objects: ['3 peluche o giocattoli', 'Fogli di carta', 'Crayons'],
-              steps: [
-                'Scegli 3 giocattoli: sono i tuoi sospetti. Dai loro un nome.',
-                'Inventa una storia semplice: cosa è sparito e chi potrebbe averlo preso.',
-                'Interroga ogni sospetto: inventa le loro risposte ad alta voce.',
-                'Scegli il colpevole e spiega le tue ragioni come un vero detective!'
-              ],
-              completion: 'Il caso è risolto! La tua deduzione era perfetta.'
-            },
-            {
-              id: 'dt4', emoji: '🔐', title: 'Il Codice Segreto',
-              intro: 'Il criminale ha lasciato un messaggio in codice. Decifralo!',
-              objects: ['Fogli di carta', 'Crayons'],
-              steps: [
-                'Crea il tuo alfabeto segreto: ogni lettera diventa un simbolo (es. A=★, B=●).',
-                'Scrivi un messaggio segreto di 3-5 parole usando il tuo codice.',
-                'Lascia il messaggio in bella vista nella stanza.',
-                'Risolvi tu stesso il codice usando il "manuale di decifratura" che hai creato!'
-              ],
-              completion: 'Codice decifrato! Sei il detective più intelligente della città.'
-            },
-            {
-              id: 'dt5', emoji: '🗺️', title: 'La Mappa del Crimine',
-              intro: 'La scena del crimine deve essere mappata! Ogni dettaglio conta.',
-              objects: ['Foglio grande', 'Crayons', 'Oggetti come segnali'],
-              steps: [
-                'Disegna la piantina della stanza su un foglio grande.',
-                'Segna con X le posizioni di 4 oggetti importanti della stanza.',
-                'Inventa perché quegli oggetti sono "prove" e scrivilo vicino ad ogni X.',
-                'Presenta la tua mappa come farebbe un detective in una conferenza!'
-              ],
-              completion: 'La scena del crimine è documentata! Ottimo lavoro, detective.'
-            },
-            {
-              id: 'dt6', emoji: '🧩', title: 'Il Puzzle degli Indizi',
-              intro: 'Gli indizi sono sparsi. Solo mettendoli insieme riveleranno la verità!',
-              objects: ['Foglio di carta', 'Crayons', 'Oggetti vari'],
-              steps: [
-                'Scrivi o disegna 4 indizi su pezzi di carta separati.',
-                'Nascondili in punti diversi della stanza.',
-                'Cercali tutti e disponili in ordine su un tavolo o sul pavimento.',
-                'Collegali con linee immaginarie e racconta la storia che formano insieme!'
-              ],
-              completion: 'Il puzzle è risolto! La verità era nascosta tra gli indizi.'
-            },
-            {
-              id: 'dt7', emoji: '🎯', title: 'Operazione Memoria',
-              intro: 'Il detective deve ricordare tutto! Allena la tua memoria prima del caso.',
-              objects: ['10 oggetti qualsiasi', 'Coperta'],
-              steps: [
-                'Disponi 10 oggetti in fila e guardali bene per 30 secondi.',
-                'Coprili con una coperta.',
-                'Cerca di ricordare e nominare tutti i 10 oggetti ad alta voce.',
-                'Scopri e conta quanti ne hai ricordati: 7+ sei un maestro detective!'
-              ],
-              completion: 'Memoria allenata! Nessun dettaglio ti sfuggirà mai più.'
-            }
-          ],
-          specialMissions: [
-            {
-              id: 'dt_s1', emoji: '🏆', title: 'Il Grande Caso Irrisolto',
-              intro: 'Il caso più difficile dell\'anno! Tutti i detective ci hanno rinunciato. Ce la fai tu?',
-              objects: ['Foglio grande', 'Crayons', 'Tutti gli oggetti disponibili'],
-              steps: [
-                'Crea un "ufficio investigativo" con un tavolo e i tuoi materiali.',
-                'Inventa il caso: cosa è sparito, dove, chi era presente.',
-                'Crea 5 prove fisiche usando oggetti della stanza.',
-                'Risolvi il caso e presenta la tua conclusione come al TG della sera!'
-              ],
-              completion: 'Caso chiuso! Sei il detective numero uno del paese.'
-            },
-            {
-              id: 'dt_s2', emoji: '🌃', title: 'Missione Notturna',
-              intro: 'L\'operazione più segreta richiede silenzio e concentrazione assoluta.',
-              objects: ['Torcia', 'Fogli di carta', 'Oggetti vari'],
-              steps: [
-                'Abbassa le luci e usa solo la torcia.',
-                'Nascondi 3 "file segreti" (pezzi di carta con disegni) nella stanza.',
-                'Cerca i file usando solo la luce della torcia.',
-                'Riporta tutti i file alla base e dichiarate che la missione è compiuta!'
-              ],
-              completion: 'Missione notturna completata con successo! Sei una leggenda.'
-            }
-          ]
-        }
-      };
+  <!-- MISSIONS LIST -->
+  <div class="screen" id="screen-missions">
+    <div class="top-bar z1">
+      <div class="page-header" style="flex:1">
+        <button class="back-btn" onclick="goTo('worlds')">&#x2190;</button>
+        <h1 id="missions-title">Missioni</h1>
+      </div>
+      <button class="audio-btn" id="audio-btn2" onclick="toggleAudio()">&#x1F50A;</button>
+    </div>
+    <div class="z1" style="width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div class="section-title">Oggi</div>
+      <div class="progress-dots" id="progress-dots"></div>
+    </div>
+    <div class="mission-list z1" id="mission-list"></div>
+    <div class="special-card z1" id="special-section" style="display:none;margin-top:8px;">
+      <div class="special-lock-icon">&#x2B50;</div>
+      <div class="special-title" id="special-title">Missione Speciale</div>
+      <div class="special-sub" id="special-sub">Completa le 3 missioni per sbloccarla</div>
+      <button class="btn btn-gold btn-sm" id="special-btn" onclick="trySpecial()">&#x1F513; Attiva</button>
+    </div>
+  </div>
 
-      const XP_PER_MISSION = 50;
-      const XP_PER_SPECIAL = 100;
-      const XP_PER_LEVEL = 100;
-      const MAX_DAILY_MISSIONS = 3;
+  <!-- MISSION DETAIL -->
+  <div class="screen" id="screen-mission">
+    <div class="top-bar z1">
+      <div class="page-header" style="flex:1">
+        <button class="back-btn" onclick="goTo('missions')">&#x2190;</button>
+        <div></div>
+      </div>
+      <button class="audio-btn" onclick="toggleAudio()">&#x1F50A;</button>
+    </div>
+    <div class="mission-header z1">
+      <div class="mission-world-badge" id="mission-world-badge"></div>
+      <div class="mission-emoji" id="mission-emoji"></div>
+      <div class="mission-title" id="mission-title"></div>
+      <div class="mission-intro" id="mission-intro"></div>
+    </div>
+    <div class="card objects-card z1">
+      <div class="objects-label">Oggetti</div>
+      <div class="objects-list" id="objects-list"></div>
+    </div>
+    <div class="card steps-card z1">
+      <div class="steps-label">La Missione</div>
+      <div id="steps-list"></div>
+    </div>
+    <div class="z1" style="width:100%;padding-top:8px;">
+      <button class="btn btn-gold" id="complete-btn" onclick="completeMission()">&#x1F31F; Missione Compiuta!</button>
+    </div>
+  </div>
 
-      // ===== STATE =====
-      let state = {};
+  <!-- SESSION COMPLETE -->
+  <div class="screen" id="screen-session">
+    <div class="z1 session-complete-card card">
+      <div class="level-badge" id="session-badge">&#x1F3C6;</div>
+      <div class="level-text">Livello raggiunto</div>
+      <div class="level-num" id="session-level">1</div>
+      <div style="margin:16px 0;font-size:15px;color:rgba(255,255,255,0.6)">Missioni completate oggi:</div>
+      <div class="session-missions" id="session-missions"></div>
+      <div class="xp-earned" id="session-xp">+150 XP</div>
+      <div style="font-size:15px;color:rgba(255,255,255,0.65);margin-bottom:20px;line-height:1.5">Sei stato straordinario! Torna domani per nuove avventure.</div>
+    </div>
+    <div class="z1" style="width:100%;display:flex;flex-direction:column;gap:12px;margin-top:8px;">
+      <div class="special-card" id="session-special-card">
+        <div class="special-lock-icon">&#x2B50;</div>
+        <div class="special-title" id="session-special-title">Missione Speciale Disponibile!</div>
+        <div class="special-sub" id="session-special-sub">Chiedi ad un genitore di sbloccarla</div>
+        <button class="btn btn-gold btn-sm" id="session-special-btn" onclick="trySpecial()">&#x1F513; Sblocca</button>
+      </div>
+      <button class="btn btn-ghost" onclick="goTo('diary')">&#x1F4D6; Apri il Diario</button>
+    </div>
+  </div>
 
-      function defaultState() {
-        return {
-          xp: 0,
-          level: 1,
-          audioOn: true,
-          lastDate: null,
-          currentWorld: null,
-          todayMissions: [],
-          todaySpecialDone: false,
-          completedMissions: { spazio: [], magia: [], detective: [] },
-          diary: []
-        };
+  <!-- DAILY LOCK -->
+  <div class="screen" id="screen-lock">
+    <div class="lock-icon z1">&#x1F512;</div>
+    <div class="z1"><div class="lock-title">Bel lavoro per oggi!</div></div>
+    <div class="z1">
+      <div class="lock-time" id="lock-time-display">&#x1F634;</div>
+      <div class="lock-msg" style="margin-top:8px">Torna domani per nuove<br>avventure magiche!</div>
+    </div>
+    <div class="z1" style="width:100%;display:flex;flex-direction:column;gap:12px;margin-top:16px;">
+      <button class="btn btn-ghost" onclick="goTo('diary')">&#x1F4D6; Apri il Diario</button>
+      <button class="btn btn-danger btn-sm" onclick="devReset()">&#x21BA; Reset (test)</button>
+    </div>
+  </div>
+
+  <!-- DIARY -->
+  <div class="screen" id="screen-diary">
+    <div class="top-bar z1">
+      <div class="page-header" style="flex:1">
+        <button class="back-btn" onclick="goTo('worlds')">&#x2190;</button>
+        <h1>Il mio Diario</h1>
+      </div>
+    </div>
+    <div class="z1" style="width:100%" id="diary-list"></div>
+  </div>
+
+  <!-- FINAL COMPLETE -->
+  <div class="screen" id="screen-final">
+    <div class="final-star z1">&#x1F31F;</div>
+    <div class="z1" style="text-align:center;">
+      <h1 style="font-size:32px;background:linear-gradient(90deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Avventura Completata!</h1>
+      <p style="font-size:16px;color:rgba(255,255,255,0.65);margin-top:10px;line-height:1.6">Hai completato la missione speciale.<br>Sei un vero eroe!</p>
+    </div>
+    <div class="card z1" style="text-align:center;padding:24px;">
+      <div style="font-size:48px;margin-bottom:8px" id="final-world-icon">&#x2728;</div>
+      <div style="font-size:18px;font-weight:800;margin-bottom:4px" id="final-mission-name"></div>
+      <div class="xp-earned" style="margin-top:12px" id="final-xp">+200 XP</div>
+    </div>
+    <div class="z1" style="width:100%;display:flex;flex-direction:column;gap:12px;margin-top:8px;">
+      <button class="btn btn-ghost" onclick="goTo('diary')">&#x1F4D6; Apri il Diario</button>
+      <button class="btn btn-danger btn-sm" onclick="devReset()">&#x21BA; Reset (test)</button>
+    </div>
+  </div>
+
+  <!-- PARENT GATE -->
+  <div class="parent-gate" id="parent-gate" style="display:none;">
+    <div class="gate-card">
+      <div style="font-size:40px;text-align:center;margin-bottom:12px">&#x1F9D1;&#x200D;&#x1F4BC;</div>
+      <div class="gate-title">Area Genitori</div>
+      <div class="gate-sub">Risolvi il calcolo per sbloccare la missione speciale per il tuo bambino.</div>
+      <div class="gate-math" id="gate-math">? + ? = ?</div>
+      <input class="gate-input" type="number" id="gate-input" placeholder="Risposta..." inputmode="numeric">
+      <div class="gate-error" id="gate-error"></div>
+      <div class="gate-btns">
+        <button class="btn btn-primary" onclick="checkGate()">Sblocca</button>
+        <button class="btn btn-ghost btn-sm" onclick="closeGate()">Annulla</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REWARD OVERLAY -->
+  <div class="reward-overlay" id="reward-overlay" style="display:none;">
+    <div class="sparkles-container" id="sparkles"></div>
+    <div class="reward-card">
+      <div class="reward-trophy" id="reward-trophy">&#x1F31F;</div>
+      <div class="reward-title" id="reward-title">Missione Completata!</div>
+      <div class="reward-msg" id="reward-msg">Fantastico! Hai completato questa missione!</div>
+      <div class="xp-earned" id="reward-xp">+50 XP</div>
+      <button class="btn btn-gold" onclick="closeReward()">Continua &#x203A;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== MISSION DATA =====
+var WORLDS = {
+  spazio: {
+    name: 'SPAZIO',
+    icon: '\u{1F680}',
+    color: '#a0d0ff',
+    badge: '\u{1F30C}',
+    missions: [
+      {
+        id: 'sp1', emoji: '\u{1F6F8}', title: 'La Base di Lancio',
+        intro: 'Il centro di controllo ha rilevato segnali alieni! Costruisci la base di lancio.',
+        objects: ['Cuscini', 'Coperta', 'Libri', 'Scatola'],
+        steps: [
+          'Metti 4 cuscini in cerchio: questa e la tua base di lancio.',
+          'Metti una coperta sopra per creare il tetto della navicella.',
+          'Posiziona 3 libri come pannelli di controllo davanti a te.',
+          'Siediti dentro e conta alla rovescia: 5, 4, 3, 2, 1... Decollo!'
+        ],
+        completion: 'Base di lancio attivata! Sei pronto per la missione.'
+      },
+      {
+        id: 'sp2', emoji: '\u{2604}\uFE0F', title: 'Caccia ai Meteoriti',
+        intro: 'Frammenti di meteorite sono sparsi nella galassia. Raccoglili tutti!',
+        objects: ['Calzini colorati', 'Tazze di plastica', 'Cestone'],
+        steps: [
+          'Forma 5 palline con i calzini: questi sono i tuoi meteoriti.',
+          'Nascondili in 5 posti diversi della stanza.',
+          'Posiziona una tazza come deposito sicuro.',
+          'Cerca i meteoriti e portali uno alla volta nella tua base!'
+        ],
+        completion: 'Raccolta meteoriti completata! La Terra e salva.'
+      },
+      {
+        id: 'sp3', emoji: '\u{1F319}', title: 'Mappa dei Pianeti',
+        intro: 'L\'astronomo ha perso la mappa! Ricreala con gli oggetti della stanza.',
+        objects: ['Oggetti di diverse dimensioni', 'Fogli di carta', 'Crayons'],
+        steps: [
+          'Trova 5 oggetti di dimensioni diverse, come i pianeti del sistema solare.',
+          'Disponili in fila dal piu piccolo al piu grande.',
+          'Su un foglio, disegna un cerchio giallo al centro: e il Sole.',
+          'Assegna un nome inventato ad ogni pianeta e presentali ad alta voce!'
+        ],
+        completion: 'Mappa galattica completata! Sei un grande astronomo.'
+      },
+      {
+        id: 'sp4', emoji: '\u{1F4E1}', title: 'Segnale Alieno',
+        intro: 'Un segnale misterioso arriva da lontano. Devi decodificarlo!',
+        objects: ['Torcia o luce del telefono', 'Coperta', 'Cuscino'],
+        steps: [
+          'Costruisci una piccola tenda con la coperta e il cuscino.',
+          'Entra dentro con la torcia accesa.',
+          'Batti sul pavimento questo ritmo segreto: 3 veloci, 2 lenti, 1 forte.',
+          'Ripetilo 3 volte: hai inviato la risposta agli alieni!'
+        ],
+        completion: 'Segnale ricevuto! Gli alieni ti hanno risposto.'
+      },
+      {
+        id: 'sp5', emoji: '\u{1F9D1}\u200D\u{1F680}', title: 'Passeggiata Spaziale',
+        intro: 'C\'e un guasto alla navicella! Devi raggiungere il modulo di riparazione.',
+        objects: ['Fogli di carta', 'Cuscini', 'Libri'],
+        steps: [
+          'Posiziona 6 fogli di carta sul pavimento: sono le tue piattaforme nello spazio.',
+          'Metti 2 cuscini come zone sicure agli angoli della stanza.',
+          'Muoviti SOLO sui fogli e sui cuscini, senza toccare il pavimento.',
+          'Raggiungi entrambe le zone sicure senza toccare lo spazio aperto!'
+        ],
+        completion: 'Riparazione completata! La navicella e salva.'
+      },
+      {
+        id: 'sp6', emoji: '\u{1F320}', title: 'Pioggia di Stelle',
+        intro: 'Un fenomeno rarissimo! Le stelle cadenti portano messaggi segreti.',
+        objects: ['Fogli di carta', 'Crayons'],
+        steps: [
+          'Strappa 5 pezzi di carta e appallottolali: sono le tue stelle cadenti.',
+          'Scrivi o disegna su ognuno un desiderio segreto.',
+          'Lancia le stelle in aria una alla volta dalla stessa posizione.',
+          'Raccoglile tutte e mettile in un posto speciale come archivio galattico.'
+        ],
+        completion: 'I tuoi desideri sono stati lanciati nello spazio!'
+      },
+      {
+        id: 'sp7', emoji: '\u{1F52D}', title: 'Osservatorio Segreto',
+        intro: 'L\'osservatorio deve essere pronto prima del tramonto!',
+        objects: ['Rotolo di carta', 'Scatola', 'Torcia'],
+        steps: [
+          'Arrotola un foglio di carta formando un tubo: e il tuo telescopio.',
+          'Metti la scatola come piedistallo dell\'osservatorio.',
+          'Gira lentamente per la stanza cercando stelle, cioe punti luminosi o oggetti brillanti.',
+          'Conta almeno 5 stelle e annuncia le tue scoperte ad alta voce!'
+        ],
+        completion: 'Osservatorio attivo! Sei un esploratore galattico.'
       }
-
-      function loadState() {
-        try {
-          const raw = localStorage.getItem('sparkplay_v2');
-          if (!raw) { state = defaultState(); return; }
-          const saved = JSON.parse(raw);
-          state = Object.assign(defaultState(), saved);
-          if (!state.completedMissions) state.completedMissions = { spazio: [], magia: [], detective: [] };
-          if (!state.diary) state.diary = [];
-          checkDateReset();
-        } catch (e) {
-          state = defaultState();
-        }
+    ],
+    specialMissions: [
+      {
+        id: 'sp_s1', emoji: '\u{1F47D}', title: 'Primo Contatto',
+        intro: 'Gli alieni vogliono comunicare! Devi creare un messaggio interstellare.',
+        objects: ['Fogli di carta grandi', 'Crayons', 'Oggetti vari'],
+        steps: [
+          'Disegna un grande cerchio su un foglio: e il Messaggio per gli Alieni.',
+          'Dentro il cerchio, disegna 3 cose importanti della tua vita.',
+          'Disponi gli oggetti della stanza attorno al foglio come confini del campo.',
+          'Presenta ad alta voce il tuo messaggio come se gli alieni potessero sentirti!'
+        ],
+        completion: 'Messaggio interstellare inviato! Gli alieni capiscono.'
+      },
+      {
+        id: 'sp_s2', emoji: '\u{1FA90}', title: 'La Grande Nebulosa',
+        intro: 'Una nebulosa ha risucchiato tutti gli oggetti! Ricostruisci la galassia.',
+        objects: ['Oggetti morbidi', 'Coperte', 'Cuscini'],
+        steps: [
+          'Raccogli ogni oggetto morbido che riesci a trovare nella stanza.',
+          'Costruisci una galassia disponendoli a spirale partendo dal centro della stanza.',
+          'Crea 3 pianeti abitati con diversi gruppi di oggetti.',
+          'Cammina intorno alla galassia e dai un nome ai 3 pianeti.'
+        ],
+        completion: 'La galassia e stata ricostruita! Sei l\'astronomo piu grande dell\'universo.'
       }
-
-      function saveState() {
-        try {
-          localStorage.setItem('sparkplay_v2', JSON.stringify(state));
-        } catch (e) {}
+    ]
+  },
+  magia: {
+    name: 'MAGIA',
+    icon: '\u{1FA84}',
+    color: '#d0aaff',
+    badge: '\u2728',
+    missions: [
+      {
+        id: 'mg1', emoji: '\u{1F9D9}', title: 'L\'Accademia degli Stregoni',
+        intro: 'Sei stato ammesso all\'Accademia! Il tuo primo compito e allestire la scuola di magia.',
+        objects: ['Libri', 'Cuscini', 'Coperta'],
+        steps: [
+          'Metti 3 libri in fila: sono i banchi degli studenti.',
+          'Posiziona un cuscino per ogni studente, usando peluche o oggetti come compagni.',
+          'Stendi la coperta come tappeto magico davanti alla classe.',
+          'Siediti davanti e insegna il primo incantesimo: Lumos! Sparkus! Volare!'
+        ],
+        completion: 'L\'Accademia e aperta! I tuoi studenti applaudono.'
+      },
+      {
+        id: 'mg2', emoji: '\u{1F5DD}\uFE0F', title: 'La Porta Incantata',
+        intro: 'Una porta segreta e apparsa! Per aprirla devi completare il rito magico.',
+        objects: ['Libri', 'Cuscini', 'Oggetti della stanza'],
+        steps: [
+          'Posiziona 2 libri in piedi affiancati: sono i pilastri della porta magica.',
+          'Metti 3 oggetti davanti: sono le chiavi dell\'incantesimo.',
+          'Tocca ogni oggetto in ordine ripetendo una parola magica che inventi tu.',
+          'Attraversa la porta con un salto e dichiara che sei entrato nel regno magico!'
+        ],
+        completion: 'La porta si e aperta! Sei entrato nel regno incantato.'
+      },
+      {
+        id: 'mg3', emoji: '\u{1F52E}', title: 'La Sfera del Destino',
+        intro: 'La sfera di cristallo rivela il futuro solo ai piu coraggiosi.',
+        objects: ['Pallone morbido o tazza rotonda', 'Coperta', 'Crayons'],
+        steps: [
+          'Posiziona un oggetto tondo su una coperta piegata: e la sfera di cristallo.',
+          'Siediti davanti con le mani appoggiate dolcemente ai lati.',
+          'Chiudi gli occhi e immagina 3 avventure future.',
+          'Aprili e racconta ad alta voce le tue 3 visioni come fossero profezie!'
+        ],
+        completion: 'La sfera ha parlato! Le tue profezie sono state registrate.'
+      },
+      {
+        id: 'mg4', emoji: '\u{1F9EA}', title: 'La Pozione Segreta',
+        intro: 'Lo stregone ha perso la ricetta! Crea la tua pozione magica.',
+        objects: ['Tazza o bicchiere di plastica', 'Foglio di carta', 'Oggetti piccoli'],
+        steps: [
+          'Prendi una tazza vuota: e il tuo calderone magico.',
+          'Scegli 4 ingredienti, oggetti piccoli non cibo, e mettili vicino al calderone.',
+          'Aggiungi ogni ingrediente pronunciando un nome magico inventato.',
+          'Mescola con una bacchetta immaginaria e dichiara il nome della pozione!'
+        ],
+        completion: 'Pozione completata! I poteri magici si attivano.'
+      },
+      {
+        id: 'mg5', emoji: '\u{1F300}', title: 'Il Labirinto Incantato',
+        intro: 'Un labirinto magico e comparso in casa! Riesci a trovare l\'uscita?',
+        objects: ['Cuscini', 'Libri', 'Calzini'],
+        steps: [
+          'Metti 6 oggetti sul pavimento come ostacoli magici da non toccare.',
+          'Posiziona un calzino dall\'altra parte della stanza: e l\'uscita del labirinto.',
+          'Muoviti lentamente aggirando tutti gli ostacoli senza toccarli.',
+          'Quando arrivi al calzino, solleva le braccia e grida: Incantesimo rotto!'
+        ],
+        completion: 'Labirinto superato! Il tuo potere magico cresce.'
+      },
+      {
+        id: 'mg6', emoji: '\u26A1', title: 'L\'Incantesimo del Risveglio',
+        intro: 'Un giocattolo e stato addormentato da una maledizione! Solo tu puoi salvarlo.',
+        objects: ['Peluche o giocattolo', 'Foglio di carta', 'Crayons'],
+        steps: [
+          'Scegli un peluche o giocattolo: e stato maledetto e non puo muoversi.',
+          'Disegna 3 rune magiche su un foglio: forme a tua scelta.',
+          'Posiziona il foglio sotto il giocattolo e tocca ogni runa dicendo una parola magica.',
+          'Solleva il giocattolo e fallo svegliare con entusiasmo: la maledizione e rotta!'
+        ],
+        completion: 'Il giocattolo si e svegliato! Sei un grande stregone.'
+      },
+      {
+        id: 'mg7', emoji: '\u{1F5FA}\uFE0F', title: 'La Mappa delle Rune',
+        intro: 'Le rune antiche indicano dove e nascosto il tesoro magico!',
+        objects: ['Fogli di carta', 'Crayons', 'Un piccolo oggetto'],
+        steps: [
+          'Scegli un piccolo oggetto come tesoro magico e nascondilo nella stanza.',
+          'Disegna 3 foglietti con indizi in codice: frecce, X, simboli inventati.',
+          'Posiziona i foglietti come una caccia al tesoro a catena.',
+          'Seguili in ordine per trovare il tesoro nascosto!'
+        ],
+        completion: 'Il tesoro e stato trovato! Le rune antiche non mentono mai.'
       }
-
-      function todayString() {
-        const d = new Date();
-        return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    ],
+    specialMissions: [
+      {
+        id: 'mg_s1', emoji: '\u{1F3F0}', title: 'Il Castello Magico',
+        intro: 'Il regno ha bisogno di un castello! Costruiscilo prima del tramonto.',
+        objects: ['Tutti i cuscini', 'Coperte', 'Libri', 'Scatole'],
+        steps: [
+          'Raccogli tutti i cuscini e le coperte disponibili.',
+          'Costruisci le mura del castello con i cuscini disposti in quadrato.',
+          'Usa i libri come torri agli angoli.',
+          'Entra dentro e dichiara il nome del tuo regno magico!'
+        ],
+        completion: 'Il castello e pronto! Sei il re o la regina del regno magico.'
+      },
+      {
+        id: 'mg_s2', emoji: '\u{1F308}', title: 'Il Portale degli Incantesimi',
+        intro: 'Il libro degli incantesimi e stato completato! Esegui il rito finale.',
+        objects: ['Fogli di carta', 'Crayons', 'Oggetti colorati'],
+        steps: [
+          'Disegna su un grande foglio il Libro degli Incantesimi.',
+          'Scrivi o disegna 5 incantesimi che hai imparato oggi.',
+          'Disponi gli oggetti colorati a semicerchio davanti a te come un altare magico.',
+          'Leggi ogni incantesimo ad alta voce con la voce piu stregonesca che hai!'
+        ],
+        completion: 'Il libro degli incantesimi e completo! La magia e con te per sempre.'
       }
-
-      function checkDateReset() {
-        const today = todayString();
-        if (state.lastDate !== today) {
-          state.lastDate = today;
-          state.todayMissions = [];
-          state.todaySpecialDone = false;
-          saveState();
-        }
+    ]
+  },
+  detective: {
+    name: 'DETECTIVE',
+    icon: '\u{1F50D}',
+    color: '#ffd27a',
+    badge: '\u{1F575}\uFE0F',
+    missions: [
+      {
+        id: 'dt1', emoji: '\u{1F575}\uFE0F', title: 'Il Caso del Giocattolo Scomparso',
+        intro: 'Un giocattolo e misteriosamente sparito! Tocca a te indagare.',
+        objects: ['Fogli di carta', 'Crayons', 'Un oggetto da nascondere'],
+        steps: [
+          'Chiudi gli occhi mentre qualcuno nasconde un oggetto, oppure fallo tu e poi dimentica dove.',
+          'Rientra e osserva attentamente la stanza per 30 secondi senza muoverti.',
+          'Annota o disegna 3 cose sospette che noti.',
+          'Trova l\'oggetto nascosto usando solo le tue osservazioni!'
+        ],
+        completion: 'Caso risolto! Sei un detective nato.'
+      },
+      {
+        id: 'dt2', emoji: '\u{1F463}', title: 'Le Impronte Misteriose',
+        intro: 'Tracce misteriose portano verso una stanza segreta. Seguile!',
+        objects: ['Fogli di carta', 'Crayons o matite'],
+        steps: [
+          'Disegna 6 impronte su pezzi di carta: forme di piede o zampa.',
+          'Posizionali come un sentiero che porta da un punto A a un punto B della stanza.',
+          'Segui il sentiero fermandoti su ogni impronta per 2 secondi.',
+          'Alla fine del percorso, crea un indizio finale: un bigliettino con un disegno.'
+        ],
+        completion: 'Il sentiero misterioso e stato seguito! L\'indizio e tuo.'
+      },
+      {
+        id: 'dt3', emoji: '\u{1F4CB}', title: 'Il Sospetto Principale',
+        intro: 'Tre sospetti sono stati interrogati. Devi scoprire chi e colpevole!',
+        objects: ['3 peluche o giocattoli', 'Fogli di carta', 'Crayons'],
+        steps: [
+          'Scegli 3 giocattoli: sono i tuoi sospetti. Dai loro un nome.',
+          'Inventa una storia semplice: cosa e sparito e chi potrebbe averlo preso.',
+          'Interroga ogni sospetto: inventa le loro risposte ad alta voce.',
+          'Scegli il colpevole e spiega le tue ragioni come un vero detective!'
+        ],
+        completion: 'Il caso e risolto! La tua deduzione era perfetta.'
+      },
+      {
+        id: 'dt4', emoji: '\u{1F510}', title: 'Il Codice Segreto',
+        intro: 'Il criminale ha lasciato un messaggio in codice. Decifralo!',
+        objects: ['Fogli di carta', 'Crayons'],
+        steps: [
+          'Crea il tuo alfabeto segreto: ogni lettera diventa un simbolo.',
+          'Scrivi un messaggio segreto di 3-5 parole usando il tuo codice.',
+          'Lascia il messaggio in bella vista nella stanza.',
+          'Risolvi il codice usando il manuale di decifratura che hai creato!'
+        ],
+        completion: 'Codice decifrato! Sei il detective piu intelligente della citta.'
+      },
+      {
+        id: 'dt5', emoji: '\u{1F5FA}\uFE0F', title: 'La Mappa del Crimine',
+        intro: 'La scena del crimine deve essere mappata! Ogni dettaglio conta.',
+        objects: ['Foglio grande', 'Crayons', 'Oggetti come segnali'],
+        steps: [
+          'Disegna la piantina della stanza su un foglio grande.',
+          'Segna con X le posizioni di 4 oggetti importanti della stanza.',
+          'Inventa perche quegli oggetti sono prove e scrivilo vicino ad ogni X.',
+          'Presenta la tua mappa come farebbe un detective in una conferenza!'
+        ],
+        completion: 'La scena del crimine e documentata! Ottimo lavoro, detective.'
+      },
+      {
+        id: 'dt6', emoji: '\u{1F9E9}', title: 'Il Puzzle degli Indizi',
+        intro: 'Gli indizi sono sparsi. Solo mettendoli insieme riveleranno la verita!',
+        objects: ['Foglio di carta', 'Crayons', 'Oggetti vari'],
+        steps: [
+          'Scrivi o disegna 4 indizi su pezzi di carta separati.',
+          'Nascondili in punti diversi della stanza.',
+          'Cercali tutti e disponili in ordine su un tavolo o sul pavimento.',
+          'Collegali e racconta la storia che formano insieme!'
+        ],
+        completion: 'Il puzzle e risolto! La verita era nascosta tra gli indizi.'
+      },
+      {
+        id: 'dt7', emoji: '\u{1F3AF}', title: 'Operazione Memoria',
+        intro: 'Il detective deve ricordare tutto! Allena la tua memoria prima del caso.',
+        objects: ['10 oggetti qualsiasi', 'Coperta'],
+        steps: [
+          'Disponi 10 oggetti in fila e guardali bene per 30 secondi.',
+          'Coprili con una coperta.',
+          'Cerca di ricordare e nominare tutti i 10 oggetti ad alta voce.',
+          'Scoprili e conta quanti ne hai ricordati: 7 o piu significa maestro detective!'
+        ],
+        completion: 'Memoria allenata! Nessun dettaglio ti sfuggira mai piu.'
       }
-
-      // ===== STARS =====
-      function createStars() {
-        const container = document.getElementById('stars');
-        for (let i = 0; i < 60; i++) {
-          const s = document.createElement('div');
-          s.className = 'star-dot';
-          const size = Math.random() * 3 + 1;
-          s.style.cssText = `
-            width:${size}px;height:${size}px;
-            left:${Math.random()*100}%;top:${Math.random()*100}%;
-            --op:${Math.random()*0.7+0.1};
-            --dur:${Math.random()*4+2}s;
-            --delay:-${Math.random()*5}s;
-          `;
-          container.appendChild(s);
-        }
+    ],
+    specialMissions: [
+      {
+        id: 'dt_s1', emoji: '\u{1F3C6}', title: 'Il Grande Caso Irrisolto',
+        intro: 'Il caso piu difficile dell\'anno! Tutti i detective ci hanno rinunciato. Ce la fai tu?',
+        objects: ['Foglio grande', 'Crayons', 'Oggetti della stanza'],
+        steps: [
+          'Crea un ufficio investigativo con un tavolo e i tuoi materiali.',
+          'Inventa il caso: cosa e sparito, dove, chi era presente.',
+          'Crea 5 prove fisiche usando oggetti della stanza.',
+          'Risolvi il caso e presenta la tua conclusione come al telegiornale!'
+        ],
+        completion: 'Caso chiuso! Sei il detective numero uno del paese.'
+      },
+      {
+        id: 'dt_s2', emoji: '\u{1F303}', title: 'Missione Notturna',
+        intro: 'L\'operazione piu segreta richiede silenzio e concentrazione assoluta.',
+        objects: ['Torcia', 'Fogli di carta', 'Oggetti vari'],
+        steps: [
+          'Abbassa le luci e usa solo la torcia.',
+          'Nascondi 3 file segreti, cioe pezzi di carta con disegni, nella stanza.',
+          'Cerca i file usando solo la luce della torcia.',
+          'Riporta tutti i file alla base e dichiara che la missione e compiuta!'
+        ],
+        completion: 'Missione notturna completata con successo! Sei una leggenda.'
       }
-
-      // ===== AUDIO =====
-      let speechSynth = window.speechSynthesis;
-      let speaking = false;
-
-      function toggleAudio() {
-        state.audioOn = !state.audioOn;
-        saveState();
-        updateAudioBtn();
-        if (!state.audioOn) stopSpeech();
-      }
-
-      function updateAudioBtn() {
-        document.querySelectorAll('.audio-btn, #audio-btn, #audio-btn2').forEach(btn => {
-          btn.textContent = state.audioOn ? '🔊' : '🔇';
-        });
-      }
-
-      function stopSpeech() {
-        if (speechSynth) speechSynth.cancel();
-        speaking = false;
-      }
-
-      function speak(text) {
-        if (!state.audioOn || !speechSynth) return;
-        stopSpeech();
-        const clean = text.replace(/[\u{1F000}-\u{FFFF}]/gu, '').replace(/[✨🌟⭐🚀🔍🪄]/g, '').trim();
-        if (!clean) return;
-        const utt = new SpeechSynthesisUtterance(clean);
-        utt.lang = 'it-IT';
-        utt.rate = 0.82;
-        utt.pitch = 1.05;
-        utt.volume = 0.95;
-        utt.onstart = () => { speaking = true; };
-        utt.onend = utt.onerror = () => { speaking = false; };
-        speechSynth.speak(utt);
-      }
-
-      // ===== NAVIGATION =====
-      let currentScreen = 'welcome';
-
-      function goTo(screen) {
-        stopSpeech();
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        const el = document.getElementById('screen-' + screen);
-        if (el) {
-          el.classList.add('active');
-          el.scrollTop = 0;
-          currentScreen = screen;
-        }
-        updateAudioBtn();
-        if (screen === 'worlds') renderWorlds();
-        if (screen === 'missions') renderMissions();
-        if (screen === 'diary') renderDiary();
-      }
-
-      // ===== WORLDS =====
-      function renderWorlds() {
-        updateXpUI();
-        ['spazio', 'magia', 'detective'].forEach(wid => {
-          const el = document.getElementById('lock-' + wid);
-          if (!el) return;
-          const isLocked = isWorldLockedToday(wid);
-          el.textContent = isLocked ? '✓ Completato oggi' : '';
-        });
-      }
-
-      function isWorldLockedToday(worldId) {
-        if (state.todayMissions.length >= MAX_DAILY_MISSIONS && state.currentWorld === worldId) return true;
-        return false;
-      }
-
-      function selectWorld(worldId) {
-        if (state.currentWorld && state.currentWorld !== worldId && state.todayMissions.length > 0) {
-          const ok = confirm('Hai già iniziato con un altro mondo oggi. Cambiare ora azzererà i progressi di oggi. Continuare?');
-          if (!ok) return;
-          state.todayMissions = [];
-          state.todaySpecialDone = false;
-        }
-        state.currentWorld = worldId;
-        saveState();
-
-        if (state.todayMissions.length >= MAX_DAILY_MISSIONS) {
-          goTo('session');
-          renderSession();
-          return;
-        }
-
-        goTo('missions');
-      }
-
-      // ===== MISSIONS =====
-      function getAvailableMissions(worldId) {
-        const world = WORLDS[worldId];
-        const all = world.missions.map(m => m.id);
-        const done = state.completedMissions[worldId] || [];
-        let available = all.filter(id => !done.includes(id));
-        if (available.length === 0) {
-          state.completedMissions[worldId] = [];
-          saveState();
-          available = all;
-        }
-        return available;
-      }
-
-      function getTodayMissions(worldId) {
-        const world = WORLDS[worldId];
-        const allMissions = world.missions;
-        const todayIds = state.todayMissions;
-
-        if (todayIds.length === 0) {
-          const available = getAvailableMissions(worldId);
-          const picked = shuffleArr([...available]).slice(0, MAX_DAILY_MISSIONS);
-          return picked.map(id => allMissions.find(m => m.id === id)).filter(Boolean);
-        }
-
-        return todayIds.map(id => allMissions.find(m => m.id === id)).filter(Boolean);
-      }
-
-      function getSpecialMission(worldId) {
-        const world = WORLDS[worldId];
-        const sms = world.specialMissions;
-        return sms[Math.floor(Math.random() * sms.length)];
-      }
-
-      function shuffleArr(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-      }
-
-      function renderMissions() {
-        const world = WORLDS[state.currentWorld];
-        if (!world) { goTo('worlds'); return; }
-
-        document.getElementById('missions-title').textContent = world.name;
-
-        const missions = getTodayMissions(state.currentWorld);
-        if (state.todayMissions.length === 0) {
-          state.todayMissions = missions.map(m => m.id);
-          saveState();
-        }
-
-        const list = document.getElementById('mission-list');
-        list.innerHTML = '';
-
-        const doneTodayIds = state.todayMissions.filter((id, idx) => {
-          return state.completedMissions[state.currentWorld]?.includes(id);
-        });
-
-        const dots = document.getElementById('progress-dots');
-        dots.innerHTML = '';
-        missions.forEach((m, i) => {
-          const isDone = state.completedMissions[state.currentWorld]?.includes(m.id);
-          const dot = document.createElement('div');
-          dot.className = 'progress-dot' + (isDone ? ' done' : (i === doneTodayIds.length ? ' active' : ''));
-          dots.appendChild(dot);
-        });
-
-        const completedToday = missions.filter(m => state.completedMissions[state.currentWorld]?.includes(m.id)).length;
-
-        missions.forEach((mission, i) => {
-          const isDone = state.completedMissions[state.currentWorld]?.includes(mission.id);
-          const isUnlocked = !isDone && i <= completedToday;
-          const item = document.createElement('div');
-          item.className = 'mission-item' + (isDone ? ' done' : '');
-          item.innerHTML = `
-            <div class="mission-num ${isDone ? 'done' : ''}">${isDone ? '✓' : (i+1)}</div>
-            <div class="mission-info">
-              <h3>${mission.emoji} ${mission.title}</h3>
-              <p>${isDone ? 'Completata!' : mission.intro.substring(0,60)+'...'}</p>
-            </div>
-            <div class="arr">${isDone ? '✓' : (isUnlocked ? '›' : '🔒')}</div>
-          `;
-          if (!isDone && isUnlocked) {
-            item.onclick = () => openMission(mission);
-          }
-          list.appendChild(item);
-        });
-
-        const specialSection = document.getElementById('special-section');
-        const specialBtn = document.getElementById('special-btn');
-        const specialTitle = document.getElementById('special-title');
-        const specialMission = getSpecialMission(state.currentWorld);
-
-        if (completedToday >= MAX_DAILY_MISSIONS) {
-          specialSection.style.display = 'block';
-          specialTitle.textContent = specialMission.emoji + ' ' + specialMission.title;
-          if (state.todaySpecialDone) {
-            specialBtn.style.display = 'none';
-            specialSection.querySelector('.special-sub').textContent = '✓ Completata oggi!';
-          } else {
-            specialBtn.style.display = '';
-            specialSection.querySelector('.special-sub').textContent = 'Chiedi ad un genitore di sbloccarla';
-          }
-        } else {
-          specialSection.style.display = 'none';
-        }
-      }
-
-      // ===== OPEN MISSION =====
-      let activeMission = null;
-      let completionGuard = false;
-
-      function openMission(mission, isSpecial = false) {
-        activeMission = mission;
-        activeMission._isSpecial = isSpecial;
-        completionGuard = false;
-
-        document.getElementById('mission-world-badge').textContent = WORLDS[state.currentWorld].name;
-        document.getElementById('mission-emoji').textContent = mission.emoji;
-        document.getElementById('mission-title').textContent = mission.title;
-        document.getElementById('mission-intro').textContent = mission.intro;
-
-        const objList = document.getElementById('objects-list');
-        objList.innerHTML = '';
-        (mission.objects || []).forEach(obj => {
-          const tag = document.createElement('div');
-          tag.className = 'object-tag';
-          tag.textContent = obj;
-          objList.appendChild(tag);
-        });
-
-        const stepsList = document.getElementById('steps-list');
-        stepsList.innerHTML = '';
-        (mission.steps || []).forEach((step, i) => {
-          const row = document.createElement('div');
-          row.className = 'step-row';
-          row.innerHTML = `<div class="step-num">${i+1}</div><div class="step-text">${step}</div>`;
-          stepsList.appendChild(row);
-        });
-
-        goTo('mission');
-        const textToSpeak = `${mission.title}. ${mission.intro}. Passo uno: ${mission.steps[0]}`;
-        setTimeout(() => speak(textToSpeak), 600);
-      }
-
-      // ===== COMPLETE MISSION =====
-      function completeMission() {
-        if (completionGuard) return;
-        completionGuard = true;
-
-        const mission = activeMission;
-        const isSpecial = mission._isSpecial;
-
-        if (isSpecial) {
-          state.todaySpecialDone = true;
-          if (!state.completedMissions[state.currentWorld]) state.completedMissions[state.currentWorld] = [];
-          addXP(XP_PER_SPECIAL);
-          saveState();
-          addDiaryEntry(mission, true);
-          showReward(mission, true);
-        } else {
-          if (!state.completedMissions[state.currentWorld]) state.completedMissions[state.currentWorld] = [];
-          if (!state.completedMissions[state.currentWorld].includes(mission.id)) {
-            state.completedMissions[state.currentWorld].push(mission.id);
-          }
-          addXP(XP_PER_MISSION);
-          saveState();
-
-          const completedToday = state.todayMissions.filter(id =>
-            state.completedMissions[state.currentWorld]?.includes(id)
-          ).length;
-
-          showReward(mission, false, completedToday >= MAX_DAILY_MISSIONS);
-        }
-      }
-
-      function addXP(amount) {
-        state.xp += amount;
-        const newLevel = Math.floor(state.xp / XP_PER_LEVEL) + 1;
-        state.level = newLevel;
-        updateXpUI();
-      }
-
-      function updateXpUI() {
-        const xpInLevel = state.xp % XP_PER_LEVEL;
-        const pct = (xpInLevel / XP_PER_LEVEL) * 100;
-        const bar = document.getElementById('xp-bar');
-        if (bar) bar.style.width = pct + '%';
-        const lvlEl = document.getElementById('level-num');
-        if (lvlEl) lvlEl.textContent = state.level;
-        const xpEl = document.getElementById('xp-num');
-        if (xpEl) xpEl.textContent = state.xp;
-        const nextEl = document.getElementById('xp-next');
-        if (nextEl) nextEl.textContent = state.level * XP_PER_LEVEL;
-      }
-
-      // ===== REWARDS =====
-      let rewardCallback = null;
-
-      function showReward(mission, isSpecial, sessionDone = false) {
-        stopSpeech();
-
-        const overlay = document.getElementById('reward-overlay');
-        const trophy = document.getElementById('reward-trophy');
-        const title = document.getElementById('reward-title');
-        const msg = document.getElementById('reward-msg');
-        const xpEl = document.getElementById('reward-xp');
-
-        if (isSpecial) {
-          trophy.textContent = '🌟';
-          title.textContent = 'Missione Speciale!';
-          msg.textContent = `"${mission.title}" — Sei incredibile!`;
-          xpEl.textContent = `+${XP_PER_SPECIAL} XP`;
-          rewardCallback = () => goToFinal(mission);
-        } else if (sessionDone) {
-          trophy.textContent = '🏆';
-          title.textContent = 'Tre Missioni Completate!';
-          msg.textContent = `"${mission.title}" — Giornata straordinaria!`;
-          xpEl.textContent = `+${XP_PER_MISSION} XP`;
-          rewardCallback = () => { renderSession(); goTo('session'); };
-        } else {
-          trophy.textContent = '⭐';
-          title.textContent = 'Missione Completata!';
-          msg.textContent = `"${mission.title}" — Fantastico!`;
-          xpEl.textContent = `+${XP_PER_MISSION} XP`;
-          rewardCallback = () => goTo('missions');
-        }
-
-        createSparkles();
-        overlay.style.display = 'flex';
-        speak(title.textContent + '. ' + msg.textContent);
-      }
-
-      function closeReward() {
-        document.getElementById('reward-overlay').style.display = 'none';
-        if (rewardCallback) { rewardCallback(); rewardCallback = null; }
-      }
-
-      function createSparkles() {
-        const container = document.getElementById('sparkles');
-        container.innerHTML = '';
-        for (let i = 0; i < 18; i++) {
-          const s = document.createElement('div');
-          s.className = 'sparkle-dot';
-          s.style.cssText = `
-            left:${Math.random()*100}%;
-            top:${Math.random()*100}%;
-            background:${['#ffd700','#fff','#b06afc','#ff9900'][Math.floor(Math.random()*4)]};
-            animation-delay:${Math.random()*0.6}s;
-            width:${Math.random()*12+4}px;
-            height:${Math.random()*12+4}px;
-          `;
-          container.appendChild(s);
-          setTimeout(() => s.remove(), 1200);
-        }
-      }
-
-      // ===== SESSION =====
-      function renderSession() {
-        const world = WORLDS[state.currentWorld];
-        document.getElementById('session-badge').textContent = world.badge;
-        document.getElementById('session-level').textContent = state.level;
-
-        const sessionMissions = state.todayMissions
-          .map(id => world.missions.find(m => m.id === id))
-          .filter(Boolean);
-
-        const sessionEl = document.getElementById('session-missions');
-        sessionEl.innerHTML = '';
-        sessionMissions.forEach(m => {
-          const chip = document.createElement('div');
-          chip.className = 'session-mission-chip';
-          chip.innerHTML = `<span>${m.emoji}</span><span>${m.title}</span><span style="margin-left:auto;color:var(--gold)">✓</span>`;
-          sessionEl.appendChild(chip);
-        });
-
-        const totalXpToday = MAX_DAILY_MISSIONS * XP_PER_MISSION;
-        document.getElementById('session-xp').textContent = `+${totalXpToday} XP guadagnati oggi`;
-        addDiaryEntry(null, false, true);
-      }
-
-      function addDiaryEntry(specialMission, isSpecialOnly = false, isSessionSave = false) {
-        if (!state.currentWorld) return;
-        const world = WORLDS[state.currentWorld];
-        const today = todayString();
-
-        const existing = state.diary.find(e => e.date === today && e.world === state.currentWorld);
-        if (existing) {
-          if (specialMission && !existing.specialMission) {
-            existing.specialMission = specialMission.title;
-          }
-          if (isSessionSave) {
-            existing.missions = state.todayMissions
-              .map(id => world.missions.find(m => m.id === id)?.title)
-              .filter(Boolean);
-            existing.xp = state.xp;
-            existing.level = state.level;
-          }
-          saveState();
-          return;
-        }
-
-        const entry = {
-          date: today,
-          world: state.currentWorld,
-          worldIcon: world.icon,
-          worldName: world.name,
-          missions: state.todayMissions
-            .map(id => world.missions.find(m => m.id === id)?.title)
-            .filter(Boolean),
-          specialMission: specialMission ? specialMission.title : null,
-          xp: state.xp,
-          level: state.level
-        };
-        state.diary.unshift(entry);
-        if (state.diary.length > 30) state.diary = state.diary.slice(0, 30);
-        saveState();
-      }
-
-      // ===== FINAL SCREEN =====
-      function goToFinal(mission) {
-        const world = WORLDS[state.currentWorld];
-        document.getElementById('final-world-icon').textContent = world.icon;
-        document.getElementById('final-mission-name').textContent = mission.title;
-        document.getElementById('final-xp').textContent = `+${XP_PER_SPECIAL} XP — Livello ${state.level}`;
-        goTo('final');
-      }
-
-      // ===== PARENT GATE =====
-      let gateA, gateB, gateAnswer;
-
-      function trySpecial() {
-        const completedToday = state.todayMissions.filter(id =>
-          state.completedMissions[state.currentWorld]?.includes(id)
-        ).length;
-
-        if (completedToday < MAX_DAILY_MISSIONS) {
-          alert('Completa prima le 3 missioni del giorno!');
-          return;
-        }
-
-        if (state.todaySpecialDone) {
-          alert('La missione speciale è già stata completata oggi!');
-          return;
-        }
-
-        gateA = Math.floor(Math.random() * 15) + 10;
-        gateB = Math.floor(Math.random() * 15) + 10;
-        gateAnswer = gateA + gateB;
-        document.getElementById('gate-math').textContent = `${gateA} + ${gateB} = ?`;
-        document.getElementById('gate-input').value = '';
-        document.getElementById('gate-error').textContent = '';
-        document.getElementById('parent-gate').style.display = 'flex';
-      }
-
-      function checkGate() {
-        const val = parseInt(document.getElementById('gate-input').value);
-        if (val === gateAnswer) {
-          closeGate();
-          const special = getSpecialMission(state.currentWorld);
-          openMission(special, true);
-        } else {
-          document.getElementById('gate-error').textContent = 'Risposta errata. Riprova!';
-          document.getElementById('gate-input').value = '';
-        }
-      }
-
-      function closeGate() {
-        document.getElementById('parent-gate').style.display = 'none';
-      }
-
-      document.getElementById('gate-input').addEventListener('keydown', e => {
-        if (e.key === 'Enter') checkGate();
+    ]
+  }
+};
+
+// ===== CONSTANTS =====
+var XP_PER_MISSION = 50;
+var XP_PER_SPECIAL = 100;
+var XP_PER_LEVEL = 100;
+var MAX_DAILY_MISSIONS = 3;
+var STORAGE_KEY = 'sparkplay_v3';
+
+// ===== STATE =====
+var state = {};
+
+function defaultState() {
+  return {
+    xp: 0,
+    level: 1,
+    audioOn: true,
+    lastDate: null,
+    currentWorld: null,
+    todayMissions: [],          // IDs of today's 3 chosen missions
+    todaySpecialId: null,       // stable special mission ID for today
+    todaySpecialKey: null,      // "YYYY-MM-DD_worldId" key for stability
+    todaySpecialDone: false,
+    completedMissions: { spazio: [], magia: [], detective: [] },
+    diary: []
+  };
+}
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) { state = defaultState(); return; }
+    var saved = JSON.parse(raw);
+    state = defaultState();
+    // Merge saved fields safely
+    if (typeof saved.xp === 'number') state.xp = saved.xp;
+    if (typeof saved.level === 'number') state.level = saved.level;
+    if (typeof saved.audioOn === 'boolean') state.audioOn = saved.audioOn;
+    if (typeof saved.lastDate === 'string') state.lastDate = saved.lastDate;
+    if (typeof saved.currentWorld === 'string') state.currentWorld = saved.currentWorld;
+    if (Array.isArray(saved.todayMissions)) state.todayMissions = saved.todayMissions;
+    if (typeof saved.todaySpecialId === 'string') state.todaySpecialId = saved.todaySpecialId;
+    if (typeof saved.todaySpecialKey === 'string') state.todaySpecialKey = saved.todaySpecialKey;
+    if (typeof saved.todaySpecialDone === 'boolean') state.todaySpecialDone = saved.todaySpecialDone;
+    if (saved.completedMissions && typeof saved.completedMissions === 'object') {
+      ['spazio','magia','detective'].forEach(function(w) {
+        if (Array.isArray(saved.completedMissions[w])) state.completedMissions[w] = saved.completedMissions[w];
       });
+    }
+    if (Array.isArray(saved.diary)) state.diary = saved.diary;
+    checkDateReset();
+  } catch(e) {
+    state = defaultState();
+  }
+}
 
-      // ===== DIARY =====
-      function renderDiary() {
-        const container = document.getElementById('diary-list');
-        container.innerHTML = '';
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
 
-        if (!state.diary || state.diary.length === 0) {
-          container.innerHTML = '<div class="diary-empty">Il tuo diario è ancora vuoto.<br>Completa la prima missione per iniziare!</div>';
-          return;
-        }
+// ===== DATE =====
+function todayString() {
+  var d = new Date();
+  var y = d.getFullYear();
+  var m = String(d.getMonth() + 1).padStart('0', 2); // fix: padStart(length, fill)
+  var day = String(d.getDate()).padStart('0', 2);
+  return y + '-' + m + '-' + day;
+}
 
-        state.diary.forEach(entry => {
-          const card = document.createElement('div');
-          card.className = 'diary-entry';
+// String.padStart polyfill-safe version
+if (!String.prototype.padStart) {
+  String.prototype.padStart = function(targetLength, padString) {
+    var str = String(this);
+    padString = padString || ' ';
+    while (str.length < targetLength) str = padString + str;
+    return str.slice(-targetLength);
+  };
+}
 
-          const dateStr = entry.date.split('-').reverse().join('/');
-          const missions = (entry.missions || []).map(m =>
-            `<div class="diary-mission-row"><span>⭐</span><span>${m}</span></div>`
-          ).join('');
-          const special = entry.specialMission
-            ? `<div class="diary-mission-row"><span>🌟</span><span><strong>${entry.specialMission}</strong> (Speciale)</span></div>`
-            : '';
+function todayStringFixed() {
+  var d = new Date();
+  var y = d.getFullYear();
+  var mo = d.getMonth() + 1;
+  var day = d.getDate();
+  return y + '-' + (mo < 10 ? '0' : '') + mo + '-' + (day < 10 ? '0' : '') + day;
+}
 
-          card.innerHTML = `
-            <div class="diary-entry-header">
-              <div class="diary-world-icon">${entry.worldIcon || '✨'}</div>
-              <div class="diary-entry-meta">
-                <div class="diary-world-name">${entry.worldName || entry.world}</div>
-                <div class="diary-date">${dateStr}</div>
-              </div>
-              <div class="diary-xp">Lv. ${entry.level} · ${entry.xp} XP</div>
-            </div>
-            <div class="diary-missions">${missions}${special}</div>
-          `;
-          container.appendChild(card);
-        });
+function checkDateReset() {
+  var today = todayStringFixed();
+  if (state.lastDate !== today) {
+    state.lastDate = today;
+    state.todayMissions = [];
+    state.todaySpecialId = null;
+    state.todaySpecialKey = null;
+    state.todaySpecialDone = false;
+    saveState();
+  }
+}
+
+// ===== STARS =====
+function createStars() {
+  var container = document.getElementById('stars');
+  for (var i = 0; i < 60; i++) {
+    var s = document.createElement('div');
+    s.className = 'star-dot';
+    var size = Math.random() * 3 + 1;
+    s.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (Math.random()*100) + '%;top:' + (Math.random()*100) + '%;--op:' + (Math.random()*0.7+0.1) + ';--dur:' + (Math.random()*4+2) + 's;--delay:-' + (Math.random()*5) + 's;';
+    container.appendChild(s);
+  }
+}
+
+// ===== AUDIO =====
+var speechSynth = (typeof window !== 'undefined') ? window.speechSynthesis : null;
+
+function toggleAudio() {
+  state.audioOn = !state.audioOn;
+  saveState();
+  updateAudioBtns();
+  if (!state.audioOn) stopSpeech();
+}
+
+function updateAudioBtns() {
+  var icon = state.audioOn ? '\uD83D\uDD0A' : '\uD83D\uDD07';
+  ['audio-btn','audio-btn2'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = icon;
+  });
+  document.querySelectorAll('.audio-btn').forEach(function(el) {
+    el.textContent = icon;
+  });
+}
+
+function stopSpeech() {
+  try { if (speechSynth) speechSynth.cancel(); } catch(e) {}
+}
+
+function speak(text) {
+  if (!state.audioOn || !speechSynth) return;
+  stopSpeech();
+  // Strip emoji-like characters for cleaner speech
+  var clean = text.replace(/[\u{1F000}-\u{FFFFF}]/gu, '').replace(/[^\u0000-\u007E\u00C0-\u024F\u0080-\u00FF]/g, ' ').trim();
+  if (!clean) return;
+  try {
+    var utt = new SpeechSynthesisUtterance(clean);
+    utt.lang = 'it-IT';
+    utt.rate = 0.82;
+    utt.pitch = 1.05;
+    utt.volume = 0.95;
+    speechSynth.speak(utt);
+  } catch(e) {}
+}
+
+// ===== NAVIGATION =====
+var currentScreen = 'welcome';
+
+function goTo(screen) {
+  stopSpeech();
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  var el = document.getElementById('screen-' + screen);
+  if (el) { el.classList.add('active'); el.scrollTop = 0; currentScreen = screen; }
+  updateAudioBtns();
+  if (screen === 'worlds') renderWorlds();
+  if (screen === 'missions') renderMissions();
+  if (screen === 'diary') renderDiary();
+}
+
+// ===== WORLDS =====
+function renderWorlds() {
+  updateXpUI();
+  var today = todayStringFixed();
+  ['spazio','magia','detective'].forEach(function(wid) {
+    var el = document.getElementById('lock-' + wid);
+    if (!el) return;
+    if (state.lastDate === today && state.currentWorld === wid && state.todayMissions.length > 0) {
+      var done = countCompletedToday(wid);
+      if (done >= MAX_DAILY_MISSIONS) {
+        el.textContent = state.todaySpecialDone ? '\u2713 Completo oggi' : '\u2713 3 missioni completate';
+        return;
       }
+      el.textContent = done + '/3 missioni completate';
+    } else {
+      el.textContent = '';
+    }
+  });
+}
 
-      // ===== DEV RESET =====
-      function devReset() {
-        if (confirm('Resettare tutto? (Solo per test)')) {
-          localStorage.removeItem('sparkplay_v2');
-          location.reload();
-        }
+function countCompletedToday(worldId) {
+  if (!state.todayMissions || !state.completedMissions[worldId]) return 0;
+  return state.todayMissions.filter(function(id) {
+    return state.completedMissions[worldId].indexOf(id) !== -1;
+  }).length;
+}
+
+function selectWorld(worldId) {
+  var today = todayStringFixed();
+
+  // Already fully locked today
+  if (state.lastDate === today && state.todaySpecialDone) {
+    goTo('lock');
+    return;
+  }
+
+  // Session done today with this world: go to session screen
+  if (state.lastDate === today && state.currentWorld === worldId && countCompletedToday(worldId) >= MAX_DAILY_MISSIONS) {
+    renderSession();
+    goTo('session');
+    return;
+  }
+
+  // Switching world mid-day
+  if (state.currentWorld && state.currentWorld !== worldId && state.todayMissions.length > 0) {
+    if (!confirm('Hai gia iniziato con un altro mondo oggi. Cambiare ora azzera i progressi. Continuare?')) return;
+    state.todayMissions = [];
+    state.todaySpecialId = null;
+    state.todaySpecialKey = null;
+    state.todaySpecialDone = false;
+  }
+
+  state.currentWorld = worldId;
+  saveState();
+  goTo('missions');
+}
+
+// ===== SPECIAL MISSION (STABLE) =====
+function getOrPickSpecialMission(worldId) {
+  var key = todayStringFixed() + '_' + worldId;
+  if (state.todaySpecialKey === key && state.todaySpecialId) {
+    var world = WORLDS[worldId];
+    var found = null;
+    for (var i = 0; i < world.specialMissions.length; i++) {
+      if (world.specialMissions[i].id === state.todaySpecialId) { found = world.specialMissions[i]; break; }
+    }
+    if (found) return found;
+  }
+  // Pick one and save
+  var world = WORLDS[worldId];
+  var idx = Math.floor(Math.random() * world.specialMissions.length);
+  var mission = world.specialMissions[idx];
+  state.todaySpecialId = mission.id;
+  state.todaySpecialKey = key;
+  saveState();
+  return mission;
+}
+
+// ===== MISSIONS =====
+function getAvailableMissions(worldId) {
+  var world = WORLDS[worldId];
+  var all = world.missions.map(function(m) { return m.id; });
+  var done = state.completedMissions[worldId] || [];
+  var available = all.filter(function(id) { return done.indexOf(id) === -1; });
+  if (available.length === 0) {
+    state.completedMissions[worldId] = [];
+    saveState();
+    available = all;
+  }
+  return available;
+}
+
+function shuffleArr(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+  return arr;
+}
+
+function ensureTodayMissions(worldId) {
+  if (state.todayMissions.length > 0) return; // Already set
+  var available = getAvailableMissions(worldId);
+  var picked = shuffleArr(available.slice()).slice(0, MAX_DAILY_MISSIONS);
+  state.todayMissions = picked;
+  saveState();
+}
+
+function renderMissions() {
+  var worldId = state.currentWorld;
+  var world = WORLDS[worldId];
+  if (!world) { goTo('worlds'); return; }
+
+  document.getElementById('missions-title').textContent = world.name;
+  ensureTodayMissions(worldId);
+
+  var completedArr = state.completedMissions[worldId] || [];
+  var completedToday = countCompletedToday(worldId);
+
+  // Progress dots
+  var dots = document.getElementById('progress-dots');
+  dots.innerHTML = '';
+  for (var di = 0; di < MAX_DAILY_MISSIONS; di++) {
+    var dot = document.createElement('div');
+    var missionId = state.todayMissions[di];
+    var isDone = missionId && completedArr.indexOf(missionId) !== -1;
+    dot.className = 'progress-dot' + (isDone ? ' done' : (di === completedToday ? ' active' : ''));
+    dots.appendChild(dot);
+  }
+
+  // Mission list
+  var list = document.getElementById('mission-list');
+  list.innerHTML = '';
+  state.todayMissions.forEach(function(id, i) {
+    var mission = null;
+    for (var mi = 0; mi < world.missions.length; mi++) {
+      if (world.missions[mi].id === id) { mission = world.missions[mi]; break; }
+    }
+    if (!mission) return;
+
+    var isDone = completedArr.indexOf(id) !== -1;
+    var isUnlocked = !isDone && i <= completedToday;
+
+    var item = document.createElement('div');
+    item.className = 'mission-item' + (isDone ? ' done' : (!isUnlocked ? ' locked' : ''));
+
+    var numDiv = document.createElement('div');
+    numDiv.className = 'mission-num' + (isDone ? ' done' : '');
+    numDiv.textContent = isDone ? '\u2713' : (i + 1);
+
+    var info = document.createElement('div');
+    info.className = 'mission-info';
+    var h3 = document.createElement('h3');
+    h3.textContent = mission.emoji + ' ' + mission.title;
+    var p = document.createElement('p');
+    p.textContent = isDone ? 'Completata!' : mission.intro.substring(0, 60) + '...';
+    info.appendChild(h3);
+    info.appendChild(p);
+
+    var arr = document.createElement('div');
+    arr.className = 'arr';
+    arr.textContent = isDone ? '\u2713' : (isUnlocked ? '\u203A' : '\uD83D\uDD12');
+
+    item.appendChild(numDiv);
+    item.appendChild(info);
+    item.appendChild(arr);
+
+    if (!isDone && isUnlocked) {
+      (function(m) {
+        item.onclick = function() { openMission(m, false); };
+      })(mission);
+    }
+    list.appendChild(item);
+  });
+
+  // Special section
+  var specialSection = document.getElementById('special-section');
+  var specialBtn = document.getElementById('special-btn');
+  var specialTitleEl = document.getElementById('special-title');
+  var specialSubEl = document.getElementById('special-sub');
+
+  if (completedToday >= MAX_DAILY_MISSIONS) {
+    var specialMission = getOrPickSpecialMission(worldId);
+    specialSection.style.display = 'block';
+    specialTitleEl.textContent = specialMission.emoji + ' ' + specialMission.title;
+    if (state.todaySpecialDone) {
+      specialBtn.style.display = 'none';
+      specialSubEl.textContent = '\u2713 Completata oggi!';
+    } else {
+      specialBtn.style.display = '';
+      specialSubEl.textContent = 'Chiedi ad un genitore di sbloccarla';
+    }
+  } else {
+    specialSection.style.display = 'none';
+  }
+}
+
+// ===== OPEN MISSION =====
+var activeMission = null;
+var completionGuard = false;
+
+function openMission(mission, isSpecial) {
+  activeMission = mission;
+  activeMission._isSpecial = isSpecial;
+  completionGuard = false;
+
+  var btn = document.getElementById('complete-btn');
+  if (btn) btn.disabled = false;
+
+  document.getElementById('mission-world-badge').textContent = WORLDS[state.currentWorld].name;
+  document.getElementById('mission-emoji').textContent = mission.emoji;
+  document.getElementById('mission-title').textContent = mission.title;
+  document.getElementById('mission-intro').textContent = mission.intro;
+
+  var objList = document.getElementById('objects-list');
+  objList.innerHTML = '';
+  (mission.objects || []).forEach(function(obj) {
+    var tag = document.createElement('div');
+    tag.className = 'object-tag';
+    tag.textContent = obj;
+    objList.appendChild(tag);
+  });
+
+  var stepsList = document.getElementById('steps-list');
+  stepsList.innerHTML = '';
+  (mission.steps || []).forEach(function(step, i) {
+    var row = document.createElement('div');
+    row.className = 'step-row';
+    var numEl = document.createElement('div');
+    numEl.className = 'step-num';
+    numEl.textContent = i + 1;
+    var textEl = document.createElement('div');
+    textEl.className = 'step-text';
+    textEl.textContent = step;
+    row.appendChild(numEl);
+    row.appendChild(textEl);
+    stepsList.appendChild(row);
+  });
+
+  goTo('mission');
+  var toSpeak = mission.title + '. ' + mission.intro + '. Passo uno: ' + (mission.steps[0] || '');
+  setTimeout(function() { speak(toSpeak); }, 600);
+}
+
+// ===== COMPLETE MISSION =====
+function completeMission() {
+  if (completionGuard || !activeMission) return;
+  completionGuard = true;
+
+  var btn = document.getElementById('complete-btn');
+  if (btn) btn.disabled = true;
+
+  var mission = activeMission;
+  var isSpecial = mission._isSpecial;
+  var worldId = state.currentWorld;
+
+  if (isSpecial) {
+    if (state.todaySpecialDone) return; // Guard: already done
+    state.todaySpecialDone = true;
+    if (!state.completedMissions[worldId]) state.completedMissions[worldId] = [];
+    addXP(XP_PER_SPECIAL);
+    saveState();
+    updateDiarySpecial(mission.title);
+    showReward(mission, true, false);
+  } else {
+    if (!state.completedMissions[worldId]) state.completedMissions[worldId] = [];
+    var alreadyDone = state.completedMissions[worldId].indexOf(mission.id) !== -1;
+    if (!alreadyDone) {
+      state.completedMissions[worldId].push(mission.id);
+      addXP(XP_PER_MISSION);
+    }
+    saveState();
+
+    var completedToday = countCompletedToday(worldId);
+    var sessionDone = completedToday >= MAX_DAILY_MISSIONS;
+
+    if (sessionDone) {
+      // Save diary entry for the session
+      saveDiarySession();
+    }
+
+    showReward(mission, false, sessionDone);
+  }
+}
+
+function addXP(amount) {
+  state.xp += amount;
+  state.level = Math.floor(state.xp / XP_PER_LEVEL) + 1;
+  updateXpUI();
+}
+
+function updateXpUI() {
+  var xpInLevel = state.xp % XP_PER_LEVEL;
+  var pct = (xpInLevel / XP_PER_LEVEL) * 100;
+  var bar = document.getElementById('xp-bar');
+  if (bar) bar.style.width = pct + '%';
+  var lvlEl = document.getElementById('level-num');
+  if (lvlEl) lvlEl.textContent = state.level;
+  var xpEl = document.getElementById('xp-num');
+  if (xpEl) xpEl.textContent = state.xp;
+  var nextEl = document.getElementById('xp-next');
+  if (nextEl) nextEl.textContent = state.level * XP_PER_LEVEL;
+}
+
+// ===== REWARDS =====
+var rewardCallback = null;
+
+function showReward(mission, isSpecial, sessionDone) {
+  stopSpeech();
+  var overlay = document.getElementById('reward-overlay');
+  var trophy = document.getElementById('reward-trophy');
+  var title = document.getElementById('reward-title');
+  var msg = document.getElementById('reward-msg');
+  var xpEl = document.getElementById('reward-xp');
+
+  if (isSpecial) {
+    trophy.textContent = '\u{1F31F}';
+    title.textContent = 'Missione Speciale!';
+    msg.textContent = '"' + mission.title + '" - Sei incredibile!';
+    xpEl.textContent = '+' + XP_PER_SPECIAL + ' XP';
+    rewardCallback = function() { goToFinal(mission); };
+  } else if (sessionDone) {
+    trophy.textContent = '\u{1F3C6}';
+    title.textContent = 'Tre Missioni Completate!';
+    msg.textContent = '"' + mission.title + '" - Giornata straordinaria!';
+    xpEl.textContent = '+' + XP_PER_MISSION + ' XP';
+    rewardCallback = function() { renderSession(); goTo('session'); };
+  } else {
+    trophy.textContent = '\u2B50';
+    title.textContent = 'Missione Completata!';
+    msg.textContent = '"' + mission.title + '" - Fantastico!';
+    xpEl.textContent = '+' + XP_PER_MISSION + ' XP';
+    rewardCallback = function() { goTo('missions'); };
+  }
+
+  createSparkles();
+  overlay.style.display = 'flex';
+  speak(title.textContent + '. ' + msg.textContent);
+}
+
+function closeReward() {
+  document.getElementById('reward-overlay').style.display = 'none';
+  if (rewardCallback) { var cb = rewardCallback; rewardCallback = null; cb(); }
+}
+
+function createSparkles() {
+  var container = document.getElementById('sparkles');
+  container.innerHTML = '';
+  var colors = ['#ffd700','#fff','#b06afc','#ff9900'];
+  for (var i = 0; i < 18; i++) {
+    var s = document.createElement('div');
+    s.className = 'sparkle-dot';
+    var w = Math.random() * 12 + 4;
+    s.style.cssText = 'left:' + (Math.random()*100) + '%;top:' + (Math.random()*100) + '%;background:' + colors[Math.floor(Math.random()*4)] + ';animation-delay:' + (Math.random()*0.6) + 's;width:' + w + 'px;height:' + w + 'px;';
+    container.appendChild(s);
+    (function(el) { setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 1200); })(s);
+  }
+}
+
+// ===== SESSION =====
+function renderSession() {
+  var world = WORLDS[state.currentWorld];
+  if (!world) return;
+
+  document.getElementById('session-badge').textContent = world.badge;
+  document.getElementById('session-level').textContent = state.level;
+
+  var sessionEl = document.getElementById('session-missions');
+  sessionEl.innerHTML = '';
+  state.todayMissions.forEach(function(id) {
+    var m = null;
+    for (var i = 0; i < world.missions.length; i++) {
+      if (world.missions[i].id === id) { m = world.missions[i]; break; }
+    }
+    if (!m) return;
+    var chip = document.createElement('div');
+    chip.className = 'session-mission-chip';
+    var s1 = document.createElement('span'); s1.textContent = m.emoji;
+    var s2 = document.createElement('span'); s2.textContent = m.title;
+    var s3 = document.createElement('span'); s3.style.cssText = 'margin-left:auto;color:var(--gold)'; s3.textContent = '\u2713';
+    chip.appendChild(s1); chip.appendChild(s2); chip.appendChild(s3);
+    sessionEl.appendChild(chip);
+  });
+
+  var sessionXp = MAX_DAILY_MISSIONS * XP_PER_MISSION;
+  document.getElementById('session-xp').textContent = '+' + sessionXp + ' XP guadagnati oggi';
+
+  // Update session special card
+  var specialMission = getOrPickSpecialMission(state.currentWorld);
+  document.getElementById('session-special-title').textContent = specialMission.emoji + ' ' + specialMission.title;
+  if (state.todaySpecialDone) {
+    document.getElementById('session-special-btn').style.display = 'none';
+    document.getElementById('session-special-sub').textContent = '\u2713 Missione speciale completata!';
+  } else {
+    document.getElementById('session-special-btn').style.display = '';
+    document.getElementById('session-special-sub').textContent = 'Chiedi ad un genitore di sbloccarla';
+  }
+}
+
+// ===== DIARY =====
+function saveDiarySession() {
+  if (!state.currentWorld) return;
+  var world = WORLDS[state.currentWorld];
+  var today = todayStringFixed();
+  var sessionXp = MAX_DAILY_MISSIONS * XP_PER_MISSION;
+
+  var existing = findDiaryEntry(today, state.currentWorld);
+  if (existing) {
+    existing.missions = state.todayMissions.map(function(id) {
+      for (var i = 0; i < world.missions.length; i++) {
+        if (world.missions[i].id === id) return world.missions[i].title;
       }
+      return null;
+    }).filter(Boolean);
+    existing.sessionXp = sessionXp;
+    existing.level = state.level;
+    saveState();
+    return;
+  }
 
-      // ===== INIT =====
-      function init() {
-        createStars();
-        loadState();
-        updateXpUI();
-        updateAudioBtn();
-
-        const today = todayString();
-        if (state.lastDate === today && state.todaySpecialDone && state.todayMissions.length >= MAX_DAILY_MISSIONS) {
-          goTo('lock');
-          return;
-        }
-
-        goTo('welcome');
-        speak('Benvenuto in SparkPlay! Inizia la tua avventura.');
+  var entry = {
+    date: today,
+    world: state.currentWorld,
+    worldIcon: world.icon,
+    worldName: world.name,
+    missions: state.todayMissions.map(function(id) {
+      for (var i = 0; i < world.missions.length; i++) {
+        if (world.missions[i].id === id) return world.missions[i].title;
       }
+      return null;
+    }).filter(Boolean),
+    specialMission: null,
+    sessionXp: sessionXp,
+    level: state.level
+  };
+  state.diary.unshift(entry);
+  if (state.diary.length > 30) state.diary = state.diary.slice(0, 30);
+  saveState();
+}
 
-      window.addEventListener('load', init);
-    </script>
-  </body>
+function updateDiarySpecial(specialTitle) {
+  if (!state.currentWorld) return;
+  var today = todayStringFixed();
+  var existing = findDiaryEntry(today, state.currentWorld);
+  if (existing) {
+    existing.specialMission = specialTitle;
+    existing.sessionXp = (existing.sessionXp || 0) + XP_PER_SPECIAL;
+    existing.level = state.level;
+    saveState();
+  } else {
+    // Edge case: session entry missing — create it
+    var world = WORLDS[state.currentWorld];
+    var entry = {
+      date: today,
+      world: state.currentWorld,
+      worldIcon: world.icon,
+      worldName: world.name,
+      missions: state.todayMissions.map(function(id) {
+        for (var i = 0; i < world.missions.length; i++) {
+          if (world.missions[i].id === id) return world.missions[i].title;
+        }
+        return null;
+      }).filter(Boolean),
+      specialMission: specialTitle,
+      sessionXp: XP_PER_SPECIAL,
+      level: state.level
+    };
+    state.diary.unshift(entry);
+    if (state.diary.length > 30) state.diary = state.diary.slice(0, 30);
+    saveState();
+  }
+}
+
+function findDiaryEntry(date, world) {
+  for (var i = 0; i < state.diary.length; i++) {
+    if (state.diary[i].date === date && state.diary[i].world === world) return state.diary[i];
+  }
+  return null;
+}
+
+function renderDiary() {
+  var container = document.getElementById('diary-list');
+  container.innerHTML = '';
+
+  if (!state.diary || state.diary.length === 0) {
+    var empty = document.createElement('div');
+    empty.className = 'diary-empty';
+    empty.innerHTML = 'Il tuo diario &egrave; ancora vuoto.<br>Completa la prima missione per iniziare!';
+    container.appendChild(empty);
+    return;
+  }
+
+  state.diary.forEach(function(entry) {
+    var card = document.createElement('div');
+    card.className = 'diary-entry';
+
+    // Date display: YYYY-MM-DD -> DD/MM/YYYY
+    var parts = entry.date.split('-');
+    var dateStr = (parts[2] || '') + '/' + (parts[1] || '') + '/' + (parts[0] || '');
+
+    var xpLabel = entry.sessionXp ? '+' + entry.sessionXp + ' XP' : 'Lv. ' + entry.level;
+
+    var header = document.createElement('div');
+    header.className = 'diary-entry-header';
+    header.innerHTML = '<div class="diary-world-icon">' + (entry.worldIcon || '\u2728') + '</div>' +
+      '<div class="diary-entry-meta"><div class="diary-world-name">' + (entry.worldName || entry.world) + '</div>' +
+      '<div class="diary-date">' + dateStr + '</div></div>' +
+      '<div class="diary-xp">Lv. ' + entry.level + ' &middot; ' + xpLabel + '</div>';
+
+    var missionsDiv = document.createElement('div');
+    missionsDiv.className = 'diary-missions';
+    (entry.missions || []).forEach(function(m) {
+      var row = document.createElement('div');
+      row.className = 'diary-mission-row';
+      row.innerHTML = '<span>\u2B50</span><span>' + m + '</span>';
+      missionsDiv.appendChild(row);
+    });
+    if (entry.specialMission) {
+      var srow = document.createElement('div');
+      srow.className = 'diary-mission-row';
+      srow.innerHTML = '<span>\uD83C\uDF1F</span><span><strong>' + entry.specialMission + '</strong> (Speciale)</span>';
+      missionsDiv.appendChild(srow);
+    }
+
+    card.appendChild(header);
+    card.appendChild(missionsDiv);
+    container.appendChild(card);
+  });
+}
+
+// ===== FINAL SCREEN =====
+function goToFinal(mission) {
+  var world = WORLDS[state.currentWorld];
+  document.getElementById('final-world-icon').textContent = world.icon;
+  document.getElementById('final-mission-name').textContent = mission.title;
+  document.getElementById('final-xp').textContent = '+' + XP_PER_SPECIAL + ' XP \u2014 Livello ' + state.level;
+  goTo('final');
+}
+
+// ===== PARENT GATE =====
+var gateA, gateB, gateAnswer;
+
+function trySpecial() {
+  var worldId = state.currentWorld;
+  if (!worldId) { goTo('worlds'); return; }
+
+  var completedToday = countCompletedToday(worldId);
+  if (completedToday < MAX_DAILY_MISSIONS) {
+    alert('Completa prima le 3 missioni del giorno!');
+    return;
+  }
+  if (state.todaySpecialDone) {
+    alert('La missione speciale e gia stata completata oggi!');
+    return;
+  }
+
+  gateA = Math.floor(Math.random() * 15) + 10;
+  gateB = Math.floor(Math.random() * 15) + 10;
+  gateAnswer = gateA + gateB;
+  document.getElementById('gate-math').textContent = gateA + ' + ' + gateB + ' = ?';
+  document.getElementById('gate-input').value = '';
+  document.getElementById('gate-error').textContent = '';
+  document.getElementById('parent-gate').style.display = 'flex';
+}
+
+function checkGate() {
+  var val = parseInt(document.getElementById('gate-input').value, 10);
+  if (val === gateAnswer) {
+    closeGate();
+    var special = getOrPickSpecialMission(state.currentWorld);
+    openMission(special, true);
+  } else {
+    document.getElementById('gate-error').textContent = 'Risposta errata. Riprova!';
+    document.getElementById('gate-input').value = '';
+  }
+}
+
+function closeGate() {
+  document.getElementById('parent-gate').style.display = 'none';
+}
+
+document.getElementById('gate-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') checkGate();
+});
+
+// ===== DEV RESET =====
+function devReset() {
+  if (confirm('Resettare tutto? (Solo per test)')) {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+}
+
+// ===== INIT =====
+function init() {
+  createStars();
+  loadState();
+  updateXpUI();
+  updateAudioBtns();
+
+  var today = todayStringFixed();
+
+  // Fully locked: special done today
+  if (state.lastDate === today && state.todaySpecialDone) {
+    goTo('lock');
+    return;
+  }
+
+  // Session complete: 3 normal missions done, special not done yet
+  if (state.lastDate === today && state.currentWorld && state.todayMissions.length >= MAX_DAILY_MISSIONS) {
+    var completed = countCompletedToday(state.currentWorld);
+    if (completed >= MAX_DAILY_MISSIONS) {
+      renderSession();
+      goTo('session');
+      return;
+    }
+  }
+
+  // Otherwise show welcome
+  goTo('welcome');
+  setTimeout(function() { speak('Benvenuto in SparkPlay! Inizia la tua avventura.'); }, 800);
+}
+
+window.addEventListener('load', init);
+</script>
+</body>
 </html>
